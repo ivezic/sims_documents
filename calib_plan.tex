@@ -104,14 +104,39 @@ using the best-available prior calibrated observations.
 
 \section{Overview of the photometric calibration process}
 
+The photometric requirements described above are a factor of 2 better
+than those achieved by previous wide-field surveys operating on
+primarily photometric nights. To reach this level of precision using
+observations taken under a wide variety of conditions (including
+non-photometric nights) requires a new approach. This is possible by
+gathering additional data on the wavelength dependence of the
+throughput of the hardware system and the atmosphere and by leveraging
+the multiple observations of many stars that LSST will
+gather. Traditional photometric calibration uses a set of standard
+stars, observed at a range of airmasses in between science
+observations, to calculate zeropoint offsets and perhaps a single
+color-dependent extinction term for the science images. Calibration of
+LSST magnitudes to SRD levels, under conditions with up to XXX cloud
+extinction, would require standard stars in every CCD of every
+exposure: this standard star network is thus necesssarily defined as the
+non-variable, isolated, bright stars observed within LSST itself. In
+addition, when considering the possibility of $>1\%$ variations in the
+filter bandpasses across the field of view and/or the strong effects
+of water band absorption in the $y$ band (see
+Fig~\ref{fig:colorexamples} CREATE FIGURE), it becomes clear that LSST
+must measure and correct for wavelength-dependent effects to a much
+higher level than previous surveys. This section describes and motivates our
+photometric calibration approach. 
+
 The end goal of photometric calibration is to be able to translate
 `counts measured in a particular image' into `photons above the
 atmosphere', removing the signatures introduced by the atmosphere, the
-telescope, the detector, and (potentially) data processing.
+telescope, the detector, and (potentially) data processing. So, let us
+first consider how the light from a source is translated into
+counts. 
 
-Let us first consider how the light from a source is translated into
-counts. Given $F_\nu(\lambda)$, the specific flux of an object {\it at
-the top} of the atmosphere, at a position described by ($alt$,$az$), 
+Given $F_\nu(\lambda)$, the specific flux of an object {\it at
+the top} of the atmosphere, at a position described by ($alt$,$az$),
 the flux transmitted through the atmosphere to the telescope pupil is
 \begin{equation}
 \label{eqn:Fpupil}
@@ -192,36 +217,38 @@ imprinted with many different kinds of effects, which have different
 scales of variability over time ($t$), spatial scale ($alt$, $az$ or
 $x$, $y$), and wavelength ($\lambda$), suggesting that it is possible
 and even beneficial to separate these effects for calibration
-purposes. A quick overview is presented here and will be elaborated on
-in later sections.
+purposes. Wavelength-dependent effects can be considered variations in
+the {\it shape} of the bandpass; gray-scale effects can be considered
+variations in the {\it normalization} of the bandpass. Furthermore,
+variations in the bandpass caused by the hardware system can be
+separated from variations in the bandpass caused by atmospheric
+throughput, and measured with different methods. 
 
-The first requirement is to consider separately the variations in
-$S_b^{atm}(\lambda,alt,az,t)$ from $S_b^{sys}(\lambda,x,y,t)$, as
-$S_b^{sys}$ (for the most part) varies on timescales of a day or more rather than
-exposure-to-exposure (Stubbs \& Tonry REF). We can further divide and
+First, consider the variations in $S_b{sys}(\lambda,x,y,t)$, which
+vary on timescales of a day or more.  We can further divide and
 correct the measured counts for variations in
 $S_b^{sys}(\lambda,x,y,t)$, the throughput in the hardware system, as
 follows. Using a dome-screen system that is capable of producing light
 at a range of individual wavelengths (the ``stubbsometer''), we can
 measure the sensitivity of the mirror/lens/filter/detector system as a
-function of $x$,$y$ at each wavelength, producing a series of
-`narrow band flat fields'. While it would be possible to use these
-as a standard flat field (after choosing a particular method to
-combine the measurements at different wavelengths), it is not possible
-to generate all the necessary narrow band flats each night; scanning
-through all 6 filters at 1nm intervals requires tens of
-hours. However, since the wavelength-dependent effects are expected to
-vary slowly over time, we can instead plan to only produce
-narrow band flat fields every 30 days. Using standard white-light
-flat fields for each filter acquired at the start and end of observing
-on each night, we can also correct for the much more rapidly changing
-wavelength-independent effects (dust accumulation, pixel-to-pixel
-sensitivity variations, etc.) that occur primarily on scales smaller
-than the PSF. The images are corrected for gray-scale effects with the white-light flat
-field, and also corrected for the wavelength-dependent effects in
-system throughput measured from the narrow band flats.
+function of $x$,$y$ at each wavelength, producing a series of `narrow
+band flat fields'. While it would be possible to use these as a
+standard flat field (after choosing a particular method to combine the
+measurements at different wavelengths), it is not possible to generate
+all the necessary narrow band flats each night; scanning through all 6
+filters at 1nm intervals requires tens of hours. However, since the
+wavelength-dependent effects are expected to vary slowly over time, we
+can instead plan to only produce narrow band flat fields every 30
+days. Using standard white-light flat fields for each filter acquired
+at the start and end of observing on each night, we can also correct
+for the much more rapidly changing wavelength-independent effects
+(dust accumulation, pixel-to-pixel sensitivity variations, etc.) that
+occur primarily on scales smaller than the PSF. The images are
+corrected for gray-scale effects with the white-light flat field, and
+also corrected for the wavelength-dependent effects in system
+throughput measured from the narrow band flats.
 
-When considering $S_b^{atm}(\lambda,alt,az,t)$, we can again
+Next, considering $S_b^{atm}(\lambda,alt,az,t)$, we can again
 separate the wavelength-dependent variations, which occur primarily over
 spatial scales larger than the field of view and several minute timescales, from the gray
 variations due to clouds, which occur over much smaller spatial and
@@ -278,7 +305,7 @@ are measurements in one filter tied to measurements in another filter
 (requirements \ref{color_req} and \ref{abs_req}).  
 
 To fulfill these last two requirements a further set of measurements
-is required. In all filters, a set of objects with a well-known
+are needed. In all filters, a set of objects with a well-known
 spectral type (such as main sequence stars or white dwarfs, preferably
 with direct observations of the SED of the specific object) must be
 observed and calibrated, in individual filters, as above. The prior
@@ -299,7 +326,11 @@ produces a final magnitude,
 \label{eqn:finalmags}
 m_b^{ext} = m_b^{nat}  + \Delta_{b-r} + \Delta_r
 \end{equation}
-which can be compared to physical flux scales. 
+which can be compared to physical flux scales. Placing our photometric
+measurements on a standardized internal system and then tying this
+internal system to an external flux scale, allows a separation
+of the errors which arise from internal calibration vs. external
+calibration. 
 
 Using the calibration methods described to this point, it is possible
 to translate counts from a particular object into photons above the
@@ -344,58 +375,6 @@ come from this illumination-corrected flat field; it is possible (as
 the ghosting pattern is wavelength-dependent) that this illumination
 correction may have some wavelength dependence. 
  
-\subsection{Why stray from tradition?}
-
-The traditional method for photometric calibration is to gather
-careful flat fields (from dark sky flats, twilight flats, and/or dome
-flats), perhaps add an illumination correction generated by rastering
-a dense pattern of bright stars across a field of view, and to then use
-observations of well-measured `standard' stars taken around the
-science observations, at a similar range of airmasses, to calibrate
-the science images. This approach is inadequate for LSST for several
-reasons. 
-
-The primary reason is that LSST will operate under a wide variety of
-conditions, including many non-photometric nights. In order to be able
-to calibrate the LSST photometry to the precision required by the SRD,
-there would have to be `standard stars' in every LSST exposure at a
-sufficiently dense spacing to measure the effect of clouds on the
-scale necessary to achieve 0.5\% photometry. Such a network of
-standard stars does not exist -- indeed, these stars are the very
-things LSST is striving to survey. Thus, self-calibration using the
-stars from the survey is necessary. 
-
-A secondary consideration is that this traditional approach typically
-ignores many of the wavelength-dependent effects, often only
-considering a filter-dependent extinction term tied to the airmass of
-the exposure, $\Delta m_b = k_b\,X$\footnote{Although some surveys,
-such as the CFHT SuperNova Legacy Survey (SNLS) (Regnault REF)
-certainly have measured and applied color-dependent corrections to
-measured magnitudes that vary based on location in the focal plane.}.
-To meet the SRD requirements, particularly when considering the
-possibility of having $>1\%$ variations in the filter bandpass across the
-focal plane and the strong effects of water band absorption in the $y$
-band, we must measure and correct for many more wavelength-dependent
-effects. As these wavelength-dependent effects have different
-characteristics than the gray-scale sensitivity variations, this
-naturally leads us to more explicitly separate the {\it shape} and {\it
-normalization} of the bandpass, through separate calibration and
-correction stages. 
-
-A third reason is that using a set of standards measured on a
-different (external) system ties the error in any internal photometric
-measurements to the error in the standard star measurements, which is
-especially problematic if there is a strong difference in bandpasses
-between the internal and external system or the spectral energy
-distributions of the science objects from the standard
-stars. Placing our photometric measurements on a standardized internal
-system, and then tying this internal system to an external flux scale,
-allows a clearer separation of these errors. 
-
-These reasons suggest that LSST must use a self-calibration method to
-tie multiple observations of many stars into a self-consistent
-photometric system, which includes wavelength-dependent effects. 
-
 \subsection{Why not use self-calibration alone?}
 
 One might also ask why all of the steps in the overview above
