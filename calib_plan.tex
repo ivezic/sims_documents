@@ -224,7 +224,7 @@ variations in the bandpass caused by the hardware system can be
 separated from variations in the bandpass caused by atmospheric
 throughput, and measured with different methods. 
 
-First, consider the variations in $S_b{sys}(\lambda,x,y,t)$, which
+First, consider the variations in $S_b^{sys}(\lambda,x,y,t)$, which
 vary on timescales of a day or more.  We can further divide and
 correct the measured counts for variations in
 $S_b^{sys}(\lambda,x,y,t)$, the throughput in the hardware system, as
@@ -249,7 +249,7 @@ also corrected for the wavelength-dependent effects in system
 throughput measured from the narrow band flats.
 
 Next, considering $S_b^{atm}(\lambda,alt,az,t)$, we can again
-separate the wavelength-dependent variations, which occur primarily over
+separate the wavelength-dependent variations, which occur over
 spatial scales larger than the field of view and several minute timescales, from the gray
 variations due to clouds, which occur over much smaller spatial and
 time scales. By using an auxiliary telescope equipped with a
@@ -359,7 +359,7 @@ center of the field of view or at the edge, the amount of sky
 background (or dome illumination) observed in the images varies.
 Creating an image where the background is `flat' across the image
 means that the counts from the astronomical objects have been altered.
-This is demonstrated in Figure~\ref{fig:flatissues} (CREATE
+This is demonstrated in Fig~\ref{fig:flatissues} (CREATE
 FIGURE). Thus, a further correction to the flat field - usually called
 an `illumination correction' - must be made, to remove the effects of
 stray and scattered light, ghosting, and the pixel scale variation
@@ -392,22 +392,51 @@ example, an uncorrected and unknown color term arising from a 2.5\%
 radial gradient in the wavelength of the filter would cause
 self-calibration to fail to converge to the 0.5\% photometric
 repeatability requirement with 2 years of simulated data. Another
-limitation is that the self-calibration cannot correct for any effects
-smaller than the PSF. Thus it is necessary to correct the photometric
+limitation is that the self-calibration cannot possibly correct for
+any effects smaller than the PSF, and perhaps cannot correct for
+effects on scales smaller than a few times the mean separation of
+calibration stars. Thus it is necessary to correct the photometric
 measurements as much as possible before self-calibration using the
 white-light (illumination-corrected) flatfields, the narrow band dome
 flats, and the atmospheric absorption model.
 
-Adding these corrections directly at the image level as much as possible (rather than as a
-series of zeropoint offsets) will also benefit photometric
-precision for extended objects. This is particularly true for the
-illumination correction. 
+Adding these corrections directly at the image level as much as
+possible (rather than as a series of zeropoint offsets) will also
+benefit photometric precision for extended objects. This is
+particularly true for the illumination correction.
 
 \section{Details of the calibration process}
 
+Equation~\ref{eqn:Fpupil2counts} 
+
+\begin{equation}
+\label{eqn:fullcounts}
+C_b(alt,az,x,y,t) = C \, \int_0^\infty {F_\nu(\lambda,t)
+  \S_b^{atm}(\lambda,alt,az,t) \, S_b^{sys}(\lambda,x,y,t) \lambda^{-1}d\lambda}.
+\end{equation}
+
+\begin{equation}
+\label{PhiDef}
+   \phi_b(\lambda,alt,az,x,y,t) = {\lambda^{-1}
+     S^{atm}(\lambda,alt,az,t) S_b^{sys}(\lambda,x,y,t) \over
+     \int_0^\infty {\lambda^{-1} S^{atm}(\lambda,alt,az,t) S_b^{sys}(\lambda,x,y,t) d\lambda}}.
+\end{equation}
+By definition, $\int_0^\infty {\phi_b(\lambda) d\lambda}=1$.
+
+
+
 \subsection{Measurement of system transmission}
 
-\subsubsection{Flat Field}
+The hardware (system) transmission, $S_b^{sys}(\lambda,x,y,t)$, is
+measured through the white-light flat fields and the narrow band flat
+fields. These flat fields must be corrected for stray and scattered
+light as well as variations in pixel scale using an illumination
+correction. This section describes how these measurements are obtained
+and applied.
+
+\subsubsection{White-light Flat Field}
+
+The white-light flat field is obtained in a similar manner as typical 
 
 The generation of a flat field is necessary to correct pixel-to-pixel
 variations in the detector sensitivity, 
@@ -425,7 +454,7 @@ normalization on scale of distance-between-stars (if rapidly varying)
 
 then must correct flat field for night-sky illumination pattern
 
-\subsubsection{Stubbsometer}
+\subsubsection{Narrow band Flat Field}
 varies across field of view (example: measuring change in shape of
 bandpass towards edges)
 timescale of measurement ~ 1 month
@@ -464,6 +493,220 @@ works with bright main sequence and white dwarf stars (stars with
 well-known colors and SEDS which can be modeled) to generate zeropoint
 corrections for each patch (patch size ~ 1 CCD) which are then applied
 to other stars within that patch 
+
+In addition to providing a compact description for in-band flux (see Eq.~\ref{eqn:Finband} 
+below), $\phi_b(\lambda)$ conveniently separates the
+shape of the response function from its normalization, a separation
+that maps well onto the baseline calibration strategy.  The shape of 
+the response functions will be determined by direct measurements
+using auxiliary instrumentation, while the normalization (also known
+as `gray' zeropoint calibration) will be determined self-consistently
+using the main survey data for non-variable main-sequence stars. 
+
+For given $S^{atm}(\lambda)$ and $S_b^{sys}(\lambda)$, the in-band flux can be 
+defined as 
+\begin{equation}
+\label{eqn:Finband}
+                          F_b = \int_0^\infty {F_\nu(\lambda) \phi_b(\lambda) d\lambda}.
+\end{equation}
+The normalization of $F_b$ corresponds to the top of the atmosphere,
+but of course the atmosphere affects the wavelength dependence (or shape) of 
+$\phi_b(\lambda)$. Note that gray effects do not change $F_b$, due to the 
+definition of $\phi_b(\lambda)$ as the normalized system response.  For
+convenience, we define corresponding magnitude as 
+\begin{equation}
+\label{eqn:maginband}
+                    m_b = -2.5\log_{10}(F_b / F_{AB}),
+\end{equation}
+with the flux normalization $F_{AB} = 3631$ Jy (1 Jansky = 10$^{-26}$ W Hz$^{-1}$ m$^{-2}$ = 
+10$^{-23}$ erg cm$^{-2}$s$^{-1}$ Hz$^{-1}$). 
+
+
+Even for perfectly calibrated data, and for perfectly non-variable 
+stars, $F_b$ will vary between different observations since in general 
+$\phi_b(\lambda)$ will vary due to changing atmospheric conditions  
+(and perhaps due to hardware aging or changes in the instrumental setup). 
+To correct $F_b$ for changes in $\phi_b(\lambda)$, both the shape of the source
+SED, $F_\nu(\lambda)$, and $\phi_b(\lambda)$ must be known. 
+For example, a source with a flat SED, $F_\nu(\lambda)=F_o$, would 
+have $F_b = F_o$ regardless of the wavelength dependence of $\phi_b(\lambda)$, 
+but a power-law SED with more flux in the blue than the red results in a larger
+$F_b$ when $\phi_b(\lambda)$ also has a higher response in the blue.
+
+The aim of photometric calibration is to calibrate the counts $C_b(alt,az,x,y)$ measured in each observation 
+to the corresponding $F_b$, and to provide a measurement of $\phi_b(\lambda)$ for that particular observation. 
+Such pairs of ($F_b$,$\phi_b(\lambda)$) will represent the main photometric products --- the 
+survey will collect $\sim$ 10$^{13}$ such pairs over a ten year period: one pair for each observation 
+($\sim$1000) of each source ($\sim10^{10}$). 
+
+To separate the true observed values (corresponding to the true number of photons delivered to the 
+focal plane) from the measured (reported) values, the true observed values will be indexed $obs$, and 
+their measured (reported) values will be indexed $meas$. In general,  the reported $F_b^{meas}$ will
+not be identical to $F_b^{obs}$ because $\phi_b^{meas}(\lambda)$ will not be identical
+to $\phi_b^{obs}(\lambda)$ due to measurement errors, and because the gray zeropoint calibration 
+(the product of self-calibration pipeline) will not be perfect. 
+
+%%%%%%%%%%%%%%
+
+In a small patch over which the photometric zeropoint can be assumed
+constant (roughly one CCD, though this assumption of constancy can
+be relaxed), the calibration problem reduces to 
+determining a zeropoint for each observation, $Z^{'}$, such that 
+\begin{equation}
+\label{eqn:mobs}
+                    m_b^{obs} = Z^{'}_b -2.5\log_{10}(C_b) 
+\end{equation}
+where $C_b$ is the counts extracted from the image of a particular source
+(note that this $C_b$ is not necessarily equal to the ``true'' counts given by
+eq.~\ref{eqn:Fpupil2counts}. That is, a model for extracted counts will also
+include various extraction errors, e.g. due to imperfect aperture correction). 
+
+This zeropoint $Z^{'}$ depends on the source
+spectral energy distribution as well as the system transmissivity, thus as written above
+combines the gray-scale normalization of $S_b(\lambda)$ with the shape of this response function. 
+However, as described at the start of this section, these two aspects of the 
+zeropoint can be separated as 
+\begin{eqnarray}
+\label{eqn:stdmag}
+     m_b^{obs} & \equiv & -2.5\log_{10}\left({F_b^{obs} \over F_{AB}}\right) \\
+      & = &-2.5 \log_{10}\left( {\int_0^\infty {F_\nu(\lambda) \phi_b(\lambda)^{obs} d\lambda} \over F_{AB}} \right)  \\
+       &= & -2.5 \log_{10} \left( {\int_0^\infty {F_\nu(\lambda) \phi_b(\lambda)^{obs} d\lambda} \over
+        \int_0^\infty {F_\nu(\lambda) \phi_b(\lambda)^{std} d\lambda}} \right) 
+         \left( \int_0^\infty {F_\nu(\lambda) \phi_b(\lambda)^{std} d\lambda} \over F_{AB}  \right) \\
+ %        & = & -\Delta m_b^{obs} - 2.5 log_{10} \left( { \int_0^\infty {F_\nu(\lambda) \phi_b(\lambda)^{std} d\lambda} \over F_{AB} } \right) \\
+  %       & = & -\Delta m_b^{obs} + Z_b^{obs} - 2.5\log_{10}(C_b^{obs})
+         & = & -\Delta m_b^{obs} + m_b^{std} 
+\end{eqnarray}
+This $\Delta m_b^{obs}$ is the correction between the ``raw'' measurement of $F_b^{obs}$ 
+in a particular $\phi(\lambda)^{obs}$ to a ``standardized'' $F_b^{std}$ where the system response
+has been renormalized to a common $\phi_b^{std}$, a fixed pre-defined
+standard system response (which can be defined as an 
+appropriately weighted average of $\phi_b^{meas}$ obtained
+during the commissioning period). 
+
+To further clarify, here $\phi_b^{obs}(\lambda)$ stands for the {\bf true} 
+$\phi_b$ corresponding to that particular observation. When correcting
+observed counts to a common bandpass system, only the {\bf measured} 
+value of this function, $\phi_b^{meas}(\lambda)$, can be used. Therefore,
+to distinguish this case explicitly 
+\begin{equation}
+\label{Eq:dmCorrMeas}
+  \Delta m_b^{meas} = 
+ 2.5\,\log\left({\int_0^\infty F_\nu(\lambda) \phi_b^{meas}(\lambda)
+ d\lambda \over \int_0^\infty F_\nu(\lambda) 
+\phi_b^{std}(\lambda) d\lambda} \right). 
+\end{equation}
+{\it With this correction, the measured counts can be ``placed'' on a standardized flux 
+scale and the calibration equation becomes} 
+\begin{equation}
+\label{eqn:mmstd}
+                     m_b^{std} = m_b^{meas} + \Delta m_b^{meas}, 
+\end{equation}
+with
+\begin{equation}
+\label{eqn:mmeas}
+                       m_b^{meas} = Z^{meas}_b  -2.5\log_{10}(C_b). 
+\end{equation}
+Now $Z_b$ depends only on the gray-scale extinction and system response, while the dependence 
+of  counts on the {\it shape} of the bandpass has been taken care of with $\Delta m_b$.
+In the limit when $\Delta m_b$ is perfectly known, and $Z_b$ is determined perfectly, 
+$m_b^{std}$ for non-variable sources will be constant (apart from random measurement
+errors, that is, in a systematic sense). 
+
+The $\Delta m_b^{meas}$ correction can be computed only if $F_\nu(\lambda)$ is
+known (note that it is only the {\it shape} of $F_\nu(\lambda)$ that 
+is important, the normalization is arbitrary). This is the main
+reason to select main-sequence stars for self-calibration (because
+their spectral energy distribution can be estimated with sufficient
+accuracy from their broad-band colors). Nevertheless, even for a
+perfectly known $F_\nu(\lambda)$, there will always be an 
+error associated with $\Delta m_b$ because the measured value
+of $\phi_b^{obs}(\lambda)$ (= $\phi_b^{meas}(\lambda)$) is not 
+equal to $\phi_b^{obs}(\lambda)$.  Because $\Delta m_b^{meas}$
+is not equal to the true $\Delta m_b^{obs}$, there will always be
+a small, but irreducible, calibration error because generally the stellar
+energy distributions are not flat (a detailed study of these errors was 
+done by Lynne). 
+
+For simplicity, after this point we don't retain explicit $meas$ vs. $obs$ indices for 
+$\Delta m_b$; it is implied that in generating simulated counts one 
+would use $\Delta m_b^{obs}$ computed using $\phi_b^{obs}(\lambda)$, 
+while in the self-calibration pipeline one would use $\Delta m_b^{meas}$ 
+computed using  $\phi_b^{meas}(\lambda)$. Hereafter, $\Delta m_b$ refers 
+to $\Delta m_b^{meas}$. 
+
+This correction to the measured magnitudes of each star is the first step of the 
+calibration process, facilitated by the auxiliary telescope and flat-field measurements,
+and is accomplished by applying a lookup 
+table of $\Delta m_b$ values for a set of stellar spectral energy distributions and
+a given $\phi_b^{meas}(\lambda)$. Each self-calibration star can be matched against
+its most-likely stellar spectral energy distribution using (approximately calibrated) colors, and the appropriate
+$\Delta m_b$ applied. For each star indexed by $i$ and each calibration patch (with its
+own $\phi_b^{meas}(\lambda)$) indexed by $j$, we then have (c.f. eqs~\ref{eqn:mmstd} and \ref{eqn:mmeas}). 
+\begin{equation}
+\label{Eq:obsMag}
+          (m_b^{std})_{ij} =  (m_b^{meas})_{ij} + (\Delta m_b)_{ij},
+\end{equation}
+and
+\begin{equation}
+\label{Eq:rawMag}
+       (m_b^{meas})_{ij} =  (Z_o)_j  -2.5\log[(C_b)_{ij}], 
+\end{equation}
+where $(Z_o)_j$ is an approximate, and essentially arbitrary, zeropoint adopted
+for calibration patch $j$. 
+
+The zeropoint for each calibration patch will be determined by requiring 
+that all the observations of a given star, presumably observed on 
+many patches, are consistent. It is assumed that only non-variable 
+main-sequence stars will be pre-selected for self-calibration. This selection
+will be based on approximately calibrated data (say, a few percent),
+which will suffice in this context.  The self-calibration procedure
+is supposed to deliver data calibrated to specifications listed in
+the Science Requirements Document ($\sim$0.01 mag rms scatter of the
+internal photometric zero-point error across the sky).
+
+The difference between this measured standardized magnitude, $(m_b^{std})_{ij}$, 
+(in principle, on an arbitrary scale, but for pedagogical reasons it can be thought 
+of as approximately calibrated magnitude via appropriate selection of $Z_o$) and 
+the best estimate of the true magnitude of a star, $(m_b^{best})_{i}$, is assumed the same for all 
+calibration stars on a calibration patch, 
+\begin{equation}
+\label{Eq:ZP}
+   (m_b^{std})_{ij} = (m_b^{best})_{i} + (\Delta Z)_j
+\end{equation}
+
+This is the basic set of equations that LSST self-calibration 
+will solve to obtain $(m_b^{best})_{i}$ and $(\Delta Z)_j$
+(approximately, $i=1..10^8$ and $j=1..10^8$). Of course, not 
+all stars will be observed on all calibration patches, so there 
+will be only about 10$^{10}$ non-zero values of $(m_b^{std})_{ij}$
+(per band). 
+With the known values of $(\Delta Z)_j$, all measurements from that 
+patch can be re-calibrated, analyzed for systematics in 
+$[(m_b^{std})_{ij} - (m_b^{best})_{i}]$ and $[(m_b^{obs})_{ij} - (m_b^{best})_{i}]$ 
+residuals (e.g., as a function
+of observation time, position on the focal plane, airmass, seeing,
+stellar color, brightness, seeing, etc.), and self-calibration
+step repeated if necessary, with corrections for systematics incorporated 
+in the next-iteration values for $(m_b^{std})_{ij}$. 
+Applying these $Z_j$ corrections to the measured
+magnitudes of each star is the second step in 
+the calibration process and is the step facilitated by the self-calibration process. 
+
+The self-calibration step can be successful only if patches
+overlap on the sky so that the same star is observed on 
+multiple patches. It is good to reiterate that $(m_b^{best})_{i}$ and 
+$(\Delta Z)_j$ are constrained only up to an arbitrary 
+additive constant. The calibration in different bands $b$
+can be tied together using sources with known shape of their 
+spectral energy distribution (e.g. from spectrophotometric
+observations, but also using models, and populations instead
+of single sources). The {\it single} remaining flux normalization
+constant can be tied to any available flux standard (of course,
+a number of such standards could be used to test for spatial
+uniformity obtained by the self-calibration step, and for 
+universality of assumptions used to tie different bands together).
+
 
 
 
@@ -504,6 +747,19 @@ ugriz
 presumably the text motivates these, but this provides a place to
 gather them, maybe add some more comments
 
+
+\section{Potential improvements to photometric accuracy}
+
+For scientists interested in higher precision photometry for objects
+with known SEDs, it is possible to improve the procedure above, by
+using the measured $S_b$ and their known SED to reconstruct the
+expected counts. (even possibly redoing the flat field??)
+\begin{equation}
+F_v(\lambda) = F_o \, f_v(\lambda)
+\end{equation}
+where $f_v(\lambda_b)=1$ at some reference wavelength, $\lambda_b$,
+chosen to be the effective wavelength of the standard bandpass
+$\phi_b^{std}$.  
 
 %\section{Comparison of standard calibration and SDSS ubercal (as
 % approximation for this method)}
