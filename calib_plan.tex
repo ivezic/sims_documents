@@ -105,8 +105,8 @@ using the best-available prior calibrated observations.
 \section{Overview of the photometric calibration process}
 
 The photometric requirements described above are a factor of 2 better
-than those achieved by previous wide-field surveys operating on
-primarily photometric nights. To reach this level of precision using
+than those previously achieved by wide-field surveys operating on
+primarily photometric nights. To reach the SRD level of precision using
 observations taken under a wide variety of conditions (including
 non-photometric nights) requires a new approach. This is possible by
 gathering additional data on the wavelength dependence of the
@@ -122,31 +122,23 @@ exposure: this standard star network is thus necesssarily defined as the
 non-variable, isolated, bright stars observed within LSST itself. In
 addition, when considering the possibility of $>1\%$ variations in the
 filter bandpasses across the field of view and/or the strong effects
-of water band absorption in the $y$ band (see
-Fig~\ref{fig:colorexamples} CREATE FIGURE), it becomes clear that LSST
+of water band absorption in the $y$ band, it becomes clear that LSST
 must measure and correct for wavelength-dependent effects to a much
 higher level than previous surveys. This section describes and motivates our
 photometric calibration approach. 
-
-The end goal of photometric calibration is to be able to translate
-`counts measured in a particular image' into `photons above the
-atmosphere', removing the signatures introduced by the atmosphere, the
-telescope, the detector, and (potentially) data processing. So, let us
-first consider how the light from a source is translated into
-counts. 
 
 Given $F_\nu(\lambda)$, the specific flux of an object {\it at
 the top} of the atmosphere, at a position described by ($alt$,$az$),
 the flux transmitted through the atmosphere to the telescope pupil is
 \begin{equation}
 \label{eqn:Fpupil}
-                      F_\nu^{pupil}(\lambda,alt,az,t) = F_\nu(\lambda) \, S^{atm}(\lambda,alt,az,t),
+   F_\nu^{pupil}(\lambda,alt,az,t) = F_\nu(\lambda) \, S^{atm}(\lambda,alt,az,t),
 \end{equation}
 where $S^{atm}(\lambda,alt,az)$ is the (dimensionless) probability that a photon of 
 wavelength $\lambda$ makes it through the atmosphere,
 \begin{equation}
 \label{eqn:atmTau}
-                        S^{atm}(\lambda,alt,az,t)   = {\rm e}^{-\tau^{atm}(\lambda,alt,az,t)}.
+   S^{atm}(\lambda,alt,az,t)   = {\rm e}^{-\tau^{atm}(\lambda,alt,az,t)}.
 \end{equation}
 Here $\tau^{atm}(\lambda,alt,az)$ is the optical depth of the
 atmospheric layer at wavelength $\lambda$ towards the position
@@ -160,11 +152,7 @@ Clouds represent an additive gray (non-wavelength dependent)
 contribution to $\tau^{atm}$ which can introduce a strong variation of
 $\tau^{atm}$ on much smaller angular scales and short timescales (on
 the order of 2-10\% of the total extinction at $1^{\circ}$ scales,
-variable within minutes) (Ivezic2007). Under ``photometric''
-atmospheric conditions, most of $\tau^{atm}$ variation is a smooth
-function of $alt$, or airmass, however LSST will need to observe under
-a wide variety of non-photometric conditions in order to achieve its
-survey goals.
+variable within minutes) (Ivezic2007). 
 
 Note that while both $F_\nu(\lambda,t)$ and $\tau^{atm}(\lambda,alt,az,t)$ 
 could vary more quickly than the standard LSST exposure time of 15
@@ -193,50 +181,104 @@ exposure time, $g$ is the gain of the readout electronics (number of
 photoelectrons per ADU count, a number greater than one), and $h$ is
 the Planck constant. The system response function,
 $S_b^{sys}(\lambda,x,y)$, includes the (multiplicative) effects of the
-mirror reflectance, transmission. In general, the wavelength-dependent
-variations in $S_b^{sys}$ change slowly and over spatial scales much
-larger than the PSF; over periods of months, the mirror reflectance
-and filter transmission will degrade as their coatings
-age. $S_b^{atm}$ is likely to also show a wavelength-dependent spatial
-variation ($x$, $y$), due to irregularities in the filter material and
-variations in the incident angle of incoming light, which would vary
-on a similar time and spatial scale (Regnault ref). Spatial variations
-in $S_b^{sys}$ that are independent of wavelength can occur more
-rapidly, on the timescale of a day, and on a pixel level spatial
-scale. Dust on the dewar window or filter or detector sensitivity
-variations on the pixel-to-pixel scale can be treated as
-wavelength-independent. 
+mirror reflectance, optics transmission and detector sensitivity. In
+general, the wavelength-dependent variations in $S_b^{sys}$ change
+slowly and over spatial scales much larger than the PSF; over periods
+of months, the mirror reflectance and filter transmission will degrade
+as their coatings age. $S_b^{atm}$ is likely to also show a
+wavelength-dependent spatial variation ($x$, $y$), due to
+irregularities in the filter material and variations in the incident
+angle of incoming light, which would vary on a similar time and
+spatial scale (Regnault REF). Spatial variations in $S_b^{sys}$ that
+are independent of wavelength can occur more rapidly, on the timescale
+of a day, and on a pixel level spatial scale. Dust on the dewar window
+or filter or detector sensitivity variations on the pixel-to-pixel
+scale can be treated as wavelength-independent.
 %A more rapid wavelength-dependent variation in
 %detector sensitivity (especially at the very red wavelengths in the
 %$y$ band) results from variations in the temperature of the detector,
 %but with little or no spatial variation.
 
-From equation~\ref{eqn:Fpupil2counts} and the paragraphs above, we can see
-that the generation of counts $C_b(alt,az,x,y,t)$ from photons is
+From equation~\ref{eqn:Fpupil2counts} and the paragraphs above, we can
+see that the generation of counts $C_b(alt,az,x,y,t)$ from photons is
 imprinted with many different kinds of effects, which have different
 scales of variability over time ($t$), spatial scale ($alt$, $az$ or
-$x$, $y$), and wavelength ($\lambda$), suggesting that it is possible
-and even beneficial to separate these effects for calibration
-purposes. Wavelength-dependent effects can be considered variations in
-the {\it shape} of the bandpass; gray-scale effects can be considered
-variations in the {\it normalization} of the bandpass. Furthermore,
-variations in the bandpass caused by the hardware system can be
-separated from variations in the bandpass caused by atmospheric
-throughput, and measured with different methods. 
+$x$, $y$), and wavelength ($\lambda$), suggesting that it is
+beneficial to separate these effects for calibration
+purposes. This may be
+seen more easily by introducing $\phi_b(\lambda,alt,az,x,y,t)$, the normalized system
+response in a filter $b$ for a particular observation,
+\begin{equation}
+\label{eqn:PhiDef}
+   \phi_b(\lambda,alt,az,x,y,t) = {
+     {S^{atm}(\lambda,alt,az,t) S_b^{sys}(\lambda,x,y,t) \slash
+       \lambda} \over
+     \int_0^\infty { {S^{atm}(\lambda,alt,az,t) 
+         S_b^{sys}(\lambda,x,y,t) \slash \lambda} \,d\lambda}}.
+\end{equation}
+By definition, $\int_0^\infty {\phi_b(\lambda) d\lambda}=1$.  From
+Equations~\ref{eqn:Fpupil} and~\ref{eqn:Fpupil2counts}, we can then
+recast the counts measured as
+\begin{eqnarray}
+\label{eqn:fullcounts}
+C_b(alt,az,x,y,t) & = & C \, \int_0^\infty {F_\nu(\lambda,t)
+  S_b^{atm}(\lambda,alt,az,t) \, S_b^{sys}(\lambda,x,y,t)
+  \lambda^{-1}d\lambda} \\
+&= & C'(alt,az,x,y,t) \,
+     \int_0^\infty {F_\nu(\lambda,t)\phi_b(\lambda,alt,az,x,y,t)
+       d\lambda} 
+\end{eqnarray}
+where $C'(alt,az,x,y,t)$ is a gray normalization value that depends
+on the total system throughput. We can also introduce
+$\phi_b^{std}(\lambda)$, a `standardized' bandpass, so
+\begin{eqnarray}
+C_b(alt,az,x,y,t) & = & C'(alt,az,x,y,t)
+\left( {\int_0^\infty {F_\nu(\lambda,t)\phi_b^{obs}(\lambda,alt,az,x,y,t) d\lambda} \over 
+\int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda) d\lambda}} 
+\right) \int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda}
+\nonumber \\ 
+& = & C'(alt,az,x,y,t) \, K'(F_\nu(\lambda,t),
+\phi_b^{obs}(\lambda,alt,az,x,y,t) 
+\int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda} 
+\end{eqnarray}
+where $K'(F_\nu, \phi_b^{obs})$ is a wavelength and source SED
+dependent value that depends on the shape of the system throughput,
+but not on its normalization. The values 
+\begin{equation}
+\label{eqn:defnatmags}
+m_{nat} = -2.5 log_{10} (\int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda})
+\end{equation}
+represent `natural magnitudes', which can be directly compared from
+one observation to another although they are not tied to an external
+physical scale. The wavelength-dependent effects tied into
+$K'(F_\nu(\lambda,t), \phi_b^{obs}(\lambda,alt,az,x,y,t))$ can be
+considered variations in the {\it shape} of the bandpass; the
+gray-scale effects tied into $C'(alt,az,x,y,t)$ are variations in the
+{\it normalization} of the bandpass.  Furthermore, variations in the
+normalization of the bandpass caused by the {\it hardware} system can be separated from the
+variations in the bandpass caused by the {\it atmosphere}, and
+measured with different methods, splitting
+$C'(alt,az,x,y,t)$ into $C''(alt,az,t)$ and $C''(x,y,t)$ portions. It
+is more difficult for $K'(F_\nu, \phi_b^{obs})$, as the atmosphere and
+hardware effects on the total counts are not truly independent,
+however the underlying wavelength-dependent variations in $S_b^{sys}$
+and $S^{atm}$ {\it are} independent and can be measured separately and
+only applied to the measured counts as a combined correction. 
 
-First, consider the variations in $S_b^{sys}(\lambda,x,y,t)$, which
-vary on timescales of a day or more.  We can further divide and
-correct the measured counts for variations in
-$S_b^{sys}(\lambda,x,y,t)$, the throughput in the hardware system, as
-follows. Using a dome-screen system that is capable of producing light
-at a range of individual wavelengths (the ``stubbsometer''), we can
-measure the sensitivity of the mirror/lens/filter/detector system as a
-function of $x$,$y$ at each wavelength, producing a series of `narrow
-band flat fields'. While it would be possible to use these as a
-standard flat field (after choosing a particular method to combine the
-measurements at different wavelengths), it is not possible to generate
-all the necessary narrow band flats each night; scanning through all 6
-filters at 1nm intervals requires tens of hours. However, since the
+Let us first consider all variations in $S_b^{sys}(\lambda,x,y,t)$, as
+these vary on timescales quite different from
+$S^{atm}(\lambda,alt,az,t)$.  We can further divide and correct the
+measured counts for variations in $S_b^{sys}(\lambda,x,y,t)$, the
+throughput in the hardware system, as follows. Using a dome-screen
+system that is capable of producing light at a range of individual
+wavelengths (the ``stubbsometer''), we can measure the sensitivity of
+the mirror/lens/filter/detector system as a function of $x$,$y$ at
+each wavelength, producing a series of `narrow band flat
+fields'. While it would be possible to use these as a standard flat
+field (after choosing a particular method to combine the measurements
+at different wavelengths), it is not possible to generate all the
+necessary narrow band flats each night; scanning through all 6 filters
+at 1nm intervals requires tens of hours. However, since the
 wavelength-dependent effects are expected to vary slowly over time, we
 can instead plan to only produce narrow band flat fields every 30
 days. Using standard white-light flat fields for each filter acquired
@@ -253,10 +295,9 @@ separate the wavelength-dependent variations, which occur over
 spatial scales larger than the field of view and several minute timescales, from the gray
 variations due to clouds, which occur over much smaller spatial and
 time scales. By using an auxiliary telescope equipped with a
-spectroscope to examine bright stars with known spectral energy
-distributions (primarily white dwarfs due to their lack of spectral
-lines, stars that would be near but not necessarily in the field of
-view of the main telescope), we can measure the absorption lines in
+spectroscope to examine bright stars near the main telescope's field
+of view with known spectral energy
+distributions, we can measure the absorption lines in
 the atmosphere every 5--10 minutes. These observations are used as
 constraints for MODTRAN atmospheric models, generating simpler
 representations of the atmospheric throughput which can be
@@ -272,7 +313,7 @@ between these observations, we can determine the extinction due to
 clouds within each chip, then apply this extinction to all other
 photometric measurements from the same observation. 
 
-To summarize the LSST photometric calibration: pixel-to-pixel gray sensitivity variations are corrected
+To summarize: pixel-to-pixel gray sensitivity variations are corrected
 using white-light flat fields, wavelength-dependent
 variations of the hardware system across the field of view are
 corrected with narrow band flats generated by the ``stubbsometer''
@@ -282,27 +323,28 @@ and gray variations on the scale of a CCD due to clouds are corrected
 using self-calibration. Each of these steps are necessary to achieve
 0.5\% precision in repeat photometry and 1\% precision in photometric
 stability across the sky (requirements \ref{repeatability_req} and
-\ref{uniformity_req} ). It is worth noting that the procedure
-described above generates `natural magnitudes' which could be thought
-of as 
+\ref{uniformity_req} ). This can be related to the natural magnitudes
+(Eqn~\ref{eqn:defnatmags}) ({\it roughly}) as 
 \begin{eqnarray}
 \label{eqn:natmags}
-m^{nat} & = &-2.5 \, log_{10} \, (C_{b, raw}(alt,az,x,y,t))  \\ 
- & & + \delta z_{ff}(x,y,t) + \delta k_{stubbsometer}(\lambda,x,y,t)  \nonumber \\  
- & &+ \delta z_{selfcalib}(alt,az,t)  + \delta
- k_{MODTRAN}(\lambda,alt,az,t)  \nonumber
+m_{nat} & = &-2.5 \, log_{10} \, (C_{b, raw}(alt,az,x,y,t))  \\ 
+ & & +\, \delta z_{ff}(x,y,t) + \delta k_{ff}(x,y,SED,t)  \nonumber \\  
+ & &+\, \delta z_{selfcalib}(alt,az,t)  + \delta k_{atm}(alt,az,SED,t)  \nonumber
 \end{eqnarray}
-where the counts from the object in the image are translated to an internally consistent magnitude
-through corrections from the flat field, stubbsometer, atmospheric models and
-self-calibration procedures. The wavelength-dependent corrections,
-$\delta k$, are equivalent to correcting the {\it shape} of the
-bandpass in each filter to a `standard' bandpass (which will be
-defined during commisioning), while the wavelength independent
-corrections, $\delta z$, are equivalent to correcting the {\it
-normalization} of the bandpass to a common standard.  These `natural
-magnitudes' are not, however, tied to an external physical scale, nor
-are measurements in one filter tied to measurements in another filter
-(requirements \ref{color_req} and \ref{abs_req}).  
+where the raw counts from the object in the image are translated to an
+internally consistent magnitude through corrections from the flat
+field, stubbsometer, atmospheric models and self-calibration
+procedures. The wavelength-dependent corrections, $\delta k$, are
+equivalent to correcting the {\it shape} of the bandpass in each
+filter to a `standard' bandpass (which will be defined during
+commisioning) and their values (for a particular object) 
+depend on the spectral energy distribution of that object, while the
+wavelength independent corrections, $\delta z$, are equivalent to
+correcting the {\it normalization} of the bandpass to a common
+standard.  The natural magnitudes are not, however, tied to an
+external physical scale, nor are measurements in one filter tied to
+measurements in another filter (requirements \ref{color_req} and
+\ref{abs_req}).
 
 To fulfill these last two requirements a further set of measurements
 are needed. In all filters, a set of objects with a well-known
@@ -312,7 +354,7 @@ observed and calibrated, in individual filters, as above. The prior
 knowledge of each SED is combined with the `standard bandpass' shape
 to generate synthetic color photometry. These synthetic colors are
 then compared with the calibrated natural magnitudes from
-Eqn~\ref{eqn:natmags} to calculate $\Delta_{b-r}$, the corrections
+Eqn~\ref{eqn:defnatmags} to calculate $\Delta_{b-r}$, the corrections
 needed to tie measurements in each filter together (referenced to $r$
 band).  At this point, only one final measurement is necessary to tie
 the entire system to an external physical scale: an $r$ band LSST
@@ -359,8 +401,7 @@ center of the field of view or at the edge, the amount of sky
 background (or dome illumination) observed in the images varies.
 Creating an image where the background is `flat' across the image
 means that the counts from the astronomical objects have been altered.
-This is demonstrated in Fig~\ref{fig:flatissues} (CREATE
-FIGURE). Thus, a further correction to the flat field - usually called
+Thus, a further correction to the flat field - usually called
 an `illumination correction' - must be made, to remove the effects of
 stray and scattered light, ghosting, and the pixel scale variation
 from the flat field. This illumination correction will be generated by
@@ -384,7 +425,7 @@ are necessary, as in theory the self-calibration could account for
 these corrections in addition to the effects of clouds. In practice,
 however, the minimization between observed and predicted magnitudes
 that occurs during self-calibration has limitations, which will be
-further detailed in section~\ref{selfcalib}.  In particular, the
+further detailed in section~\ref{sec:selfcalib}.  In particular, the
 minimization algorithm can fail to converge to the required level of
 precision if the input magnitudes are sufficiently far from the model
 predicted values.  Color terms in particular can be problematic. For
@@ -393,7 +434,7 @@ radial gradient in the wavelength of the filter would cause
 self-calibration to fail to converge to the 0.5\% photometric
 repeatability requirement with 2 years of simulated data. Another
 limitation is that the self-calibration cannot possibly correct for
-any effects smaller than the PSF, and perhaps cannot correct for
+any effects smaller than the PSF, not will it correct for
 effects on scales smaller than a few times the mean separation of
 calibration stars. Thus it is necessary to correct the photometric
 measurements as much as possible before self-calibration using the
@@ -407,273 +448,343 @@ particularly true for the illumination correction.
 
 \section{Details of the calibration process}
 
-Equation~\ref{eqn:Fpupil2counts} 
+The next sections describe further details of the calibration process
+and how each correction is measured, calculated and applied. 
 
-\begin{equation}
-\label{eqn:fullcounts}
-C_b(alt,az,x,y,t) = C \, \int_0^\infty {F_\nu(\lambda,t)
-  \S_b^{atm}(\lambda,alt,az,t) \, S_b^{sys}(\lambda,x,y,t) \lambda^{-1}d\lambda}.
-\end{equation}
+\subsection{Measurement of the system transmission}
 
-\begin{equation}
-\label{PhiDef}
-   \phi_b(\lambda,alt,az,x,y,t) = {\lambda^{-1}
-     S^{atm}(\lambda,alt,az,t) S_b^{sys}(\lambda,x,y,t) \over
-     \int_0^\infty {\lambda^{-1} S^{atm}(\lambda,alt,az,t) S_b^{sys}(\lambda,x,y,t) d\lambda}}.
-\end{equation}
-By definition, $\int_0^\infty {\phi_b(\lambda) d\lambda}=1$.
+Variations in measured counts which results from changes in the hardware
+(system) transmission function, $S_b^{sys}(\lambda,x,y,t)$, are corrected
+through a flat field created from a combination of white-light flat
+fields, narrow band flat fields, and an illumination correction.  This
+section describes how these measurements are obtained and applied.
 
+\subsubsection{Narrow band Flat Fields}
+\label{sec:narrowband}
 
+The narrow band flat fields are necessary to correct for variations in
+the system throughput as a function of wavelength across the focal
+plane. These variations are expected to change relatively slowly over
+time due to aging in the filter and mirror coatings, and so these
+narrow band flats will only be acquired on an approximately monthly
+basis as they can be very time-consuming at high wavelength resolution
+($\approx1$ nm).
 
-\subsection{Measurement of system transmission}
+An array of projectors mounted in the dome of the LSST enclosure will
+be illuminated with both broadband (e.g. quartz lamp) and tunable
+narrow band (essentially monochromatic) light sources.  Adjustment of
+the wavelength of the light source can be as fine as 1~nm. The
+projectors are designed to fill the LSST etendue with uniform
+illumination and also limit the extent of stray light emitted outside
+the design acceptance of the system. A set of precision diodes will be
+used to normalize the photon flux integrated during flat field
+exposures, thus allowing a precise comparison of the system response
+between different narrow band flats in the same filter, at different
+wavelengths.  These photodiodes, together with their read-out
+electronics, will be calibrated at the U.S. National Institute of
+Standards (NIST) to $\approx0.1\%$ relative accuracy across
+wavelengths from 450~nm to 950~nm. The response of these diodes varies
+smoothly across this range of wavelength and provides a well-behaved
+reference for determination of $S_b^{sys}(\lambda)$.  Further details
+of the narrow band flat field apparatus (the ``stubbsometer'') can be
+found in (LSST dome screen reference document REF).
 
-The hardware (system) transmission, $S_b^{sys}(\lambda,x,y,t)$, is
-measured through the white-light flat fields and the narrow band flat
-fields. These flat fields must be corrected for stray and scattered
-light as well as variations in pixel scale using an illumination
-correction. This section describes how these measurements are obtained
-and applied.
+In each filter, the set of narrow band flats taken at each wavelength
+form a data cube in ($x,y,\lambda$). Using the photodiode measurements
+of the light emitted at each wavelength, these can be collapsed to a
+single synthetic flat field image ($x,y$) by choosing a desired source
+spectral energy distribution (SED), then combining the individual narrow
+band images after applying an appropriate illumination correction and
+weighting by the photodiode measurements. The desired
+SED could be a single SED or could be a set of SEDS (for example, if
+data management chose to use the `night sky' SED to create the summed
+flat field from the narrow band flat fields, this would vary
+throughout the lunar cycle), but will be clearly defined during the
+commissioning period. The synthetic flat field, updated for nightly
+changes by the white light flat, will be used for flattening images.
+
+In addition, the narrow band flats must also be used to measure
+changes in the bandpass shape throughout the field of view. Before
+applying $\delta k(x,y,SED)$ corrections to the observed magnitudes,
+however, the wavelength-dependent effects of the atmosphere must also
+be considered, as the final effect on the observed magnitude is not
+independent. Thus, the narrow band flat fields will be combined using
+a series of standard model SEDS to generate
+$\delta k(x,y,alt,az,SED)$ corrections for each image after the atmospheric
+corrections described in Section~\ref{sec:auxtele} have been
+calculated and applied to the model SEDs. Thus there will be lookup
+tables created with $\delta k(x,y,alt,az,SED,t)$ as a function of
+color for each observation. These $\delta k$ correct the shape of the
+system bandpass response to a standardized value, chosen during
+commissioning.  Obviously, applying these corrections requires knowing
+the spectral energy distribution of the astronomical object, but with
+the many observations available at the time of data release, the color
+will be known (through iteration of the photometric calibration
+procedure) to $\approx 0.07$~magnitudes.
+
+CREATE FIGURE: data cube of narrow band flats, different input SEDS,
+$\delta k$ ouputs
 
 \subsubsection{White-light Flat Field}
 
-The white-light flat field is obtained in a similar manner as typical 
+The white light flat field is necessary to correct for night-to-night
+variations in the system throughput. These variations are expected to
+be gray, resulting from dust particles or other out-of-focus
+contaminants in the light path. The white light flat fields will be
+obtained with the same apparatus as the narrow band dome flats, but as
+the number of exposures required to characterize a filter is
+dramatically reduced (1 white light image instead of $~\approx900$
+narrow band images, multiplied by the number of exposures required to
+build a good combined image in each case) these white light flats can
+be obtained at the start and end of every night of observing.
 
-The generation of a flat field is necessary to correct pixel-to-pixel
-variations in the detector sensitivity, 
-corrects pixel-to-pixel variation
+The white light flat field is not directly applied to images; instead,
+changes in the white light flat from night to night are transferred to
+the synthetic flat field. A `master' white light flat will be obtained at the
+same time as the synthetic flat field, on each subsequent night the
+new white light flat will be divided by the `master' to create a
+`difference flat'. The synthetic flat field will be multiplied by the
+difference flat to update any small-scale gray variations in system
+response. 
 
-timescale of measurement 1 night
+The light generated by the quartz lamp must be relatively stable over
+the time interval between monthly narrow band flat measurements, to
+reduce changes in ghosting or color-dependent sensitivity variations
+in the white light flats.
+(yes, this should have an estimate of how stable it has to be .. this
+should come from how much ghosting might change with changes in the
+light from the quartz lamp \& have not calculated this)
 
-flat field created using dome screen + white light (not narrow band)
-
-assume this flat field is wavelength independent
-
-this is only method that can correct for variations in pixel-pixel
-level normalization $<$ PSF ever, or correct for variations in
-normalization on scale of distance-between-stars (if rapidly varying)
-
-then must correct flat field for night-sky illumination pattern
-
-\subsubsection{Narrow band Flat Field}
-varies across field of view (example: measuring change in shape of
-bandpass towards edges)
-timescale of measurement ~ 1 month
-
-so stubbsometer generations $\delta k$ terms but no image?? 
-(or no image that is generally applied?)
-Or do we take night sky color, generate stubbs-o-flat (1d) and then
-scale by white-light flats??
-
-so stubbsometer smooths white-light flat ??
+CREATE FIGURE: synthetic narrow band flat, two white light flats and then 'new'
+corrected synthetic narrow band flat?
 
 \subsubsection{Generating the illumination correction}
 
-\subsubsection{CCOB}
-(seems like this might make more sense ... generate illumination
-correction monthly or more and then apply to stubbsometer correction
-to white-light flat).
+Even with careful design, the illumination pattern from the dome
+projector system will not be uniform over spatial scales comparable to
+the size of the focal plane. Estimates by Photon Engineering,
+Inc. (Tucson, AZ) of the amount of ``stray'' light within the dome
+housing indicate that $\approx 1−2\%$ of the light that reaches the
+camera focal plane may not originate from within the LSST etendue.
+Furthermore, there will be light scattered within the camera dewar and
+$\approx 1-2\%$ of the light within the etendue will have undergone
+multiple reflections within the camera refractive optics (creating
+`ghost' images of the light from the dome screen). In addition,
+projection effects cause a variation in the pixel scale from the
+center to the outer edges of the field of view, so that the pixels
+subtending a larger area (the center of the field) gather more light
+from the dome screen. If these effects are not compensated for by
+multiplying the dome flat by an illlumination correction, the counts
+extracted from astronomical objects will be inaccurate by similar
+levels.
 
+CREATE FIGURE: illustrating these problems in a dome screen flat field
+and their effect on science image if uncorrected
 
-
-\subsection{Measurement of atmospheric transmission function}
-
-auxiliary telescope
-constant across field of view
-timescale of measurement ~ 5 minutes
-
-
-\subsection{Self-Calibration}
-\label{selfcalib}
-
-corrects for gray-scale variations larger than the PSF - primarily due to clouds,
-but could also correct for some remaining color dependent terms (like variation
-due to filter transmission varying from center to edge of field of view).
-
-works with bright main sequence and white dwarf stars (stars with
-well-known colors and SEDS which can be modeled) to generate zeropoint
-corrections for each patch (patch size ~ 1 CCD) which are then applied
-to other stars within that patch 
-
-In addition to providing a compact description for in-band flux (see Eq.~\ref{eqn:Finband} 
-below), $\phi_b(\lambda)$ conveniently separates the
-shape of the response function from its normalization, a separation
-that maps well onto the baseline calibration strategy.  The shape of 
-the response functions will be determined by direct measurements
-using auxiliary instrumentation, while the normalization (also known
-as `gray' zeropoint calibration) will be determined self-consistently
-using the main survey data for non-variable main-sequence stars. 
-
-For given $S^{atm}(\lambda)$ and $S_b^{sys}(\lambda)$, the in-band flux can be 
-defined as 
-\begin{equation}
-\label{eqn:Finband}
-                          F_b = \int_0^\infty {F_\nu(\lambda) \phi_b(\lambda) d\lambda}.
-\end{equation}
-The normalization of $F_b$ corresponds to the top of the atmosphere,
-but of course the atmosphere affects the wavelength dependence (or shape) of 
-$\phi_b(\lambda)$. Note that gray effects do not change $F_b$, due to the 
-definition of $\phi_b(\lambda)$ as the normalized system response.  For
-convenience, we define corresponding magnitude as 
-\begin{equation}
-\label{eqn:maginband}
-                    m_b = -2.5\log_{10}(F_b / F_{AB}),
-\end{equation}
-with the flux normalization $F_{AB} = 3631$ Jy (1 Jansky = 10$^{-26}$ W Hz$^{-1}$ m$^{-2}$ = 
-10$^{-23}$ erg cm$^{-2}$s$^{-1}$ Hz$^{-1}$). 
-
-
-Even for perfectly calibrated data, and for perfectly non-variable 
-stars, $F_b$ will vary between different observations since in general 
-$\phi_b(\lambda)$ will vary due to changing atmospheric conditions  
-(and perhaps due to hardware aging or changes in the instrumental setup). 
-To correct $F_b$ for changes in $\phi_b(\lambda)$, both the shape of the source
-SED, $F_\nu(\lambda)$, and $\phi_b(\lambda)$ must be known. 
-For example, a source with a flat SED, $F_\nu(\lambda)=F_o$, would 
-have $F_b = F_o$ regardless of the wavelength dependence of $\phi_b(\lambda)$, 
-but a power-law SED with more flux in the blue than the red results in a larger
-$F_b$ when $\phi_b(\lambda)$ also has a higher response in the blue.
-
-The aim of photometric calibration is to calibrate the counts $C_b(alt,az,x,y)$ measured in each observation 
-to the corresponding $F_b$, and to provide a measurement of $\phi_b(\lambda)$ for that particular observation. 
-Such pairs of ($F_b$,$\phi_b(\lambda)$) will represent the main photometric products --- the 
-survey will collect $\sim$ 10$^{13}$ such pairs over a ten year period: one pair for each observation 
-($\sim$1000) of each source ($\sim10^{10}$). 
-
-To separate the true observed values (corresponding to the true number of photons delivered to the 
-focal plane) from the measured (reported) values, the true observed values will be indexed $obs$, and 
-their measured (reported) values will be indexed $meas$. In general,  the reported $F_b^{meas}$ will
-not be identical to $F_b^{obs}$ because $\phi_b^{meas}(\lambda)$ will not be identical
-to $\phi_b^{obs}(\lambda)$ due to measurement errors, and because the gray zeropoint calibration 
-(the product of self-calibration pipeline) will not be perfect. 
-
-%%%%%%%%%%%%%%
-
-In a small patch over which the photometric zeropoint can be assumed
-constant (roughly one CCD, though this assumption of constancy can
-be relaxed), the calibration problem reduces to 
-determining a zeropoint for each observation, $Z^{'}$, such that 
-\begin{equation}
-\label{eqn:mobs}
-                    m_b^{obs} = Z^{'}_b -2.5\log_{10}(C_b) 
-\end{equation}
-where $C_b$ is the counts extracted from the image of a particular source
-(note that this $C_b$ is not necessarily equal to the ``true'' counts given by
-eq.~\ref{eqn:Fpupil2counts}. That is, a model for extracted counts will also
-include various extraction errors, e.g. due to imperfect aperture correction). 
-
-This zeropoint $Z^{'}$ depends on the source
-spectral energy distribution as well as the system transmissivity, thus as written above
-combines the gray-scale normalization of $S_b(\lambda)$ with the shape of this response function. 
-However, as described at the start of this section, these two aspects of the 
-zeropoint can be separated as 
+The illumination correction (one per filter) will be generated
+whenever the camera is removed from the telescope or the focal path
+undergoes significant changes (such as a filter being replaced or the
+mirrors being realuminized). It will be created by combining
+photometric measurements of stars obtained from rastoring dense star
+fields across the focal plane on a photometric night (where the star's
+images are corrected by the `raw' synthetic flat, with no illumination
+correction), the observed narrow band dome screen (DS) flats, and a
+ZEMAX model constrained by measurements of the focal plane response
+and ghosting in the focal plane using the Camera Calibration Optical
+Bench (CCOB; more details below). After acquiring these data, it is then possible to
+create a model for the illumination correction by minimizing (in each
+filter)
 \begin{eqnarray}
-\label{eqn:stdmag}
-     m_b^{obs} & \equiv & -2.5\log_{10}\left({F_b^{obs} \over F_{AB}}\right) \\
-      & = &-2.5 \log_{10}\left( {\int_0^\infty {F_\nu(\lambda) \phi_b(\lambda)^{obs} d\lambda} \over F_{AB}} \right)  \\
-       &= & -2.5 \log_{10} \left( {\int_0^\infty {F_\nu(\lambda) \phi_b(\lambda)^{obs} d\lambda} \over
-        \int_0^\infty {F_\nu(\lambda) \phi_b(\lambda)^{std} d\lambda}} \right) 
-         \left( \int_0^\infty {F_\nu(\lambda) \phi_b(\lambda)^{std} d\lambda} \over F_{AB}  \right) \\
- %        & = & -\Delta m_b^{obs} - 2.5 log_{10} \left( { \int_0^\infty {F_\nu(\lambda) \phi_b(\lambda)^{std} d\lambda} \over F_{AB} } \right) \\
-  %       & = & -\Delta m_b^{obs} + Z_b^{obs} - 2.5\log_{10}(C_b^{obs})
-         & = & -\Delta m_b^{obs} + m_b^{std} 
+ \chi^2 & = & \Sigma_{N_{stars}} { (m^{star}_{meas}(i,j) - m^{star}_{model}(i,j))^2
+\over \sigma_b^2}  \\
+  & & +\, \Sigma_{N_{DS}} { \Sigma_{(i,j,\lambda)}
+    (ADU^{DS}_{meas}(i,j,\lambda) - ADU^{DS}_{ model}(i,j,\lambda))^2 \over
+    \sigma_{DS}^2 }  \nonumber  \\
+ & & +\,  \Sigma_{N_{CCOB}} { \Sigma_{(i,j,\lambda)}
+   (ADU^{CCOB}_{meas}(i,j,\lambda) - ADU^{CCOB}_{model}(i,j,\lambda))^2 \over
+   \sigma_{CCOB}^2 }   \nonumber
 \end{eqnarray}
-This $\Delta m_b^{obs}$ is the correction between the ``raw'' measurement of $F_b^{obs}$ 
-in a particular $\phi(\lambda)^{obs}$ to a ``standardized'' $F_b^{std}$ where the system response
-has been renormalized to a common $\phi_b^{std}$, a fixed pre-defined
-standard system response (which can be defined as an 
-appropriately weighted average of $\phi_b^{meas}$ obtained
-during the commissioning period). 
+where the measured values above are the measured magnitudes of the stars
+from the dense rastor scan (corrected only by the raw synthetic flat
+without illumination correction), the measured ADU values from each pixel of the narrow band
+flat fields, and the measured ADU values from each pixel from the CCOB
+measurements. The model values come from best-fit parameters for each
+of these, when the illumination correction is included: 
+\begin{eqnarray}
+m^{star}_{model}(x,y) & = &  \int d\theta d\phi \, \int {d\lambda \over \lambda}
+F_\nu^{star}(x,y,\lambda)\,S^{atm}(x,y,\lambda)\,M(\theta,\phi,\lambda)\,R(\theta,\phi,\lambda)\,FP(x,y,\theta,\phi,\lambda)
+\nonumber \\
+ & = & m^{star}_{bestfit} - \delta k_{ff}(x,y,SED) - \delta
+ k_{atm}(alt,az,SED) - \int d\lambda \, Z_{IC}(x,y,\lambda)\\
+\nonumber \\
+ADU^{DS}_{model}(x,y,\lambda) & = & \int d\theta d\phi \,
+FP(x,y,\theta,\phi,\lambda)   \nonumber \\
+& & [(F_\nu^{DS}(x,y,\theta,\phi,\lambda)\,M(\theta,\phi,\lambda)\,R(\theta,\phi,\lambda))
++ SS^{DS}(x,y,\theta,\phi,\lambda) +  \nonumber \\ 
+& & \Sigma_{(x',y')} \int d\theta' d\phi' \,F_\nu^{DS}(x',y',\theta',
+\phi',\lambda)\,M(\theta',\phi',\lambda)\,G(x',y',\theta',\phi';
+x,y,\theta,\phi,\lambda)] \nonumber  \\
+ & = & ADU^{DS}_{bestfit}(x,y,\lambda) + 10^{-0.4 \,
+   Z_{IC}(x,y,\lambda)} \\
+\nonumber \\
+ADU^{CCOB}_{model}(x,y,\theta,\phi,\lambda) & = &  FP(x,y,\theta,\phi,\lambda) \nonumber \\
+& & [ F_\nu^{CCOB}(x,y,\theta,\phi,\lambda)\,R(\theta,\phi,\lambda) +
+\nonumber \\
+&& \Sigma_{(x',y')} \int d\theta' d\phi'
+\,F_\nu^{CCOB}(x',y',\theta',\phi',\lambda)\,G(x',y',\theta',\phi';x,y,\theta,\phi,\lambda)]
+\nonumber \\
+& = & ADU^{CCOB}_{bestfit}(x,y,\theta,\phi,\lambda) +
+10^{-0.4\,Z_{IC}}(x,y,\lambda) - SS^{DS}_{bestfit}(x,y,\lambda) 
+\end{eqnarray} 
+where $Z_{IC}$ represents the entire illumination correction,
+including pixel scale variations, corrections for ghosting and
+corrections for stray light in the synthetic flat, and $FP$ stands for
+focal plane response, $M$ for the mirror transmission response, $R$ for the
+refractive optics transmission, $G$ is the ghosting expected in this bandpass (calculated from
+the ZEMAX model), and $SS$ stands for all other stray/scattered light
+that is present in the dome screen flats. The form for
+$Z^{IC}$ must account for possible sharp changes at amp boundaries,
+and should be multiplied back into the synthetic flat (changing pixel
+values in the synthetic flat) rather than just applied as a series of
+zeropoint offsets, to improve galaxy photometry. The best fit values
+for the stars represent magnitudes in a standard bandpass
+(which then has to be corrected for the wavelength-dependent color
+terms across the flat field and with varying atmosphere transmission,
+to match the bandpass at each observation), while the best fit values
+for the dome screen and CCOB ADU values can be evaluated from the
+photodiode and are shown with a wavelength dependence as in each case
+the ADU measurement is acquired using a very narrow band light source.
 
-To further clarify, here $\phi_b^{obs}(\lambda)$ stands for the {\bf true} 
-$\phi_b$ corresponding to that particular observation. When correcting
-observed counts to a common bandpass system, only the {\bf measured} 
-value of this function, $\phi_b^{meas}(\lambda)$, can be used. Therefore,
-to distinguish this case explicitly 
-\begin{equation}
-\label{Eq:dmCorrMeas}
-  \Delta m_b^{meas} = 
- 2.5\,\log\left({\int_0^\infty F_\nu(\lambda) \phi_b^{meas}(\lambda)
- d\lambda \over \int_0^\infty F_\nu(\lambda) 
-\phi_b^{std}(\lambda) d\lambda} \right). 
-\end{equation}
-{\it With this correction, the measured counts can be ``placed'' on a standardized flux 
-scale and the calibration equation becomes} 
-\begin{equation}
-\label{eqn:mmstd}
-                     m_b^{std} = m_b^{meas} + \Delta m_b^{meas}, 
-\end{equation}
-with
-\begin{equation}
-\label{eqn:mmeas}
-                       m_b^{meas} = Z^{meas}_b  -2.5\log_{10}(C_b). 
-\end{equation}
-Now $Z_b$ depends only on the gray-scale extinction and system response, while the dependence 
-of  counts on the {\it shape} of the bandpass has been taken care of with $\Delta m_b$.
-In the limit when $\Delta m_b$ is perfectly known, and $Z_b$ is determined perfectly, 
-$m_b^{std}$ for non-variable sources will be constant (apart from random measurement
-errors, that is, in a systematic sense). 
+\subsubsubsection{Camera Calibration Optical Bench}
 
-The $\Delta m_b^{meas}$ correction can be computed only if $F_\nu(\lambda)$ is
-known (note that it is only the {\it shape} of $F_\nu(\lambda)$ that 
-is important, the normalization is arbitrary). This is the main
-reason to select main-sequence stars for self-calibration (because
-their spectral energy distribution can be estimated with sufficient
-accuracy from their broad-band colors). Nevertheless, even for a
-perfectly known $F_\nu(\lambda)$, there will always be an 
-error associated with $\Delta m_b$ because the measured value
-of $\phi_b^{obs}(\lambda)$ (= $\phi_b^{meas}(\lambda)$) is not 
-equal to $\phi_b^{obs}(\lambda)$.  Because $\Delta m_b^{meas}$
-is not equal to the true $\Delta m_b^{obs}$, there will always be
-a small, but irreducible, calibration error because generally the stellar
-energy distributions are not flat (a detailed study of these errors was 
-done by Lynne). 
+The Camera Calibration Optical Bench (CCOB) provides a method to
+calibrate the spatial and wavelength-dependent response of the focal
+plane (umounted from the telescope) using a well controlled,
+wavelength-variable, light source calibrated using a NIST
+photodiode. This light source, which produces a spot in the focal
+plane approximately the size of or smaller than the PSF, will be
+scanned across the detector at a variety of incident angles. The
+response of the detector will be measured in two different
+configurations: one with only the detector and the dewar window -
+which doubles as lens 3 (L3) - and one with the detector, L3, L2, L1,
+the filters and the camera shutter. In the L3-only configuration, the
+detector response should include only relative simple ghosting,
+primarily 3 ghost images from reflections between the CCD surface and
+L3. In the full refractive optics configuration (with L3, L2, L1, the
+filter and camera shutter), the detector response will include a more
+complicated ghost pattern.
 
-For simplicity, after this point we don't retain explicit $meas$ vs. $obs$ indices for 
-$\Delta m_b$; it is implied that in generating simulated counts one 
-would use $\Delta m_b^{obs}$ computed using $\phi_b^{obs}(\lambda)$, 
-while in the self-calibration pipeline one would use $\Delta m_b^{meas}$ 
-computed using  $\phi_b^{meas}(\lambda)$. Hereafter, $\Delta m_b$ refers 
-to $\Delta m_b^{meas}$. 
+The CCOB thus provides measurements of the focal plane response in
+different optical configurations, variable over $x$, $y$, $\lambda$ and incident
+angle. This does not directly measure the illumination
+correction (for example, pixel scale variation due to projection
+effects is not included) but does provide constraints for model
+calculations (such as a ZEMAX model) of ghosting patterns which are
+necessary for the illumination correction. This also allows a
+separation of stray/scattered light within the focal plane and
+non-uniformities in dome screen illumination from the ghost response.
 
-This correction to the measured magnitudes of each star is the first step of the 
-calibration process, facilitated by the auxiliary telescope and flat-field measurements,
-and is accomplished by applying a lookup 
-table of $\Delta m_b$ values for a set of stellar spectral energy distributions and
-a given $\phi_b^{meas}(\lambda)$. Each self-calibration star can be matched against
-its most-likely stellar spectral energy distribution using (approximately calibrated) colors, and the appropriate
-$\Delta m_b$ applied. For each star indexed by $i$ and each calibration patch (with its
-own $\phi_b^{meas}(\lambda)$) indexed by $j$, we then have (c.f. eqs~\ref{eqn:mmstd} and \ref{eqn:mmeas}). 
+More details about the requirements and physical apparatus of the CCOB
+are available in (LSST CCOB REF).
+
+\subsection{Measurement of the atmospheric transmission} 
+
+The atmospheric transmission function, $S^{atm}(alt,az,\lambda,t)$, is
+broken into two parts: a wavelength-dependent, slowly varying portion
+that is the end result of variations in the composition of the
+atmosphere and a more rapidly variable gray portion that is the result
+of variable cloud extinction. Measurements of the atmosphere from the
+auxiliary telescope correct the wavelength-dependent portion while the
+self-calibration procedure must be used to correct for cloud
+extinction. This section describes how these measurements are acquired
+and the corrections applied to the data.
+
+\subsubsection{Auxiliary telescope}
+\label{sec:auxtele}
+
+The spectroscopic measurements from the auxiliary telescope are
+necessary to correct for the wavelength-dependent variations in
+atmospheric transmission; it is worth noting that these auxiliary
+telescope measurements will {\it not} correct for cloud extinction or
+any other gray extinction. The wavelength-dependent atmospheric
+variations are due to variations in the composition of the atmosphere;
+measurements acquired within a few degrees of the field of view and
+within 5--10 minutes of the science image will be sufficient to
+correct the `observed' atmospheric bandpass to the `standard'
+atmospheric bandpass.
+
+The auxiliary telescope will be a 1.2m telescope equipped with a
+spectroscope which will monitor a set of probe stars as they traverse
+the sky each night. The spectra from the auxiliary telescope will be
+processed to correct for the efficiency of the spectroscope itself,
+leaving the spectra of the star and the signature of absorption from
+the atmosphere. The resulting spectra will be fit to state-of-the-art
+atmospheric models (such as MODTRAN4) to determine the atmospheric
+components responsible for absorption in the spectra. These components
+can then be interpolated to calculate the atmospheric mix present in
+any science image, recreating the relevant
+$\phi^{atm}(alt,az,\lambda,t)$. Recognition of the atmospheric components
+can be done with a relatively modest spectral resolution (R$\sim400$),
+but it is important that the full spectral range (300~nm to 1100~nm)
+be obtained in a single exposure. Choosing white dwarfs (with $r<12$)
+as the probe stars simplifies this procedure as the white dwarfs have
+relatively simple spectra, however a range of stars could be used in
+which case the spectra of each star can be bootstrapped from the large
+number of repeat observations, using an iterative procedure to extract
+stellar parameters (effective temperature and surface gravity) for
+each of the probe stars along with the atmospheric constituents. 
+
+For each interpolated $\phi^{atm}(alt,az,\lambda,t)$, combined with
+the the bandpass shape measured as a function of position in the focal
+plane (as in Section~\ref{sec:narrowband}), a set of $\delta
+k(x,y,alt,az,SED)$ corrections will be calculated using standard
+stellar models, creating tables of $\delta k$ as a
+function of color for each observation. These $\delta k$ correct the shape of the entire
+bandpass response (both system and atmosphere) to a standardized value
+defined during commissioning.
+
+ADD/CREATE FIGURE showing atmosphere and various components
+
+CREATE FIGURE flowchart? (like figure 4 from calibration preliminary
+baseline design?)
+
+CREATE FIGURE effects on magnitude for different color sources as
+atmosphere changes (for single airmass, different compositions)
+
+\subsubsection{Self-calibration}
+\label{sec:selfcalib}
+
+After applying each of the previous corrections, the raw counts are
+corrected to a `standard' bandpass, $\phi^{std}(\lambda)$, using both
+the narrow band flats and the atmospheric model derived from the
+auxiliary telescope observations. Small scale ($<$ several times the
+PSF) gray-scale zeropoint variations have also been removed by the
+synthetic flat. However, there still remain variations in
+normalization of the system response that result from gray-scale
+extinction due to clouds. The self-calibration procedure is necessary
+to correct for these zeropoint offsets.
+
+The self-calibration procedure selects bright, isolated main sequence
+and white dwarf stars (or any star with well-known colors and a
+well-known SED, to reduce errors in the applied
+$\delta k$ values) from the sample of all observed stars after they are
+corrected to the standard bandpass (`standardized'). Only non-variable stars will be
+selected for self-calibration, based on approximately calibrated data
+(say, a few percent) which will suffice in this context. It then uses
+the many repeat observations of these stars to generate gray zeropoint
+corrections for patches over which the photometric zeropoint can be
+assumed constant (approximately one CCD in size).
+ 
+Assuming that the difference between the best estimate of the true magnitude of each star $i$
+($m^{best}_i$) and the observed standardized magnitude of those stars
+in each calibration patch $j$, is the same for each star in the
+calibration patch, we can relate the two by
 \begin{equation}
-\label{Eq:obsMag}
-          (m_b^{std})_{ij} =  (m_b^{meas})_{ij} + (\Delta m_b)_{ij},
+\label{eqn:zp}
+m^{best}_i = m^{std}_i + (\delta z)_j. 
 \end{equation}
-and
-\begin{equation}
-\label{Eq:rawMag}
-       (m_b^{meas})_{ij} =  (Z_o)_j  -2.5\log[(C_b)_{ij}], 
-\end{equation}
-where $(Z_o)_j$ is an approximate, and essentially arbitrary, zeropoint adopted
-for calibration patch $j$. 
 
-The zeropoint for each calibration patch will be determined by requiring 
-that all the observations of a given star, presumably observed on 
-many patches, are consistent. It is assumed that only non-variable 
-main-sequence stars will be pre-selected for self-calibration. This selection
-will be based on approximately calibrated data (say, a few percent),
-which will suffice in this context.  The self-calibration procedure
-is supposed to deliver data calibrated to specifications listed in
-the Science Requirements Document ($\sim$0.01 mag rms scatter of the
-internal photometric zero-point error across the sky).
-
-The difference between this measured standardized magnitude, $(m_b^{std})_{ij}$, 
-(in principle, on an arbitrary scale, but for pedagogical reasons it can be thought 
-of as approximately calibrated magnitude via appropriate selection of $Z_o$) and 
-the best estimate of the true magnitude of a star, $(m_b^{best})_{i}$, is assumed the same for all 
-calibration stars on a calibration patch, 
-\begin{equation}
-\label{Eq:ZP}
-   (m_b^{std})_{ij} = (m_b^{best})_{i} + (\Delta Z)_j
-\end{equation}
+XXXXX
 
 This is the basic set of equations that LSST self-calibration 
 will solve to obtain $(m_b^{best})_{i}$ and $(\Delta Z)_j$
@@ -708,8 +819,6 @@ uniformity obtained by the self-calibration step, and for
 universality of assumptions used to tie different bands together).
 
 
-
-
 \section{Fixing LSST to an external scale: Calculating normalization}
 \subsection{Bandpass to bandpass (color)}
 white dwarfs
@@ -721,19 +830,27 @@ calibrated by HST)
 
 \section{Validation of the method}
 
-why will this method work and how will we know?
+This section will talk about how we will apply the methods above, why
+it will work, and how we will know whether it will work. What
+simulations will be done? What testing
+will be done? 
 
-Generation of standard passband for each filter
-
-Error propagation and allowances
-
+The error budgets should be discussed here. 
 
 \subsection{Quality assurement}
-assessment of errors? 
-external tests : stellar locus 
+In production, there will be some quality assurement required. What
+will be this - how will we assess errors? 
+One possible test is the stellar locus - how will this be applied.
 
 
 \appendix
+
+
+\section{Table of error budgets}
+
+The text motivates these, but this provides a place to
+gather them, maybe add some more comments
+
 
 \section{Filter Set}
 ugriz
@@ -742,24 +859,14 @@ ugriz
 \end{figure}
 
 
-\section{Table of error budgets}
-
-presumably the text motivates these, but this provides a place to
-gather them, maybe add some more comments
-
-
 \section{Potential improvements to photometric accuracy}
 
 For scientists interested in higher precision photometry for objects
 with known SEDs, it is possible to improve the procedure above, by
 using the measured $S_b$ and their known SED to reconstruct the
-expected counts. (even possibly redoing the flat field??)
-\begin{equation}
-F_v(\lambda) = F_o \, f_v(\lambda)
-\end{equation}
-where $f_v(\lambda_b)=1$ at some reference wavelength, $\lambda_b$,
-chosen to be the effective wavelength of the standard bandpass
-$\phi_b^{std}$.  
+expected counts. 
+This section will describe briefly how that could happen. 
+Perhaps this section will be dropped if thought unnecessary for this document?
 
 %\section{Comparison of standard calibration and SDSS ubercal (as
 % approximation for this method)}
