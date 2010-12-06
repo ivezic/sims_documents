@@ -248,7 +248,7 @@ but not on its normalization. The values
 \label{eqn:defnatmags}
 %m_{nat}  & = &-2.5 log_{10} \left( {C_b(alt,az,x,y,t) \over C'(alt,az,x,y,t) \, K'(F_\nu(\lambda,t),
 %\phi_b^{obs}(\lambda,alt,az,x,y,t)} \right) \nonumber \\
- m_{nat} =  -2.5 log_{10} (\int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda})
+ m_b^{nat} =  -2.5 log_{10} (\int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda})
 \end{equation}
 represent `natural magnitudes', directly comparable from
 one observation to another although they are not tied to an external
@@ -329,9 +329,9 @@ stability across the sky (requirements \ref{repeatability_req} and
 (Eqn~\ref{eqn:defnatmags})  as 
 \begin{eqnarray}
 \label{eqn:defnatmags2}
-m_{nat} & = &-2.5 \, log_{10} \, (C_{b, raw}(alt,az,x,y,t))  \\ 
- & & +\, \delta z_{ff}(x,y,t) + \delta k_{ff}(x,y,SED,t)  \nonumber \\  
- & &+\, \delta z_{selfcalib}(alt,az,t)  + \delta k_{atm}(alt,az,SED,t)  \nonumber
+m_b^{nat} & = &-2.5 \, log_{10} \, (C_{b, raw}(alt,az,x,y,t))  \\ 
+ & & +\, \delta z_b^{ff}(x,y,t) + \delta k_b^{ff}(x,y,SED,t)  \nonumber \\  
+ & &+\, \delta z_b^{selfcalib}(alt,az,t)  + \delta k_b^{atm}(alt,az,SED,t)  \nonumber
 \end{eqnarray}
 where the raw counts from the object in the image are translated to an
 internally consistent magnitude through corrections from the flat
@@ -367,7 +367,7 @@ photometric night, a larger set of external reference objects spread
 throughout the sky will be used to reduce systematic errors. This then
 produces a final magnitude, 
 \begin{equation}
-\label{eqn:finalmags}
+\label{eqn:extmags}
 m_b^{ext} = m_b^{nat}  + \Delta_{b-r} + \Delta_r
 \end{equation}
 which can be compared to physical flux scales. Placing our photometric
@@ -448,18 +448,28 @@ possible (rather than as a series of zeropoint offsets) will also
 benefit photometric precision for extended objects. This is
 particularly true for the illumination correction.
 
-\section{Details of the calibration process}
+\section{Details of the internal calibration process}
 
 The next sections describe further details of the calibration process
-and how each correction is measured, calculated and applied. 
+and how each correction is measured, calculated and applied. These
+procedures are applied to each filter independently. The end
+result of the internal calibration process is a set of natural
+magnitudes, $m_b^{nat}$, measured for each object in each visit, as
+well as a record of $\phi^{atm}(\lambda,alt,az,t)$,
+$\phi_b^{sys}(\lambda,x,y,t)$, the flat field applied, the
+zeropoint offset calculated for cloud extinction and the spectral
+energy distribution assumed for the object to calculate $m_b^{nat}$.
 
 \subsection{Measurement of the system transmission}
 
 Variations in measured counts which results from changes in the hardware
 (system) transmission function, $S_b^{sys}(\lambda,x,y,t)$, are corrected
-through a flat field created from a combination of white-light flat
-fields, narrow band flat fields, and an illumination correction.  This
-section describes how these measurements are obtained and applied.
+through a `synthetic' flat field created from a combination of
+narrow-band flat fields, white-light flat fields and an illumination correction.
+Wavelength-dependent spatial changes are measured directly through the
+narrow band flats combined with the illumination correction, while
+more rapid spatial and temporal wavelength-independent changes are
+measured through changes in the white-light flat field.
 
 \subsubsection{Narrow band Flat Fields}
 \label{sec:narrowband}
@@ -508,12 +518,12 @@ changes by the white light flat, will be used for flattening images.
 
 In addition, the narrow band flats must also be used to measure
 changes in the bandpass shape throughout the field of view. Before
-applying $\delta k(x,y,SED)$ corrections to the observed magnitudes,
+applying $\delta k(x,y,SED,t)$ corrections to the observed magnitudes,
 however, the wavelength-dependent effects of the atmosphere must also
 be considered, as the final effect on the observed magnitude is not
 independent. Thus, the narrow band flat fields will be combined using
 a series of standard model SEDS to generate
-$\delta k(x,y,alt,az,SED)$ corrections for each image after the atmospheric
+$\delta k(x,y,alt,az,SED,t)$ corrections for each image after the atmospheric
 corrections described in Section~\ref{sec:auxtele} have been
 calculated and applied to the model SEDs. Thus there will be lookup
 tables created with $\delta k(x,y,alt,az,SED,t)$ as a function of
@@ -598,14 +608,14 @@ Bench (CCOB; more details below). After acquiring these data, it is then possibl
 create a model for the illumination correction by minimizing (in each
 filter)
 \begin{eqnarray}
- \chi^2 & = & \Sigma_{N_{stars}} { (m^{star}_{meas}(x,y) - m^{star}_{model}(x,y))^2
-\over \sigma_b^2}  \\
-  & & +\, \Sigma_{N_{DS}} { \Sigma_{(x,y,\lambda)}
-    (ADU^{DS}_{meas}(x,y,\lambda) - ADU^{DS}_{ model}(x,y,\lambda))^2 \over
-    \sigma_{DS}^2 }  \nonumber  \\
- & & +\,  \Sigma_{N_{CCOB}} { \Sigma_{(x,y,\lambda)}
-   (ADU^{CCOB}_{meas}(x,y,\lambda) - ADU^{CCOB}_{model}(x,y,\lambda))^2 \over
-   \sigma_{CCOB}^2 }   \nonumber
+ \chi^2 & = & \Sigma_{N_{stars}} \left( { m^{star}_{meas}(x,y) - m^{star}_{model}(x,y)
+\over \sigma_b} \right)^2  \\
+  & & +\, \Sigma_{N_{DS}, x,y,\lambda} \left( {
+    ADU^{DS}_{meas}(x,y,\lambda) - ADU^{DS}_{ model}(x,y,\lambda) \over
+    \sigma_{DS \, x,y,\lambda } } \right)^2  \nonumber  \\
+ & & +\,  \Sigma_{N_{CCOB},x,y,\theta,\phi,\lambda} \left( { 
+   ADU^{CCOB}_{meas}(x,y,\theta,\phi,\lambda) - ADU^{CCOB}_{model}(x,y,\theta,\phi,\lambda) \over
+   \sigma_{CCOB \,x,y,\theta,\phi,\lambda}}  \right)^2   \nonumber
 \end{eqnarray}
 where the measured values above are the measured magnitudes of the stars
 from the dense rastor scan (corrected only by the raw synthetic flat
@@ -701,15 +711,14 @@ are available in Docushare Document-10015 and 8217.
 
 \subsection{Measurement of the atmospheric transmission} 
 
-The atmospheric transmission function, $S^{atm}(alt,az,\lambda,t)$, is
+The atmospheric transmission function, $S^{atm}(\lambda,alt,az,t)$, is
 broken into two parts: a wavelength-dependent, slowly varying portion
 that is the end result of variations in the composition of the
 atmosphere and a more rapidly variable gray portion that is the result
 of variable cloud extinction. Measurements of the atmosphere from the
 auxiliary telescope correct the wavelength-dependent portion while the
 self-calibration procedure must be used to correct for cloud
-extinction. This section describes how these measurements are acquired
-and the corrections applied to the data.
+extinction. 
 
 \subsubsection{Auxiliary telescope}
 \label{sec:auxtele}
@@ -735,7 +744,7 @@ atmospheric models (such as MODTRAN4) to determine the atmospheric
 components responsible for absorption in the spectra. These components
 can then be interpolated to calculate the atmospheric mix present in
 any science image, recreating the relevant
-$\phi^{atm}(alt,az,\lambda,t)$. Recognition of the atmospheric components
+$\phi^{atm}(\lambda,alt,az,t)$. Recognition of the atmospheric components
 can be done with a relatively modest spectral resolution (R$\sim400$),
 but it is important that the full spectral range (300~nm to 1100~nm)
 be obtained in a single exposure. Choosing white dwarfs (with $r<12$)
@@ -746,14 +755,19 @@ number of repeat observations, using an iterative procedure to extract
 stellar parameters (effective temperature and surface gravity) for
 each of the probe stars along with the atmospheric constituents. 
 
-For each interpolated $\phi^{atm}(alt,az,\lambda,t)$, combined with
+For each interpolated $\phi^{atm}(\lambda,alt,az,t)$, combined with
 the the bandpass shape measured as a function of position in the focal
-plane (as in Section~\ref{sec:narrowband}), a set of $\delta
-k(x,y,alt,az,SED)$ corrections will be calculated using standard
-stellar models, creating tables of $\delta k$ as a
+plane, $\phi_b^{sys}(\lambda,x,y,t)$ (as in Section~\ref{sec:narrowband}), a set of $\delta
+k(x,y,alt,az,SED,t)$ corrections will be calculated using a series of model
+spectral energy distributions (including standard
+stellar models), creating tables of $\delta k$ as a
 function of color for each observation. These $\delta k$ correct the shape of the entire
 bandpass response (both system and atmosphere) to a standardized value
-defined during commissioning.
+defined during commissioning. Applying these corrections requires knowing
+the spectral energy distribution of the astronomical object, but with
+the many observations available at the time of data release, the color
+will be known (through iteration of the photometric calibration
+procedure) to $\approx 0.07$~magnitudes.
 
 ADD/CREATE FIGURE showing atmosphere and various components
 
@@ -788,28 +802,34 @@ the many repeat observations $j$ of each star $i$ in a particular filter to mini
 \begin{equation}
 \label{eqn:selfcalmin}
 \chi^2 = \Sigma_{ij} \left(  { m_{b,ij}^{std} - m_{b,ij}^{model} \over
-    \sigma_{b,ij}^{std} } \right)
+    \sigma_{b,ij}^{std} } \right)^2
 \end{equation}
 where the $m_{model}$ includes any remaining photometric corrections
 that must be applied. In our current calibration plan, this would be only the
 gray extinction from clouds, applied by requiring the photometric
-zeropoint offset over a small patch ($\delta z_j$) be constant, 
+zeropoint offset over a small patch of sky in a given observation, $\delta z_j$, be constant:
 \begin{equation}
 \label{eqn:zp}
 m^{model}_{b,ij} = m^{best}_{b,i} - \delta z_{b,j},
 \end{equation}
 where the patch size is approximately one CCD in size. A more
 complicated model, {\it e.g.} a $\delta z_{b}$ with structure, could
-be used if found desireable.
+be used if found desireable. Simulations of the Milky Way based on a
+model by Mario Juric (JuricREF) indicate that there will be
+approximately 100 (XX-update)
+suitable calibration stars per patch over the entire sky. 
+
+CREATE FIGURE with milky way density in all bandpasses.
 
 Minimizing Equation~\ref{eqn:selfcalmin} requires solving for
 approximately, $10^8$ $m_{b,i}^{best}$ and $10^8$ $\delta z_j$. Of
 course, not all stars will be observed on all calibration patches, so
 there will be only about 10$^{10}$ non-zero values of
-$(m_b^{std})_{ij}$ (per band). Preliminary work on a self-calibration
-solver to do this minimization has shown success using a conjugate
-gradient method, although there are other numerical approaches that
-may also be promising (RegnaultREF).
+$(m_b^{std})_{ij}$ (per band). Preliminary work using a conjugate
+gradient method to compute $m_{b}^{best}$ and $\delta z_j$ for
+approximately $10^6$ stars and $10^6$ patches was very successful; the
+same method could be relatively easily parallelized for the full data
+set. 
 
 With the known values of $(\delta z)_j$, all measurements from that
 patch can be re-calibrated, then analyzed for systematics in
@@ -833,27 +853,101 @@ stars have roughly correct AB magnitudes, however the goal after
 self-calibration is only to have a rigid, self-consistent magnitude
 system, equivalent to the natural magnitudes.
 
-XXX
+More details of the self-calibration procedure can be found in
+Docushare Document-8619 and Jones 2010 (SPIE paper). 
 
-\section{Fixing LSST to an external scale: Calculating normalization}
-\subsection{Bandpass to bandpass (color)}
-white dwarfs
-main sequence stars
+
+\section{Fixing LSST to an external scale}
+
+The next two subsections describe how the internally calibrated
+natural magnitudes, independently calibrated in each filter bandpass, are fixed
+to an external scale such that the flux in a single band can be compared to the
+flux in another filter band (SRD requirement \ref{color_req}) and that
+the flux in a particular filter band can be compared to an absolute
+external system (SRD requirement \ref{abs_req}). This is equivalent to
+determining $\Delta_{br}$ and $\Delta_r$ from Eqn~\ref{eqn:extmags}. 
+
+\subsection{Band to band (color)}
+
+The band to band calibration for each filter $b$ (the $\Delta_{br}$
+values) will be determined by measuring the flux from one or more
+celestial objects whose physics and chemistry are believed to be well
+understood. In principle, a single object with known colors would be
+sufficient, however many objects across the LSST footprint
+will be used to evaluate possible systematic effects in the internal
+calibration process. 
+
+Hot hydrogen (DA) and helium (DB) white dwarf stars have simple
+atmospheres that are reasonably well understood (model colors are
+currently reliable to about 0.01 magnitudes). It is estimated that
+there will be $\approx$ 100/10 DA/DB WD stars with $r<24$ in each LSST
+image at the South Galactic Pole. Catalogs of WD stars visible from
+Cerro Pachon have been constructed (Bergeron 1992, Eisenstein
+2006), and a `white dwarf calibration system' has been developed
+(Holberg \& Bergeron 2006). The locus of main sequence stars in
+color-color space is also reasonably well understood and has been used
+to calibrate photometry with success in previous surveys (MacDonald
+2004, Ivezic 2007). The use of the main sequence stellar locus in addition to
+WD stars will provide a valuable check on systematic effects that may
+arise from using (primarily) white dwarfs in the determination of
+$\phi^{atm}(\lambda,alt,az,t)$. 
+
+The values for $\Delta_{br}$ will be determined by generating model
+$m_b^{nat}$ values for each band-band calibration object, then
+minimizing 
+\begin{equation}
+\chi^2 = \Sigma_{i} \left( { (m_{b,i}^{nat} - m_{r,i}^{nat})^{meas} - (m_{b,i}^{nat}
+    - m_{r,i}^{nat})^{model} \over  \sigma_{b-r,i}}\right) ^2. 
+\end{equation}
+This comparison can
+be done using subsets of objects from low galactic extinction regions,
+and then bootstrapping to the entire sky to check for systematic
+effects, perhaps by using the main sequence stellar locus as an
+additional method to determine the amount of galactic extinction. 
+
 \subsection{Single bandpass to external flux system (absolute scale)}
-like other systems - pick a standard and go with it (white dwarf,
-calibrated by HST)
 
+After determining the band to band calibration, there is a single
+number required to calibrate the entire system to an absolute flux
+scale: $\Delta_r$.  This can again be determined using a single
+object with a well-known flux and spectral energy distribution,
+however multiple external calibrators provide a valuable check on
+systematic effects. 
+
+Several WDs in the Northern hemisphere have been very precisely
+calibrated with HST STIS measurements (Bohlin \& Gilliland 2004) and
+it should be possible to obtain similar HST measurements of one or
+more targets for use in the Southern hemisphere. Identification of
+these targets has not yet been done. 
 
 \section{Validation of the method}
+
+(these are some ideas of what might go in this section; not edited yet)
+
+The error budgets should be discussed here, including table.
+
+Assumptions and items that must be tested in above: 
+\begin{enumerate}
+\item{that the dome screen system can be produced}
+\item{whether the illumination can be measured using the method above}
+\item{that the atmosphere can be measured using the methods described
+    in the aux tele section}
+\item{that the self-calibration procedure will converge on a
+    correct/uniform answer}
+\item{whether the photometric zeropoint will be constant within 5 mmag 
+    within a CCD and what total extinction does this relate to}
+\item{whether data management can extract counts within their error
+    budget}
+\item{how will galactic extinction affect these procedures?}
+\end{enumerate}
 
 This section will talk about how we will apply the methods above, why
 it will work, and how we will know whether it will work. What
 simulations will be done? What testing
 will be done? 
 
-The error budgets should be discussed here. 
 
-\subsection{Quality assurement}
+\subsection{Quality assessment}
 In production, there will be some quality assurement required. What
 will be this - how will we assess errors? 
 One possible test is the stellar locus - how will this be applied.
@@ -862,27 +956,59 @@ One possible test is the stellar locus - how will this be applied.
 \appendix
 
 
-\section{Table of error budgets}
+%\section{Table of error budgets}
 
-The text motivates these, but this provides a place to
-gather them, maybe add some more comments
+%The text motivates these, but this provides a place to
+%gather them, maybe add some more comments
 
 
 \section{Filter Set}
-ugriz
+
 \begin{figure}[ht]
 \includegraphics[width=5in]{filters}
 \end{figure}
 
 
-\section{Potential improvements to photometric accuracy}
+\section{Improvements in photometric accuracy}
 
-For scientists interested in higher precision photometry for objects
-with known SEDs, it is possible to improve the procedure above, by
-using the measured $S_b$ and their known SED to reconstruct the
-expected counts. 
-This section will describe briefly how that could happen. 
-Perhaps this section will be dropped if thought unnecessary for this document?
+To conduct science with the catalogs from LSST, the natural magnitudes, $m_b^{nat}$, for each astronomical object in
+each visit must obviously be recorded, resulting in approximately
+$2\times10^{13}$ measurements. However, in order to permit scientists
+to generate higher precision photometry for objects with known SEDs
+(which are likely to be different than the SEDs LSST used to create
+those $m_b^{nat}$ measurements),
+$\phi_b^{visit}(\lambda,alt,az,x,y,t)$ and the zeropoint offset from
+the self-calibration procedure must also be available. With these
+additional pieces of information, scientists can generate more precise
+$\delta k(alt,az,x,y,SED,t)$ corrections to $m_b^{nat}$.
+
+TODO : need to look at the differences in $m_b^{obs}$ resulting from
+using a completely flat (within each filter) SED, an actual star or
+galaxy or SN SED, a flat SED that has been 'tilted' to have the right
+color (i.e. straight line SED, slope!=0) in various cases of
+$\phi_b$. This has bearing on what type of SED LSST should use in
+general (probably flat) and what must be used to generate input
+magnitudes for the self-cal. Also has bearing on what resolution
+$\phi_b$ must be recorded with.   (also, while doing this : how much
+scatter is introduced to $m_b^{nat}$ due to using the wrong SED? -
+evaluate difference between flat and true SED corrected magnitudes under range of different
+$\phi_b$)  ($m_b^{nat}$ = standardized $\phi_b$, $m_b^{obs}$ =
+observed $\phi$). 
+
+CREATE FIGURE: the likely magnitude of these corrections (part of the output
+of the TODO above)
+
+Data management could record a full $\phi_b^{visit}(\lambda,alt,az,x,y,t)$ value
+for every object in every visit, where the resolution on
+$\phi(\lambda)$ will need to be about 0.5~nm.  It should also be possible
+for data management to simply record the full narrow band flats field
+set, the synthetic flat field applied to the image, 
+the interpolated components for the atmosphere (approximately 6
+parameters per visit), and the zeropoint applied to each patch
+(approximately 369 per visit). Together with provenance information on
+how each of these was used to generate the observational corrections,
+it would be possible to regenerate a higher precision $m_b^{nat}$. 
+
 
 %\section{Comparison of standard calibration and SDSS ubercal (as
 % approximation for this method)}
