@@ -144,16 +144,17 @@ wavelength $\lambda$ makes it through the atmosphere,
 Here $\tau^{atm}(\lambda,alt,az)$ is the optical depth of the
 atmospheric layer at wavelength $\lambda$ towards the position
 ($alt$,$az$).  Observational data show that $\tau^{atm}$'s dependency
-on wavelength is slowly varying with time ($t$) (on the order of
-5-10\% over an hour near the water bands) and position ($alt$,$az$)
-(primarily a function of airmass, but additional variation on the
-scale of tens of degrees can be detected due to water vapor
-absorption) (LSST-5367), under `typical' observing conditions.  
-Clouds represent an additive gray (non-wavelength dependent)
-contribution to $\tau^{atm}$ which can introduce a strong variation of
-$\tau^{atm}$ on much smaller angular scales and short timescales (on
-the order of 2-10\% of the total extinction at $1^{\circ}$ scales,
-variable within minutes) (Ivezic2007). 
+on wavelength is slowly varying with time ($t$) and position
+($alt$,$az$) under `typical' observing conditions. The atmospheric
+absorption varies on the order of 5-10\% per hour as a function of
+wavelength, and spatially varies primarily as a function of airmass
+but additional variation can be detected due to water absorption on
+the scale of tens of degrees (LSST-5367).  Clouds represent an
+additive gray (non-wavelength dependent) contribution to $\tau^{atm}$
+which can introduce a strong variation of $\tau^{atm}$ on much smaller
+angular scales and short timescales (on the order of 2-10\% of the
+total extinction at $1^{\circ}$ scales, variable within minutes)
+(Ivezic2007).
 
 Note that while both $F_\nu(\lambda,t)$ and $\tau^{atm}(\lambda,alt,az,t)$ 
 could vary more quickly than the standard LSST exposure time of 15
