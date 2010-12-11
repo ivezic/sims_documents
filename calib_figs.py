@@ -8,6 +8,8 @@ pixscale_change = -0.005 # fraction change pixel scale at center to outer edges.
 ghostscale = 1e-3  # fraction of total counts that are added in ghost pupil.
 domegradient = 0.01  # fraction of change in total counts due to the dome screen not being illuminated evenly.
 
+# run make_skywflat 
+
 def make_pixgrid():
     # Define the pixel grid - this is the grid in the camera, where pixel distortion can occur,
     # adding sensitivity variations which are flat random, with mean of 1, +/- sensitivity_var.
@@ -84,7 +86,7 @@ def measure_star(pixgrid, star):
                 starmeas = starmeas + pixgrid[i][j]
                 starpix = starpix + 1
     # get estimate for background here
-    bkgdextent = 4
+    bkgdextent = 6
     bkgdpix = 0
     bkgd = 0
     for i in range(starx0 - bkgdextent, starx0-1):
@@ -109,7 +111,8 @@ def measure_star(pixgrid, star):
                 bkgdpix = bkgdpix + 1
     bkgd = bkgd / bkgdpix
     starmeas = starmeas - (bkgd*starpix)
-    print starmeas, bkgd, starmeas + (bkgd*starpix)
+    print "Star flux: ", starmeas, "bkgd flux ", bkgd, "star + bkgd ", starmeas + (bkgd*starpix), \
+          "npix ", starpix, "bkgd pix", bkgdpix
     return starmeas, bkgd
         
 def add_domewvariance(pixgrid, domeval):
@@ -167,16 +170,8 @@ def add_ghost(pixgrid, rawdetector):
     pixgrid = pixgrid + ghostring
     return pixgrid, ghostring
             
-    
 
-def make_flatfigure():
-    domeval = 1
-    detector = make_pixgrid()
-    flat = numpy.copy(detector)
-    flat, dome = add_domewvariance(flat, domeval)
-    flat, pixscale = add_pixscale(flat)
-    flat, ghost = add_ghost(flat, detector)
-    print "created flat and added sky, dome, ghost"
+def make_flatfigure(detector, dome, pixscale, ghost, flat, ic, domemean):
     # Set up figure. 
     fig = pylab.figure()
     fig.subplots_adjust(wspace=0.45, hspace=0.1, top=0.93, bottom=0.1)
@@ -191,9 +186,10 @@ def make_flatfigure():
     ax.tick_params(axis='x', labelbottom='off')
     ax = pylab.subplot(423)
     pylab.figtext(0.05, 0.61, "Dome Var.")
-    im = ax.imshow(dome, origin='lower')
-    step = (dome.max()-dome.min())/nsteps
-    ticks = numpy.arange(dome.min(), dome.max()+step/2.0, step)
+    dometmp = dome / domemean
+    im = ax.imshow(dometmp, origin='lower')
+    step = (dometmp.max()-dometmp.min())/nsteps
+    ticks = numpy.arange(dometmp.min(), dometmp.max()+step/2.0, step)
     pylab.colorbar(im, shrink=0.75, aspect=10, ticks=ticks, format='%.3f')
     pylab.grid(which='major')
     ax.tick_params(axis='x', labelbottom='off')
@@ -207,9 +203,10 @@ def make_flatfigure():
     ax.tick_params(axis='x', labelbottom='off')
     ax =pylab.subplot(427)
     pylab.figtext(0.05, 0.2, "Ghosting")
-    im = ax.imshow(ghost, origin='lower')
-    step = (ghost.max()-ghost.min())/nsteps
-    ticks = numpy.arange(ghost.min(), ghost.max()+step/2.0, step)
+    ghosttmp = ghost / domemean
+    im = ax.imshow(ghosttmp, origin='lower')
+    step = (ghosttmp.max()-ghosttmp.min())/nsteps
+    ticks = numpy.arange(ghosttmp.min(), ghosttmp.max()+step/2.0, step)
     pylab.colorbar(im, shrink=0.75, aspect=10, ticks=ticks, format='%.4f')
     pylab.grid(which='major')
     pylab.xticks(rotation=-45)
@@ -223,13 +220,11 @@ def make_flatfigure():
     pylab.grid(which='major')
     ax = pylab.subplot(224)
     pylab.figtext(0.65, 0.48, "Illum. Corr.")
-    ic = (flat - ghost)/dome/pixscale/flat
     im = ax.imshow(ic, origin='lower')
     step = (ic.max()-ic.min())/nsteps
     ticks = numpy.arange(ic.min(), ic.max()+step/2.0, step)
     pylab.colorbar(im, shrink=0.8, ticks=ticks, format='%.3f')
     pylab.grid(which='major')
-    #return flat, ic
 
 def make_skywflat():
     # make the flat field
@@ -242,6 +237,7 @@ def make_skywflat():
     ic = (flat - ghost)/dome/pixscale/flat
     ic = ic / ic.mean()
     flat = flat/flat.mean()
+    make_flatfigure(detector, dome, pixscale, ghost, flat, ic, domeval)
     # add stars to the 'sky'
     sky = numpy.copy(detector)
     star1 = [30, 30, 5000]
@@ -341,3 +337,7 @@ def make_skywflat():
     pylab.xlim(0,skysize-1)
     pylab.ylim(0,skysize-1)
 
+if __name__ == 'main':
+    make_skywflat()
+    pylab.show()
+    
