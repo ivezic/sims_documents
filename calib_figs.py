@@ -253,7 +253,7 @@ def make_skywflat():
     fig = pylab.figure()
     fig.subplots_adjust(wspace=0.25, hspace=0.01, left=0.08, right=0.94)
     ax = pylab.subplot(231)
-    pylab.title("Dome Flat, no I.C.", fontsize='medium')
+    pylab.title("Dome Flat, w/o IC", fontsize='medium')
     im = ax.imshow(flat, origin='lower')
     pylab.colorbar(im, shrink=0.65, format="%.3f")
     pylab.grid(which='major')
@@ -278,7 +278,7 @@ def make_skywflat():
     ax.tick_params(axis='x', labelbottom='off')
     ax.tick_params(axis='y', labelleft='off')
     ax = pylab.subplot(233)
-    pylab.title("Sky/Dome, no IC", fontsize='medium')
+    pylab.title("Proc. Sky, w/o IC", fontsize='medium')
     pixgrid = (sky-ghost2)/flat
     im = ax.imshow(pixgrid, origin='lower')
     step = (pixgrid.max() - pixgrid.min())/5.0
@@ -295,7 +295,7 @@ def make_skywflat():
     pylab.xlim(0,skysize-1)
     pylab.ylim(0,skysize-1)
     ax = pylab.subplot(234)
-    pylab.title("Dome Flat & IC", fontsize='medium')
+    pylab.title("Dome Flat w/ IC", fontsize='medium')
     im = ax.imshow(flat*ic, origin='lower')
     pylab.colorbar(im, shrink=0.65, format='%.3f')
     pylab.grid(which='major')
@@ -320,7 +320,7 @@ def make_skywflat():
     ax.tick_params(axis='y', labelleft='off')
     pylab.xticks(rotation=-45)
     ax = pylab.subplot(236)
-    pylab.title("Sky/Dome & IC", fontsize='medium')
+    pylab.title("Proc. Sky w/ IC", fontsize='medium')
     pixgrid = (sky-ghost2)/flat/ic        
     im = ax.imshow(pixgrid, origin='lower')
     step = (pixgrid.max() - pixgrid.min())/5.0
@@ -337,7 +337,7 @@ def make_skywflat():
     pylab.xlim(0,skysize-1)
     pylab.ylim(0,skysize-1)
 
-if __name__ == 'main':
+if __name__ == '__main__':
     make_skywflat()
     pylab.show()
     
