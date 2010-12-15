@@ -50,40 +50,50 @@ Level 2 photometric calibration.
 \section{Photometric Requirements}
 
 The LSST Science Requirements Document (SRD) specifies that the survey
-must deliver photometry with the following characteristics:
+must deliver photometry with the following characteristics: 
 \begin{enumerate}
-\item{Repeatability of 5 millimags in $gri$, 7.5 millimags in $uzy$ 
-    (median values),
-for bright unresolved sources.  This specifies the distribution of
-random photometric errors ($\sigma$) and constrains both the
-repeatability of extracting counts from images and the ability to
-monitor (or model) the changes in normalized system response
-($\phi$). It could be thought of as making the photometry of a single
-source consistent over time. \label{repeatability_req}}
-\item{Uniformity of 10 millimags in $grizy$, and up to 20 millimags in
-$u$ (median values), again for bright unresolved sources. This places a constraint on
-the stability of the photometric system across the sky and places an
-upper limit on various systematic errors, such as a correlation of
+\item{{\bf Repeatability:} the median value of the rms of calibrated magnitude
+measurements around the mean calibrated magnitude for each
+star will not exceed 5 millimags in $gri$, 7.5 millimags in $uzy$
+for bright unresolved objects (bright implying that the measurement
+of the star's brightness is not dominated by photon statistics,
+approximately 1-4 magnitudes fainter than the saturation limit in a
+given filter).  No more than 10\% of these objects should have an rms larger
+than 15 mmag in $gri$, 22.5 mmag in $uzy$.  This specifies the
+distribution of random photometric errors ($\sigma$) and constrains
+both the repeatability of extracting counts from images and the
+ability to monitor (or model) the changes in normalized system
+response ($\phi$). It could be thought of as making the photometry of
+a single source consistent over time. \label{repeatability_req}}
+\item{{\bf Uniformity:} the rms of the internal photometric zeropoint
+error will not exceed 10 millimags in $grizy$, 20 millimags in $uzy$,
+again for bright unresolved sources. No more than 10\% of these
+sources should be more than 15 mmag in $gri$ or 22.5 mmag in $uzy$
+from the mean internal zeropoint.  This places a constraint on the
+stability of the photometric system across the sky as well as places
+an upper limit on various systematic errors, such as a correlation of
 internal photometric zero-point error with the position on a
 sensor. This makes the photometry of many sources comparable over the
 entire sky, which when combined with the previous requirements creates
 a stable photometric system across the sky and over time, in a single
 filter. \label{uniformity_req}}
-\item{Band-to-band zero-point calibration for main sequence stars of 5
-millimags for any color not involving $u$ band, 10 millimags for
-colors constructed with $u$ band photometry. This constrains the upper
-limit of the systematic error in the measurement of the system
-throughput as a function of wavelength. This requirement ties
-photometric measurements in different filters together, enabling
-colors to be measured for sources with unknown SEDs or (for sources
-with known SEDs) magnitudes in different filters to be directly
-compared. \label{color_req}}
-\item{Zero-point calibration with respect to an external system of 10
-millimags. This requirement ties LSST internal photometry to a
-physical scale, and places a constraint on the upper limit of the
-systematic error in the measurement of the total system
-throughput. This final step enables LSST photometry to be compared
-with photometry from other telescopes using other photometric
+\item{{\bf Band-to-band photometric calibration:} The absolute
+band-to-band zeropoint calibration for main sequence stars must be
+known with an accuracy of 5 millimags for any color not involving $u$
+band, 10 millimags for colors constructed with $u$ band
+photometry. This constrains the upper limit of the systematic error in
+the measurement of the system throughput as a function of
+wavelength. This requirement ties photometric measurements in
+different filters together, enabling colors to be measured for sources
+with unknown SEDs or (for sources with known SEDs) magnitudes in
+different filters to be directly compared. \label{color_req}}
+\item{{\bf Absolute photometric calibration:} The LSST photometric
+system must transform to an external physical scale ({\it e.g.} AB
+mags) with an accuracy of 10 millimags. This requirement ties LSST
+internal photometry to a physical scale, and places a constraint on
+the upper limit of the systematic error in the measurement of the
+total system throughput. This final step enables LSST photometry to be
+compared with photometry from other telescopes using other photometric
 systems. \label{abs_req}}
 \end{enumerate}
 
@@ -184,19 +194,18 @@ photoelectrons per ADU count, a number greater than one), and $h$ is
 the Planck constant. The system response function,
 $S_b^{sys}(\lambda,x,y)$, includes the effects of the mirror
 reflectance, optics transmission and detector sensitivity. In general,
-the wavelength-dependent variations in $S_b^{sys}$ change slowly; over
+the wavelength-dependent variations in $S_b^{sys}$ change slowly in time; over
 periods of months, the mirror reflectance and filter transmission will
-degrade as their coatings age. There will likely also be a
-wavelength-dependent spatial variation in $S_b^{sys}$ due to
-irregularities in the filter material caused by production methods,
-which will vary slowly from the center of the field of view to the
-outer edges, equivalent to a bandpass shift on the order of 1-2\% of
-the central wavelength of the filter. Spatial variations in $S_b^{sys}$ that are
-independent of wavelength can occur more rapidly in time, on the
-timescale of a day, and in spatial scale, on a pixel level. These
-variations are caused by dust on the dewar window or filter or
-detector sensitivity variations on the pixel-to-pixel scale, and can
-be treated as wavelength-independent.
+degrade as their coatings age. There will also be wavelength-dependent
+spatial variations in $S_b^{sys}$ due to irregularities in the filter
+material; these are expected to vary slowly from the center of the
+field of view to the outer edges, equivalent to a bandpass shift on
+the order of 1-2\% of the effective wavelength of the
+filter. Wavelength-independent variations in $S_b^{sys}$ occur more
+rapidly, on the timescale of a day, and at spatial scales as
+small as the pixel level. There are a range of causes for these
+variations: dust particles on the filter or dewar window, gain changes
+between amplifiers, or pixel-to-pixel detector sensitivity variations. 
 %A more rapid wavelength-dependent variation in
 %detector sensitivity (especially at the very red wavelengths in the
 %$y$ band) results from variations in the temperature of the detector,
@@ -217,62 +226,130 @@ shape}.
 This leads us to introduce $\phi_b(\lambda,alt,az,x,y,t)$,
 \begin{equation}
 \label{eqn:PhiDef}
-   \phi_b(\lambda,alt,az,x,y,t) = {
-     {S^{atm}(\lambda,alt,az,t) S_b^{sys}(\lambda,x,y,t) \slash
-       \lambda} \over
-     \int_0^\infty { {S^{atm}(\lambda,alt,az,t) 
-         S_b^{sys}(\lambda,x,y,t) \slash \lambda} \,d\lambda}}.
+   \phi_b(\lambda,alt,az,x,y,t) =  {
+     {S^{atm}(\lambda,alt,az,t)\, S_b^{sys}(\lambda,x,y,t) \,
+       \lambda^{-1}} \over
+     \int_0^\infty { {S^{atm}(\lambda,alt,az,t) \,
+         S_b^{sys}(\lambda,x,y,t) \, \lambda^{-1}} \,d\lambda}}.
 \end{equation}
 the normalized bandpass response for a particular observation. Note
 that $\phi_b$ {\it only} represents shape information about the
 bandpass, as by definition, $\int_0^\infty {\phi_b(\lambda) d\lambda}=1$. 
-From Equations~\ref{eqn:Fpupil} and~\ref{eqn:Fpupil2counts}, we can then
+From Equations~\ref{eqn:Fpupil} and~\ref{eqn:Fpupil2counts}, we can then 
 recast the counts received from an object as
 \begin{eqnarray}
 \label{eqn:fullcounts}
-C_b(alt,az,x,y,t) & = & C \, \int_0^\infty {F_\nu(\lambda,t)
-  S_b^{atm}(\lambda,alt,az,t) \, S_b^{sys}(\lambda,x,y,t)
-  \lambda^{-1}d\lambda} \\
-&= & C'(alt,az,x,y,t) 
+C_b(alt,az,x,y,t) & = & C \, \int_0^\infty {F_\nu(\lambda,t) \,
+  S^{atm}(\lambda,alt,az,t) \, S_b^{sys}(\lambda,x,y,t)
+  \lambda^{-1} d\lambda} \nonumber \\
+&= & {C'}^{atm}(alt,az,t) \, {C'}_b^{sys}(x,y,t) \,
      \int_0^\infty {F_\nu(\lambda,t)\phi_b(\lambda,alt,az,x,y,t)
        d\lambda} 
 \end{eqnarray}
-where $C'(alt,az,x,y,t)$ is a wavelength-independent normalization
-value that depends only
-on the {\it normalization} of the total system throughput. 
-We can then also introduce a well-defined `standard' bandpass,
-$\phi_b^{std}(\lambda)$, chosen during commisioning,
+where ${C'}^{atm}(alt,az,x,y,t)$ and ${C'}_b^{sys}$ are
+wavelength-independent normalization values that depend only on the
+{\it normalization} of the independent atmospheric and system
+throughputs. We can thus measure and apply corrections for the
+normalization of the atmospheric and system transmission
+independently.  We can then also introduce a well-defined `standard'
+bandpass, $\phi_b^{std}(\lambda)$, chosen during commisioning, so that
 \begin{eqnarray}
-C_b(alt,az,x,y,t) & = & C'(alt,az,x,y,t)
-\left( {\int_0^\infty {F_\nu(\lambda,t)\phi_b^{obs}(\lambda,alt,az,x,y,t) d\lambda} \over 
+\label{eqn:counts}
+C_b(alt,az,x,y,t) & = & {C'}^{atm}(alt,az,t)\,{C'}_b^{sys}(x,y,t) \times
+\nonumber \\
+&& \left( {\int_0^\infty {F_\nu(\lambda,t)\phi_b^{obs}(\lambda,alt,az,x,y,t) d\lambda} \over 
 \int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda) d\lambda}} 
 \right) \int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda}
 \nonumber \\ 
-& = & C'(alt,az,x,y,t) \, K'{\textbf(}F_\nu(\lambda,t),
-\phi_b^{obs}(\lambda,alt,az,x,y,t){\textbf)}
-\int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda}
-\end{eqnarray}
-where $K'(F_\nu, \phi_b^{obs})$ is a wavelength dependent value that
-depends only on the {\it shape} of the system throughput,
-but not on its normalization.  Furthermore, variations in the
-normalization of the bandpass caused by the {\it hardware} system can be separated from the
-variations in the bandpass caused by the {\it atmosphere}, and
-measured with different methods, splitting
-$C'(alt,az,x,y,t)$ into $C'^{atm}(alt,az,t)$ and $C'^{sys}(x,y,t)$ portions. It
-is more difficult for $K'(F_\nu, \phi_b^{obs})$, as the atmosphere and
-hardware effects on the total counts are not truly independent,
-however the underlying wavelength-dependent variations in $S_b^{sys}$
-and $S^{atm}$ {\it are} independent and can be measured separately and
-only applied to the measured counts as a combined correction. This
-leads to a final equation describing the ADU counts generated in the
-detector in a particular observation:
-\begin{eqnarray}
-\label{eqn:counts}
-C_b(alt,az,x,y,t) &  = & C'^{atm}(alt,az,t) \, C'^{sys}(x,y,t) \times \nonumber \\
- & & K'{\textbf(}F_\nu(\lambda,t), 
+& = & {C'}^{atm}(alt,az,t)\, {C'}_b^{sys}(x,y,t) \times \nonumber \\
+&&  K'{\textbf(}f_\nu(\lambda,t),
 \phi_b^{obs}(\lambda,alt,az,x,y,t){\textbf)} \times \nonumber \\
-& & \int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda}.
+&& \int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda}
 \end{eqnarray}
+where $K'(f_\nu, \phi_b^{obs})$ is a value that
+depends only on the {\it shape} (wavelength-dependence) of the system
+throughput during a particular observation and the {\it shape} of the SED
+of the astronomical object ($f_\nu = F_\nu / F_o$, $F_o$ being the
+total flux of the object),
+but not on the normalization of the total throughput or the total flux
+of the object.  The variation in
+the total counts arising from the $K'(f_\nu,
+\phi_b^{obs})$ term is dependent on the cumulative effect of both the
+atmosphere and the system transmission curves on the source SED, thus
+while the underlying wavelength-dependent (shape) variations in $S_b^{sys}$
+and $S^{atm}$ {\it are} independent and can be measured separately,
+the resulting effect can only applied as a combined correction. 
+
+Examples of the effects of variations in the atmospheric transmission
+curve and system transmission curve {\it shapes} on final observed
+counts are shown in Figure~\ref{fig:delta_mags} and
+Table~\ref{tab:delta_mags}. It is worthwhile to note that even for these two
+main sequence models, covering a limited range of $g-i$ color, with
+conservative atmospheric and system transmission curve changes, the
+resulting changes in magnitude can be larger than the SRD
+repeatability requirements would allow. Adding the effect of
+gray-scale normalization changes due to the atmosphere or detector
+sensitivity would further increase the magnitude variations. 
+
+\begin{figure}[htbp]
+\includegraphics[width=6in]{delta_mags}
+\caption{ {\small {\bf Changes in observed magnitudes (counts) due to variations in
+system and atmospheric bandpass shape.} Two main sequence kurucz model
+stars, one blue (35000 K) and one red (6000 K), were used to generate
+observed magnitudes (equivalent to $-2.5\, log(C_b)$ - the counts in
+Eqn~\ref{eqn:counts}) using three different atmospheric transmission
+profiles and two different system transmission profiles. The stellar
+flux profiles are shown in the top center panel, while the atmospheric
+transmission functions ($S^{atm}(\lambda)$) are shown across the
+second row and the two system transmission profiles
+($S_b^{sys}(\lambda)$) are duplicated across the third row. The
+atmospheric transmission profiles correspond to an airmass=1.0, 1.2
+and 1.5 (from left to right), with variable atmospheric absorption
+components. Note that the X=1.0 atmosphere is very similar but not
+identical to the current LSST default X=1.2 atmosphere throughput
+curve, which is used as `standard' here. The system transmission
+profiles consist of a `standard' profile (matching the LSST current
+expected values) and version where the filter throughputs have been
+shifted by 1\% of the effective wavelength of each filter (consistent
+with the shift expected near the edge of each filter). The final row
+demonstrates the changes in observed magnitudes produced by the X=1.0,
+`standard' and X=1.5 atmospheres (left to right, respectively),
+combined with both the `standard' system transmission (represented by
+the star points) and the +1\% shifted system transmission (represented
+by the filled circles) for both the red and blue stars. The exact
+differences in magnitudes resulting from this calculation are listed in
+Table~\ref{tab:delta_mags}. }
+\label{fig:delta_mags} }
+\end{figure}
+
+\begin{center}
+\begin{table}[htb]
+\caption{{\bf Changes in observed magnitudes due variations in system and atmospheric
+ bandpass shape (see also Fig~\ref{fig:delta_mags}) } }
+\begin{tabular}{l l | c c c c c c}
+& & $u$ & $g$ & $r$ & $i$ & $z$ & $y$ \\ 
+\hline \hline
+Standard atm, std sys  &  red & 21.472 & 20.378 & 20.000 & 19.911 & 19.913 & 19.913 \\
+Standard atm, std sys  &  blue & 19.102 & 19.503 & 20.000 & 20.378 &
+20.672 & 20.886 \\ \hline \hline
+& & \multicolumn{6} {c} {{\small Change in observed magnitude due to bandpass
+shape }} \\ 
+\hline
+Standard atm, +1\% sys shift & red  & -0.031 & -0.022 & -0.008 & -0.002 & 0.001 & 0.001 \\
+Standard atm, +1\% sys shift & blue  & 0.009 & 0.017 & 0.020 & 0.020 & 0.016 & 0.016 \\ \hline
+X=1.0, std sys & red  & 0.003 & -0.000 & 0.000 & -0.000 & 0.000 & 0.001 \\
+X=1.0, std sys & blue  & -0.001 & 0.000 & -0.001 & -0.000 & -0.001 & 0.005 \\ \hline
+X=1.0, +1\% sys shift & red & -0.028 & -0.022 & -0.008 & -0.002 & 0.001 & 0.002 \\
+X=1.0, +1\% sys shift & blue & 0.008 & 0.017 & 0.019 & 0.020 & 0.014 & 0.021 \\ \hline
+X=1.5, std sys  & red & -0.012 & -0.004 & -0.001 & -0.000 & -0.000 & -0.000 \\
+X=1.5, std sys  & blue & 0.005 & 0.003 & 0.002 & 0.001 & 0.001 & -0.000 \\ \hline
+X=1.5, +1\% sys shift & red & -0.042 & -0.025 & -0.009 & -0.002 & 0.001 & 0.001 \\
+X=1.5, +1\% sys shift & blue & 0.014 & 0.019 & 0.022 & 0.021 & 0.017 & 0.016 \\ \hline
+\end{tabular}
+\label{tab:delta_mags}
+\end{table}
+\end{center}
+
 
 \subsection{From counts to photons}
 
@@ -285,7 +362,7 @@ Let us first consider all variations in $S_b^{sys}(\lambda,x,y,t)$,
 further dividing this variability into wavelength-dependent and
 wavelength-independent (gray) portions as follows. Using a dome-screen
 system that is capable of producing light at a range of individual
-wavelengths (the ``stubbsometer''), we can measure the sensitivity of
+wavelengths, we can measure the sensitivity of
 the mirror/lens/filter/detector system as a function of $x$,$y$ at
 each wavelength, producing a data cube of `narrow band flat
 fields'. While it would be desireable to use these as a standard flat
@@ -346,18 +423,19 @@ Using Equation~\ref{eqn:counts} above, we now define a `natural magnitude'
 \begin{eqnarray}
 \label{eqn:defnatmags}
 m_{nat}  & = &-2.5 log_{10} \left( {C_b(alt,az,x,y,t) \over 
-C'^{atm}(alt,az,t) \, C'^{sys}(x,y,t) \,
-K'{\textbf(}F_\nu(\lambda,t),
+{C'}^{atm}(alt,az,t) \, {C'}_b^{sys}(x,y,t) \,
+K'{\textbf(}f_\nu(\lambda,t),
 \phi_b^{obs}(\lambda,alt,az,x,y,t){\textbf)} } \right) \nonumber \\
  & = & -2.5 log_{10} \left( \int_0^\infty
    {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda} \right),
 \end{eqnarray}
-describing the quantity we wish to derive from the measured ADU counts. 
-These natural magnitudes are calibrated for variations in the observed
-bandpass shape and normalization, thus are directly comparable from
-one observation to another. However, they are not tied to an external
-physical scale (or from one filter to another), and thus only define an internally calibrated LSST
-magnitude in a particular filter.
+describing the quantity we wish to derive from the measured ADU
+counts.  These natural magnitudes are calibrated for variations in the
+observed bandpass shape and normalization, thus are directly
+comparable from one observation to another. However, they are not tied
+to an external physical scale (or from one filter to another), and
+thus only define an internally calibrated LSST magnitude in a
+particular filter.
 
 The natural magnitudes can be {\it conceptually} related to the corrections
 from illumination-corrected narrow band flat fields (calibrating the
@@ -374,16 +452,18 @@ m_b^{nat} & = &-2.5 \, log_{10} \, (C_{b, raw}(alt,az,x,y,t))
  & & +\, \delta z_b^{ff}(x,y,t) + \delta k_b^{ff}(x,y,SED,t)  \nonumber \\  
  & &+\, \delta z_b^{selfcalib}(alt,az,t)  + \delta k_b^{atm}(alt,az,SED,t), 
 \end{eqnarray}
-where the wavelength-dependent zeropoint offsets, $\delta k$, are
+where the $\delta k$ zeropoint offsets depend on the shape of the
+source SED and the atmosphere (or system) throughput curves and are
 equivalent to correcting the {\it shape} of the bandpass to a standard
-curve and the wavelength-indepedent
-zeropoint offsets, $\delta z$, are equivalent to
-correcting the {\it normalization} of the bandpass to a common zeropoint
-standard. Note that in practice these corrections are not applied in
-as in Equation~\ref{eqn:defnatmags2}, {\it e.g.} the flat field
-correction would be applied directly to the image pixels and $\delta
-k_b^{ff}$ is not independent of $\delta k_b^{atm}$, but this is a
-useful conceptual aid.
+curve, and the $\delta z$ zeropoint offsets depend on the total
+throughput of the atmosphere (or system) and are equivalent to
+correcting the {\it normalization} of the bandpass to a common
+zeropoint standard. Note that in practice these corrections are not
+applied in as in Equation~\ref{eqn:defnatmags2}, {\it e.g.} the flat
+field correction would be applied directly to the image pixels and a
+total $\delta k_b(alt,az,x,y,SED,t)$ should be calculated from the
+atmosphere and system throughput curves combined.
+
 
 Finally, the internally calibrated natural magnitudes in each filter
 must be tied from one filter band to another to fulfill SRD
@@ -491,7 +571,7 @@ Standards (NIST) to $\approx0.1\%$ relative accuracy across
 wavelengths from 450~nm to 950~nm. The response of these diodes varies
 smoothly across this range of wavelength and provides a well-behaved
 reference for determination of $S_b^{sys}(\lambda)$.  Further details
-of the narrow band flat field apparatus (the ``stubbsometer'') can be
+of the narrow band flat field apparatus can be
 found in XXX (SPIE ref). 
 
 In each filter, the set of narrow band flats taken at each wavelength
@@ -606,15 +686,13 @@ screen has a 1\% gradient across the field of view, the pixel scale
 changes by 0.5\% from corner to corner, and the ghosting is generated
 by adding 0.1\% of the total light into a ring reflection. 
 The top large panel on the right shows the dome screen flat field that
-would be observed after combining all of the effects on the left. This
-looks very much like  `typical' flat field. The bottom large panel on
+would be observed after combining all of the effects on the left. The bottom large panel on
 the right shows the illumination correction that must be multiplied with 
 this flat field to remove the effects of the dome screen variation,
 the pixel scale variation, and the ghosting.   Note that no photon noise was
 introduced in this simulation.  \label{fig:flatfield}
 } }
 \end{figure}
-
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{ICeffect}
@@ -638,15 +716,13 @@ the top row. The bottom right panel demonstrates an improved processing
 of the raw sky image, by subtracting the ghost image and then dividing
 by the illumination corrected flat field. 
 Note that the sky background does not appear
-flat, but the counts have been corrected to the appropriate levels to
-maintain photometry. 
+flat but is correct for preserving stellar photometric accuracy. 
 In each image with stars, the numbers next to each star indicate the
 counts measured within an appropriate circular aperture for the
 star. In the raw images, these counts are not equal because of the
 variation in pixel to pixel sensitivities.  \label{fig:iceffect}
 }}
 \end{figure}
-
 
 The illumination correction (one per filter) will be generated
 whenever the camera is removed from the telescope or the focal path
