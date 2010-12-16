@@ -86,7 +86,7 @@ def measure_star(pixgrid, star):
                 starmeas = starmeas + pixgrid[i][j]
                 starpix = starpix + 1
     # get estimate for background here
-    bkgdextent = 6
+    bkgdextent = int(0.5*psf)
     bkgdpix = 0
     bkgd = 0
     for i in range(starx0 - bkgdextent, starx0-1):

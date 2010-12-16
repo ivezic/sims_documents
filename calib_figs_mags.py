@@ -379,3 +379,16 @@ def make_figures(stars, sys_std, sys_edge, atmos, total, mags_delta):
     pylab.xticks(xspace, filterlist)
     ax.tick_params(axis='y', labelleft='off', labelright='on', labelsize='small')
     pylab.title("Delta Mag (X=1.5)",  fontsize='small')                       
+
+
+
+if __name__ == "__main__":
+
+    sys_std, sys_edge = read_hardware()
+    atmos = read_atmos()
+    total = combine_throughputs(atmos, sys_std, sys_edge)
+    stars = read_seds(total)
+    delta_mags = calc_mags(stars, total)
+    make_figures(stars, sys_std, sys_edge, atmos, total, delta_mags)
+    pylab.show()
+    
