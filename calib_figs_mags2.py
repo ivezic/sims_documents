@@ -74,27 +74,77 @@ def combine_throughputs(atmos, sys):
     return total
 
 
-def read_seds(total):
-    # read SEDs - one blue star, one red star
+def read_stars():
+    # read MS, g40 stars SEDs
     stars = {}
-    seddir = "/Users/rhiannonjones/seds/kurucz_r/"
-    key = "red"
-    stars[key] = Sed()
-    stars[key].readSED_flambda(os.path.join(seddir, "km01_6000.fits_g40"))
-    normmag = 20
-    fluxnorm = stars[key].calcFluxNorm(normmag, total['standard']['r'])
-    stars[key].multiplyFluxNorm(fluxnorm)
-    stars[key].flambdaTofnu()
-    key = "blue"
-    stars[key] = Sed()
-    stars[key].readSED_flambda(os.path.join(seddir, "kp02_35000.fits_g40"))
-    normmag = 20
-    fluxnorm = stars[key].calcFluxNorm(normmag, total['standard']['r'])
-    stars[key].multiplyFluxNorm(fluxnorm)
-    stars[key].flambdaTofnu()
-    return stars
-
+    stardir = "/Users/rhiannonjones/seds/kurucz_r/"
+    allfilelist = os.listdir(stardir)
+    starlist = []
+    for filename in allfilelist:
+        if filename[-3:] == 'g40':
+            starlist.append(filename)
+    stars = {}
+    for s in starlist:
+        stars[s] = Sed.Sed()
+        stars[s].readSED_flambda(stardir+s)
+    print "#Read %d stars from %s" %(len(starlist), stardir)
+    atemperature = []
+    amet = []
+    for s in starlist:
+        tmp = s.split('_')
+        met = float(tmp[0][2:])
+        if tmp[0][1] == 'm':
+            met = -1 * met
+        met = met/10.0
+        amet.append(met)
+        temperature = float(tmp[1][:5])
+        atemperature.append(temperature)
+    temperature = n.array(atemperature)
+    met = n.array(amet)
+    return stars, starlist, temperature, met
 
 
 if __name__ == "__main__":
     
+    sys_std = read_hardware(shift_perc=None)
+    atmos = read_atmos()
+    total_std = combine_throughputs(atmos, sys_std)    
+    stars, starlist = read_stars()
+    # Use a bandpass to set up the fnuArray for easy/fast calculation
+    # of magnitudes for the stars.
+    starfnuArray, starzp = total['standard']['g'].setupFnuArray(stars)
+    # calculate the standard magnitudes for each of these stars
+    mags_std = {}
+    atmokeylist = ['standard', 'X=1.0', 'X=1.5']
+    for akey in atmokeylist:
+        bplist = []
+        for f in filterlist:
+            bplist.append(total[akey][f])
+
+    
+    shifts = numpy.arange(0, 10, 0.5)
+    for shift in shifts:
+        sys = read_hardware(shift_perc = shift)
+        total = combine_throughputs(atmos, sys)
+        
+        # calculate magnitude in flat bandpass
+        for s in starlist:
+            stdmags = {}
+        writestring = "%s  standard " %(s)
+        for f in filterlist:
+            stdmags[f] = stars[s].calcMag(standard[f])
+            writestring = writestring + " %.5f " %(stdmags[f])
+        for f in filterlist:
+            writestring = writestring + " 0.0 "
+        print writestring
+        for a in atmoslist:
+            writestring = "%s  %s " %(s, a)
+            mags = {}
+            for f in filterlist:
+                mags[f] = stars[s].calcMag(throughputs[a][f])
+                writestring = writestring + " %.5f " %(mags[f])
+            for f in filterlist:
+                tmp = mags[f] - stdmags[f]
+                writestring = writestring + " %.5f " %(tmp)
+            print writestring
+

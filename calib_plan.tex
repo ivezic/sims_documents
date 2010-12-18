@@ -521,9 +521,6 @@ benefit photometric precision for extended objects. This is
 particularly true for the illumination correction.
 
 
-XXX  : todo - flat SEDS vs true SEDs -  what's the scatter? what about
-in different conditions? 
-
 \section{Details of the internal calibration process}
 
 The next sections describe further details of the calibration process
@@ -597,18 +594,21 @@ applying $\delta k(x,y,SED,t)$ corrections to the observed magnitudes,
 however, the wavelength-dependent effects of the atmosphere must also
 be considered, as the final effect on the observed magnitude is not
 independent. Thus, the narrow band flat fields will be combined using
-a series of standard model SEDS to generate
-$\delta k(x,y,alt,az,SED,t)$ corrections for each image after the atmospheric
+a series of standard model SEDS to generate $\delta
+k(x,y,alt,az,SED,t)$ corrections for each image after the atmospheric
 corrections described in Section~\ref{sec:auxtele} have been
-calculated and applied to the model SEDs. Thus there will be lookup
-tables created with $\delta k(x,y,alt,az,SED,t)$ as a function of
-color for each observation. These $\delta k$ correct the shape of the
-system bandpass response to a standardized value, chosen during
-commissioning.  Obviously, applying these corrections requires knowing
-the spectral energy distribution of the astronomical object, but with
-the many observations available at the time of data release, the color
-will be known (through iteration of the photometric calibration
-procedure) to $\approx 0.07$~magnitudes.
+calculated and applied to the model SEDs. Thus for each observation,
+there will be lookup tables created with $\delta k(x,y,alt,az,SED,t)$
+that can be parametrized as a function of object color. These $\delta
+k$ correct the shape of the system bandpass response to a standardized
+value, chosen during commissioning.  Obviously, applying these
+corrections requires knowing the color of the astronomical object (and
+ideally, the full spectral energy distribution), and this information
+will not always be known for all objects. In practice, the calibration
+pipeline will calculate corrections using best-estimates of the
+objects' color. These estimates will increase in accuracy as the
+survey progresses, eventually reaching $\approx 0.07$~magnitudes for
+objects with many repeat observations.
 
 CREATE FIGURE: data cube of narrow band flats, different input SEDS,
 $\delta k$ ouputs
@@ -650,10 +650,10 @@ Even with careful design, the illumination pattern from the dome
 projector system will not be uniform over spatial scales comparable to
 the size of the focal plane. Estimates by Photon Engineering,
 Inc. (Tucson, AZ) of the amount of ``stray'' light within the dome
-housing indicate that $\approx 1−2\%$ of the light that reaches the
+housing indicate that $\approx1-2\%$ of the light that reaches the
 camera focal plane may not originate from within the LSST etendue.
 Furthermore, there will be light scattered within the camera dewar and
-$\approx 1-2\%$ of the light within the etendue will have undergone
+some fraction of the light within the etendue will have undergone
 multiple reflections within the camera refractive optics (creating
 `ghost' images of the light from the dome screen). In addition,
 projection effects cause a variation in the pixel scale from the
@@ -734,7 +734,7 @@ mirrors being realuminized). It will be created by combining
 photometric measurements of stars obtained from rastoring dense star
 fields across the focal plane on a photometric night (where the star's
 images are corrected by the `raw' synthetic flat, with no illumination
-correction), the observed narrow band dome screen (DS) flats, and a
+correction), the observed individual narrow band dome screen (DS) flats, and a
 ZEMAX model constrained by measurements of the focal plane response
 and ghosting in the focal plane using the Camera Calibration Optical
 Bench (CCOB; more details below). After acquiring these data, it is then possible to
@@ -754,7 +754,9 @@ where the measured values above are the measured magnitudes of the stars
 from the dense rastor scan (corrected only by the raw synthetic flat
 without illumination correction), the measured ADU values from each pixel of the narrow band
 flat fields, and the measured ADU values from each pixel from the CCOB
-measurements. The model values come from best-fit parameters for each
+measurements, reported over a range of pixel locations ($x,y$) and incident
+angles ($\theta,\phi$) corresponding to the range of light paths for
+incoming photons. The model values come from best-fit parameters for each
 of these, when the illumination correction is included: 
 \begin{eqnarray}
 m^{star}_{model}(x,y) & = &  \int d\theta d\phi \, \int {d\lambda \over \lambda}
@@ -787,9 +789,7 @@ corrections for stray light in the synthetic flat, and $FP$ stands for
 focal plane response, $M$ for the mirror transmission response, $R$ for the
 refractive optics transmission, $G$ is the ghosting expected in this bandpass (calculated from
 the ZEMAX model), and $SS$ stands for all other stray/scattered light
-that is present in the dome screen flats. The ($x,y$) indexes refer to
-the pixel locations, while the ($\theta,\phi$) values refer to the
-beam incident angles. The form for
+that is present in the dome screen flats. The form for
 $Z^{IC}$ must account for possible sharp changes at amp boundaries,
 and should be multiplied back into the synthetic flat (changing pixel
 values in the synthetic flat) rather than just applied as a series of
@@ -862,10 +862,10 @@ atmospheric transmission; it is worth noting that these auxiliary
 telescope measurements will {\it not} correct for cloud extinction or
 any other gray extinction. The wavelength-dependent atmospheric
 variations are due to variations in the composition of the atmosphere;
-measurements acquired within a few degrees of the field of view and
-within 5--10 minutes of the science image will be sufficient to
-correct the `observed' atmospheric bandpass to the `standard'
-atmospheric bandpass.
+the auxiliary telescope will acquire measurements with a sufficient
+sampling rate and spacing across the sky to allow determination of the
+atmospheric absorption within each science image, correcting the
+`observed' atmospheric transmission curve to the `standard' bandpass.
 
 The auxiliary telescope will be a 1.2m telescope equipped with a
 spectroscope which will monitor a set of probe stars as they traverse
@@ -873,8 +873,10 @@ the sky each night. The spectra from the auxiliary telescope will be
 processed to correct for the efficiency of the spectroscope itself,
 leaving the spectra of the star and the signature of absorption from
 the atmosphere. The resulting spectra will be fit to state-of-the-art
-datmospheric models (such as MODTRAN4) to determine the atmospheric
-components responsible for absorption in the spectra. These components
+atmospheric models (such as MODTRAN4) to determine the 
+components responsible for absorption in the spectra, including
+molecular scattering, aerosol scattering, and absorption from oxygen, nitrogen, ozone,
+water vapor and trace elements. The fitted values of these atmospheric components
 can then be interpolated to calculate the atmospheric mix present in
 any science image, recreating the relevant
 $\phi^{atm}(\lambda,alt,az,t)$. Recognition of the atmospheric components
@@ -888,19 +890,14 @@ number of repeat observations, using an iterative procedure to extract
 stellar parameters (effective temperature and surface gravity) for
 each of the probe stars along with the atmospheric constituents. 
 
-For each interpolated $\phi^{atm}(\lambda,alt,az,t)$, combined with
-the the bandpass shape measured as a function of position in the focal
-plane, $\phi_b^{sys}(\lambda,x,y,t)$ (as in Section~\ref{sec:narrowband}), a set of $\delta
-k(x,y,alt,az,SED,t)$ corrections will be calculated using a series of model
-spectral energy distributions (including standard
-stellar models), creating tables of $\delta k$ as a
-function of color for each observation. These $\delta k$ correct the shape of the entire
-bandpass response (both system and atmosphere) to a standardized value
-defined during commissioning. Applying these corrections requires knowing
-the spectral energy distribution of the astronomical object, but with
-the many observations available at the time of data release, the color
-will be known (through iteration of the photometric calibration
-procedure) to $\approx 0.07$~magnitudes.
+By collecting atmospheric absorption measurements every 5-10 minutes 
+over a wide range of airmasses and positions in the sky, 
+
+Each interpolated $\phi^{atm}(\lambda,alt,az,t)$, will be combined with
+the bandpass shape measured as a function of position in the focal
+plane, $\phi_b^{sys}(\lambda,x,y,t)$, as in
+Section~\ref{sec:narrowband}), creating a set of $\delta
+k(x,y,alt,az,SED,t)$ corrections for each observation.
 
 ADD/CREATE FIGURE showing atmosphere and various components
 
