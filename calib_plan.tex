@@ -36,18 +36,32 @@ Lynne Jones, David Burke, \v{Z}eljko Ivezi\'{c}, and the Photometric Calibration
 Two levels of LSST photometric calibration will be carried out at
 differing cadences and with differing performance targets. A nightly
 data calibration based on the best available set of prior calibrated
-observations will provide “best-effort” precision and accuracy. This
+observations will provide best-effort precision and accuracy. This
 calibration will be used for quality assurance, generation of alerts
-to transients, and other quantities appropriate for Level 1 Data
-Products.  A more complete analysis will recalibrate the data
-accumulated by the survey at periodic “Data Release” dates (Level 2 in
-LSST data management terminology.)  It is this repeated calibration of
-the accumulated survey that will be held to the survey requirements
-for photometric repeatability, uniformity, and accuracy.  This
-document describes the calibration requirements and processes for the
-Level 2 photometric calibration.
+for transient objects, and other quantities appropriate for nightly
+data generation (Level 1 Data Product in LSST Data Management terms).
+A more complete analysis will recalibrate the data accumulated by the
+survey at periodic Data Release dates (aka Level 2 Data products).  It
+is this repeated calibration of the accumulated survey that will be
+held to the survey requirements for photometric repeatability,
+uniformity, and accuracy.  This document describes the calibration
+requirements and processes for the Level 2 photometric calibration.
+
+Section~\ref{sec:photoreq} reviews the survey requirements for
+photometric calibration, while Section~\ref{sec:calib_overview}
+describes the philosophy behind LSST's calibration procedure, first
+motivating this procedure by describing the true path of a photon
+through the atmosphere and LSST system and then from the calibration
+point of view, trying to recreate the transmission of those photons to
+the focal plane.  Section~\ref{sec:calib_details} describes details of
+each step of the calibration procedure, including how each calibration
+measurement is obtained and applied to the science data.
+Section~\ref{sec:error} discusses the error budget of the calibration
+procedure, while Section~\ref{sec:validate} provides a short overview
+of the current validation plans.
 
 \section{Photometric Requirements}
+\label{sec:photoreq}
 
 The LSST Science Requirements Document (SRD) specifies that the survey
 must deliver photometry with the following characteristics: 
@@ -71,9 +85,9 @@ again for bright unresolved sources. No more than 10\% of these
 sources should be more than 15 mmag in $gri$ or 22.5 mmag in $uzy$
 from the mean internal zeropoint.  This places a constraint on the
 stability of the photometric system across the sky as well as places
-an upper limit on various systematic errors, such as a correlation of
-internal photometric zero-point error with the position on a
-sensor. This makes the photometry of many sources comparable over the
+an upper limit on various systematic errors, such as any correlation
+of photometric calibration with varying stellar populations (or
+colors). This makes the photometry of many sources comparable over the
 entire sky, which when combined with the previous requirements creates
 a stable photometric system across the sky and over time, in a single
 filter. \label{uniformity_req}}
@@ -81,7 +95,7 @@ filter. \label{uniformity_req}}
 band-to-band zeropoint calibration for main sequence stars must be
 known with an accuracy of 5 millimags for any color not involving $u$
 band, 10 millimags for colors constructed with $u$ band
-photometry. This constrains the upper limit of the systematic error in
+photometry. This places an upper limit on the systematic error in
 the measurement of the system throughput as a function of
 wavelength. This requirement ties photometric measurements in
 different filters together, enabling colors to be measured for sources
@@ -100,11 +114,11 @@ systems. \label{abs_req}}
 Requirements \ref{repeatability_req} and \ref{uniformity_req} must be
 met by compensating for changes in system sensitivity as a function of
 time, location in the sky or focal plane, and result in a relative
-calibration within a single filter. Requirements \ref{color_req}
-and \ref{abs_req} require additional measurements of sources with
-known colors and absolute magnitudes, where these additional
-measurements result in a relative calibration from filter to filter as
-well as an absolute physical scale for the overall system.
+calibration within a single filter. Requirements \ref{color_req} and
+\ref{abs_req} require additional measurements of sources with known
+colors and absolute magnitudes, providing a relative calibration from
+filter to filter as well as an absolute physical scale for the overall
+system.
 
 Only photometric measurements released as part of the data release
 products (generated annually) will be held to the requirements
@@ -114,29 +128,49 @@ products will be generated to ``best-effort'' precision and accuracy
 using the best-available prior calibrated observations.
 
 \section{Overview of the photometric calibration process}
+\label{sec:calib_overview}
 
-Traditional photometric calibration, where a set of standard stars are
-observed at a range of airmasses to calculate zeropoint offsets and a
-single color-dependent extinction term, is sufficient for photometry
-at the few percent level on photometric nights. However, for LSST to
-reach 0.5\% level photometric repeatability and 1\% photometric
-uniformity (as specified in the SRD) over a wide range
-of observing conditions requires a new approach. By splitting the
-measurement of the normalization of the system response (the
-gray-scale zeropoint) from the shape of the bandpass (the color and
-wavelength-dependent terms) and also splitting the measurement
-of the telescope hardware response from the atmospheric throughput, we
-can achieve photometric calibration at the required levels. 
+In traditional photometric calibration, a set of standard stars are
+observed at a range of airmasses to calculate zeropoint offsets and
+(typically) a single color-dependent extinction term. This is
+sufficient for photometry at the few percent level on photometric
+nights, however, historical weather data from Cerro Pachon tells us
+only 53\% of the available observing time can be considered
+photometric. To take advantage of the full 85\% of the available
+observing time which is usable (total cloud extinction less than 1.5
+magnitudes), and to reach the SRD specified requirements -- 0.5\%
+level photometric repeatability and 1\% photometric uniformity --
+requires a new approach.
+
+This new approach lies in splitting the measurement of the {\it
+normalization} of the throughput in each observation (the gray-scale
+zeropoint) from the {\it shape} of the throughput curve (the color
+dependent terms), and further, using separate procedures to measure
+the contributions of the telescope hardware response (to the total
+normalization and bandpass shape) from the atmospheric throughput (to
+normalization and shape). This allows optimized methods to measure
+each individual component affecting the final measured magnitudes,
+allowing us to achieve photometric calibration at the required levels.
 
 This section will provide an overview of the calibration measurements
-required and motivate the process itself. 
+required and motivate the process itself, starting with a review of
+what is physically happening to photons in their path toward the focal
+plane (the `truth') then followed by an outline of how the measured
+ADU counts can be translated back to photons above the atmosphere (the
+`model').
 
 \subsection{From photons to counts}
 
 Let us first consider how the photons from an astronomical object are
-converted into ADUs in the detector, paying attention to
-what variations might arise in the LSST system to affect the final ADU
-counts.
+converted into ADUs in the detector, paying attention to what
+variations (including their time and spatial scales for variability)
+might arise in the LSST system to affect the final ADU counts. This is
+the `truth' that the calibration procedure must attempt to recreate. 
+
+Note - while $F_nu{\lambda,t)$ and other quantities that are functions of time
+could vary more quickly than the standard LSST exposure time of 15s, it is
+assumed that all such quantities are averaged over that short exposure time, so 
+that $t$ refers to quantities that can vary from exposure to exposure. 
 
 Given $F_\nu(\lambda)$, the specific flux of an object at
 the top of the atmosphere, at a position described by ($alt$,$az$),
@@ -166,13 +200,7 @@ angular scales and short timescales (on the order of 2-10\% of the
 total extinction at $1^{\circ}$ scales, variable within minutes)
 (Ivezic2007).
 
-Note that while both $F_\nu(\lambda,t)$ and $\tau^{atm}(\lambda,alt,az,t)$ 
-could vary more quickly than the standard LSST exposure time of 15
-seconds, it is assumed here that all quantities are averaged over some
-short exposure time and that $t$ indicates that the quantities could
-vary from exposure to exposure. 
-
-Given $F_\nu^{pupil}(\lambda,alt,az,t)$, the ADU counts recorded at a
+Given $F_\nu^{pupil}(\lambda,alt,az,t)$, then the ADU counts recorded at a
 position within the field of view described by ($x$,$y$) can be
 written as
 \begin{equation}
@@ -182,7 +210,7 @@ written as
 Here, $S_b^{sys}(\lambda,x,y,t)$ is the (dimensionless) probability
 that a photon will be converted into an ADU count, and the term
 $\lambda^{-1}$ comes from the conversion of energy per unit frequency
-into the number of photons per unit wavelength ($b=ugrizy$). The
+into the number of photons per unit wavelength (and $b$ refers to a particular filter, $ugrizy$). The
 dimensional conversion constant $C$ is
 \begin{equation}
 \label{eqn:Cconstant}
@@ -193,7 +221,7 @@ exposure time, $g$ is the gain of the readout electronics (number of
 photoelectrons per ADU count, a number greater than one), and $h$ is
 the Planck constant. The system response function,
 $S_b^{sys}(\lambda,x,y)$, includes the effects of the mirror
-reflectance, optics transmission and detector sensitivity. In general,
+reflectance, optics transmission and detector sensitivity. Here again, 
 the wavelength-dependent variations in $S_b^{sys}$ change slowly in time; over
 periods of months, the mirror reflectance and filter transmission will
 degrade as their coatings age. There will also be wavelength-dependent
@@ -201,7 +229,7 @@ spatial variations in $S_b^{sys}$ due to irregularities in the filter
 material; these are expected to vary slowly from the center of the
 field of view to the outer edges, equivalent to a bandpass shift on
 the order of 1-2\% of the effective wavelength of the
-filter. Wavelength-independent variations in $S_b^{sys}$ occur more
+filter. Wavelength-independent (gray-scale) variations in $S_b^{sys}$ occur more
 rapidly, on the timescale of a day, and at spatial scales as
 small as the pixel level. There are a range of causes for these
 variations: dust particles on the filter or dewar window, gain changes
@@ -214,16 +242,15 @@ between amplifiers, or pixel-to-pixel detector sensitivity variations.
 From equation~\ref{eqn:Fpupil2counts} and the paragraphs above, we can
 see that the generation of counts $C_b(alt,az,x,y,t)$ from photons is
 imprinted with many different effects, each with different variability
-scales over time ($t$), space ($alt$, $az$ or $x$, $y$), and
-wavelength ($\lambda$). These different scales of variability motivate
-us to separate the measurement of these effects for calibration
-purposes. In particular, the 
-wavelength-independent variation in the {\it normalization} of $S_b^{sys}$ and $S^{atm}$
-occurs on quite different temporal and spatial scales than the
-wavelength-dependent variability in the {\it
-shape}.
+scales over time, space, and wavelength. In particular the
+wavelength-dependent variability (bandpass shape!) is typically much
+slower to change than the gray-scale variations
+(normalization!). These different scales of variability motivate us to
+separate the measurement of the normalization of $S_b^{sys}$ and
+$S^{atm}$ from the measurement of the wavelength-dependent shape of
+the bandpass. 
 
-This leads us to introduce $\phi_b(\lambda,alt,az,x,y,t)$,
+This then leads us to introduce a `normalized bandpass response function', $\phi_b(\lambda,alt,az,x,y,t)$,
 \begin{equation}
 \label{eqn:PhiDef}
    \phi_b(\lambda,alt,az,x,y,t) =  {
@@ -232,9 +259,10 @@ This leads us to introduce $\phi_b(\lambda,alt,az,x,y,t)$,
      \int_0^\infty { {S^{atm}(\lambda,alt,az,t) \,
          S_b^{sys}(\lambda,x,y,t) \, \lambda^{-1}} \,d\lambda}}.
 \end{equation}
-the normalized bandpass response for a particular observation. Note
-that $\phi_b$ {\it only} represents shape information about the
+for each observation. Note
+that $\phi_b$ only represents {\it shape} information about the
 bandpass, as by definition, $\int_0^\infty {\phi_b(\lambda) d\lambda}=1$. 
+
 From Equations~\ref{eqn:Fpupil} and~\ref{eqn:Fpupil2counts}, we can then 
 recast the counts received from an object as
 \begin{eqnarray}
@@ -247,43 +275,53 @@ C_b(alt,az,x,y,t) & = & C \, \int_0^\infty {F_\nu(\lambda,t) \,
        d\lambda} 
 \end{eqnarray}
 where ${C'}^{atm}(alt,az,x,y,t)$ and ${C'}_b^{sys}$ are
-wavelength-independent normalization values that depend only on the
-{\it normalization} of the independent atmospheric and system
+wavelength-independent values that depend only on the {\it
+normalization} of the independent atmospheric and system
 throughputs. We can thus measure and apply corrections for the
-normalization of the atmospheric and system transmission
-independently.  We can then also introduce a well-defined `standard'
-bandpass, $\phi_b^{std}(\lambda)$, chosen during commisioning, so that
+normalization of the atmospheric and system transmission independently
+of each other and of the shape of the bandpass.  We can also introduce
+a well-defined `standard' bandpass response, $\phi_b^{std}(\lambda)$, chosen
+during commisioning, so that
 \begin{eqnarray}
 \label{eqn:counts}
 C_b(alt,az,x,y,t) & = & {C'}^{atm}(alt,az,t)\,{C'}_b^{sys}(x,y,t) \times
 \nonumber \\
-&& \left( {\int_0^\infty {F_\nu(\lambda,t)\phi_b^{obs}(\lambda,alt,az,x,y,t) d\lambda} \over 
-\int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda) d\lambda}} 
-\right) \int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda}
+&& \left( {\int_0^\infty {f_\nu(\lambda,t)\phi_b^{obs}(\lambda,alt,az,x,y,t) d\lambda} \over 
+\int_0^\infty {f_\nu(\lambda,t)\phi_b^{std}(\lambda) d\lambda}} 
+\right)\times  \nonumber \\ 
+\int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda}
 \nonumber \\ 
-& = & {C'}^{atm}(alt,az,t)\, {C'}_b^{sys}(x,y,t) \times \nonumber \\
-&&  K'{\textbf(}f_\nu(\lambda,t),
-\phi_b^{obs}(\lambda,alt,az,x,y,t){\textbf)} \times \nonumber \\
-&& \int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda}
 \end{eqnarray}
-where $K'(f_\nu, \phi_b^{obs})$ is a value that
-depends only on the {\it shape} (wavelength-dependence) of the system
-throughput during a particular observation and the {\it shape} of the SED
-of the astronomical object ($f_\nu = F_\nu / F_o$, $F_o$ being the
-total flux of the object),
+where $F_nu{\lambda,t) = F_o(t)\,f_nu(\lambda,t)$, separating the
+normalization ($F_o$) and shape ($f_nu$) of the source spectral energy
+distribution ($m_AB = 2.5 \log_10({F_o} \over {3631 Jy})$).  It's
+worth noting that $\int_0^\infty
+{F_\nu(\lambda,t)\phi_b^{std}(\lambda) d\lambda}$ is a constant value
+for a non-variable source and corresponds to its `natural magnitude'.
+For convenience, the middle term above can be written as
+\begin{eqnarray}
+\label{eqn:counts_b}
+K'(\int {f_\nu\,\phi_b^{obs}}) = \left( {\int_0^\infty {f_\nu(\lambda,t)\phi_b^{obs}(\lambda,alt,az,x,y,t) d\lambda} \over 
+\int_0^\infty {f_\nu(\lambda,t)\phi_b^{std}(\lambda) d\lambda}} 
+\right)
+\end{eqnarray}
+where $K'$ is a value that depends only on the {\it shape}
+(wavelength-dependence) of the system throughput during a particular
+observation and the {\it shape} of the SED of the astronomical object,
 but not on the normalization of the total throughput or the total flux
-of the object.  The variation in
-the total counts arising from the $K'(f_\nu,
-\phi_b^{obs})$ term is dependent on the cumulative effect of both the
-atmosphere and the system transmission curves on the source SED, thus
-while the underlying wavelength-dependent (shape) variations in $S_b^{sys}$
-and $S^{atm}$ {\it are} independent and can be measured separately,
-the resulting effect can only applied as a combined correction. 
+of the object.  The variation in the total counts arising from the
+$K'$ term is dependent on the cumulative effect of both the atmosphere
+and the system transmission curves on the source SED, thus while the
+underlying wavelength-dependent (shape) variations in $S_b^{sys}$ and
+$S^{atm}$ {\it are} independent and can be measured separately, the
+resulting effect can only applied as a combined correction.
 
 Examples of the effects of variations in the atmospheric transmission
 curve and system transmission curve {\it shapes} on final observed
 counts are shown in Figure~\ref{fig:delta_mags} and
-Table~\ref{tab:delta_mags}. It is worthwhile to note that even for these two
+Table~\ref{tab:delta_mags}.
+XXXXX
+ It is worthwhile to note that even for these two
 main sequence models, covering a limited range of $g-i$ color, with
 conservative atmospheric and system transmission curve changes, the
 resulting changes in magnitude can be larger than the SRD
@@ -522,6 +560,7 @@ particularly true for the illumination correction.
 
 
 \section{Details of the internal calibration process}
+\label{sec:calib_detail}
 
 The next sections describe further details of the calibration process
 and how each correction is measured, calculated and applied. These
@@ -988,6 +1027,7 @@ Docushare Document-8619 and Jones 2010 (SPIE paper).
 
 
 \section{Fixing LSST to an external scale}
+\label{sec:calib_external}
 
 The next two subsections describe how the internally calibrated
 natural magnitudes, independently calibrated in each filter bandpass, are fixed
@@ -1051,6 +1091,7 @@ more targets for use in the Southern hemisphere. Identification of
 these targets has not yet been done. 
 
 \section{Error flowdown}
+\label{sec:error}
 
 Errors in the reported $m_b^{nat}$ can arise from the errors in
 measurement of counts in the image, the atmospheric transmission
@@ -1065,6 +1106,7 @@ mmag in $gri$/$uzy$).
 
 
 \section{Validation of the method}
+\label{sec:validation}
 
 (these are some ideas of what might go in this section; not edited yet)
 
