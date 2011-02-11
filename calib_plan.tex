@@ -317,8 +317,8 @@ in $S_b^{sys}$ and $S^{atm}$ are independent and can be measured
 separately, the resulting effect can only applied as a combined
 correction.
 
-Examples of the effects of variations in the $\Phi_b^{sys}(\lambda)$
-(hardware response) and $\Phi^{atm}(\lambda)$ (atmospheric response)
+Examples of the effects of variations in the $\phi_b^{sys}(\lambda)$
+(hardware response) and $\phi^{atm}(\lambda)$ (atmospheric response)
 curves on the final observed counts are shown in
 Figure~\ref{fig:delta_mags} and Table~\ref{tab:delta_mags}. Two main
 sequence stellar models \citep{Kurucz93}, one with temperature 35000K
@@ -436,7 +436,7 @@ can measure the sensitivity of the hardware (mirrors + lenses + filter
 + detector) transmission as a function of $x$,$y$ at each wavelength,
 producing a data cube of `narrow band flat fields'. At a particular
 $x,y$ location, this data cube records the shape of the transmission
-response in $\lambda$ (measuring $\Phi_b^{sys}(\lambda,t)$). By
+response in $\lambda$ (measuring $\phi_b^{sys}(\lambda,t)$). By
 flattening the data cube through the $\lambda$ axis using a chosen
 spectral energy distribution, the resulting 2-dimensional ($x,y$)
 `synthetic flat field' records the normalization of
@@ -477,7 +477,7 @@ of the telescope is altered.
 Next, considering $S^{atm}(\lambda,alt,az,t)$, we will more
 dramatically separate the measurement of the shape of the atmospheric
 response and the normalization of the transmission.  The
-wavelength-dependent variations in $\Phi^{sys}(\lambda,t)$ change
+wavelength-dependent variations in $\phi^{sys}(\lambda,t)$ change
 smoothly over spatial scales larger than the field of view and over
 several minutes.  By using an auxiliary telescope equipped with a
 spectroscope to observe bright stars with known SEDs, we can measure
@@ -501,7 +501,7 @@ from the many different observations of the survey. The bootstrapping
 for the calibration star magnitudes and the determination of the
 normalization for $S^{atm}(alt,az,t)$ are achieved
 simulataneously. First the previously described corrections for
-$\Phi^{atm}(\lambda,t)$, $\Phi_b^{sys}(\lambda,t)$ and the flat field
+$\phi^{atm}(\lambda,t)$, $\phi_b^{sys}(\lambda,t)$ and the flat field
 normalization must be added to each observation, producing a
 `standardized' magnitude for each star, and then in `self-calibration', we minimize the
 difference between the standardized magnitude and a model magnitude,
@@ -552,8 +552,8 @@ method, and $\delta k_b^{atm+sys}$ depends on the shape of the total
 system response (atmosphere + hardware measured from the auxiliary
 telescope and the narrow band flat fields) as well as the shape of the
 source SED. The correction $\delta k_b^{atm+sys}$ is effectively a
-lookup table for each observation, where $\Phi_b^{sys}(\lambda,x,y,t)$
-and $\Phi^{atm}(\lambda,alt,az,t)$ are combined with a series of model
+lookup table for each observation, where $\phi_b^{sys}(\lambda,x,y,t)$
+and $\phi^{atm}(\lambda,alt,az,t)$ are combined with a series of model
 SEDs and the resulting magnitude variation is recorded as a function
 of source SED and $x,y$ in the focal plane (as the atmospheric variation is
 roughly constant across the field of view). For many sources (but not
@@ -594,7 +594,6 @@ systematic errors. This defines an AB magnitude,
 m_b^{AB} = m_b^{nat}  + \Delta_{b-r} + \Delta_r
 \end{equation}
 which can be compared to absolute physical flux scales. 
-
 
 The sequence for photometric calibration is then:
 \begin{enumerate}
@@ -650,7 +649,7 @@ $m_b^{nat}$ only includes normalization corrections).
 \label{sec:narrowband}
 
 Compensation for variations (in $x,y,t$) in the normalization of the
-hardware transmission will be done using a flat field measured
+hardware transmission ($S_b^{sys}$) will be done using a flat field measured
 using narrow band and white light flat fields, after these are
 corrected for differences in illumination patterns between the dome
 screen and the night sky (the `illumination correction'). This is the
@@ -660,23 +659,23 @@ few times the PSF (and in the current calibration implementation,
 smaller than the scale of a CCD).
 
 The specialized hardware for this flat field measurement is an array
-of projectors mounted in the dome of the LSST enclosure, instead of
-the traditional `dome screen'. These projectors will be illuminated
-with both broadband (e.g. quartz lamp) and tunable narrow band
-(essentially monochromatic) light sources.  Adjustment of the
-wavelength of the tuneable narrow band light source can be as fine as
-1~nm. The projectors are designed to fill the LSST etendue with a
-uniform illumination, smoothly varying by less than 1\% across the
-camera field of view (corresponding to less than 10\% variability
-across the projector surface) and less than 0.25\% on scales smaller
-than $0.5^{\circ}$ (a little larger than the size of a CCD).  The
+of projectors mounted in the dome of the LSST enclosure instead of the
+traditional `dome screen'. These projectors will be illuminated with
+both broadband (e.g. quartz lamp) and tunable narrow band (essentially
+monochromatic) light sources.  Adjustment of the wavelength of the
+tuneable narrow band light source can be as fine as 1~nm. The
+projectors are designed to fill the LSST etendue with a uniform
+illumination, smoothly varying by less than 1\% across the camera
+field of view (corresponding to less than 10\% variability across the
+projector surface) and less than 0.25\% on scales smaller than
+$0.5^{\circ}$ (a little larger than the size of a CCD).  The
 projectors will also be designed to limit the extent of light emitted
-outside the range of angles seen by the camera, to reduce stray light
-\citep{Gressler2010}. A set of precision diodes will be used to
-normalize the photon flux integrated during flat field exposures, thus
-allowing a precise comparison of the system response at different
-wavelengths when using the narrow band light sources.  These
-photodiodes, together with their read-out electronics, will be
+outside the range of angles seen by the camera to reduce stray light
+in the flat fields \citep{Gressler2010}. A set of precision diodes
+will be used to normalize the photon flux integrated during flat field
+exposures, thus allowing a precise comparison of the system response
+at different wavelengths when using the narrow band light sources.
+These photodiodes, together with their read-out electronics, will be
 calibrated at the U.S. National Institute of Standards (NIST) to
 $\approx0.1\%$ relative accuracy across wavelengths from 450~nm to
 950~nm. The response of these diodes varies smoothly across this range
@@ -689,91 +688,66 @@ in \citet{Stubbs2007a}.
 
 In each filter, a set of narrow band flats will taken at a series of
 wavelengths to form a data cube of flat fields in
-($x,y,\lambda$). This data cube will also be used to determine the
-shape of the hardware response, but first consider how these narrow
-band flats can be applied to the normalization of the hardware
-transmission.
+($x,y,\lambda$). Using the photodiode measurements of the light
+emitted at each wavelength, the data cube can be collapsed to a single
+`synthetic flat field' image ($x,y$) by choosing a desired spectral
+energy distribution, then combining the individual narrow band images
+after applying an appropriate illumination correction (see
+subsection~\ref{sec:ic}) for each
+wavelength and weighting by the goal SED and the photodiode
+measurements. The desired SED could be a single, constant SED or could
+be a set of SEDS, but will be clearly defined during the commissioning
+period. One choice might be a night sky SED to match the majority of
+pixels in each image; the goal SED would then vary throughout the
+lunar cycle.
 
-Using the photodiode measurements of the light emitted at each
-wavelength, these can be collapsed to a single `synthetic flat field'
-image ($x,y$) by choosing a desired source spectral energy
-distribution (SED), then combining the individual narrow band images
-after applying an appropriate illumination correction and weighting by
-the photodiode measurements. The desired SED could be a single SED or
-could be a set of SEDS (for example, if data management chose to use a
-night sky SED to create the summed flat field from the narrow band
-flat fields, this would vary throughout the lunar cycle), but will be
-clearly defined during the commissioning period. The synthetic flat
-field, updated for nightly changes by the white light flat, will be
-used for flattening images.
+\begin{figure}[htbp]
+\includegraphics[width=6in]{narrowband_flat}
+\caption{ {\small
+{\bf Examples of synthetic flat generation.} 
+The top panel illustrates simplified narrow band flats, at 'blue',
+'green' and 'red' wavelengths. The bottom panel shows the result of 
+combining these flats with a desired SED that is either weighted
+toward blue wavelengths, a completely even distribution, or weighted
+towards red wavelengths. 
+\label{fig:narrowband}
+} }
+\end{figure}
 
-In addition, the narrow band flats must also be used to measure
-changes in the bandpass shape throughout the field of view. Before
-applying $\delta k(x,y,SED,t)$ corrections to the observed magnitudes,
-however, the wavelength-dependent effects of the atmosphere must also
-be considered, as the final effect on the observed magnitude is not
-independent. Thus, the narrow band flat fields will be combined using
-a series of standard model SEDS to generate $\delta
-k(x,y,alt,az,SED,t)$ corrections for each image after the atmospheric
-corrections described in Section~\ref{sec:auxtele} have been
-calculated and applied to the model SEDs. Thus for each observation,
-there will be lookup tables created with $\delta k(x,y,alt,az,SED,t)$
-that can be parametrized as a function of object color. These $\delta
-k$ correct the shape of the system bandpass response to a standardized
-value, chosen during commissioning.  Obviously, applying these
-corrections requires knowing the color of the astronomical object (and
-ideally, the full spectral energy distribution), and this information
-will not always be known for all objects. In practice, the calibration
-pipeline will calculate corrections using best-estimates of the
-objects' color. These estimates will increase in accuracy as the
-survey progresses, eventually reaching $\approx 0.07$~magnitudes for
-objects with many repeat observations.
+The narrow band flats are time-consuming to acquire. Scanning through
+all 6 filters at 1~nm intervals requires many hours worth of
+exposures, but must also be done in minimal levels of ambient
+light. Luckily, any wavelength dependent variations in the synthetic
+flat are expected to change relatively slowly so the full set of
+narrow band flats only need to be acquired approximately once a month,
+which could be done during cloudy nights. However, gray-scale
+variations in the hardware normalization (due to dust particles on the
+filters, etc.) will occur on a much shorter timescale.  Thus, it is
+necessary to use a standard white-light flat to correct for these
+short timescale gray-scale variations in the system throughput.  The
+white-light flat fields will be obtained with the same apparatus as
+the narrow band dome flats, but as the number of exposures required to
+characterize a filter is dramatically reduced, these white-light flats
+can be obtained at the start and end of every night of observing.
 
-CREATE FIGURE: data cube of narrow band flats, different input SEDS,
-$\delta k$ ouputs
-
-
-The narrow band flat fields are necessary to correct for variations in
-the system throughput as a function of wavelength across the focal
-plane. These variations are expected to change relatively slowly over
-time due to aging in the filter and mirror coatings, and so these
-narrow band flats will only be acquired on an approximately monthly
-basis as they can be very time-consuming at high wavelength resolution
-($\approx1$ nm).
-
-
-\subsubsection{White-light Flat Field}
-
-The white-light flat field is necessary to correct for night-to-night
-variations in the system throughput. These variations are expected to
-be gray, resulting from dust particles or other out-of-focus
-contaminants in the light path. The white-light flat fields will be
-obtained with the same apparatus as the narrow band dome flats, but as
-the number of exposures required to characterize a filter is
-dramatically reduced (1 white-light image instead of $~\approx900$
-narrow band images, multiplied by the number of exposures required to
-build a good combined image in each case) these white-light flats can
-be obtained at the start and end of every night of observing.
-
-The white-light flat will not be applied directly to images, as it has
-the wrong spectral energy distribution. Instead, changes in the
-white-light flat from night to night will be transferred to the data
-cube of narrow band flat fields, adjusting the narrow band flats for
-small-scale changes in gray-scale throughput. This can be done by taking a
-white-light flat simultaneously with the acquisition of the narrow
-band flat data cube. White-light flats obtained over the next month
-are compared to the `simultaneous' white-light flat, and then the
-narrow band flat data cube can be multiplied by any observed differences.
+The white-light flat is not applied directly to images, as it
+does not have the desired spectral energy distribution. Instead,
+changes in the white-light flat from night to night will be
+transferred to the data cube of narrow band flat fields, adjusting the
+narrow band flats for small-scale changes in gray-scale
+throughput. This can be done by taking a white-light flat
+simultaneously with the acquisition of the narrow band flat data
+cube. White-light flats obtained over the next month are compared to
+the `simultaneous' white-light flat, and then the narrow band flat
+data cube can be multiplied by any observed differences.
 
 The light generated by the quartz lamp must be relatively stable over
 the time interval between monthly narrow band flat measurements, to
 reduce changes in ghosting or color-dependent sensitivity variations
 in the white light flats.
 
-CREATE FIGURE: synthetic narrow band flat, two white light flats and then 'new'
-corrected synthetic narrow band flat?
-
 \subsubsection{Generating the illumination correction}
+\label{sec:ic}
 
 Even with careful design, the illumination pattern from the dome
 projector system will not be uniform over spatial scales comparable to
@@ -781,21 +755,23 @@ the size of the focal plane. Estimates by Photon Engineering,
 Inc. (Tucson, AZ) of the amount of ``stray'' light within the dome
 housing indicate that $\approx1-2\%$ of the light that reaches the
 camera focal plane may not originate from within the LSST etendue.
-Furthermore, there will be light scattered within the camera dewar and
-some fraction of the light within the etendue will have undergone
-multiple reflections within the camera refractive optics (creating
-`ghost' images of the light from the dome screen). In addition,
+There will be also light scattered within the camera dewar and some
+fraction of the light within the etendue will have undergone multiple
+reflections within the camera refractive optics (creating `ghost'
+images of the light from the dome screen). This stray and scattered
+light is not present in the science images and so must be removed from
+the flat field using the illumination correction. In addition,
 projection effects cause a variation in the pixel scale from the
 center to the outer edges of the field of view, so that the pixels
 subtending a larger area (the center of the field) gather more light
-from the dome screen. If these effects are not compensated for by
-multiplying the dome flat by an illlumination correction, the counts
-extracted from astronomical objects will be inaccurate by similar
-levels. The effects resulting in the observed dome flat and the
+from the dome screen. This effect {\it is} present in the night sky
+science images as well, but does not affect the flux measured from
+astronomical objects and so this gradient must be preserved.
+Illlustrative examples of these effects in a dome flat and the
 corresponding illumination correction are illustrated in
-Figure~\ref{fig:flatfield}, while the results of the illumination
-correction on image processing are shown in
-Figure~\ref{fig:iceffect}. 
+Figure~\ref{fig:flatfield}, and the effect of this illumination
+correct on final measured counts are shown in
+Figure~\ref{fig:iceffect}.
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{flatfield_corr}
@@ -849,12 +825,14 @@ of the raw sky image, by subtracting the ghost image and then dividing
 by the illumination corrected flat field. 
 Note that the sky background does not appear
 flat but is correct for preserving stellar photometric accuracy. 
-In each image with stars, the numbers next to each star indicate the
+In every image with stars, the numbers next to each star indicate the
 counts measured within an appropriate circular aperture for the
 star. In the raw images, these counts are not equal because of the
 variation in pixel to pixel sensitivities.  \label{fig:iceffect}
 }}
 \end{figure}
+
+XXXX START HERE - split IC generation up for clarity and remove(?) CCOB
 
 The illumination correction (one per filter) will be generated
 whenever the camera is removed from the telescope or the focal path
@@ -971,7 +949,37 @@ non-uniformities in dome screen illumination from the ghost response.
 More details about the requirements and physical apparatus of the CCOB
 are available in Docushare Document-10015 and 8217.
 
-\subsection{Measurement of the atmospheric transmission} 
+\subsection{Hardware and Atmospheric Response Curves $\phi_b^{atm+sys}(\lambda)$}
+
+The narrow band flat fields are necessary to correct for variations in
+the system throughput as a function of wavelength across the focal
+plane. These variations are expected to change relatively slowly over
+time due to aging in the filter and mirror coatings, and so these
+narrow band flats will only be acquired on an approximately monthly
+basis as they can be very time-consuming at high wavelength resolution
+($\approx1$ nm).
+
+In addition, the narrow band flats must also be used to measure
+changes in the bandpass shape throughout the field of view. Before
+applying $\delta k(x,y,SED,t)$ corrections to the observed magnitudes,
+however, the wavelength-dependent effects of the atmosphere must also
+be considered, as the final effect on the observed magnitude is not
+independent. Thus, the narrow band flat fields will be combined using
+a series of standard model SEDS to generate $\delta
+k(x,y,alt,az,SED,t)$ corrections for each image after the atmospheric
+corrections described in Section~\ref{sec:auxtele} have been
+calculated and applied to the model SEDs. Thus for each observation,
+there will be lookup tables created with $\delta k(x,y,alt,az,SED,t)$
+that can be parametrized as a function of object color. These $\delta
+k$ correct the shape of the system bandpass response to a standardized
+value, chosen during commissioning.  Obviously, applying these
+corrections requires knowing the color of the astronomical object (and
+ideally, the full spectral energy distribution), and this information
+will not always be known for all objects. In practice, the calibration
+pipeline will calculate corrections using best-estimates of the
+objects' color. These estimates will increase in accuracy as the
+survey progresses, eventually reaching $\approx 0.07$~magnitudes for
+objects with many repeat observations.
 
 The atmospheric transmission function, $S^{atm}(\lambda,alt,az,t)$, is
 broken into two parts: a wavelength-dependent, slowly varying portion
@@ -1033,10 +1041,8 @@ ADD/CREATE FIGURE showing atmosphere and various components
 CREATE FIGURE flowchart? (like figure 4 from calibration preliminary
 baseline design?)
 
-CREATE FIGURE effects on magnitude for different color sources as
-atmosphere changes (for single airmass, different compositions)
 
-\subsubsection{Self-calibration}
+\subsection{Normalization of the Atmospheric Transmission}
 \label{sec:selfcalib}
 
 After applying each of the previous corrections, the raw counts are
