@@ -1,6 +1,6 @@
 \documentclass[12pt,preprint]{aastex}
 \usepackage{graphicx}
-
+\usepackage{natbib}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% author-defined commands
@@ -417,15 +417,17 @@ better knowledge of the SED.}
 
 
 \subsection{From counts to photons}
+\label{sec:counts2photons}
 
 The previous section laid out the origins of ADU count variability
 from one observation to another. Now we will consider how we can, in
-practice, calibrate a particular observed ADU count to a measurement
-of $F_\nu(\lambda,t)$ above the atmosphere for a particular object.
-In other words, how we can recreate the `truth' by compensating for
-the variations in $S^{atm}(\lambda,alt,az,t)$ and
-$S_b^{sys}(\lambda,x,y,t)$, using the separability of the normalization
-and shape of the total system response. 
+practice, acquire the information necessary to convert a particular
+observed ADU count to a measurement of $F_\nu(\lambda,t)$ above the
+atmosphere for a particular object.  In other words, how we can
+recreate the `truth' by compensating for the variations in
+$S^{atm}(\lambda,alt,az,t)$ and $S_b^{sys}(\lambda,x,y,t)$, using the
+separability of the normalization and shape of the total system
+response.
 
 Let us first consider measurement of the variations in
 $S_b^{sys}(\lambda,x,y,t)$.  By using a dome-screen system that is
@@ -435,21 +437,23 @@ can measure the sensitivity of the hardware (mirrors + lenses + filter
 producing a data cube of `narrow band flat fields'. At a particular
 $x,y$ location, this data cube records the shape of the transmission
 response in $\lambda$ (measuring $\Phi_b^{sys}(\lambda,t)$). By
-combining the data cube over $\lambda$ using a chosen spectral energy
-distribution, the resulting `synthetic flat field' records the
-normalization of $S_b^{sys}(x,y,t)$. Generation of the synthetic flat
-field in this manner is time-consuming (requiring many hours to scan
-through all 6 filters at the necessary wavelength intervals), however
-the wavelength-dependent effects are expected to vary only slowly over
+flattening the data cube through the $\lambda$ axis using a chosen
+spectral energy distribution, the resulting 2-dimensional ($x,y$)
+`synthetic flat field' records the normalization of
+$S_b^{sys}(x,y,t)$. Generation of the synthetic flat field in this
+manner is time-consuming (requiring many hours to scan through all 6
+filters at the necessary wavelength intervals, $\sim1nm$), however the
+wavelength-dependent effects are expected to vary only slowly over
 time, so the full narrow band flat field scan will only be repeated
 every 30 days. Since gray-scale normalization changes are likely to
 occur on a much more rapid timescale, standard white-light flat field
 will also be acquired at the start and end of each night and these
 will be used to correct the normalization of the system response on a
-nightly basis. This normalization correction is particularly important
-over small spatial scales, less than a few times the Point Spread
-Function (PSF), as no later calibration stage can contribute to these
-corrections.
+nightly basis, updating the synthetic flat field (which has the
+desired SED) for the current changes in normalization. This flat field
+correction is particularly important over small spatial scales, as no
+later calibration stage can contribute to normalization corrections at
+less than a few times the Point Spread Function (PSF).
 
 It is worth noting that these flat fields (both narrow band and
 white-light) must themselves be corrected for the effects of pixel
@@ -502,6 +506,7 @@ normalization must be added to each observation, producing a
 `standardized' magnitude for each star, and then in `self-calibration', we minimize the
 difference between the standardized magnitude and a model magnitude,
 \begin{equation}
+\label{eqn:chi2}
 \chi^2 = \Sigma_{ij} \left( { m_{b,ij}^{std} - m_{b,ij}^{model} \over \sigma_{b,ij}^{std} } \right)^2
 \end{equation}
 where the model magnitude is derived from the best-fit `true'
@@ -550,7 +555,7 @@ source SED. The correction $\delta k_b^{atm+sys}$ is effectively a
 lookup table for each observation, where $\Phi_b^{sys}(\lambda,x,y,t)$
 and $\Phi^{atm}(\lambda,alt,az,t)$ are combined with a series of model
 SEDs and the resulting magnitude variation is recorded as a function
-of $g-i$ and $x,y$ in the focal plane (as the atmospheric variation is
+of source SED and $x,y$ in the focal plane (as the atmospheric variation is
 roughly constant across the field of view). For many sources (but not
 calibration stars) LSST will simply assume a flat SED, at which point
 the $\delta k_b^{atm+sys}$ correction becomes zero, and users may
@@ -590,78 +595,117 @@ m_b^{AB} = m_b^{nat}  + \Delta_{b-r} + \Delta_r
 \end{equation}
 which can be compared to absolute physical flux scales. 
 
+
+The sequence for photometric calibration is then:
+\begin{enumerate}
+\item{Acquire narrow band flat fields on a monthly basis, acquire
+white-light flat fields to update the narrow band flat fields on a
+nightly basis, and generate an illumination correction on a
+many-monthly basis. Apply the illumination correction to the narrow
+band flat fields and combine the narrow band flat fields into a
+synthetic flat using a chosen SED (perhaps mimicking the night sky
+SED). Scale the synthetic flat for any measured changes in the
+white-light flat occuring since the generation of the synthetic
+flat. Apply final synthetic flat to images directly, dividing science 
+images by the synthetic flat field.}
+\item{After remaining image processing (bias correction, fringe correction, etc)
+extract ADU counts of sources from images. }
+\item{Acquire spectra of known stars on a 5--10 minute timeline
+throughout each night and generate atmospheric response curve for each
+observation's $alt,az$ based on MODTRAN models, retrieve hardware
+response curve from narrow band flat fields at various $x,y$ locations
+within the focal plane. Using a range of model SEDS, generate a table
+of $k_b^{atm+sys}(x,y,SED)$ corrections for each observation. Apply
+$k_b^{atm+sys}$ corrections to stars chosen for self-calibration.}
+\item{At appropriate intervals (such as at Data Release), minimize
+$\chi^2$ from Equation~\ref{eqn:chi2} for the self-calibration stars
+and record $\delta z_b^{selfcalib}$ for each patch (each CCD in each
+observation).}
+\item{Apply $\delta z_b^{selfcalib}$ to all stars in calibration
+patch. If an SED is known or has been chosen for particular science
+targets, apply appropriate $k_b^{atm+sys}$ correction.}
+\item{Apply measured corrections $\Delta_{b-r}$ and $\Delta_r$.}
+\end{enumerate}
+resulting in calibrated $m_b^{AB}$ values in a standardized bandpass shape, 
+with above-the-atmosphere fluxes. 
+
 \section{The internal calibration process}
 \label{sec:calib_details}
 
 The next subsections expand on each of the internal calibration steps
-described above, including how each correction is measured, calculated
-and applied.  These steps described in this section are applied to
-each filter independently. The end result of the internal calibration
-process is a set of natural magnitudes, $m_b^{nat}$, measured for each
-object in each visit, together with a record of
-$\phi_b^{sys}(\lambda,x,y,t)$ and $\phi^{atm}(\lambda,alt,az,t)$ (the
-shape of $S_b^{sys}$ and $S^{atm}$), the flat field applied
-(normalization of $S_b^{sys}$), the zeropoint offset calculated for
-cloud extinction (normalization of $S^{atm}$) and the spectral energy
-distribution assumed for the object to calculate $m_b^{nat}$ (which may
-be a flat SED, in which case $m_b^{nat}$ only includes normalization corrections). 
+leading to natural magnitude measurements described above, including
+how each correction is measured, calculated and applied.  These steps
+described in this section are applied to each filter
+independently. The end result of the internal calibration process is a
+set of natural magnitudes, $m_b^{nat}$, measured for each object in
+each visit, together with a record of $\phi_b^{sys}(\lambda,x,y,t)$
+and $\phi^{atm}(\lambda,alt,az,t)$ (the shape of $S_b^{sys}$ and
+$S^{atm}$), the flat field applied (normalization of $S_b^{sys}$), the
+zeropoint offset calculated for cloud extinction (normalization of
+$S^{atm}$) and the spectral energy distribution assumed for the object
+to calculate $m_b^{nat}$ (which may be a flat SED, in which case
+$m_b^{nat}$ only includes normalization corrections).
 
-
-
-\subsection{Measurement of the system transmission}
-
-Variations in measured counts which results from changes in the hardware
-(system) transmission function, $S_b^{sys}(\lambda,x,y,t)$, are corrected
-through a `synthetic' flat field created from a combination of
-narrow-band flat fields, white-light flat fields and an illumination correction.
-Wavelength-dependent spatial changes are measured directly through the
-narrow band flats combined with the illumination correction, while
-more rapid spatial and temporal wavelength-independent changes are
-measured through changes in the white-light flat field.
-
-\subsubsection{Narrow band Flat Fields}
+\subsection{Normalization of the hardware transmission}
 \label{sec:narrowband}
 
-The narrow band flat fields are necessary to correct for variations in
-the system throughput as a function of wavelength across the focal
-plane. These variations are expected to change relatively slowly over
-time due to aging in the filter and mirror coatings, and so these
-narrow band flats will only be acquired on an approximately monthly
-basis as they can be very time-consuming at high wavelength resolution
-($\approx1$ nm).
+Compensation for variations (in $x,y,t$) in the normalization of the
+hardware transmission will be done using a flat field measured
+using narrow band and white light flat fields, after these are
+corrected for differences in illumination patterns between the dome
+screen and the night sky (the `illumination correction'). This is the
+first step in photometric calibration and is necessary to correct for
+variations in the normalization of $S_b^{sys}$ that are smaller than a
+few times the PSF (and in the current calibration implementation,
+smaller than the scale of a CCD).
 
-An array of projectors mounted in the dome of the LSST enclosure will
-be illuminated with both broadband (e.g. quartz lamp) and tunable
-narrow band (essentially monochromatic) light sources.  Adjustment of
-the wavelength of the light source can be as fine as 1~nm. The
-projectors are designed to fill the LSST etendue with uniform
-illumination and also limit the extent of stray light emitted outside
-the design acceptance of the system. A set of precision diodes will be
-used to normalize the photon flux integrated during flat field
-exposures, thus allowing a precise comparison of the system response
-between different narrow band flats in the same filter, at different
-wavelengths.  These photodiodes, together with their read-out
-electronics, will be calibrated at the U.S. National Institute of
-Standards (NIST) to $\approx0.1\%$ relative accuracy across
-wavelengths from 450~nm to 950~nm. The response of these diodes varies
-smoothly across this range of wavelength and provides a well-behaved
-reference for determination of $S_b^{sys}(\lambda)$.  Further details
-of the narrow band flat field apparatus can be
-found in XXX (SPIE ref). 
+The specialized hardware for this flat field measurement is an array
+of projectors mounted in the dome of the LSST enclosure, instead of
+the traditional `dome screen'. These projectors will be illuminated
+with both broadband (e.g. quartz lamp) and tunable narrow band
+(essentially monochromatic) light sources.  Adjustment of the
+wavelength of the tuneable narrow band light source can be as fine as
+1~nm. The projectors are designed to fill the LSST etendue with a
+uniform illumination, smoothly varying by less than 1\% across the
+camera field of view (corresponding to less than 10\% variability
+across the projector surface) and less than 0.25\% on scales smaller
+than $0.5^{\circ}$ (a little larger than the size of a CCD).  The
+projectors will also be designed to limit the extent of light emitted
+outside the range of angles seen by the camera, to reduce stray light
+\citep{Gressler2010}. A set of precision diodes will be used to
+normalize the photon flux integrated during flat field exposures, thus
+allowing a precise comparison of the system response at different
+wavelengths when using the narrow band light sources.  These
+photodiodes, together with their read-out electronics, will be
+calibrated at the U.S. National Institute of Standards (NIST) to
+$\approx0.1\%$ relative accuracy across wavelengths from 450~nm to
+950~nm. The response of these diodes varies smoothly across this range
+of wavelength and provides a well-behaved reference for determination
+of $S_b^{sys}(\lambda)$.  Further details of the LSST narrow band flat
+field apparatus can be found in \citet{Gressler2010}.  Preliminary
+results from a similar apparatus tested at PanSTARRS can be found in
+\citet{Stubbs2010}, as well as earlier experiments from CTIO described
+in \citet{Stubbs2007a}.
 
-In each filter, the set of narrow band flats taken at each wavelength
-form a data cube in ($x,y,\lambda$). Using the photodiode measurements
-of the light emitted at each wavelength, these can be collapsed to a
-single `synthetic flat field' image ($x,y$) by choosing a desired source
-spectral energy distribution (SED), then combining the individual narrow
-band images after applying an appropriate illumination correction and
-weighting by the photodiode measurements. The desired
-SED could be a single SED or could be a set of SEDS (for example, if
-data management chose to use a night sky SED to create the summed
-flat field from the narrow band flat fields, this would vary
-throughout the lunar cycle), but will be clearly defined during the
-commissioning period. The synthetic flat field, updated for nightly
-changes by the white light flat, will be used for flattening images.
+In each filter, a set of narrow band flats will taken at a series of
+wavelengths to form a data cube of flat fields in
+($x,y,\lambda$). This data cube will also be used to determine the
+shape of the hardware response, but first consider how these narrow
+band flats can be applied to the normalization of the hardware
+transmission.
+
+Using the photodiode measurements of the light emitted at each
+wavelength, these can be collapsed to a single `synthetic flat field'
+image ($x,y$) by choosing a desired source spectral energy
+distribution (SED), then combining the individual narrow band images
+after applying an appropriate illumination correction and weighting by
+the photodiode measurements. The desired SED could be a single SED or
+could be a set of SEDS (for example, if data management chose to use a
+night sky SED to create the summed flat field from the narrow band
+flat fields, this would vary throughout the lunar cycle), but will be
+clearly defined during the commissioning period. The synthetic flat
+field, updated for nightly changes by the white light flat, will be
+used for flattening images.
 
 In addition, the narrow band flats must also be used to measure
 changes in the bandpass shape throughout the field of view. Before
@@ -687,6 +731,16 @@ objects with many repeat observations.
 
 CREATE FIGURE: data cube of narrow band flats, different input SEDS,
 $\delta k$ ouputs
+
+
+The narrow band flat fields are necessary to correct for variations in
+the system throughput as a function of wavelength across the focal
+plane. These variations are expected to change relatively slowly over
+time due to aging in the filter and mirror coatings, and so these
+narrow band flats will only be acquired on an approximately monthly
+basis as they can be very time-consuming at high wavelength resolution
+($\approx1$ nm).
+
 
 \subsubsection{White-light Flat Field}
 
@@ -1175,13 +1229,12 @@ will be this - how will we assess errors?
 One possible test is the stellar locus - how will this be applied.
 
 
+
+\bibliographystyle{apj}
+\bibliography{calib_plan}
+
+
 \appendix
-
-
-%\section{Table of error budgets}
-
-%The text motivates these, but this provides a place to
-%gather them, maybe add some more comments
 
 
 \section{Filter Set}
