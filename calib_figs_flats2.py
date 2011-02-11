@@ -30,6 +30,24 @@ def make_pixgrid(sensitivity_var=0.002):
                         pixgrid[i][j] = 0.001                    
     return pixgrid
 
+def add_pattern(pixgrid, pattern_amp=0.001):
+    # take the pixel grid with gaussian variations from make_pixgrid and
+    # then add a spatial pattern in the detector sensitivity
+    # (i.e. the detector may have a greater sensitivity to blue light in one corner?)    
+    # let's make preliminary pattern 
+    pattern_xlo = 30
+    pattern_xmid = 50
+    pattern_xhi = 70
+    pattern_ystepsize =  40  # note this is an integer! 
+    for i in range(pattern_xlo, pattern_xhi):
+        for j in range(0, skysize):
+            xhalf = (j/pattern_ystepsize)%2
+            if ((xhalf == 0) & (i<pattern_xmid)):
+                pixgrid[i][j] = pixgrid[i][j] * (1+ pattern_amp)
+            elif ((xhalf == 1) & (i>pattern_xmid)):
+                pixgrid[i][j] = pixgrid[i][j] * (1+ pattern_amp)
+    return pixgrid
+    
 def add_bkgd(pixgrid, bkgdval):
     pixgrid = pixgrid/pixgrid.mean()*bkgdval
     return pixgrid
@@ -342,34 +360,37 @@ def make_narrowbandflat():
     detector = make_pixgrid()
     flat = {}
     flat['blue'] = numpy.copy(detector)
-    flat['blue'], dome = add_domewvariance(flat['blue'], domeval, domegradient=0.002)
-    flat['blue'], pixscale = add_pixscale(flat['blue'])
-    flat['blue'], ghost = add_ghost(flat['blue'], detector, ghostscale=1.0e-3,
-                                    ghostring_inner=skysize/2.0, ghostring_outer=skysize/0.9)
-    ic = (flat['blue'] - ghost)/dome/pixscale/flat['blue']
-    ic = ic / ic.mean()
+    flat['blue'] = add_pattern(flat['blue'], pattern_amp=0.0015)
+    #flat['blue'], dome = add_domewvariance(flat['blue'], domeval, domegradient=0.002)
+    #flat['blue'], pixscale = add_pixscale(flat['blue'])
+    #flat['blue'], ghost = add_ghost(flat['blue'], detector, ghostscale=1.0e-3,
+    #                                ghostring_inner=skysize/2.0, ghostring_outer=skysize/0.9)
+    #ic = (flat['blue'] - ghost)/dome/pixscale/flat['blue']
+    #ic = ic / ic.mean()
     flat['blue'] = flat['blue']/flat['blue'].mean()
     # make the green flat field
     domeval = 10000
     detector = make_pixgrid()
     flat['green'] = numpy.copy(detector)
-    flat['green'], dome = add_domewvariance(flat['green'], domeval, domegradient=0.005)
-    flat['green'], pixscale = add_pixscale(flat['green'])
-    flat['green'], ghost = add_ghost(flat['green'], detector, ghostscale=1.5e-3,
-                                     ghostring_inner=skysize/2.4, ghostring_outer=skysize/1.0)
-    ic = (flat['green'] - ghost)/dome/pixscale/flat['green']
-    ic = ic / ic.mean()
+    flat['green'] = add_pattern(flat['green'], pattern_amp=0.0007)
+    #flat['green'], dome = add_domewvariance(flat['green'], domeval, domegradient=0.005)
+    #flat['green'], pixscale = add_pixscale(flat['green'])
+    #flat['green'], ghost = add_ghost(flat['green'], detector, ghostscale=1.5e-3,
+    #                                 ghostring_inner=skysize/2.4, ghostring_outer=skysize/1.0)
+    #ic = (flat['green'] - ghost)/dome/pixscale/flat['green']
+    #ic = ic / ic.mean()
     flat['green'] = flat['green']/flat['green'].mean()
     # make the red field
     domeval = 10000
     detector = make_pixgrid()
     flat['red'] = numpy.copy(detector)
-    flat['red'], dome = add_domewvariance(flat['red'], domeval, domegradient=0.01)
-    flat['red'], pixscale = add_pixscale(flat['red'])
-    flat['red'], ghost = add_ghost(flat['red'], detector, ghostscale=2.0e-3,
-                                   ghostring_inner=skysize/2.7, ghostring_outer=skysize/1.2)
-    ic = (flat['red'] - ghost)/dome/pixscale/flat['red']
-    ic = ic / ic.mean()
+    flat['red'] = add_pattern(flat['red'], pattern_amp=0.0005)
+    #flat['red'], dome = add_domewvariance(flat['red'], domeval, domegradient=0.01)
+    #flat['red'], pixscale = add_pixscale(flat['red'])
+    #flat['red'], ghost = add_ghost(flat['red'], detector, ghostscale=2.0e-3,
+    #                               ghostring_inner=skysize/2.7, ghostring_outer=skysize/1.2)
+    #ic = (flat['red'] - ghost)/dome/pixscale/flat['red']
+    #ic = ic / ic.mean()
     flat['red'] = flat['red']/flat['red'].mean()
     # combine the flat with different 'seds' and make figure
     fig = pylab.figure()
