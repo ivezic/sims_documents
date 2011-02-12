@@ -610,8 +610,9 @@ images by the synthetic flat field.}
 \item{After remaining image processing (bias correction, fringe correction, etc)
 extract ADU counts of sources from images. }
 \item{Acquire spectra of known stars on a 5--10 minute timeline
-throughout each night and generate atmospheric response curve for each
-observation's $alt,az$ based on MODTRAN models, retrieve hardware
+throughout each night, fit for atmospheric absorption coefficients 
+and generate atmospheric response curve for each science image's
+$alt,az,t$ based on MODTRAN models, retrieve hardware
 response curve from narrow band flat fields at various $x,y$ locations
 within the focal plane. Using a range of model SEDS, generate a table
 of $k_b^{atm+sys}(x,y,SED)$ corrections for each observation. Apply
@@ -693,7 +694,7 @@ emitted at each wavelength, the data cube can be collapsed to a single
 `synthetic flat field' image ($x,y$) by choosing a desired spectral
 energy distribution, then combining the individual narrow band images
 after applying an appropriate illumination correction (see
-subsection~\ref{sec:ic}) for each
+subsection~\ref{sec:ic} for details on the illumination correction) for each
 wavelength and weighting by the goal SED and the photodiode
 measurements. The desired SED could be a single, constant SED or could
 be a set of SEDS, but will be clearly defined during the commissioning
@@ -706,10 +707,17 @@ lunar cycle.
 \caption{ {\small
 {\bf Examples of synthetic flat generation.} 
 The top panel illustrates simplified narrow band flats, at 'blue',
-'green' and 'red' wavelengths. The bottom panel shows the result of 
-combining these flats with a desired SED that is either weighted
-toward blue wavelengths, a completely even distribution, or weighted
-towards red wavelengths. 
+'green' and 'red' wavelengths. These represent illumination corrected
+(thus the relatively flat illumination pattern!) narrow band flat
+fields, where the detector shows a sensitivity pattern that is more
+pronounced in the blue wavelength flat field. The bottom panel shows
+the result of combining these flats to create a synthetic flat with a
+desired SED that is either weighted toward blue wavelengths (1.5*blue
++ 1.0*green + 0.5*red), a completely even distribution, or a synthetic
+flat weighted toward red wavelenghts (0.5*blue + 1.0*green + 1.5*red).
+In operations, the synthetic flat will be created using a well-defined
+SED that will best correct the system normalization for science
+targets in the field.
 \label{fig:narrowband}
 } }
 \end{figure}
@@ -749,26 +757,38 @@ in the white light flats.
 \subsubsection{Generating the illumination correction}
 \label{sec:ic}
 
-Even with careful design, the illumination pattern from the dome
-projector system will not be uniform over spatial scales comparable to
-the size of the focal plane. Estimates by Photon Engineering,
-Inc. (Tucson, AZ) of the amount of ``stray'' light within the dome
-housing indicate that $\approx1-2\%$ of the light that reaches the
-camera focal plane may not originate from within the LSST etendue.
-There will be also light scattered within the camera dewar and some
-fraction of the light within the etendue will have undergone multiple
-reflections within the camera refractive optics (creating `ghost'
-images of the light from the dome screen). This stray and scattered
-light is not present in the science images and so must be removed from
-the flat field using the illumination correction. In addition,
-projection effects cause a variation in the pixel scale from the
-center to the outer edges of the field of view, so that the pixels
-subtending a larger area (the center of the field) gather more light
-from the dome screen. This effect {\it is} present in the night sky
-science images as well, but does not affect the flux measured from
-astronomical objects and so this gradient must be preserved.
-Illlustrative examples of these effects in a dome flat and the
-corresponding illumination correction are illustrated in
+The ideal flat field would demonstrate the hardware response to a
+focal plane illuminated exactly as it would be with a dark night sky,
+empty of ghosts, glints, stray or scattered light - recreating the
+hardware sensitivity variations across the focal plane as well as the
+effects of vignetting, both of which must be accounted for in the
+science images. The measured flat field, however, not only contains
+the actual vignetting and hardware sensitivity variations but also
+variations in the actual illumination pattern of the dome screen
+projectors, stray light, ghost images of the dome screen, and the
+effect of pixel scale variations across the field of view, which must
+be removed using the illumination correction. 
+
+The dome screen projectors will be designed to be uniformly
+illuminated to 1\% over the focal plane, but this is already beyond
+the SRD specifications for photometric uniformity.  There will be also
+light scattered within the camera dewar and some fraction of the light
+within the etendue will have undergone multiple reflections within the
+camera refractive optics (creating `ghost' images of the light from
+the dome screen). Estimates by Photon Engineering, Inc. (Tucson, AZ)
+indicate that $\approx1-2\%$ of the light that reaches the camera
+focal plane may be stray light that did not originate within the LSST
+etendue. In addition, projection effects cause a variation in the
+pixel scale from the center to the outer edges of the field of view,
+so that the pixels subtending a larger area (the center of the field)
+gather more light from the dome screen. This effect {\it is} present
+in the night sky science images as well, but does not affect the total
+flux measured from astronomical objects, so this gradient must be
+preserved in the science images (and thus removed from the flat field
+through the illumination correction). 
+
+Illlustrative examples of these effects in a theoretical dome flat and
+the corresponding illumination correction are shown in
 Figure~\ref{fig:flatfield}, and the effect of this illumination
 correct on final measured counts are shown in
 Figure~\ref{fig:iceffect}.
@@ -828,23 +848,64 @@ flat but is correct for preserving stellar photometric accuracy.
 In every image with stars, the numbers next to each star indicate the
 counts measured within an appropriate circular aperture for the
 star. In the raw images, these counts are not equal because of the
-variation in pixel to pixel sensitivities.  \label{fig:iceffect}
-}}
+variation in pixel to pixel sensitivities. \label{fig:iceffect} 
+ }}
 \end{figure}
 
-XXXX START HERE - split IC generation up for clarity and remove(?) CCOB
+Illumination corrections (one per filter) will be generated whenever
+the camera is removed from the telescope or the focal path undergoes
+significant changes (such as a filter being replaced or the mirrors
+being realuminized), but should be stable otherwise. The corrections
+will be created by combining information from a ZEMAX model of
+ghosting in the camera constrained by measurements from the Camera
+Calibration Optical Bench (CCOB), measurements of the observed
+individual narrow band dome screen (DS) flats, and dense star fields
+rastored across the focal plane on a photometric night.
 
-The illumination correction (one per filter) will be generated
-whenever the camera is removed from the telescope or the focal path
-undergoes significant changes (such as a filter being replaced or the
-mirrors being realuminized). It will be created by combining
-photometric measurements of stars obtained from rastoring dense star
-fields across the focal plane on a photometric night (where the star's
-images are corrected by the `raw' synthetic flat, with no illumination
-correction), the observed individual narrow band dome screen (DS) flats, and a
-ZEMAX model constrained by measurements of the focal plane response
-and ghosting in the focal plane using the Camera Calibration Optical
-Bench (CCOB; more details below). After acquiring these data, it is then possible to
+The first of these components, {\bf Camera Calibration Optical Bench
+(CCOB)}, provides a method to calibrate the spatial and
+wavelength-dependent response of the focal plane, unmounted from the
+telescope, using a well controlled, wavelength-variable, light source
+calibrated using a NIST photodiode. This light source, which produces
+a spot in the focal plane approximately the size of or smaller than
+the PSF, will be scanned across the detector ($x,y$) at a variety of
+beam incident angles, ($\theta,\phi$) and at a variety of wavelengths
+($\lambda$).  The response of the detector will be measured in two
+different configurations: one with only the detector and the dewar
+window - which doubles as lens 3 (L3) - and one with the detector, L3,
+L2, L1, the filters and the camera shutter. In the L3-only
+configuration, the detector response should include only relative
+simple ghosting, primarily 3 ghost images from reflections between the
+CCD surface and L3. In the full refractive optics configuration (with
+L3, L2, L1, the filter and camera shutter), the detector response will
+include a more complicated ghost pattern. Current simulations indicate
+the strongest ghosts are expected to originate from reflections
+between the CCD and L3 surfaces, where the resulting ghosts will
+contain $\approx10^{-4}$ times the flux of the source.  Other ghost
+images should contain about $\approx10^{-5}$ times the flux of the
+source.  See Figure~\ref{fig:ghostimage} for an example of simulated
+ghosting in the LSST focal plane. These measurements of the focal
+plane response in different optical configurations with a known
+incoming light source do not directly measure the illumination
+correction (for example, neither pixel scale variation due to
+projection effects nor the full stray/scattered light from the dome
+projectors are included), but it does provide constraints for model
+calculations (such as a ZEMAX model) of the illumination pattern in
+the camera as a function of wavelength, position in the focal plane,
+and beam incident angles, which are necessary for the creation of the
+full illumination correction.
+
+More details about the requirements and physical apparatus of the CCOB
+are available in LSST-10015 and LSST-8217.
+
+ADD FIGURE from CCOB presentations with ghost image. Grab from docushare.
+
+Using the ZEMAX model to predict how light will scatter inside the
+camera and the observed narrow band dome flats at each wavelength,
+together with an assumption on the uniformity of the dome screen
+projectors, a preliminary estimate for
+
+After acquiring these data, it is then possible to
 create a model for the illumination correction by minimizing (in each
 filter)
 \begin{eqnarray}
@@ -866,29 +927,26 @@ angles ($\theta,\phi$) corresponding to the range of light paths for
 incoming photons. The model values come from best-fit parameters for each
 of these, when the illumination correction is included: 
 \begin{eqnarray}
-m^{star}_{model}(x,y) & = &  \int d\theta d\phi \, \int {d\lambda \over \lambda}
-F_\nu^{star}(x,y,\lambda)\,S^{atm}(x,y,\lambda)\,M(\theta,\phi,\lambda)\,R(\theta,\phi,\lambda)\,FP(x,y,\theta,\phi,\lambda)
-\nonumber \\
- & = & m^{star}_{best} - \delta k_{ff}(x,y,alt,az,SED,t) - \int d\lambda \, Z_{IC}(x,y,\lambda)\\
-\nonumber \\
-ADU^{DS}_{model}(x,y,\lambda) & = & \int d\theta d\phi \,
-FP(x,y,\theta,\phi,\lambda)   \nonumber \\
-& & [(F_\nu^{DS}(x,y,\theta,\phi,\lambda)\,M(\theta,\phi,\lambda)\,R(\theta,\phi,\lambda))
+m^{star}_{model}(x,y) & = &  \int {d\lambda \over \lambda} \int d\theta d\phi \, {\textbf[} FP(x,y,\theta,\phi,\lambda) \times \nonumber \\
+&& F_\nu^{star}(x,y,\lambda)\,\, S^{atm}(x,y,\lambda)\, \,M(\theta,\phi,\lambda)\,\,R(\theta,\phi,\lambda) {\textbf]} \nonumber \\
+ & = & m^{star}_{best} - \delta k_{b}^{atm+sys}(x,y,alt,az,SED,t) - \int d\lambda \, Z_{IC}(x,y,\lambda)
+\end{eqnarray}
+
+
+\begin{eqnarray}
+ADU^{DS}_{model}(x,y,\lambda) & = & \int d\theta d\phi \, FP(x,y,\theta,\phi,\lambda) \times  \nonumber \\
+& & {\textbf[}  (F_\nu^{DS}(x,y,\theta,\phi,\lambda)\,\, M(\theta,\phi,\lambda)\,\, R(\theta,\phi,\lambda)) 
 + SS^{DS}(x,y,\theta,\phi,\lambda) +  \nonumber \\ 
-& & \Sigma_{(x',y')} \int d\theta' d\phi' \,F_\nu^{DS}(x',y',\theta',
-\phi',\lambda)\,M(\theta',\phi',\lambda)\,G(x',y',\theta',\phi';
-x,y,\theta,\phi,\lambda)] \nonumber  \\
- & = & ADU^{DS}_{best}(x,y,\lambda) - 10^{-0.4 \,
-   Z_{IC}(x,y,\lambda)} \\
-\nonumber \\
-ADU^{CCOB}_{model}(x,y,\theta,\phi,\lambda) & = &  FP(x,y,\theta,\phi,\lambda) \nonumber \\
-& & [ F_\nu^{CCOB}(x,y,\theta,\phi,\lambda)\,R(\theta,\phi,\lambda) +
-\nonumber \\
-&& \Sigma_{(x',y')} \int d\theta' d\phi'
-\,F_\nu^{CCOB}(x',y',\theta',\phi',\lambda)\,G(x',y',\theta',\phi';x,y,\theta,\phi,\lambda)]
-\nonumber \\
-& = & ADU^{CCOB}_{best}(x,y,\theta,\phi,\lambda) -
-10^{-0.4\,Z_{IC}}(x,y,\lambda) + SS^{DS}_{best}(x,y,\lambda) 
+& & \Sigma_{(x',y')} \int d\theta' d\phi' \,F_\nu^{DS}(x',y',\theta', \phi',\lambda)\,M(\theta',\phi',\lambda)\,G(x',y',\theta',\phi'; x,y,\theta,\phi,\lambda) {\textbf]} \nonumber  \\
+ & = & ADU^{DS}_{best}(x,y,\lambda) - 10^{-0.4 \, Z_{IC}(x,y,\lambda)} 
+\end{eqnarray}
+
+
+\begin{eqnarray}
+ADU^{CCOB}_{model}(x,y,\theta,\phi,\lambda) & = &  FP(x,y,\theta,\phi,\lambda) \times \nonumber \\
+& & {\textbf[}  F_\nu^{CCOB}(x,y,\theta,\phi,\lambda)\,R(\theta,\phi,\lambda) + \nonumber \\
+&& \Sigma_{(x',y')} \int d\theta' d\phi' \,F_\nu^{CCOB}(x',y',\theta',\phi',\lambda)\,G(x',y',\theta',\phi';x,y,\theta,\phi,\lambda) {\textbf]} \nonumber \\
+& = & ADU^{CCOB}_{best}(x,y,\theta,\phi,\lambda) - 10^{-0.4\,Z_{IC}}(x,y,\lambda) + SS^{DS}_{best}(x,y,\lambda) 
 \end{eqnarray} 
 where $Z_{IC}$ represents the entire illumination correction,
 including pixel scale variations, corrections for ghosting and
