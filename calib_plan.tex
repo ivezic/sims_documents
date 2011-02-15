@@ -708,7 +708,7 @@ lunar cycle.
 \begin{figure}[htbp]
 \includegraphics[width=6in]{narrowband_flat}
 \caption{ {\small
-{\bf Examples of synthetic flat generation.} 
+{\bf Simplified examples of synthetic flat generation.} 
 The top panel illustrates simplified narrow band flats, at 'blue',
 'green' and 'red' wavelengths. These represent illumination corrected
 (thus the relatively flat illumination pattern!) narrow band flat
@@ -904,7 +904,9 @@ More details about the requirements and physical apparatus of the CCOB
 are available in LSST-10015 and LSST-8217.
 
 \begin{figure}[htbp]
-\includegraphics[width=6in]{ghost_images}
+\begin{center}
+\includegraphics[angle=90,width=6in]{ghost_images}
+\end{center}
 \caption{ {\small
 {\bf Simulations of LSST camera ghost images, as measured by CCOB. }
 Various beam incident angles, positions and wavelengths will be
@@ -921,28 +923,26 @@ The ZEMAX model describes how light scatters inside the camera
 creating ghosts at each wavelength. If the dome screen projectors were
 perfectly uniform and no stray light was scattered into the LSST
 etendue, the narrow band dome flats plus the predictions from the
-ZEMAX model would suffice to create an illumination corrected
-synthetic flat.  We can also create a preliminary model of the stray
-light scattered into the LSST etendue using work similar to that of
-Photon Engineering, Inc., which can be improved by taking measurements
-of the focal plane response while blacking out M2 (to image only the
-stray light), improving the estimate of the illumination
-correction. With the dome projectors providing illumination uniform to
-within 1\% across the field of view, the resulting preliminary
-illumination correction estimate could be accurate to within a few
-percent, however unexpected light scattering outside the camera
-body(such as from an unexpected surface like the edge of a filter, the
-filter holder or other potentially bright surface) would not yet be
-accounted for.
+ZEMAX model would suffice to create a perfect illumination corrected
+synthetic flat. Stray light scattered into the LSST etendue can be
+modeled using work similar to that of Photon Engineering, Inc., and
+then the model constrained by taking measurements of the focal plane
+response while blacking out M2 (to image only the stray light). This
+creates a preliminary estimate of the illumination correction, which
+is particularly useful for small spatial scales (smaller than a CCD)
+which may not be well sampled in the next, rastor-scan step.
 
-To determine the final illumination correction, a dense network of
-stars of a variety of spectral types must be rastored across the focal plane
-on a photometric night. The images will be divided by the synthetic flat field
-corrected by the preliminary illumination corrected, and then the counts
-for each star corrected for varying color terms in the atmosphere and 
-hardware response, as further described in subsection~\ref{sec:phi_correction}. 
-The final update to the illumination correction can then be determined by
-minimizing over all stars $i$ in all observations $j$, 
+To account for illumination variations from the dome screen projectors
+on large spatial scales (which could be up to 1\% across the field of
+view) or stray light scattered from other unmodeled surfaces, a dense
+network of stars of a variety of spectral types must be rastored
+across the focal plane on a photometric night. The images will be
+divided by the synthetic flat field corrected by the preliminary
+illumination correction, and then the counts for each star corrected
+for varying color terms in the atmosphere and hardware response, as
+further described in subsection~\ref{sec:phi_correction}.  The final
+update to the illumination correction can then be determined by
+minimizing over all stars $i$ in all observations $j$,
 \begin{equation}
  \chi^2 =  \Sigma_{i=N_{stars},j=N_{obs}} \left( { m_{ij}^{meas}(x,y) - m_{ij}^{model}(x,y)
 \over \sigma_b} \right)^2  
@@ -957,20 +957,59 @@ in this filter, $k_{b,j}^{atm+sys}$ is the color-term correction
 hardware throughput curve and partially determined by the varying with
 each exposure atmospheric throughput curve), and $dZ_{IC}$ is the
 update to the illumination correction which is produced by this dense
-rastor scan.
+rastor scan. Similar applications of rastor scans have been
+successfully used in previous surveys, ({\it e.g} \citet{Regnault2009,
+Magnier2004, Manfroid1996}), providing an illumination correction
+accurate to the sub-percent level.
 
-Similar rastor scans have been successfully used in previous surveys,
-such as \citet{Regnault2009, Magnier2004, Manfroid1996} at the few
-percent level.  With the addition of the CCOB and careful design of
-the dome screen projectors to the generation of the illumation correction, 
-the final synthetic flat field (with illumination correction) is expected to
-carry an error of less than 0.25\% , or 2.5 mmag, on scales less than
-approximately the size of a CCD and less than 0.4\%, or 4 mmag, across
-the entire focal plane.
+\subsubsection{Error in the Normalization of the Hardware Transmission}
+
+The dome screen projectors will be designed to be uniform to within
+0.25\% (2.5~mmag) over scales less than $0.5^{\circ}$ (slightly larger
+than a CCD). Using the measurements from the CCOB to model ghost
+reflections and scattering within the camera, the uniformity of the
+dome screen projectors is expected to be the limiting factor on scales
+the size of a CCD. Applying the dense rastor scan of stars to correct
+the 1\% illumination variations from the dome screen projectors on the
+scale of the field of view plus the effects of 1--2\% stray light, is
+expected to increase the error in the illumination correction to just
+under 0.3\% (3~mmag).
+
+The illumination corrected synthetic flats created on a monthly basis
+then have an expected error of 0.3\% (3~mmag). These must be updated
+for nightly changes by the white-light flat fields taken with the
+quartz lamp in the dome screen projectors. As this update only depends
+on changes in the white light flats, not their absolute values, the
+only requirement is then that the quartz lamps do not change their
+spectral profile (which may change the ghosting pattern) or
+illumination pattern by more than an amount which would cause a change
+of more than 0.1\% in the illumination of the white light flat at any
+scale (that is, the illumination of the dome screen projectors with
+the quartz lamps could be non-uniform by a larger amount, but the
+pattern must be stable over time to 0.1\%).
 
 
-\subsection{Hardware and Atmospheric Response Curves $\phi_b^{atm+sys}(\lambda)$}
+\subsection{Shape of the Hardware and Atmospheric Response, $\phi_b^{atm+sys}(\lambda)$}
 \label{sec:phi_correction}
+
+The compensation for changes in observed magnitudes caused by
+variations in the wavelength dependence (shape) of the hardware
+and atmospheric response curves, $\phi_b^{sys}(\lambda)$ and
+$\phi^{atm}(\lambda)$, will be done using independent measurements of
+the hardware response curve from the narrow band flat fields and the
+atmospheric response curve from MODTRAN models based on measurements
+from the auxiliary telescope.  While the measurements are independent,
+the actual correction that must be applied depends on the combination
+of atmospheric and hardware response curves as well as the SED of the
+astronomical objects.  This correction is necessary for precision
+photometry but as it requires knowledge of the object's SED, general
+LSST reported magnitudes will only include a rough estimate or no
+correction (along with an indication of what SED was assumed to
+generate this value). However, for stars which will be used in
+self-calibration (see subsection~\ref{sec:selfcalib}) to determine
+photometric zeropoints in each exposure, a model SED well-matched to
+the object's colors will be chosen and used to generate the $\delta
+k_b^{atm+sys}$ corrections.
 
 The narrow band flat fields are necessary to correct for variations in
 the system throughput as a function of wavelength across the focal
