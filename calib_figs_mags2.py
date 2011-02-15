@@ -79,24 +79,27 @@ def read_stars():
     print "#Read %d stars from %s" %(len(starlist), stardir)
     atemperature = []
     amet = []
+    starlist2 = []
     for s in starlist:
         tmp = s.split('_')
         met = float(tmp[0][2:])
         if tmp[0][1] == 'm':
-            met = -1 * met
+            met = -1 * met        
         met = met/10.0
-        amet.append(met)
         temperature = float(tmp[1][:5])
-        atemperature.append(temperature)
+        if (temperature > 5000.0):
+            amet.append(met)
+            atemperature.append(temperature)
+            starlist2.append(s)
     temperature = numpy.array(atemperature)
     met = numpy.array(amet)
-    i = 0
-    starlist2 = []
+    starlist = starlist2
+    stars = {}
     for s in starlist:
-        if (temperature[i] > 5000.0):
-            starlist2.append(s)
-        i =  i + 1
-    return stars, starlist2, temperature, met
+        stars[s] = Sed()
+        stars[s].readSED_flambda(os.path.join(stardir,s))
+    print "#Read %d stars from %s" %(len(starlist), stardir)
+    return stars, starlist, temperature, met
 
 
 if __name__ == "__main__":
@@ -122,16 +125,36 @@ if __name__ == "__main__":
             mags_shift[f][i] = stars[s].calcMag(total_shift['X=1.5'][f])
             i = i + 1
     gi = mags_std['g'] - mags_std['i']
+    ur = mags_std['u'] - mags_std['r']
+    print gi.min(), gi.max(), ur.min(), ur.max()
     shifts = {}
     for f in filterlist:
         shifts[f] = mags_shift[f] - mags_std[f]
+    print len(gi), len(shifts['u'])
 
     pylab.figure()
     pylab.subplots_adjust(top=0.93, wspace=0.3, hspace=0.32, bottom=0.09, left=0.12, right=0.96)
+    urcolors = ['c', 'c', 'b', 'g', 'y', 'r', 'm']
+    urbinsize = abs(ur.min() - ur.max())/6.0
+    urbins = numpy.arange(ur.min(), ur.max()+urbinsize, urbinsize)
+    metbinsize = abs(metallicity.min() - metallicity.max())/6.0
+    metbins = numpy.arange(metallicity.min(), metallicity.max()+metbinsize, metbinsize)
+    #print urbinsize, urbins
+    print metbinsize, metbins
     i = 1
-    for f in filterlist:        
+    for f in filterlist:
+        print f
         pylab.subplot(3,2,i)
-        pylab.plot(gi, shifts[f], 'k.')
+        """
+        for urbidx in range(len(urbins)):
+            condition = ((ur >= urbins[urbidx]) & (ur <= urbins[urbidx]+urbinsize))
+            coloridx = urcolors[urbidx]
+            pylab.plot(gi[condition], shifts[f][condition], coloridx+'.')
+        """
+        for metidx in range(len(metbins)):
+            condition =((metallicity>=metbins[metidx]) & (metallicity<=metbins[metidx]+metbinsize))
+            coloridx = urcolors[metidx]
+            pylab.plot(gi[condition], shifts[f][condition], coloridx+'.')
         pylab.xlabel("g-i")
         pylab.ylabel("Delta %s " %(f))
         if f == 'u':
@@ -141,5 +164,5 @@ if __name__ == "__main__":
         pylab.grid(True)
         i = i + 1
     pylab.figtext(0.2, 0.95, "Change in magnitude for X=1.5 and Filter shift of 1%")
-    #pylab.show()
-    pylab.savefig("delta_mags2.eps", format='eps')
+    pylab.show()
+    #pylab.savefig("delta_mags2.eps", format='eps')
