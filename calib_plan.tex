@@ -980,66 +980,42 @@ then have an expected error of 0.3\% (3~mmag). These must be updated
 for nightly changes by the white-light flat fields taken with the
 quartz lamp in the dome screen projectors. As this update only depends
 on changes in the white light flats, not their absolute values, the
-only requirement is then that the quartz lamps do not change their
-spectral profile (which may change the ghosting pattern) or
-illumination pattern by more than an amount which would cause a change
-of more than 0.1\% in the illumination of the white light flat at any
-scale (that is, the illumination of the dome screen projectors with
-the quartz lamps could be non-uniform by a larger amount, but the
-pattern must be stable over time to 0.1\%).
+only requirement is that the quartz lamps produce an illumination
+pattern in the focal plane which is stable over time to 0.1\%. This
+means that the quartz lamps should not change their spectral profile
+(which may change the ghosting pattern due to wavelength dependent
+effects) or their illumination pattern by more than an amount which
+would produce changes of more than 0.1\% in the focal plane.
 
 
-\subsection{Shape of the Hardware and Atmospheric Response, $\phi_b^{atm+sys}(\lambda)$}
+\subsection{Shape of the Hardware and Atmospheric Response}
 \label{sec:phi_correction}
 
-The compensation for changes in observed magnitudes caused by
-variations in the wavelength dependence (shape) of the hardware
-and atmospheric response curves, $\phi_b^{sys}(\lambda)$ and
-$\phi^{atm}(\lambda)$, will be done using independent measurements of
-the hardware response curve from the narrow band flat fields and the
-atmospheric response curve from MODTRAN models based on measurements
-from the auxiliary telescope.  While the measurements are independent,
-the actual correction that must be applied depends on the combination
-of atmospheric and hardware response curves as well as the SED of the
+Compensation for changes in observed magnitudes caused by variations
+in the wavelength dependence (shape) of the hardware and atmospheric
+response curves, $\phi_b^{sys}(\lambda)$ and $\phi^{atm}(\lambda)$,
+will be done using independent measurements of the hardware response
+curve from the narrow band flat fields and the atmospheric response
+curve from MODTRAN models based on measurements from the auxiliary
+telescope.  While the measurements are independent, the actual
+correction that must be applied depends on the combination of
+atmospheric and hardware response curves as well as the SED of the
 astronomical objects.  This correction is necessary for precision
-photometry but as it requires knowledge of the object's SED, general
-LSST reported magnitudes will only include a rough estimate or no
-correction (along with an indication of what SED was assumed to
-generate this value). However, for stars which will be used in
-self-calibration (see subsection~\ref{sec:selfcalib}) to determine
+photometry, but as it requires knowledge of the object's SED, most
+LSST reported magnitudes will only include either no correction or a
+(probably rough) correction along with an indication of what SED was
+assumed to generate this value. However, for stars which will be used
+in self-calibration (see subsection~\ref{sec:selfcalib}) to determine
 photometric zeropoints in each exposure, a model SED well-matched to
 the object's colors will be chosen and used to generate the $\delta
-k_b^{atm+sys}$ corrections.
+k_b^{atm+sys}$ corrections described in this section.
 
-The narrow band flat fields are necessary to correct for variations in
-the system throughput as a function of wavelength across the focal
-plane. These variations are expected to change relatively slowly over
-time due to aging in the filter and mirror coatings, and so these
-narrow band flats will only be acquired on an approximately monthly
-basis as they can be very time-consuming at high wavelength resolution
-($\approx1$ nm).
-
-In addition, the narrow band flats must also be used to measure
-changes in the bandpass shape throughout the field of view. Before
-applying $\delta k(x,y,SED,t)$ corrections to the observed magnitudes,
-however, the wavelength-dependent effects of the atmosphere must also
-be considered, as the final effect on the observed magnitude is not
-independent. Thus, the narrow band flat fields will be combined using
-a series of standard model SEDS to generate $\delta
-k(x,y,alt,az,SED,t)$ corrections for each image after the atmospheric
-corrections described in Section~\ref{sec:auxtele} have been
-calculated and applied to the model SEDs. Thus for each observation,
-there will be lookup tables created with $\delta k(x,y,alt,az,SED,t)$
-that can be parametrized as a function of object color. These $\delta
-k$ correct the shape of the system bandpass response to a standardized
-value, chosen during commissioning.  Obviously, applying these
-corrections requires knowing the color of the astronomical object (and
-ideally, the full spectral energy distribution), and this information
-will not always be known for all objects. In practice, the calibration
-pipeline will calculate corrections using best-estimates of the
-objects' color. These estimates will increase in accuracy as the
-survey progresses, eventually reaching $\approx 0.07$~magnitudes for
-objects with many repeat observations.
+The individual narrowband flat fields described in
+section~\ref{sec:narrowband} are used directly to generate measurements of the
+hardware response curve as a function of wavelength and position in
+the focal plane. These measurements will be updated monthly as the
+hardware response curve is expected to change only slowly over time
+due to aging in the filter and mirror coatings.
 
 The atmospheric transmission function, $S^{atm}(\lambda,alt,az,t)$, is
 broken into two parts: a wavelength-dependent, slowly varying portion
@@ -1049,9 +1025,6 @@ of variable cloud extinction. Measurements of the atmosphere from the
 auxiliary telescope correct the wavelength-dependent portion while the
 self-calibration procedure must be used to correct for cloud
 extinction. 
-
-\subsubsection{Auxiliary telescope}
-\label{sec:auxtele}
 
 The spectroscopic measurements from the auxiliary telescope are
 necessary to correct for the wavelength-dependent variations in
@@ -1086,6 +1059,31 @@ which case the spectra of each star can be bootstrapped from the large
 number of repeat observations, using an iterative procedure to extract
 stellar parameters (effective temperature and surface gravity) for
 each of the probe stars along with the atmospheric constituents. 
+
+
+In addition, the narrow band flats must also be used to measure
+changes in the bandpass shape throughout the field of view. Before
+applying $\delta k(x,y,SED,t)$ corrections to the observed magnitudes,
+however, the wavelength-dependent effects of the atmosphere must also
+be considered, as the final effect on the observed magnitude is not
+independent. Thus, the narrow band flat fields will be combined using
+a series of standard model SEDS to generate $\delta
+k(x,y,alt,az,SED,t)$ corrections for each image after the atmospheric
+corrections described in Section~\ref{sec:auxtele} have been
+calculated and applied to the model SEDs. Thus for each observation,
+there will be lookup tables created with $\delta k(x,y,alt,az,SED,t)$
+that can be parametrized as a function of object color. These $\delta
+k$ correct the shape of the system bandpass response to a standardized
+value, chosen during commissioning.  Obviously, applying these
+corrections requires knowing the color of the astronomical object (and
+ideally, the full spectral energy distribution), and this information
+will not always be known for all objects. In practice, the calibration
+pipeline will calculate corrections using best-estimates of the
+objects' color. These estimates will increase in accuracy as the
+survey progresses, eventually reaching $\approx 0.07$~magnitudes for
+objects with many repeat observations.
+
+
 
 By collecting atmospheric absorption measurements every 5-10 minutes 
 over a wide range of airmasses and positions in the sky, 
