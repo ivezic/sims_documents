@@ -991,27 +991,60 @@ would produce changes of more than 0.1\% in the focal plane.
 \subsection{Shape of the Hardware and Atmospheric Response}
 \label{sec:phi_correction}
 
-Compensation for changes in observed magnitudes caused by variations
-in the wavelength dependence (shape) of the hardware and atmospheric
-response curves, $\phi_b^{sys}(\lambda)$ and $\phi^{atm}(\lambda)$,
-will be done using independent measurements of the hardware response
-curve from the narrow band flat fields and the atmospheric response
-curve from MODTRAN models based on measurements from the auxiliary
-telescope.  While the measurements are independent, the actual
-correction that must be applied depends on the combination of
+Compensation for the changes in observed magnitudes caused by
+variations in the wavelength dependence (shape) of the hardware and
+atmospheric response curves, $\phi_b^{sys}(\lambda)$ and
+$\phi^{atm}(\lambda)$, will be done using independent measurements of
+the hardware response curve (from the narrow band flat fields) and the
+atmospheric response curve (from MODTRAN4 models generated from
+measurements from the auxiliary telescope).  While the measurement of
+the shapes of the hardware and atmosphere curves are independent, the
+actual correction that must be applied depends on the combination of
 atmospheric and hardware response curves as well as the SED of the
-astronomical objects.  This correction is necessary for precision
+astronomical object.  This correction is necessary for precision
 photometry, but as it requires knowledge of the object's SED, most
-LSST reported magnitudes will only include either no correction or a
-(probably rough) correction along with an indication of what SED was
-assumed to generate this value. However, for stars which will be used
-in self-calibration (see subsection~\ref{sec:selfcalib}) to determine
-photometric zeropoints in each exposure, a model SED well-matched to
-the object's colors will be chosen and used to generate the $\delta
-k_b^{atm+sys}$ corrections described in this section.
+LSST reported magnitudes will include either no correction or a
+(potentially rough) correction along with an indication of what SED
+was assumed to generate this value. However, for stars which will be
+used in self-calibration (see subsection~\ref{sec:selfcalib}) to
+determine photometric zeropoints in each exposure, a model SED
+well-matched to the object's colors will be chosen and used to
+generate the $\delta k_b^{atm+sys}$ corrections described in this
+section.
 
-The individual narrowband flat fields described in
-section~\ref{sec:narrowband} are used directly to generate measurements of the
+The hardware response curve is measured directly using the individual
+narrowband flat fields described in section~\ref{sec:narrowband}. At
+each wavelength, the narrowband flat field will be illumination
+corrected and then sampled at various $x,y$ locations to measure the
+total hardware response. The dome screen photodiodes will be used to
+track the relative intensity output by the dome screen projectors at
+each wavelength. These measurements will be updated monthly as the
+hardware response curve is expected to change only slowly over time,
+due to aging in the filter and mirror coatings. It is expected that the
+shape of the response curve will be primarily a function of radius due to
+variations in the thickness of the filter coatings caused by the mechanism
+used to deposit those coatings. The variation due to filter nonuniformities
+are specified to be less than 1\% across the focal plane, most likely in 
+the form of a bandpass shift as shown in Figure~\ref{fig:filtershift}. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=6in]{filter_shifts}
+\end{center}
+\caption{ {\small
+{\bf Baseline filter curves and potential shifts due to nonuniformity.}
+
+
+\label{fig:filtershift}
+} }
+\end{figure}
+
+
+Sampling the ADU counts at various $x,y$ locations in the focal plane, 
+after application of the illumination correction appropriate for that wavelength
+and weighting for the relative intensity of the dome screen illumination 
+(measured by the dome screen photodiode)
+ are used directly to generate measurements of the
 hardware response curve as a function of wavelength and position in
 the focal plane. These measurements will be updated monthly as the
 hardware response curve is expected to change only slowly over time

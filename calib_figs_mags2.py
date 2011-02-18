@@ -17,24 +17,33 @@ def read_hardware(shift_perc=None):
     filterdir = os.getenv("LSST_THROUGHPUTS_DEFAULT")
     hardware = ("detector.dat", "m1.dat", "m2.dat", "m3.dat", "lens1.dat", "lens2.dat", "lens3.dat")
     # Read in the standard components, but potentially shift the filter by shift_perc percent.
+    filters = read_filtersonly(shift_perc=shift_perc)
     sys = {}
     for f in filterlist:
         sys[f] = Bandpass()
+        # put together the standard component list
         tlist = []
         for t in hardware:
             tlist.append(os.path.join(filterdir, t))
+        # read in the standard components, combine into sys
         sys[f].readThroughputList(tlist)
-        tmpfilter = Bandpass()
-        tmpfilter.readThroughput(os.path.join(filterdir, "filter_" + f + ".dat"))
-        effwavelenphi, effwavelensb = tmpfilter.calcEffWavelen()
-        # Add shift to wavelength of filter, if needed.
-        if shift_perc != None:
-            shift = effwavelensb * shift_perc
-            tmpfilter.wavelen = tmpfilter.wavelen + shift
-            tmpfilter.resampleBandpass()
-        sys[f].wavelen, sys[f].sb = sys[f].multiplyThroughputs(tmpfilter.wavelen, tmpfilter.sb)
+        # multiply by the filter throughput for final hardware throughput (no atmosphere)
+        sys[f].wavelen, sys[f].sb = sys[f].multiplyThroughputs(filters[f].wavelen, filters[f].sb)
     return sys
 
+def read_filtersonly(shift_perc=None):
+    filterdir = os.getenv("LSST_THROUGHPUTS_DEFAULT")
+    filters = {}
+    for f in filterlist:
+        filters[f] = Bandpass()
+        filters[f].readThroughput(os.path.join(filterdir, "filter_" + f + ".dat"))
+        effwavelenphi, effwavelensb = filters[f].calcEffWavelen()
+        if shift_perc != None:
+            shift = effwavelensb * shift_perc/100.0
+            filters[f].wavelen = filters[f].wavelen + shift
+            filters[f].resampleBandpass()
+    return filters
+        
 def read_atmos():
     # Read some atmosphere throughputs.
     atmosdir = "."
@@ -103,13 +112,18 @@ def read_stars():
 
 
 if __name__ == "__main__":
-    
+
+    # shift the filters by nothing (standard)
     sys_std = read_hardware(shift_perc=None)
-    sys_shift = read_hardware(shift_perc=0.01)
+    # shift the filters by one percent
+    sys_shift = read_hardware(shift_perc=1.0)
+    # read in a few different atmospheres
     atmokeylist = ['standard', 'X=1.0', 'X=1.5']
     atmos = read_atmos()
+    # combine to total throughputs 
     total_std = combine_throughputs(atmos, sys_std)    
     total_shift = combine_throughputs(atmos, sys_shift)
+    # read the stars
     stars, starlist, temperatures, metallicity = read_stars()
     print temperatures.max(), temperatures.min(), metallicity.max(), metallicity.min()
     print len(starlist)
@@ -164,5 +178,38 @@ if __name__ == "__main__":
         pylab.grid(True)
         i = i + 1
     pylab.figtext(0.2, 0.95, "Change in magnitude for X=1.5 and Filter shift of 1%")
-    pylab.show()
     #pylab.savefig("delta_mags2.eps", format='eps')
+
+    if True:
+        # plot the shift in the filters 
+        pylab.figure()
+        filters_std = read_filtersonly()
+        filters_shift = read_filtersonly(shift_perc=1.0)
+        # plot the filters alone
+        pylab.subplot(211)
+        i = 0
+        for f in filterlist:
+            pylab.plot(filters_std[f].wavelen, filters_std[f].sb, colors[i]+"-", label=f)
+            pylab.plot(filters_shift[f].wavelen, filters_shift[f].sb, colors[i]+":")
+            i = color_counter_next(i)
+        pylab.ylim(0, 1)
+        pylab.xlim(300, 1200)
+        pylab.xlabel("Wavelength (nm)")
+        pylab.ylabel("Transmission")
+        pylab.grid(True)
+        # plot the total throughput
+        pylab.subplot(212)
+        i = 0
+        for f in filterlist:
+            pylab.plot(total_std['Standard'][f].wavelen, total_std['Standard'][f].sb, colors[i]+"-", label=f)
+            pylab.plot(total_shift['Standard'][f].wavelen, total_shift['Standard'][f].sb, colors[i]+":")
+            i = color_counter_next(i)
+        pylab.ylim(0, 1)
+        pylab.xlim(300, 1200)
+        pylab.xlabel("Wavelength (nm)")
+        pylab.ylabel("Transmission")
+        pylab.grid(True)
+        pylab.legend(numpoints=1, fancybox=True, loc='upper right')
+            
+    pylab.show()
+
