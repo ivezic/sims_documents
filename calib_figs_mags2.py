@@ -194,7 +194,6 @@ if __name__ == "__main__":
             i = color_counter_next(i)
         pylab.ylim(0, 1)
         pylab.xlim(300, 1200)
-        pylab.xlabel("Wavelength (nm)")
         pylab.ylabel("Transmission")
         pylab.grid(True)
         # plot the total throughput
@@ -204,7 +203,7 @@ if __name__ == "__main__":
             pylab.plot(total_std['Standard'][f].wavelen, total_std['Standard'][f].sb, colors[i]+"-", label=f)
             pylab.plot(total_shift['Standard'][f].wavelen, total_shift['Standard'][f].sb, colors[i]+":")
             i = color_counter_next(i)
-        pylab.ylim(0, 1)
+        pylab.ylim(0, 0.8)
         pylab.xlim(300, 1200)
         pylab.xlabel("Wavelength (nm)")
         pylab.ylabel("Transmission")
