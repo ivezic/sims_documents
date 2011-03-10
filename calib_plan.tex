@@ -907,7 +907,7 @@ are available in LSST-10015 and LSST-8217.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[angle=90,width=6in]{ghost_images}
+\includegraphics[width=6in]{ghost_images}
 \caption{ {\small
 {\bf Simulations of LSST camera ghost images, as measured by CCOB. }
 Various beam incident angles, positions and wavelengths will be
@@ -1038,51 +1038,55 @@ NIST) \citep{Eppeldauer09}, as shown in Figure~\ref{fig:NIST_diode}.
 
 \begin{figure}[htp]
 \centering
-\subfloat[\citet{Stubbs2010}]{\includegraphics[width=4in]{NIST_diode}} \\
+\subfloat[\citet{Stubbs2010}]{\includegraphics[width=3.5in]{NIST_diode}} \\
 \subfloat[\citet{Eppeldauer09}]{\includegraphics[width=5in]{NIST_diode2}}
 \caption{{\small
-{\bf Quantum efficiency curve and fractional uncertainty for NIST-calibrated
-photodiode, from \citet{Stubbs2010} (upper panel) and
-\citet{Eppeldauer09} (lower panel).}  Between 400 and 900~nm,
-calibration methods already in use in experimental hardware response
-measurement systems indicate photodiode accuracy is better than 0.1\%,
-as shown in the top panel. The jump in calibration accuracy below
-900~nm is due to calibration methods used by NIST in 2005; more recent
-work by \citet{Eppeldauer09} can achieve 0.1\% calibration accuracy
-down to 1600~nm, as shown in the bottom panel.}
-}
+{\bf Quantum efficiency curve and fractional uncertainty for
+NIST-calibrated photodiode, from \citet{Stubbs2010} and
+\citet{Eppeldauer09}.}  Panel (a): Between 400 and 900~nm, calibration
+methods already in use in test systems indicate photodiode accuracy is
+better than 0.1\%, as in the bottom part of this panel.  The sudden
+decrease in calibration accuracy below 900~nm is due to calibration
+methods used by NIST in 2005. Panel (b): More recent photodiode
+calibration efforts by \citet{Eppeldauer09} show better than 0.1\%
+accuracy can be achieved to beyond 1200~nm, the limit of detector
+response for LSST, as shown here in the response curves resulting from
+multiple scans of a single source using the same photodiode.} }
 \label{fig:NIST_diode}
 \end{figure}
 
-These measurements will be updated monthly as the hardware response
-curve is expected to change only slowly over time, due to aging in the
-filter and mirror coatings. It is expected that the shape of the
-response curve will be primarily a function of radius due to
+These measurements will be updated on a monthly basis, as the hardware
+response curve is expected to change only slowly over time due to
+aging in the filter and mirror coatings. It is expected that the shape
+of the response curve will be primarily a function of radius due to
 variations in the thickness of the filter coatings caused by the
 mechanism used to deposit those coatings. The variation due to filter
 nonuniformities are specified to be less than 1\% across the focal
 plane, most likely in the form of a bandpass shift as shown in
 Figure~\ref{fig:filtershift}.
 
+Because the shape of the hardware response curve varies as a function
+of filter radius, it is also necessary to monitor any offsets of the
+filter position from dead center after any filter changes. In order to
+keep the 
+
 \begin{figure}
 \centering
 \includegraphics[width=6in]{filter_shifts}
 \caption{{\small 
-{\bf Baseline filter curves and potential shifts due to nonuniformity.}
-}}
+{\bf Baseline filter curves and a potential shift due to nonuniformity.}
+The solid lines indicate standard filter bandpasses (top panel: filter
+alone, bottom panel: filter plus standard mirror, lens, detector and atmosphere
+response curves) while the dashed lines indicate the same bandpass
+shifted redward by 1\% of the central wavelength.}}
 \label{fig:filtershift}
 \end{figure}
 
+# ADD FIGURE with delta mag for all stars for 1\% shift
 
-Sampling the ADU counts at various $x,y$ locations in the focal plane, 
-after application of the illumination correction appropriate for that wavelength
-and weighting for the relative intensity of the dome screen illumination 
-(measured by the dome screen photodiode)
- are used directly to generate measurements of the
-hardware response curve as a function of wavelength and position in
-the focal plane. These measurements will be updated monthly as the
-hardware response curve is expected to change only slowly over time
-due to aging in the filter and mirror coatings.
+
+\subsubsection{Measuring the shape of the atmospheric response curve}
+\label{sec:phi_atmo}
 
 The atmospheric transmission function, $S^{atm}(\lambda,alt,az,t)$, is
 broken into two parts: a wavelength-dependent, slowly varying portion
@@ -1136,7 +1140,7 @@ be considered, as the final effect on the observed magnitude is not
 independent. Thus, the narrow band flat fields will be combined using
 a series of standard model SEDS to generate $\delta
 k(x,y,alt,az,SED,t)$ corrections for each image after the atmospheric
-corrections described in Section~\ref{sec:auxtele} have been
+corrections described in Section~\ref{sec:phi_atmo} have been
 calculated and applied to the model SEDs. Thus for each observation,
 there will be lookup tables created with $\delta k(x,y,alt,az,SED,t)$
 that can be parametrized as a function of object color. These $\delta
