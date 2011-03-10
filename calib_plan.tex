@@ -966,26 +966,33 @@ accurate to the sub-percent level.
 
 The dome screen projectors will be designed to be uniform to within
 0.25\% (2.5~mmag) over scales less than $0.5^{\circ}$ (slightly larger
-than a CCD). Using the measurements from the CCOB to model ghost
-reflections and scattering within the camera, the uniformity of the
-dome screen projectors is expected to be the limiting factor on scales
-the size of a CCD. Applying the dense rastor scan of stars to correct
-the 1\% illumination variations from the dome screen projectors on the
-scale of the field of view plus the effects of 1--2\% stray light, is
-expected to increase the error in the illumination correction to just
-under 0.3\% (3~mmag).
+than a CCD). Translating from this engineering requirement (a simple
+limit) to the RMS of expected measurements implies a resulting RMS of
+0.7~mmag (=2.5~mmag/$\sqrt(12)$). After using the measurements from
+the CCOB to model ghost reflections and scattering within the camera,
+the uniformity of the dome screen projectors is expected to be the
+limiting factor on scales the size of a CCD. Applying the dense rastor
+scan of stars to correct the larger illumination variations from the
+dome screen projectors over the scale of the field of view, plus to
+correct for the effects of 1--2\% stray light, is expected to increase
+the error in the illumination correction to just under 0.30\%
+(3.0~mmag), based on results in previous surveys.
 
 The illumination corrected synthetic flats created on a monthly basis
-then have an expected error of 0.3\% (3~mmag). These must be updated
-for nightly changes by the white-light flat fields taken with the
-quartz lamp in the dome screen projectors. As this update only depends
-on changes in the white light flats, not their absolute values, the
-only requirement is that the quartz lamps produce an illumination
-pattern in the focal plane which is stable over time to 0.1\%. This
-means that the quartz lamps should not change their spectral profile
-(which may change the ghosting pattern due to wavelength dependent
-effects) or their illumination pattern by more than an amount which
-would produce changes of more than 0.1\% in the focal plane.
+then have an expected error of 0.25\% (2.5~mmag). These must be
+updated for nightly changes by the white-light flat fields taken with
+the quartz lamp in the dome screen projectors. As this update only
+depends on changes in the white light flats, not their absolute
+values, the only requirement is that the quartz lamps produce an
+illumination pattern in the focal plane which is stable over time at
+the same level as the initial illumination uniformity requirement, or
+stable to within 0.25\% within a CCD. This means that the quartz lamps
+should not change their spectral profile (which may change the
+ghosting pattern due to wavelength dependent effects) or their
+illumination pattern by more than an amount which would produce
+changes of more than 0.25\% in the focal plane, adding a further
+0.7~mmag rms scatter to the normalization of the system throughput,
+for a final total of 3~mmag.
 
 
 \subsection{Shape of the Hardware and Atmospheric Response}
@@ -1012,29 +1019,55 @@ well-matched to the object's colors will be chosen and used to
 generate the $\delta k_b^{atm+sys}$ corrections described in this
 section.
 
+\subsubsection{Measuring the shape of the hardware response curve}
+\label{sec:phi_hardware}
+
 The hardware response curve is measured directly using the individual
 narrowband flat fields described in section~\ref{sec:narrowband}. At
 each wavelength, the narrowband flat field will be illumination
-corrected and then sampled at various $x,y$ locations to measure the
-total hardware response. The dome screen photodiodes will be used to
-track the relative intensity output by the dome screen projectors at
-each wavelength. These measurements will be updated monthly as the
-hardware response curve is expected to change only slowly over time,
-due to aging in the filter and mirror coatings. It is expected that the
-shape of the response curve will be primarily a function of radius due to
-variations in the thickness of the filter coatings caused by the mechanism
-used to deposit those coatings. The variation due to filter nonuniformities
-are specified to be less than 1\% across the focal plane, most likely in 
-the form of a bandpass shift as shown in Figure~\ref{fig:filtershift}. 
+corrected and then sampled at various $x,y$ positions to measure the
+total hardware response at those locations. The dome screen
+photodiodes will be used to track the relative intensity produced by
+the dome screen projectors at each wavelength. The photodiodes are
+expected to be accurate to within 0.1\% between 400-900~nm ($g,r,i,z$
+bandpasses) with current technology, which can be extended to 1600~nm
+(into the $y$ band) using techniques under development (which also have the
+possibility of achieving 0.01\% accuracy in the diode calibration at
+NIST) \citep{Eppeldauer09}.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=6in]{NIST_diode}
+\end{center}
+\caption{{\small
+{\bf Quantum efficiency curve and fractional uncertainty for NIST-calibrated
+photodiode, from \citet{Stubbs2010}.} Between 400 and 900~nm, the 
+calibration is better than 0.1\%. The jump in calibration accuracy below
+900~nm is due to calibration methods used by NIST in 2005; more recent 
+work by \citet{Eppeldauer09} can achieve 0.1\% calibration accuracy
+down to 1600~nm.}
+}
+\label{fig:NIST_diode}
+\end{figure}
+
+These measurements will be updated monthly as the hardware response
+curve is expected to change only slowly over time, due to aging in the
+filter and mirror coatings. It is expected that the shape of the
+response curve will be primarily a function of radius due to
+variations in the thickness of the filter coatings caused by the
+mechanism used to deposit those coatings. The variation due to filter
+nonuniformities are specified to be less than 1\% across the focal
+plane, most likely in the form of a bandpass shift as shown in
+Figure~\ref{fig:filtershift}.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=6in]{filter_shifts}
 \end{center}
-\caption{ {\small
+\caption{{\small 
 {\bf Baseline filter curves and potential shifts due to nonuniformity.}
+}}
 \label{fig:filtershift}
-} }
 \end{figure}
 
 
