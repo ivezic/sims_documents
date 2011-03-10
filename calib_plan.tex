@@ -1,6 +1,8 @@
 \documentclass[12pt,preprint]{aastex}
 \usepackage{graphicx}
+\usepackage{subfig}
 \usepackage{natbib}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% author-defined commands
@@ -904,9 +906,8 @@ More details about the requirements and physical apparatus of the CCOB
 are available in LSST-10015 and LSST-8217.
 
 \begin{figure}[htbp]
-\begin{center}
+\centering
 \includegraphics[angle=90,width=6in]{ghost_images}
-\end{center}
 \caption{ {\small
 {\bf Simulations of LSST camera ghost images, as measured by CCOB. }
 Various beam incident angles, positions and wavelengths will be
@@ -1025,27 +1026,30 @@ section.
 The hardware response curve is measured directly using the individual
 narrowband flat fields described in section~\ref{sec:narrowband}. At
 each wavelength, the narrowband flat field will be illumination
-corrected and then sampled at various $x,y$ positions to measure the
-total hardware response at those locations. The dome screen
-photodiodes will be used to track the relative intensity produced by
-the dome screen projectors at each wavelength. The photodiodes are
-expected to be accurate to within 0.1\% between 400-900~nm ($g,r,i,z$
-bandpasses) with current technology, which can be extended to 1600~nm
-(into the $y$ band) using techniques under development (which also have the
+corrected and then used to measure the total hardware response over
+all $x,y$ positions. The dome screen photodiodes will be used to track
+the relative intensity of the light produced by the projectors at each
+wavelength. These NIST-calibrated photodiodes are expected to be
+accurate to within 0.1\% between 400-900~nm ($g,r,i,z$ bandpasses)
+with current technology, which can be extended to 1600~nm (into the
+$y$ band) using techniques under development (which also have the
 possibility of achieving 0.01\% accuracy in the diode calibration at
-NIST) \citep{Eppeldauer09}.
+NIST) \citep{Eppeldauer09}, as shown in Figure~\ref{fig:NIST_diode}. 
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=6in]{NIST_diode}
-\end{center}
+\begin{figure}[htp]
+\centering
+\subfloat[\citet{Stubbs2010}]{\includegraphics[width=4in]{NIST_diode}} \\
+\subfloat[\citet{Eppeldauer09}]{\includegraphics[width=5in]{NIST_diode2}}
 \caption{{\small
 {\bf Quantum efficiency curve and fractional uncertainty for NIST-calibrated
-photodiode, from \citet{Stubbs2010}.} Between 400 and 900~nm, the 
-calibration is better than 0.1\%. The jump in calibration accuracy below
-900~nm is due to calibration methods used by NIST in 2005; more recent 
+photodiode, from \citet{Stubbs2010} (upper panel) and
+\citet{Eppeldauer09} (lower panel).}  Between 400 and 900~nm,
+calibration methods already in use in experimental hardware response
+measurement systems indicate photodiode accuracy is better than 0.1\%,
+as shown in the top panel. The jump in calibration accuracy below
+900~nm is due to calibration methods used by NIST in 2005; more recent
 work by \citet{Eppeldauer09} can achieve 0.1\% calibration accuracy
-down to 1600~nm.}
+down to 1600~nm, as shown in the bottom panel.}
 }
 \label{fig:NIST_diode}
 \end{figure}
@@ -1061,9 +1065,8 @@ plane, most likely in the form of a bandpass shift as shown in
 Figure~\ref{fig:filtershift}.
 
 \begin{figure}
-\begin{center}
+\centering
 \includegraphics[width=6in]{filter_shifts}
-\end{center}
 \caption{{\small 
 {\bf Baseline filter curves and potential shifts due to nonuniformity.}
 }}
