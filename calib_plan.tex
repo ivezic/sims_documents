@@ -1,8 +1,8 @@
 \documentclass[12pt,preprint]{aastex}
-\usepackage{graphicx}
-\usepackage{subfig}
 \usepackage{natbib}
-
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% author-defined commands
@@ -722,9 +722,8 @@ desired SED that is either weighted toward blue wavelengths (1.5*blue
 flat weighted toward red wavelenghts (0.5*blue + 1.0*green + 1.5*red).
 In operations, the synthetic flat will be created using a well-defined
 SED that will best correct the system normalization for science
-targets in the field.
+targets in the field. }}
 \label{fig:narrowband}
-} }
 \end{figure}
 
 The narrow band flats are time-consuming to acquire. Scanning through
@@ -823,8 +822,7 @@ would be observed after combining all of the effects on the left. The bottom lar
 the right shows the illumination correction that must be multiplied with 
 this flat field to remove the effects of the dome screen variation,
 the pixel scale variation, and the ghosting.   Note that no photon noise was
-introduced in this simulation.  \label{fig:flatfield}
-} }
+introduced in this simulation. }}  \label{fig:flatfield}
 \end{figure}
 
 \begin{figure}[htbp]
@@ -853,8 +851,7 @@ flat but is correct for preserving stellar photometric accuracy.
 In every image with stars, the numbers next to each star indicate the
 counts measured within an appropriate circular aperture for the
 star. In the raw images, these counts are not equal because of the
-variation in pixel to pixel sensitivities. \label{fig:iceffect} 
- }}
+variation in pixel to pixel sensitivities. }} \label{fig:iceffect} 
 \end{figure}
 
 Illumination corrections (one per filter) will be generated whenever
@@ -915,9 +912,8 @@ explored by the CCOB, creating focal plane measurements similar to
 those simulated above. These measurements will be combined to
 constrain a ZEMAX model describing the optical paths in the camera
 (including the effect of the actual coating reflectivities of the CCD
-and lens surfaces, etc). 
+and lens surfaces, etc). }}
 \label{fig:ghostimage}
-} }
 \end{figure}
 
 The ZEMAX model describes how light scatters inside the camera
@@ -1041,7 +1037,7 @@ $y$ band) using techniques under development (which also have the
 possibility of achieving 0.01\% accuracy in the diode calibration at
 NIST) \citep{Eppeldauer09}, as shown in Figure~\ref{fig:NIST_diode}. 
 
-\begin{figure}[htp]
+\begin{figure}
 \centering
 \subfloat[\citet{Stubbs2010}]{\includegraphics[width=3.5in]{NIST_diode}} \\
 \subfloat[\citet{Eppeldauer09}]{\includegraphics[width=5in]{NIST_diode2}}
@@ -1076,24 +1072,29 @@ Figure~\ref{fig:dmag_filtershift}). However, as long as the variation
 in the hardware response curve is measured to better than 0.05\% --
 equivalent to approximately a 30~Angstrom error in wavelength
 calibration of the monochromatic light source throughout the bandpass
-or a 0.5\% error in photodiode calibration assuming that each bandpass
-is measured at approximately 100 separate wavelengths -- then the
-observed magnitudes can be calibrated to better than 1~mmag for all
-bandpasses other than $u$, where the error could be as much as 5~mmag
-for certain main sequence stars (see
+or a 0.5\% error in photodiode calibration assuming that the shape of
+each bandpass is determined using approximately 100 independent
+measurements (i.e. 1 measurement per nanometer within the bandpass) --
+the error contribution towards calibrating these observed magnitudes
+will be less than 1~mmag for all bandpasses other than $u$, where the
+error could be as much as 5~mmag for certain main sequence stars (see
 Figure~\ref{fig:dmag_filtershift_small}).
 
 Because the shape of the hardware response curve varies as a function
 of filter radius, it is also necessary to monitor any offsets of the
 filter position from dead center after any filter changes. Assuming
-the filter response curves vary linearly with radius, to remain below 
-the 
+the filter response curve varies linearly with radius, the filter
+location must be measured to better than 0.025\%  for the filter
+positioning to remain less than a 0.5~mmag source of error. Given the
+filters are approximately 75~cm in diameter, this means the filter 
+positioning must be recorded to better than 0.18~mm. 
 
 \begin{figure}
 \centering
 \includegraphics[width=6in]{filter_shifts}
 \caption{{\small 
-{\bf Baseline filter curves and a potential shift due to nonuniformity.}
+{\bf Baseline filter curves and a potential (1\% of the central
+  wavelength) shift due to nonuniformity.}
 The solid lines indicate standard filter bandpasses (top panel: filter
 alone, bottom panel: filter plus standard mirror, lens, detector and atmosphere
 response curves) while the dashed lines indicate the same bandpass
@@ -1105,11 +1106,19 @@ shifted redward by 1\% of the central wavelength.}}
 \centering
 \includegraphics[width=6in]{delta_mags_filtershift}
 \caption{{\small 
-{\bf Baseline filter curves and a potential shift due to nonuniformity.}
-The solid lines indicate standard filter bandpasses (top panel: filter
-alone, bottom panel: filter plus standard mirror, lens, detector and atmosphere
-response curves) while the dashed lines indicate the same bandpass
-shifted redward by 1\% of the central wavelength.}}
+{\bf Changes in observed magnitude (measured counts)
+due to a hardware response curve shift of 1\% of the central
+wavelength of each bandpass.}  850 Kurucz models with temperatures
+between 5000K and 35000K and metallicity indexes between -5.0 and 1.0
+(solar) were combined with a standard atmosphere and standard
+hardware bandpass, and then with a total system response where the
+atmosphere remained constant but the hardware response was shifted by
+1\% of the central wavelength of each bandpass (as in
+Fig~\ref{fig:filtershift}).  Changes in magnitude on the order of
+20~mmag are typical, except in $u$ band where the shift can create a
+$\delta u$ of closer to 80~mmag for certain kinds of main sequence
+stars. The points in each plot are color-coded by metallicity, in
+steps of 1 dex between -5.0 (blue) to 1.0 (magenta).} }
 \label{fig:dmag_filtershift}
 \end{figure}
 
@@ -1117,18 +1126,21 @@ shifted redward by 1\% of the central wavelength.}}
 \centering
 \includegraphics[width=6in]{delta_mags_filtershift_small}
 \caption{{\small 
-{\bf Baseline filter curves and a potential shift due to nonuniformity.}
-The solid lines indicate standard filter bandpasses (top panel: filter
-alone, bottom panel: filter plus standard mirror, lens, detector and atmosphere
-response curves) while the dashed lines indicate the same bandpass
-shifted redward by 1\% of the central wavelength.}}
-\label{fig:dmag_filtershift_small}
+{\bf Changes in observed magnitude (measured counts) due 
+to a hardware response curve shift of 0.05\% of the central wavelength
+of each bandpass.} Similar to Fig~\ref{fig:dmag_filtershift} except
+that the hardware response was shifted by only 0.05\% of the central
+wavelength, an amount representing an unmeasured shift in the hardware
+response and thus contributing to the final error in the calibration
+of the observed magnitudes. }}
+\label{fig:dmag_filtershift_small} 
 \end{figure}
-
-
+ 
 
 \subsubsection{Measuring the shape of the atmospheric response curve}
 \label{sec:phi_atmo}
+
+XXXX working here 
 
 The atmospheric transmission function, $S^{atm}(\lambda,alt,az,t)$, is
 broken into two parts: a wavelength-dependent, slowly varying portion
