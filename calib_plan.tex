@@ -935,7 +935,8 @@ which may not be well sampled in the next, rastor-scan step.
 
 To account for illumination variations from the dome screen projectors
 on large spatial scales (which could be up to 1\% across the field of
-view) or stray light scattered from other unmodeled surfaces, a dense
+view), stray light scattered from other unmodeled surfaces, or systematic
+differences in exposure time due to the camera shutter movement,  a dense
 network of stars of a variety of spectral types must be rastored
 across the focal plane on a photometric night. The images will be
 divided by the synthetic flat field corrected by the preliminary
@@ -961,40 +962,44 @@ update to the illumination correction which is produced by this dense
 rastor scan. Similar applications of rastor scans have been
 successfully used in previous surveys, ({\it e.g} \citet{Regnault2009,
 Magnier2004, Manfroid1996}), providing an illumination correction
-accurate to the sub-percent level.
+accurate to the sub-percent level. With the additional information
+from the CCOB and the better intrinsic uniformity of the dome screen
+illumination, we expect the illumination correction for LSST to be at
+least factor of 2 more accurate.
 
 \subsubsection{Error in the Normalization of the Hardware Transmission}
 
-The dome screen projectors will be designed to be uniform to within
+The dome screen projectors will be designed to be uniform to bertter than
 0.25\% (2.5~mmag) over scales less than $0.5^{\circ}$ (slightly larger
-than a CCD). Translating from this engineering requirement (a simple
+than a CCD). Translating from this engineering requirement (a strict
 limit) to the RMS of expected measurements implies a resulting RMS of
-0.7~mmag (=2.5~mmag/$\sqrt(12)$). After using the measurements from
-the CCOB to model ghost reflections and scattering within the camera,
-the uniformity of the dome screen projectors is expected to be the
-limiting factor on scales the size of a CCD. Applying the dense rastor
-scan of stars to correct the larger illumination variations from the
-dome screen projectors over the scale of the field of view, plus to
-correct for the effects of 1--2\% stray light, is expected to increase
-the error in the illumination correction to just under 0.30\%
-(3.0~mmag), based on results in previous surveys.
+0.7~mmag (=2.5~mmag/$\sqrt(12)$) in the dome illumination uniformity
+on scales smaller than a CCD. After using the measurements from the
+CCOB to model ghost reflections and scattering within the camera, the
+uniformity of the dome screen projectors is expected to be the
+limiting factor on these small scales. Applying the dense rastor scan
+of stars to correct for larger illumination variations from the dome
+screen projectors on the scale of the entire field of view, plus to
+correct for the effects of 1--2\% stray light and systematic exposure
+differences due to camera shutter travel, adds an additional error of
+about 2.8~mmag, increasing the expected error in the illumination
+corrected synthetic flat field to 2.9~mmag.
 
-The illumination corrected synthetic flats created on a monthly basis
-then have an expected error of 0.25\% (2.5~mmag). These must be
-updated for nightly changes by the white-light flat fields taken with
-the quartz lamp in the dome screen projectors. As this update only
-depends on changes in the white light flats, not their absolute
-values, the only requirement is that the quartz lamps produce an
-illumination pattern in the focal plane which is stable over time at
-the same level as the initial illumination uniformity requirement, or
-stable to within 0.25\% within a CCD. This means that the quartz lamps
-should not change their spectral profile (which may change the
-ghosting pattern due to wavelength dependent effects) or their
-illumination pattern by more than an amount which would produce
-changes of more than 0.25\% in the focal plane, adding a further
-0.7~mmag rms scatter to the normalization of the system throughput,
-for a final total of 3~mmag.
-
+The illumination corrected synthetic flats are created on a monthly
+basis and then must be updated for gray-scale nightly changes in the
+hardware transmission (due to dust,etc) using the white-light flat
+fields acquired using the quartz lamp in the dome screen
+projectors. As this update only depends on changes in the white light
+flats, not their absolute values, the only requirement is that the
+quartz lamps produce an illumination pattern in the focal plane which
+is stable over time at the same level as the initial illumination
+uniformity requirement, or stable to within 0.25\% within a CCD. This
+means that the quartz lamps should not change their spectral profile
+(which may change the ghosting pattern due to wavelength dependent
+effects) or their illumination pattern by more than an amount which
+would produce changes of more than 0.25\% in the focal plane, adding a
+further 0.7~mmag rms scatter, for a final total of 3~mmag expected
+error in the normalization of the hardware throughput.
 
 \subsection{Shape of the Hardware and Atmospheric Response}
 \label{sec:phi_correction}
@@ -1061,14 +1066,28 @@ aging in the filter and mirror coatings. It is expected that the shape
 of the response curve will be primarily a function of radius due to
 variations in the thickness of the filter coatings caused by the
 mechanism used to deposit those coatings. The variation due to filter
-nonuniformities are specified to be less than 1\% across the focal
+nonuniformities is specified to be less than 1\% across the focal
 plane, most likely in the form of a bandpass shift as shown in
-Figure~\ref{fig:filtershift}.
+Figure~\ref{fig:filtershift}. For main sequence stars, the resulting
+changes in observed magnitude as the bandpass shifts by 1\% of the
+central wavelength can be as much or more than 0.02~magnitudes (20
+mmag) - even larger in the $u$ band (see
+Figure~\ref{fig:dmag_filtershift}). However, as long as the variation
+in the hardware response curve is measured to better than 0.05\% --
+equivalent to approximately a 30~Angstrom error in wavelength
+calibration of the monochromatic light source throughout the bandpass
+or a 0.5\% error in photodiode calibration assuming that each bandpass
+is measured at approximately 100 separate wavelengths -- then the
+observed magnitudes can be calibrated to better than 1~mmag for all
+bandpasses other than $u$, where the error could be as much as 5~mmag
+for certain main sequence stars (see
+Figure~\ref{fig:dmag_filtershift_small}).
 
 Because the shape of the hardware response curve varies as a function
 of filter radius, it is also necessary to monitor any offsets of the
-filter position from dead center after any filter changes. In order to
-keep the 
+filter position from dead center after any filter changes. Assuming
+the filter response curves vary linearly with radius, to remain below 
+the 
 
 \begin{figure}
 \centering
@@ -1082,7 +1101,30 @@ shifted redward by 1\% of the central wavelength.}}
 \label{fig:filtershift}
 \end{figure}
 
-# ADD FIGURE with delta mag for all stars for 1\% shift
+\begin{figure}
+\centering
+\includegraphics[width=6in]{delta_mags_filtershift}
+\caption{{\small 
+{\bf Baseline filter curves and a potential shift due to nonuniformity.}
+The solid lines indicate standard filter bandpasses (top panel: filter
+alone, bottom panel: filter plus standard mirror, lens, detector and atmosphere
+response curves) while the dashed lines indicate the same bandpass
+shifted redward by 1\% of the central wavelength.}}
+\label{fig:dmag_filtershift}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=6in]{delta_mags_filtershift_small}
+\caption{{\small 
+{\bf Baseline filter curves and a potential shift due to nonuniformity.}
+The solid lines indicate standard filter bandpasses (top panel: filter
+alone, bottom panel: filter plus standard mirror, lens, detector and atmosphere
+response curves) while the dashed lines indicate the same bandpass
+shifted redward by 1\% of the central wavelength.}}
+\label{fig:dmag_filtershift_small}
+\end{figure}
+
 
 
 \subsubsection{Measuring the shape of the atmospheric response curve}

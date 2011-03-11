@@ -40,6 +40,7 @@ def read_filtersonly(shift_perc=None):
         effwavelenphi, effwavelensb = filters[f].calcEffWavelen()
         if shift_perc != None:
             shift = effwavelensb * shift_perc/100.0
+            print f, shift
             filters[f].wavelen = filters[f].wavelen + shift
             filters[f].resampleBandpass()
     return filters
@@ -116,7 +117,8 @@ if __name__ == "__main__":
     # shift the filters by nothing (standard)
     sys_std = read_hardware(shift_perc=None)
     # shift the filters by one percent
-    sys_shift = read_hardware(shift_perc=1.0)
+    shift_perc = 0.05
+    sys_shift = read_hardware(shift_perc=shift_perc)
     # read in a few different atmospheres
     atmokeylist = ['standard', 'X=1.0', 'X=1.5']
     atmos = read_atmos()
@@ -136,7 +138,9 @@ if __name__ == "__main__":
         i = 0
         for s in starlist:
             mags_std[f][i] = stars[s].calcMag(total_std['Standard'][f])
-            mags_shift[f][i] = stars[s].calcMag(total_shift['X=1.5'][f])
+            #mags_shift[f][i] = stars[s].calcMag(total_shift['X=1.5'][f])
+            atmo_choice = 'Standard'  # atmo='X=1.5'
+            mags_shift[f][i] = stars[s].calcMag(total_shift[atmo_choice][f])
             i = i + 1
     gi = mags_std['g'] - mags_std['i']
     ur = mags_std['u'] - mags_std['r']
@@ -173,18 +177,20 @@ if __name__ == "__main__":
         pylab.ylabel("Delta %s " %(f))
         if f == 'u':
             pylab.ylim(-0.11, 0.03)
+            pylab.ylim(-0.005, 0.0025)
         else:
-            pylab.ylim(-0.04, 0.025)
+            #pylab.ylim(-0.04, 0.025)
+            pylab.ylim(-0.0025, 0.0025)
         pylab.grid(True)
         i = i + 1
-    pylab.figtext(0.2, 0.95, "Change in magnitude for X=1.5 and Filter shift of 1%")
+    pylab.figtext(0.2, 0.95, "Change in magnitude for %s atmosphere and Filter shift of %.2f%s" %(atmo_choice, shift_perc, "%"))
     #pylab.savefig("delta_mags2.eps", format='eps')
 
     if True:
         # plot the shift in the filters 
         pylab.figure()
         filters_std = read_filtersonly()
-        filters_shift = read_filtersonly(shift_perc=1.0)
+        filters_shift = read_filtersonly(shift_perc=shift_perc)
         # plot the filters alone
         pylab.subplot(211)
         i = 0
@@ -201,7 +207,7 @@ if __name__ == "__main__":
         i = 0
         for f in filterlist:
             pylab.plot(total_std['Standard'][f].wavelen, total_std['Standard'][f].sb, colors[i]+"-", label=f)
-            pylab.plot(total_shift['Standard'][f].wavelen, total_shift['Standard'][f].sb, colors[i]+":")
+            pylab.plot(total_shift[atmo_choice][f].wavelen, total_shift[atmo_choice][f].sb, colors[i]+":")
             i = color_counter_next(i)
         pylab.ylim(0, 0.8)
         pylab.xlim(300, 1200)
