@@ -57,10 +57,11 @@ through the atmosphere and LSST system and then from the calibration
 point of view, trying to recreate the transmission of those photons to
 the focal plane.  Section~\ref{sec:calib_details} describes details of
 each step of the calibration procedure, including how each calibration
-measurement is obtained and applied to the science data.
-Section~\ref{sec:error} discusses the error budget of the calibration
-procedure, while Section~\ref{sec:validate} provides a short overview
-of the current validation plans.
+measurement is obtained and applied to the science data along with
+expected errors originating from each step.
+%Section~\ref{sec:error} discusses the error budget of the calibration
+%procedure, while Section~\ref{sec:validate} provides a short overview
+%of the current validation plans.
 
 \section{Photometric Requirements}
 \label{sec:photoreq}
@@ -150,9 +151,10 @@ zeropoint) from the {\it shape} of the throughput curve (the color
 dependent terms), and further, using separate procedures to measure
 the contributions of the telescope hardware response (to the total
 normalization and bandpass shape) from the atmospheric throughput (to
-normalization and shape). This allows optimized methods to measure
-each individual component affecting the final measured magnitudes,
-allowing us to achieve photometric calibration at the required levels.
+normalization and shape). This allows the use of optimized methods to
+measure each individual component affecting the final measured
+magnitudes, allowing us to achieve photometric calibration at the
+required levels.
 
 This section will provide an overview of the calibration measurements
 required and motivate the process itself, starting with a review of
@@ -189,22 +191,18 @@ wavelength $\lambda$ makes it through the atmosphere,
 \end{equation}
 Here $\tau^{atm}(\lambda,alt,az)$ is the optical depth of the
 atmospheric layer at wavelength $\lambda$ towards the position
-($alt$,$az$).  Observational data show that $\tau^{atm}$'s dependency
-on wavelength is slowly varying with time ($t$) and position
-($alt$,$az$) under `typical' observing conditions. The atmospheric
-absorption varies on the order of 5-10\% per hour as a function of
-wavelength, and spatially varies primarily as a function of airmass
-but additional variation can be detected due to water absorption on
-the scale of tens of degrees (LSST-5367).  Clouds represent an
-additive gray (non-wavelength dependent) contribution to $\tau^{atm}$
-which can introduce a strong variation of $\tau^{atm}$ on much smaller
-angular scales and short timescales (on the order of 2-10\% of the
-total extinction at $1^{\circ}$ scales, variable within minutes
-\citep{Ivezic2007}).
+($alt$,$az$). Observational data \citep{Stubbs2007b, Burke2010b} show
+that $\tau^{atm}$ can vary as a function of wavelength and position
+($alt,az$) on the order of 5-10\% per hour due to changes in water
+absorption, aerosol scattering, rayleigh scattering, and molecular
+absorption (see also LSST-5367). Clouds represent an additional gray
+(non-wavelength dependent) contribution to $\tau^{atm}$ that can vary
+even more rapidly, on the order of 2-10\% of the total extinction at
+$1^{\circ}$ scales within minutes \citep{Ivezic2007}.
 
-Given $F_\nu^{pupil}(\lambda,alt,az,t)$, then the ADU counts recorded at a
-position within the field of view described by ($x$,$y$) can be
-written as
+Given the above $F_\nu^{pupil}(\lambda,alt,az,t)$, then the ADU counts
+recorded at a position within the field of view described by ($x$,$y$)
+can be written as
 \begin{equation}
 \label{eqn:Fpupil2counts}
     C_b(alt,az,x,y,t) = C \, \int_0^\infty {F_\nu^{pupil}(\lambda,alt,az,t) \, S_b^{sys}(\lambda,x,y,t) \lambda^{-1}d\lambda}.
@@ -223,34 +221,34 @@ exposure time, $g$ is the gain of the readout electronics (number of
 photoelectrons per ADU count, a number greater than one), and $h$ is
 the Planck constant. The system response function,
 $S_b^{sys}(\lambda,x,y)$, includes the effects of the mirror
-reflectance, optics transmission and detector sensitivity. Here again, 
-the wavelength-dependent variations in $S_b^{sys}$ change slowly in time; over
-periods of months, the mirror reflectance and filter transmission will
-degrade as their coatings age. There will also be wavelength-dependent
-spatial variations in $S_b^{sys}$ due to irregularities in the filter
+reflectance, optics transmission and detector sensitivity. Here the
+wavelength-dependent variations in $S_b^{sys}$ generally change quite
+slowly in time; over periods of months, the mirror reflectance and
+filter transmission will degrade as their coatings age. A more rapidly
+time-varying wavelength-dependent change in detector sensitivity
+(particularly at very red wavelengths in the $y$ band) results from
+temperature changes in the detector, but only on scales equivalent to
+a CCD or larger.  There will also be wavelength-dependent spatial
+variations in $S_b^{sys}$ due to irregularities in the filter
 material; these are expected to vary slowly from the center of the
 field of view to the outer edges, equivalent to a bandpass shift on
 the order of 1-2\% of the effective wavelength of the
-filter. Wavelength-independent (gray-scale) variations in $S_b^{sys}$ occur more
-rapidly, on the timescale of a day, and at spatial scales as
-small as the pixel level. There are a range of causes for these
+filter. Wavelength-independent (gray-scale) variations in $S_b^{sys}$
+occur more rapidly, on the timescale of a day, and at spatial scales
+as small as the pixel level. There are a range of causes for these
 variations: dust particles on the filter or dewar window, gain changes
-between amplifiers, or pixel-to-pixel detector sensitivity variations. 
-%A more rapid wavelength-dependent variation in
-%detector sensitivity (especially at the very red wavelengths in the
-%$y$ band) results from variations in the temperature of the detector,
-%but with little or no spatial variation.
+between amplifiers, or pixel-to-pixel detector sensitivity variations.
 
 From equation~\ref{eqn:Fpupil2counts} and the paragraphs above, we can
 see that the generation of counts $C_b(alt,az,x,y,t)$ from photons is
 imprinted with many different effects, each with different variability
 scales over time, space, and wavelength. In particular the
-wavelength-dependent variability (bandpass shape!) is typically much
-slower to change than the gray-scale variations
-(normalization!). These different scales of variability motivate us to
-separate the measurement of the normalization of $S_b^{sys}$ and
-$S^{atm}$ from the measurement of the wavelength-dependent shape of
-the bandpass. 
+wavelength-dependent variability (bandpass shape) is
+typically much slower in time and space than the gray-scale variations
+(bandpass normalization). These different scales of variability
+motivate us to separate the measurement of the normalization of
+$S_b^{sys}$ and $S^{atm}$ from the measurement of the
+wavelength-dependent shape of the bandpass.
 
 This then leads us to introduce a `normalized bandpass response function', $\phi_b(\lambda,alt,az,x,y,t)$,
 \begin{equation}
@@ -296,7 +294,7 @@ C_b(alt,az,x,y,t) & = & {C'}^{atm}(alt,az,t)\,{C'}_b^{sys}(x,y,t) \times
 \end{eqnarray}
 where $F_{\nu}(\lambda,t) = F_o(t)\,f_{\nu}(\lambda,t)$, separating the
 normalization ($F_o$) and shape ($f_\nu$) of the source spectral energy
-distribution ($m_{AB} = 2.5 \log_{10}({F_o / 3631 Jy})$).  It's
+distribution ($m_{AB} = 2.5 \log_{10}({F_o / 3631\, {\rm Jy}})$).  It's
 worth noting that $\int_0^\infty
 {F_\nu(\lambda,t)\phi_b^{std}(\lambda) d\lambda}$ is a constant value
 for a non-variable source.  For convenience, the middle term above can be written as
@@ -306,38 +304,38 @@ K'(\int {f_\nu\,\phi_b^{obs} d\lambda}) = \left( {\int_0^\infty {f_\nu(\lambda,t
 \int_0^\infty {f_\nu(\lambda,t)\phi_b^{std}(\lambda) d\lambda}} 
 \right)
 \end{eqnarray}
-where $K'$ is a value that depends only on the {\it shape}
-of the system throughput during a particular
-observation and the {\it shape} of the SED of the astronomical object,
-but not on the normalization of the total throughput or the total flux
-of the object. Note that $K'$ simplifies to unity if the source
-SED, $f_\nu(\lambda)$, is constant.  The variation in the total counts
-arising from the $K'$ term is dependent on the cumulative effect of
-both the atmosphere and the hardware transmission curves on the source
-SED, thus while the underlying wavelength-dependent (shape) variations
-in $S_b^{sys}$ and $S^{atm}$ are independent and can be measured
-separately, the resulting effect can only applied as a combined
-correction.
+where $K'$ is a value that depends only on the {\it shape} of the
+system throughput during a particular observation and the {\it shape}
+of the SED of the astronomical object, but does not depend on the
+normalization of the total throughput or the total flux of the
+object. Note that $K'$ simplifies to unity if the source SED,
+$f_\nu(\lambda)$, is constant with wavelength (i.e. a flat SED).  The
+variation in the total counts arising from the $K'$ term is dependent
+on the cumulative effect of both the atmosphere and the hardware
+transmission curves on the source SED, thus while the underlying
+wavelength-dependent (shape) variations in $S_b^{sys}$ and $S^{atm}$
+are independent and can be measured separately, the resulting effect
+can only applied as a combined correction.
 
 Examples of the effects of variations in the $\phi_b^{sys}(\lambda)$
 (hardware response) and $\phi^{atm}(\lambda)$ (atmospheric response)
 curves on the final observed counts are shown in
 Figure~\ref{fig:delta_mags} and Table~\ref{tab:delta_mags}. Two main
-sequence stellar models \citep{Kurucz1993}, one with temperature 35000K
-(blue) and one 6000K (red), were combined with three different
+sequence stellar models \citep{Kurucz1993} -- one with temperature 35000K
+(blue) and one 6000K (red) -- were combined with three different
 atmospheric response curves and two different hardware response curves
 to illustrate the resulting changes in observed magnitudes. In
 Figure~\ref{fig:delta_mags2}, the $X=1.5$ atmospheric response is
-combined with the $1\$$ shift in filter bandpass (altering the
+combined with the $1\%$ shift in filter bandpass (altering the
 hardware response) for many main sequence kurucz models, spanning a
 range of $g-i$ colors, and the resulting changes in observed
-magnitudes are plotted.  These examples demonstrate that even for
-conservative atmospheric and hardware transmission curve shape
-changes, the resulting scatter in observed magnitudes can be
-larger than the SRD repeatability requirements allow. Adding variations 
+magnitudes are plotted.  These examples demonstrate that the scatter in
+observed magnitudes induced by expected atmospheric and hardware transmission
+curve shape changes alone (without any gray-scale changes) can be larger
+than the SRD repeatability requirements would permit. Adding variations 
 in the gray-scale normalization due to the hardware response (typically on the
 order of 0.01 magnitudes) and cloud extinction (could be up to a few magnitudes)
-increase the scatter farther above the SRD limits.
+will increase the scatter in observed magnitudes. 
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{delta_mags}
@@ -450,8 +448,8 @@ filters at the necessary wavelength intervals, $\sim1nm$), however the
 wavelength-dependent effects are expected to vary only slowly over
 time, so the full narrow band flat field scan will only be repeated
 every 30 days. Since gray-scale normalization changes are likely to
-occur on a much more rapid timescale, standard white-light flat field
-will also be acquired at the start and end of each night and these
+occur on a much more rapid timescale, standard white-light flat fields
+will also be acquired at the start and end of each night. These
 will be used to correct the normalization of the system response on a
 nightly basis, updating the synthetic flat field (which has the
 desired SED) for the current changes in normalization. This flat field
@@ -478,37 +476,38 @@ and effect on image processing. The illumination correction is expected
 to be stable with time and will be remeasured only when the optical path
 of the telescope is altered. 
 
-Next, considering $S^{atm}(\lambda,alt,az,t)$, we will more
-dramatically separate the measurement of the shape of the atmospheric
-response and the normalization of the transmission.  The
+Next, considering $S^{atm}(\lambda,alt,az,t)$, we will again separate
+the measurement of the shape of the atmospheric response and the
+measurement of normalization of the transmission.  The
 wavelength-dependent variations in $\phi^{sys}(\lambda,t)$ change
 smoothly over spatial scales larger than the field of view and over
 several minutes.  By using an auxiliary telescope equipped with a
 spectroscope to observe bright stars with known SEDs, we can measure
-the absorption lines at a variety of positions in the atmosphere every
+atmospheric absorption at a variety of positions in the sky every
 5--10 minutes throughout the night. These observations are used as
 constraints for MODTRAN atmospheric models, generating simpler
-representations of the atmospheric throughput (in the form of
-absorption components as a function of $alt,az,t$) which can be
-interpolated to provide models of the wavelength-dependence of
-$S^{atm}(\lambda,alt,az,t)$ in each observation. In order to correct
-for the higher frequency gray-scale variations in the normalization of
-$S^{atm}(alt,az,t)$ due to cloud extinction, we must use the
-observations of stars in the images themselves, as the cloud
-extinction can vary up to 0.01 magnitudes on the scale of a CCD
-\citep{Ivezic2007} as fast as a few minutes. This `self-calibration'
-procedure could be thought of as creating a massive calibration
-`standard' star catalog, where the calibration stars are all of the
-non-variable, main-sequence stars in the science images, except that
-the true magnitudes of the calibration stars have to be bootstrapped
-from the many different observations of the survey. The bootstrapping
-for the calibration star magnitudes and the determination of the
-normalization for $S^{atm}(alt,az,t)$ are achieved
-simulataneously. First the previously described corrections for
-$\phi^{atm}(\lambda,t)$, $\phi_b^{sys}(\lambda,t)$ and the flat field
-normalization must be added to each observation, producing a
-`standardized' magnitude for each star, and then in `self-calibration', we minimize the
-difference between the standardized magnitude and a model magnitude,
+representations of the atmospheric throughput (in the form of a set of
+absorption components as a function of $alt,az,t$). These components
+can be interpolated to generate a wavelength-dependent atmospheric
+absorption profile, $S^{atm}(\lambda,alt,az,t)$, for each
+observation. In order to correct for the higher frequency gray-scale
+variations in the normalization of $S^{atm}(alt,az,t)$ due to cloud
+extinction, we must use the observations of stars in the images
+themselves, as the cloud extinction can vary up to 0.01 magnitudes on
+the scale of a CCD \citep{Ivezic2007} as fast as a few minutes. This
+`self-calibration' procedure could be thought of as creating a massive
+calibration `standard' star catalog, where the calibration stars are
+all of the non-variable, main-sequence stars in the science images;
+the main difference is that the true magnitudes of the calibration
+stars have to be bootstrapped from the many different observations of
+the survey. The calculation of the calibration star magnitudes and
+the determination of the normalization for $S^{atm}(alt,az,t)$ are
+achieved simulataneously. First the previously described corrections
+for $\phi^{atm}(\lambda,t)$, $\phi_b^{sys}(\lambda,t)$ and the flat
+field normalization must be added to each observation, producing a
+`standardized' magnitude for each star, and then in
+`self-calibration', we minimize the difference between the
+standardized magnitude and a model magnitude,
 \begin{equation}
 \label{eqn:chi2}
 \chi^2 = \Sigma_{ij} \left( { m_{b,ij}^{std} - m_{b,ij}^{model} \over \sigma_{b,ij}^{std} } \right)^2
@@ -689,7 +688,7 @@ of wavelength and provides a well-behaved reference for determination
 of $S_b^{sys}(\lambda)$.  Further details of the LSST narrow band flat
 field apparatus can be found in \citet{Gressler2010}.  Preliminary
 results from a similar apparatus tested at PanSTARRS can be found in
-\citet{Stubbs2010}, as well as earlier experiments from CTIO described
+\citet{Stubbs2010a}, as well as earlier experiments from CTIO described
 in \citet{Stubbs2007a}.
 
 In each filter, a set of narrow band flats will taken at a series of
@@ -902,9 +901,9 @@ response itself.
 More details about the requirements and physical apparatus of the CCOB
 are available in LSST-10015 and LSST-8217.
 
-\begin{figure}[htbp]
+\begin{figure}
 \centering
-\includegraphics[width=6in]{ghost_images}
+\includegraphics[width=5.5in,angle=90]{ghost_images}
 \caption{ {\small
 {\bf Simulations of LSST camera ghost images, as measured by CCOB. }
 Various beam incident angles, positions and wavelengths will be
@@ -1039,11 +1038,11 @@ NIST) \citep{Eppeldauer09}, as shown in Figure~\ref{fig:NIST_diode}.
 
 \begin{figure}
 \centering
-\subfloat[\citet{Stubbs2010}]{\includegraphics[width=3.5in]{NIST_diode}} \\
+\subfloat[\citet{Stubbs2010a}]{\includegraphics[width=3.5in]{NIST_diode}} \\
 \subfloat[\citet{Eppeldauer09}]{\includegraphics[width=5in]{NIST_diode2}}
 \caption{{\small
 {\bf Quantum efficiency curve and fractional uncertainty for
-NIST-calibrated photodiode, from \citet{Stubbs2010} and
+NIST-calibrated photodiode, from \citet{Stubbs2010a} and
 \citet{Eppeldauer09}.}  Panel (a): Between 400 and 900~nm, calibration
 methods already in use in test systems indicate photodiode accuracy is
 better than 0.1\%, as in the bottom part of this panel.  The sudden
@@ -1140,16 +1139,7 @@ of the observed magnitudes. }}
 \subsubsection{Measuring the shape of the atmospheric response curve}
 \label{sec:phi_atmo}
 
-XXXX working here 
-
-The atmospheric transmission function, $S^{atm}(\lambda,alt,az,t)$, is
-broken into two parts: a wavelength-dependent, slowly varying portion
-that is the end result of variations in the composition of the
-atmosphere and a more rapidly variable gray portion that is the result
-of variable cloud extinction. Measurements of the atmosphere from the
-auxiliary telescope correct the wavelength-dependent portion while the
-self-calibration procedure must be used to correct for cloud
-extinction. 
+XXX
 
 The spectroscopic measurements from the auxiliary telescope are
 necessary to correct for the wavelength-dependent variations in
@@ -1168,22 +1158,27 @@ the sky each night. The spectra from the auxiliary telescope will be
 processed to correct for the efficiency of the spectroscope itself,
 leaving the spectra of the star and the signature of absorption from
 the atmosphere. The resulting spectra will be fit to state-of-the-art
-atmospheric models (such as MODTRAN4) to determine the 
-components responsible for absorption in the spectra, including
-molecular scattering, aerosol scattering, and absorption from oxygen, nitrogen, ozone,
-water vapor and trace elements. The fitted values of these atmospheric components
-can then be interpolated to calculate the atmospheric mix present in
-any science image, recreating the relevant
-$\phi^{atm}(\lambda,alt,az,t)$. Recognition of the atmospheric components
-can be done with a relatively modest spectral resolution (R$\sim400$),
-but it is important that the full spectral range (300~nm to 1100~nm)
-be obtained in a single exposure. Choosing white dwarfs (with $r<12$)
-as the probe stars simplifies this procedure as the white dwarfs have
-relatively simple spectra, however a range of stars could be used in
-which case the spectra of each star can be bootstrapped from the large
-number of repeat observations, using an iterative procedure to extract
-stellar parameters (effective temperature and surface gravity) for
-each of the probe stars along with the atmospheric constituents. 
+atmospheric models (such as MODTRAN4 \citep{modtran4a, modtran4b}) to determine
+the components responsible for absorption in the spectra, including
+molecular scattering, aerosol scattering, and molecular line
+absorption from oxygen, nitrogen, ozone and other trace elements, and
+specifically absorption from water vapor. The fitted values of these
+atmospheric components can then be interpolated to calculate the
+atmospheric mix present in any science image, recreating the relevant
+$\phi^{atm}(\lambda,alt,az,t)$. Recognition of the atmospheric
+components can be done with a relatively modest spectral resolution
+(R$\sim400$), but it is important that the full spectral range (300~nm
+to 1100~nm) be obtained in a single exposure. Choosing white dwarfs
+(with $r<12$) as the probe stars simplifies this procedure as the
+white dwarfs have relatively simple spectra, however a range of stars
+could be used in which case the spectra of each star can be
+bootstrapped from the large number of repeat observations, using an
+iterative procedure to extract stellar parameters (effective
+temperature and surface gravity) for each of the probe stars along
+with the atmospheric constituents.
+
+
+
 
 
 In addition, the narrow band flats must also be used to measure
