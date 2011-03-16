@@ -75,7 +75,7 @@ def readModtranFile(filename):
         trans[comp] = numpy.interp(wavelen, rwavelen, rtrans[comp], left=0.0, right=0.0)
         templates[comp] = 1.0 - trans[comp]
     # fix aerosols to somewhat realistic values
-    trans['aerosol'] = numpy.exp(-(0.039)*(wavelen/675.0)**-1.7)
+    trans['aerosol'] = numpy.exp(-(0.039 * secz)*(wavelen/675.0)**-1.7)
 #    trans['aerosol'] = trans['aerosol'] + (0.98-trans['aerosol'][wavelen==800])
     templates['aerosol'] = 1.0 - trans[comp]
     return secz, wavelen, trans, templates, atm_comp
@@ -85,20 +85,17 @@ def plotAtmos(secz, wavelen, trans, atm_comp, xlim=(300, 1100), newfig=True, sav
     if newfig:
         pylab.figure()
     colorindex = 0
+    transtotal = numpy.ones(len(wavelen), dtype='float')
     for comp in atm_comp:
-        pylab.plot(wavelen, trans[comp], colors[colorindex])
+        transtotal = transtotal * trans[comp]
+        pylab.plot(wavelen, trans[comp], colors[colorindex], label=comp)
         colorindex = next_color(colorindex)
-    xloc = 0.8
-    yloc = 0.4
-    colorindex = 0        
-    for comp in atm_comp:
-        pylab.figtext(xloc, yloc, comp, color=colors[colorindex])
-        colorindex = next_color(colorindex)
-        yloc = yloc - 0.03
+    pylab.plot(wavelen, transtotal, 'k:')
+    pylab.legend(loc='lower right', numpoints=1, fancybox=True)
     pylab.xlim(xlim[0], xlim[1])
     pylab.xlabel("Wavelength (nm)")
-    pylab.ylabel("Throughput")
-    pylab.title("Airmass %.2f Transmission" %(secz))
+    pylab.ylabel("Transmission")
+    pylab.title("Airmass %.2f" %(secz))
     return
 
 def plotTemplates(secz, wavelen, templates, atm_comp, xlim=(300, 1100), newfig=True, savefig=False, figroot='atmos'):
@@ -117,8 +114,8 @@ def plotTemplates(secz, wavelen, templates, atm_comp, xlim=(300, 1100), newfig=T
         yloc = yloc - 0.03
     pylab.xlim(xlim[0], xlim[1])
     pylab.xlabel("Wavelength (nm)")
-    pylab.ylabel("Throughput")
-    pylab.title("Airmass %.2f Templates" %(secz))
+    pylab.ylabel("Template")
+    pylab.title("Airmass %.2f" %(secz))
     return
 
 
@@ -260,7 +257,7 @@ if __name__ == '__main__' :
     
     for secz in seczlist[0], seczlist[10]:
         plotAtmos(secz, wavelen[secz], atmo_trans[secz], atmo_ind, newfig=True, savefig=False, figroot='atmos')
-        plotTemplates(secz, wavelen[secz], atmo_templates[secz], atmo_ind, newfig=True, savefig=False, figroot='atmos')
+        #plotTemplates(secz, wavelen[secz], atmo_templates[secz], atmo_ind, newfig=True, savefig=False, figroot='atmos')
 
     #plotAtmosRatio(seczlist[0], wavelen[seczlist[0]], atmo_trans[seczlist[0]], seczlist[15], wavelen[seczlist[15]], atmo_trans[seczlist[10]], atmo_ind)
 

@@ -1072,8 +1072,8 @@ in the hardware response curve is measured to better than 0.05\% --
 equivalent to approximately a 30~Angstrom error in wavelength
 calibration of the monochromatic light source throughout the bandpass
 or a 0.5\% error in photodiode calibration assuming that the shape of
-each bandpass is determined using approximately 100 independent
-measurements (i.e. 1 measurement per nanometer within the bandpass) --
+each bandpass is determined using at least 100 independent
+measurements (i.e. 1 measurement every few nanometers within the bandpass) --
 the error contribution towards calibrating these observed magnitudes
 will be less than 1~mmag for all bandpasses other than $u$, where the
 error could be as much as 5~mmag for certain main sequence stars (see
@@ -1084,9 +1084,10 @@ of filter radius, it is also necessary to monitor any offsets of the
 filter position from dead center after any filter changes. Assuming
 the filter response curve varies linearly with radius, the filter
 location must be measured to better than 0.025\%  for the filter
-positioning to remain less than a 0.5~mmag source of error. Given the
-filters are approximately 75~cm in diameter, this means the filter 
-positioning must be recorded to better than 0.18~mm. 
+positioning to remain less than a 0.5~mmag source of error. 
+%Given the
+%filters are approximately 75~cm in diameter, this means the filter 
+%positioning must be recorded to better than 0.18~mm. 
 
 \begin{figure}
 \centering
@@ -1130,8 +1131,9 @@ to a hardware response curve shift of 0.05\% of the central wavelength
 of each bandpass.} Similar to Fig~\ref{fig:dmag_filtershift} except
 that the hardware response was shifted by only 0.05\% of the central
 wavelength, an amount representing an unmeasured shift in the hardware
-response and thus contributing to the final error in the calibration
-of the observed magnitudes. }}
+response and thus contributing directly to the final error in the calibration
+of the observed magnitudes. Note that the y scale here is 1/10th 
+of the scale in the previous figure. }}
 \label{fig:dmag_filtershift_small} 
 \end{figure}
  
@@ -1146,27 +1148,64 @@ gathered by the auxiliary telescope.  It is worth noting that the
 auxiliary telescope measurements will not correct for cloud extinction
 or any other normalization variation due to the atmosphere; the goal
 for the auxiliary telescope to compensate for changes in the shape of
-the atmospheric transmission curve only. 
+the atmospheric transmission curve only.
 
-The shape of the atmospheric transmission curve, $\phi^{atm}(\lambda, alt, az, t)$,
-is determined by three major factors: molecular scattering (Rayleigh
-scattering), aerosol scattering, and molecular absorption. Molecular
+The shape of the atmospheric transmission curve, $\phi^{atm}(\lambda,
+alt, az, t)$, is determined by three major sources of atmospheric
+extinction: molecular scattering (Rayleigh scattering), aerosol
+scattering (Mie scattering), and molecular absorption. Molecular
 scattering, or Rayleigh scattering, is due to elastic scattering off
-atoms and molecules in the air. Atmospheric absorption due to
-rayleigh scattering is proportional to $ e^{-\tau X}$, where $\tau \propto BP\,
-\lambda^{-4}$ and $BP$ is the barometric pressure. Aerosol scattering
-is due to Mie scattering off particles suspended in the atmosphere,
-where the particle sizes and wavelengths of light are comparable. This
-gives rise to a variable absorption curve, with $\tau \propto
-(\lambda/675 \rm{nm})^{\alpha}$ where $\alpha$ ranges from -0.9 to
--1.7 based on a limited set of observations from CTIO
-\citep{Burke2010b}. Molecular absorption produces a more complex set
-of transmission features, including 
+atoms and molecules in the air. Atmospheric absorption due to Rayleigh
+scattering has an optical depth $\tau \propto (\lambda/
+\lambda_o)^{-4}\, (BP/BP_o)$, where $BP$ is the barometric pressure
+\citep{Hansen1974}.  Aerosol scattering, or Mie scattering, occurs
+when visible light is scattered by particles suspended in the
+atmosphere with a size similar to its wavelength.  This gives rise to
+an absorption curve with a variable wavelength dependence, where $\tau
+\propto (\lambda/675 \rm{nm})^{\alpha}$, $\alpha$ measured to range
+between -0.9 to -1.7 in observations from CTIO
+\citep{Burke2010b}. Both molecular and aerosol scattering produce
+transmission curves that scale almost linearly with airmass,
+$S(\lambda, X) \propto e^{-\tau X}$.  Molecular absorption produces a
+more complex set of absorption bands and features, originating from
+line absorption due to ozone (O3), oxygen (O2), water (H2O) and other
+trace elements (OH, N2O, etc.).  The molecular absorption is largely
+due to narrow saturated Lorentzian-shaped lines spaced closely in
+wavelength and thus scales closer to the square root of the airmass,
+$S(\lambda, X) \propto e^{-\tau\,\sqrt(X)}$
+\citep{Burke2010b}. Figure~\ref{fig:absorption_comps} demonstrates the
+wavelength dependency of each of these components.
 
+\begin{figure}
+\centering
+\subfloat[]{\includegraphics[width=4in]{absorption_compsA}}\\
+\subfloat[]{\includegraphics[width=4in]{absorption_compsB}} 
+\caption{{\small
+{\bf Components of atmospheric absorption.} The wavelength dependence
+of the various components of atmospheric absorption at zenith (panel
+a) and at airmass=2.0 (panel b) is shown here.  The H2O (blue) and O3
+(orange) molecular absorption contributions are shown separately,
+while the O2 absorption is combined with other trace elements (red). A
+typical example of aerosol scattering (Mie scattering) is included
+(yellow), as is molecular scattering (Rayleigh scattering)
+(green). All components except aerosol scattering were generated using
+MODTRAN4 with the US Standard option (aerosol scattering is not part of the US 
+Standard atmosphere). The resulting total absorption curve is the product of each
+of these effects and is shown with the dotted black line. This is an
+illustrative atmosphere; under actual observing conditions the
+molecular absorption components will vary in strength with time and
+the square root of the airmass, the molecular and aerosol scattering
+will depend on airmass, and the aerosol scattering profile will vary
+slightly with time.  }}
+\label{fig:absorption_comps}
+\end{figure}
+
+The contribution of each component toward the final total atmospheric
+absorption 
 We expect the Rayleigh scattering to be axisymmetric about the zenith,
 with a time dependence driven only by pressure variations. The O2
 molecular absorption is similar, although proportional to only the
-square root of the barometric pressure. 
+square root of the barometric pressure.
 
 
 
@@ -1202,47 +1241,23 @@ within each science image.
 
 
 
+\subsubsection{Correcting for the shape of the hardware and atmospheric response}
+\label{sec:apply_deltak}
 
+Correcting observed counts for the difference between the measured
+shape of the hardware and atmospheric response curves and the standard
+normalized bandpass, $phi_b^{std}(\lambda)$, requires knowledge of the
+SED of each star. However, with this knowledge, it is possible to create
+lookup tables of $\delta k(x,y,alt,az,SED,t)$ (as in Equation~\ref{eqn:defnatmags2})
+for various locations in the focal plane in each exposure. 
 
-In addition, the narrow band flats must also be used to measure
-changes in the bandpass shape throughout the field of view. Before
-applying $\delta k(x,y,SED,t)$ corrections to the observed magnitudes,
-however, the wavelength-dependent effects of the atmosphere must also
-be considered, as the final effect on the observed magnitude is not
-independent. Thus, the narrow band flat fields will be combined using
-a series of standard model SEDS to generate $\delta
-k(x,y,alt,az,SED,t)$ corrections for each image after the atmospheric
-corrections described in Section~\ref{sec:phi_atmo} have been
-calculated and applied to the model SEDs. Thus for each observation,
-there will be lookup tables created with $\delta k(x,y,alt,az,SED,t)$
-that can be parametrized as a function of object color. These $\delta
-k$ correct the shape of the system bandpass response to a standardized
-value, chosen during commissioning.  Obviously, applying these
-corrections requires knowing the color of the astronomical object (and
-ideally, the full spectral energy distribution), and this information
-will not always be known for all objects. In practice, the calibration
-pipeline will calculate corrections using best-estimates of the
-objects' color. These estimates will increase in accuracy as the
-survey progresses, eventually reaching $\approx 0.07$~magnitudes for
-objects with many repeat observations.
-
-
-Each interpolated $\phi^{atm}(\lambda,alt,az,t)$, will be combined with
-the bandpass shape measured as a function of position in the focal
-plane, $\phi_b^{sys}(\lambda,x,y,t)$, as in
-Section~\ref{sec:narrowband}), creating a set of $\delta
-k(x,y,alt,az,SED,t)$ corrections for each observation.
-
-ADD/CREATE FIGURE showing atmosphere and various components
-
-CREATE FIGURE flowchart? (like figure 4 from calibration preliminary
-baseline design?)
+Generate: errors due to bad knowledge of SED
 
 
 \subsection{Normalization of the Atmospheric Transmission}
 \label{sec:selfcalib}
 
-After applying each of the previous corrections, the raw counts are
+After applying each of the previous corrections, the raw counts have been
 corrected to a `standard' bandpass for each filter,
 $\phi_b^{std}(\lambda)$, using both the narrow band flats and the
 atmospheric model derived from the auxiliary telescope
@@ -1383,54 +1398,6 @@ it should be possible to obtain similar HST measurements of one or
 more targets for use in the Southern hemisphere. Identification of
 these targets has not yet been done. 
 
-\section{Error flowdown}
-\label{sec:error}
-
-Errors in the reported $m_b^{nat}$ can arise from the errors in
-measurement of counts in the image, the atmospheric transmission
-$S^{atm}(\lambda,alt,az,t)$, or the system transmission
-$S_b^{sys}(\lambda,x,y,t)$.  These errors must be controlled to meet
-the SRD requirements for photometric repeatability (median value of
-5/7.5 mmag in $gri$/$uzy$) and photometric uniformity (median 10/20
-mmag in $gri$/$uzy$).
-
-
-
-
-
-\section{Validation of the method}
-\label{sec:validate}
-
-(these are some ideas of what might go in this section; not edited yet)
-
-The error budgets should be discussed here, including table.
-
-Assumptions and items that must be tested in above: 
-\begin{enumerate}
-\item{that the dome screen system can be produced}
-\item{whether the illumination can be measured using the method above}
-\item{that the atmosphere can be measured using the methods described
-    in the aux tele section}
-\item{that the self-calibration procedure will converge on a
-    correct/uniform answer}
-\item{whether the photometric zeropoint will be constant within 5 mmag 
-    within a CCD and what total extinction does this relate to}
-\item{whether data management can extract counts within their error
-    budget}
-\item{how will galactic extinction affect these procedures?}
-\end{enumerate}
-
-This section will talk about how we will apply the methods above, why
-it will work, and how we will know whether it will work. What
-simulations will be done? What testing
-will be done? 
-
-
-\subsection{Quality assessment}
-In production, there will be some quality assurement required. What
-will be this - how will we assess errors? 
-One possible test is the stellar locus - how will this be applied.
-
 
 
 \bibliographystyle{apj}
@@ -1439,10 +1406,10 @@ One possible test is the stellar locus - how will this be applied.
 
 \appendix
 
-
+\newpage
 \section{Filter Set}
 
-\begin{figure}[ht]
+\begin{figure}[h!]
 \includegraphics[width=5in]{filters}
 \end{figure}
 
@@ -1450,43 +1417,53 @@ One possible test is the stellar locus - how will this be applied.
 \section{Improvements in photometric accuracy}
 \label{sec:photo_better}
 
-To conduct science with the catalogs from LSST, the natural magnitudes, $m_b^{nat}$, for each astronomical object in
-each visit must obviously be recorded, resulting in approximately
+To conduct science with the catalogs from LSST, the natural
+magnitudes, $m_b^{nat}$, for each astronomical object in each visit
+must obviously be recorded, resulting in approximately
 $2\times10^{13}$ measurements. However, in order to permit scientists
 to generate higher precision photometry for objects with known SEDs
 (which are likely to be different than the SEDs LSST used to create
-those $m_b^{nat}$ measurements),
-$\phi_b^{meas}(\lambda,alt,az,x,y,t)$ and the zeropoint offset from
-the self-calibration procedure must also be available. With these
-additional pieces of information, scientists can generate more precise
-$\delta k(alt,az,x,y,SED,t)$ corrections to $m_b^{nat}$.
+those $m_b^{nat}$ measurements), $\phi_b^{meas}(\lambda,alt,az,x,y,t)$
+and the zeropoint offset from the self-calibration procedure must also
+be available. With these additional pieces of information, scientists
+can generate more precise $\delta k(alt,az,x,y,SED,t)$ corrections to
+$m_b^{nat}$.
 
-TODO : need to look at the differences in $m_b^{obs}$ resulting from
-using a completely flat (within each filter) SED, an actual star or
-galaxy or SN SED, a flat SED that has been 'tilted' to have the right
-color (i.e. straight line SED, slope!=0) in various cases of
-$\phi_b$. This has bearing on what type of SED LSST should use in
-general (probably flat) and what must be used to generate input
-magnitudes for the self-cal. Also has bearing on what resolution
-$\phi_b$ must be recorded with.   (also, while doing this : how much
-scatter is introduced to $m_b^{nat}$ due to using the wrong SED? -
-evaluate difference between flat and true SED corrected magnitudes under range of different
-$\phi_b$)  ($m_b^{nat}$ = standardized $\phi_b$, $m_b^{obs}$ =
-observed $\phi$). 
+For many objects, LSST will assume a flat SED when generating
+$m_b^{nat}$ values, implying that no $\delta k(alt, az, x, y, SED, t)$
+correction was applied. Sections~\ref{sec:phi_hardware} and
+~\ref{sec:phi_atmo} outline the typical magnitudes of these corrections;
+for some main sequence stars these corrections can easily be on the
+order of 20 mmag for $gri$, or even 100 mmag in $u$ band. For more
+extreme SEDS, these corrections may be even larger.
 
-CREATE FIGURE: the likely magnitude of these corrections (part of the output
-of the TODO above)
+CREATE FIGURE: the likely magnitude of these corrections 
 
-Data management could record a full $\phi_b^{meas}(\lambda,alt,az,x,y,t)$ value
-for every object in every visit, where the resolution on
-$\phi(\lambda)$ will need to be at least 0.5~nm.  It should also be possible
-for data management to simply record the full narrow band flat field
-data cube, the SED used to create the synthetic flat field, 
-the interpolated components for the atmosphere (approximately 6
-parameters per visit), and the zeropoint applied to each patch
-(approximately 369 per visit). Together with provenance information on
-how each of these was used to generate the observational corrections,
-it would be possible to regenerate a higher precision $m_b^{nat}$. 
+Data management could record a full
+$\phi_b^{meas}(\lambda,alt,az,x,y,t)$ value for every object in every
+visit, where the resolution on $\phi(\lambda)$ will need to be at
+least 0.5~nm.  It should also be possible for data management to
+simply record the full narrow band flat field data cube, the SED used
+to create the synthetic flat field, the interpolated components for
+the atmosphere (approximately 6 parameters per visit), and the
+zeropoint applied to each patch (approximately 369 per
+visit). Together with provenance information on how each of these was
+used to generate the observational corrections, it would then be possible
+to regenerate a higher precision $m_b^{nat}$.
+
+%TODO : need to look at the differences in $m_b^{obs}$ resulting from
+%using a completely flat (within each filter) SED, an actual star or
+%galaxy or SN SED, a flat SED that has been 'tilted' to have the right
+%color (i.e. straight line SED, slope!=0) in various cases of
+%$\phi_b$. This has bearing on what type of SED LSST should use in
+%general (probably flat) and what must be used to generate input
+%magnitudes for the self-cal. Also has bearing on what resolution
+%$\phi_b$ must be recorded with.  (also, while doing this : how much
+%scatter is introduced to $m_b^{nat}$ due to using the wrong SED? -
+%evaluate difference between flat and true SED corrected magnitudes
+%under range of different $\phi_b$) ($m_b^{nat}$ = standardized
+%$\phi_b$, $m_b^{obs}$ = observed $\phi$).
+
 
 
 %\section{Comparison of standard calibration and SDSS ubercal (as
@@ -1504,86 +1481,5 @@ it would be possible to regenerate a higher precision $m_b^{nat}$.
 
 %may provide useful SDQA data (especially for alerts/nightly data
 %stream)
-
-
-\section{Illumination Correction alternate version}
-
-{\it This is text I wrote and then cut from the illumination correction section above.
-Looking at the most recent CCOB review, this is what had been suggested for generating
-the illumination correction. However, I believe this is confusing and hard to read. 
-It's not entirely clear to me that the IC could be determined in this way, rather than
-as described above, at least not without describing a model for the IC as above. However,
-I'm saving the equations here in case consensus is that they need to be in the IC section.}
-
-
-After acquiring the CCOB, narrow band dome flat fields, and rastor
-scan data, it is then possible to create a model for the illumination
-correction by minimizing (in each filter)
-\begin{eqnarray}
- \chi^2 & = & \Sigma_{N_{stars}} \left( { m^{star}_{meas}(x,y) - m^{star}_{model}(x,y)
-\over \sigma_b} \right)^2  \\
-  & & +\, \Sigma_{N_{DS}, x,y,\lambda} \left( {
-    ADU^{DS}_{meas}(x,y,\lambda) - ADU^{DS}_{ model}(x,y,\lambda) \over
-    \sigma_{DS \, x,y,\lambda } } \right)^2  \nonumber  \\
- & & +\,  \Sigma_{N_{CCOB},x,y,\theta,\phi,\lambda} \left( { 
-   ADU^{CCOB}_{meas}(x,y,\theta,\phi,\lambda) - ADU^{CCOB}_{model}(x,y,\theta,\phi,\lambda) \over
-   \sigma_{CCOB \,x,y,\theta,\phi,\lambda}}  \right)^2   \nonumber
-\end{eqnarray}
-where the measured values above are the measured magnitudes of the stars
-from the dense rastor scan (corrected only by the raw synthetic flat
-without illumination correction), the measured ADU values from each pixel of the narrow band
-flat fields, and the measured ADU values from each pixel from the CCOB
-measurements, reported over a range of pixel locations ($x,y$) and incident
-angles ($\theta,\phi$) corresponding to the range of light paths for
-incoming photons. The model values come from best-fit parameters for each
-of these, when the illumination correction is included: 
-\begin{eqnarray}
-m^{star}_{model}(x,y) & = &  \int {d\lambda \over \lambda} \int d\theta d\phi \, {\textbf[} FP(x,y,\theta,\phi,\lambda) \times \nonumber \\
-&& F_\nu^{star}(x,y,\lambda)\,\, S^{atm}(x,y,\lambda)\, \,M(\theta,\phi,\lambda)\,\,R(\theta,\phi,\lambda) {\textbf]} \nonumber \\
- & = & m^{star}_{best} - \delta k_{b}^{atm+sys}(x,y,alt,az,SED,t) - \int d\lambda \, Z_{IC}(x,y,\lambda)
-\end{eqnarray}
-
-
-\begin{eqnarray}
-ADU^{DS}_{model}(x,y,\lambda) & = & \int d\theta d\phi \, FP(x,y,\theta,\phi,\lambda) \times  \nonumber \\
-& & {\textbf[}  (F_\nu^{DS}(x,y,\theta,\phi,\lambda)\,\, M(\theta,\phi,\lambda)\,\, R(\theta,\phi,\lambda)) 
-+ SS^{DS}(x,y,\theta,\phi,\lambda) +  \nonumber \\ 
-& & \Sigma_{(x',y')} \int d\theta' d\phi' \,F_\nu^{DS}(x',y',\theta', \phi',\lambda)\,M(\theta',\phi',\lambda)\,G(x',y',\theta',\phi'; x,y,\theta,\phi,\lambda) {\textbf]} \nonumber  \\
- & = & ADU^{DS}_{best}(x,y,\lambda) - 10^{-0.4 \, Z_{IC}(x,y,\lambda)} 
-\end{eqnarray}
-
-
-\begin{eqnarray}
-ADU^{CCOB}_{model}(x,y,\theta,\phi,\lambda) & = &  FP(x,y,\theta,\phi,\lambda) \times \nonumber \\
-& & {\textbf[}  F_\nu^{CCOB}(x,y,\theta,\phi,\lambda)\,R(\theta,\phi,\lambda) + \nonumber \\
-&& \Sigma_{(x',y')} \int d\theta' d\phi' \,F_\nu^{CCOB}(x',y',\theta',\phi',\lambda)\,G(x',y',\theta',\phi';x,y,\theta,\phi,\lambda) {\textbf]} \nonumber \\
-& = & ADU^{CCOB}_{best}(x,y,\theta,\phi,\lambda) - 10^{-0.4\,Z_{IC}}(x,y,\lambda) + SS^{DS}_{best}(x,y,\lambda) 
-\end{eqnarray} 
-where $Z_{IC}$ represents the entire illumination correction,
-including pixel scale variations, corrections for ghosting and
-corrections for stray light in the synthetic flat, and $FP$ stands for
-focal plane response, $M$ for the mirror transmission response, $R$ for the
-refractive optics transmission, $G$ is the ghosting expected in this bandpass (calculated from
-the ZEMAX model), and $SS$ stands for all other stray/scattered light
-that is present in the dome screen flats. The form for
-$Z^{IC}$ must account for possible sharp changes at amp boundaries,
-and should be multiplied back into the synthetic flat (changing pixel
-values in the synthetic flat) rather than just applied as a series of
-zeropoint offsets, to improve galaxy photometry. The best fit values ($best$)
-for the stars represent their best-fit natural magnitude values, corrected for the wavelength-dependent color
-terms from the flat field and atmospheric transmission in order 
-to match the observed bandpass, as well as the illumination
-correction. The best fit values for the dome screen would be the
-best-fit value for the raw ADU counts at each wavelength (generally simply the
-photodiode value with some best-fit spatial
-variation), combined with the illumination
-correction. The best fit value for the CCOB comes directly from the
-photodiode measurement - no model fit necessary - however the
-stray and scattered light coming from outside the dome screen beam is
-not present in the CCOB apparatus (but is part of the illumination
-correction) and so must be added back in; in addition,
-since the CCOB measures throughput at particular beam incident
-angles, the model ADU values are not just evaluated at a particular
-wavelength, but also at a particular set of incident angles. 
 
 \end{document}
