@@ -76,8 +76,7 @@ def readModtranFile(filename):
         templates[comp] = 1.0 - trans[comp]
     # fix aerosols to somewhat realistic values
     trans['aerosol'] = numpy.exp(-(0.039 * secz)*(wavelen/675.0)**-1.7)
-#    trans['aerosol'] = trans['aerosol'] + (0.98-trans['aerosol'][wavelen==800])
-    templates['aerosol'] = 1.0 - trans[comp]
+    templates['aerosol'] = 1.0 - trans['aerosol']
     return secz, wavelen, trans, templates, atm_comp
 
 
@@ -120,28 +119,47 @@ def plotTemplates(secz, wavelen, templates, atm_comp, xlim=(300, 1100), newfig=T
 
 
 
-def plotAtmosRatio(secz_a, wavelen_a, trans_a, secz_b, wavelen_b, trans_b, atm_comp, xlim=(300, 1000), newfig=True, savefig=False, figroot='atmos_ratio'):
-    zeroes = numpy.zeros((len(wavelen_a),), dtype=float)
-    trans_ratio = {}
-    colorindex= 0
-    for comp in atm_comp: #atm_comp:
-        trans_ratio[comp] = trans_b[comp] / trans_a[comp]
-        trans_ratio[comp] = numpy.where(numpy.isnan(trans_ratio[comp]), zeroes, trans_ratio[comp])
-        trans_ratio[comp] = numpy.where((numpy.isneginf(trans_ratio[comp]) | numpy.isinf(trans_ratio[comp])), zeroes, trans_ratio[comp])
-        pylab.figure()
-        pylab.plot(wavelen_a, trans_a[comp], 'r:')
-        pylab.plot(wavelen_a, trans_b[comp], 'b:')
-        pylab.plot(wavelen_a, trans_ratio[comp], 'k--')
-        pylab.figtext(0.8, 0.4, comp)
+def plotAtmosRatio(seczlist, wavelen, atm_trans, atm_comp, xlim=(300, 1100),
+                   newfig=True, savefig=False, figroot='atmos_ratio'):
+    trans_ratio = numpy.zeros(len(wavelen), dtype='float')
+    zref = seczlist[0]
+    eps = 1e-30
+    for comp in atm_comp: 
+        tmp = numpy.where(atm_trans[zref]==0, eps, atm_trans[zref])
+        pylab.figure()        
+        for z in seczlist:
+            trans_ratio = atm_trans[z][comp] / atm_trans[zref][comp]
+            #trans_ratio = numpy.where(numpy.isnan(trans_ratio), 0.0, trans_ratio)
+            #trans_ratio = numpy.where(numpy.isneginf(trans_ratio), 0.0, trans_ratio)
+            #trans_ratio = numpy.where(numpy.isinf(trans_ratio), 0.0, trans_ratio)
+            pylab.plot(wavelen, trans_ratio, label='X=%.2f' %(z))
+        pylab.legend(loc='lower right', fancybox=True, numpoints=1)
         pylab.xlim(xlim[0], xlim[1])
-        pylab.ylim(0, 1.2)
+        #pylab.ylim(0, 1)
         pylab.xlabel("Wavelength (nm)")
-        pylab.ylabel("Ratio of Transmission (%.2f) and Transmission (%.2f)" %(secz_b, secz_a))
+        pylab.ylabel("Ratio")
+        pylab.title("Changes in transmission with airmass due to component %s" %(comp))
     return
+
+def plotAtm(seczlist, wavelen, abs_atm, atm_comp, xlim=(300, 1100),
+            newfig=True, savefig=False, figroot='atmos_piece'):
+    for comp in atm_comp: 
+        pylab.figure()
+        for z in seczlist:
+            pylab.plot(wavelen, abs_atm[z][comp], label='X=%.2f' %(z))
+        #pylab.plot(wavelen, abs_atm[z][comp]/numpy.sqrt(2.5), label="2.5X * 1.3")
+        pylab.legend(loc='lower right', fancybox=True, numpoints=1)
+        pylab.xlim(xlim[0], xlim[1])
+        #pylab.xlim(600, 1100)
+        pylab.ylim(0, 1)
+        pylab.xlabel("Wavelength (nm)")
+        pylab.ylabel("Transmission")
+        pylab.title("Transmission of component %s" %(comp))
+    return    
         
 def plotAbs(seczlist, wavelen, abs_atm, atm_comp, xlim=(300, 1100),
-            newfig=True, savefig=False, figroot='atmos_ratio'):
-    for comp in atm_comp: #atm_comp:
+            newfig=True, savefig=False, figroot='atmos_template'):
+    for comp in atm_comp: 
         pylab.figure()
         for z in seczlist:
             pylab.plot(wavelen, abs_atm[z][comp], label='X=%.2f' %(z))
@@ -156,8 +174,7 @@ def plotAbs(seczlist, wavelen, abs_atm, atm_comp, xlim=(300, 1100),
     return
         
 
-def buildAtmos(secz, wavelenDict, transDict, comp_ratios, atmo_ind, seczlist):
-    # wavelenDic and transDict = dictionaries of all secz, containing atmosphere components
+def buildAtmos(secz, wavelen, atmo_templates, atmo_ind, seczlist, C, xlim=[300, 1100]):
     # Burke paper says atmosphere put together as 
     # Trans_total (alt/az/time) = Tgray * (e^-Z*tau_aerosol(alt/az/t)) * 
     #         * (1 - C_mol * BP(t)/BPo * A_mol(Z))  -- line 2
@@ -166,64 +183,51 @@ def buildAtmos(secz, wavelenDict, transDict, comp_ratios, atmo_ind, seczlist):
     #         * (1 - C_H2O(alt/az/time) * A_H2O(Z))
     # Tau_aerosol = trans['aerosol'] ... but replace with power law (because here all 1's)
     #  typical power law index is about tau ~ lambda^-1
-    #    total absorption should also be proportional to airmass (right .. Z factor .. ok)
     # A_mol = trans['O2']
     
-    # but Burke presentation from Calibration Boston 2009 says
-    #  C_mol = C_BP but A_mol = trans_Rayleigh (trans_ray?) in line 2
-    #  C_mol = C_BP but A_mol = trans_mol in line 3 (with sqrt) 
-    #     but where is trans_O2???
-    # also, when he was checking trans_comb, just multiplied all of these components together...
-    # trans_total = 
     # should interpolate between airmass steps of modtran output
-    trans_total = numpy.ones((len(allwavelen[secz]),))
-    trans_total = (numpy.exp(-secz*alltrans[secz]['aerosol'])) #######
+
+    # secz = secz of this observation
+    # wavelen / atmo_templates == building blocks of atmosphere, with seczlist / atmo_ind keys
+    # C = coeffsdictionary = to, t1, t2, alpha0 (for aerosol), C_mol, BP, C_O3, C_H2O  values
     
-    for comp in atmo_ind:
-        trans_total = trans_total *  alltrans[secz][comp]
+
+    BP0 = 782 # mb
+    trans_total = numpy.ones(len(wavelen), dtype='float')
+    trans_total = trans_total * (1.0 - C['mol'] * C['BP']/BP0 * atmo_templates[secz]['rayleigh'])  \
+        * ( 1 - numpy.sqrt(C['mol'] * C['BP']/BP0) * atmo_templates[secz]['O2']) \
+        * ( 1 - C['O3'] * atmo_templates[secz]['O3']) \
+        * ( 1 - C['H2O'] * atmo_templates[secz]['H2O'])
+
+    aerosol = numpy.exp(-secz * (C['to'] + C['t1']*0.0 + C['t2']*0.0) * (wavelen/675.0)**C['alpha'])
+    trans_total = trans_total * aerosol
+
+    #trans_total = trans_total * (1 - atmo_templates[secz]['aerosol'])
+
     pylab.figure()
-    #pylab.plot(allwavelen[secz], trans_total, 'k:')
-    #pylab.plot(allwavelen[secz], alltrans[secz]['comb'], 'r:')
-    
-    # should try building an atmosphere according to above formula
-    trans_total = numpy.ones((len(allwavelen[secz]),))
-    C_BP = 0.9
-    C_O3 = 0.9
-    C_H2O = 0.9
-
-    # but for now, let's cheat. 
-    # the old atmos.dat file comes very close to secz=1.2, seczlist[2] file
-
-    # just divide out water for low water vapor, and then add it back in.
-    atmo = lm.teleThruput('NULL')
-    atmo.wavelen = allwavelen[secz]
-    atmo.thruput = alltrans[secz]['comb']
-    waterthruput = alltrans[secz]['H2O']
-    atmo.thruput = atmo.thruput/waterthruput
-    
-    waterthruput = alltrans[seczlist[0]]['H2O']
-    atmo.thruput = atmo.thruput*waterthruput
-    atmo.writeThruput("Atmo_12_lowater.dat")
-    pylab.plot(atmo.wavelen, atmo.thruput, 'k')
-    pylab.figtext(0.2, 0.38, 'X=1.2', color='k')
-    pylab.figtext(0.2, 0.34, '~-30%s H2O' %('%'), color='k')
-
-    atmo.thruput = atmo.thruput/waterthruput
-    waterthruput = alltrans[seczlist[6]]['H2O']
-    atmo.thruput = atmo.thruput * waterthruput
-    atmo.writeThruput("Atmo_12_hiwater.dat")
-    pylab.plot(atmo.wavelen, atmo.thruput, 'g')
-    pylab.figtext(0.2, 0.3, '~+30%s H2O' %('%'), color='g')
-    
-    y3 = lm.teleThruput("/Users/ljones/work/filters/thruputs/final_y3")
-    y4 = lm.teleThruput("/Users/ljones/work/filters/thruputs/final_y4")
-    pylab.plot(y3.wavelen, y3.thruput*2., 'm:')
-    pylab.plot(y4.wavelen, y4.thruput*2., 'b:')
-
-    pylab.xlabel("Wavelength (Angstrom)")
-    pylab.ylabel("Thruput, Percent")
-    pylab.xlim(800, 1100)
-    pylab.ylim(0.4, 1)
+    pylab.subplot(212)
+    colorindex = 0
+    for comp in atmo_ind:
+        if comp == 'aerosol':
+            pylab.plot(wavelen, (1-aerosol), colors[colorindex], label='aerosol')
+        else:
+            pylab.plot(wavelen, atmo_templates[secz][comp], colors[colorindex], label='%s' %(comp))
+        colorindex = next_color(colorindex)
+    leg =pylab.legend(loc=(0.88, 0.3), fancybox=True, numpoints=1)
+    ltext = leg.get_texts()
+    pylab.setp(ltext, fontsize='small')
+    pylab.xlim(xlim[0], xlim[1])
+    pylab.ylim(0, 1.0)
+    pylab.xlabel("Wavelength (nm)")
+    pylab.subplot(211)
+    pylab.plot(wavelen, atmo_trans[seczlist[0]]['comb'], 'r-', label='Standard')
+    pylab.plot(wavelen, trans_total, 'k-', label='Observed')
+    leg = pylab.legend(loc=(0.88, 0.2), fancybox=True, numpoints=1)
+    ltext = leg.get_texts()
+    pylab.setp(ltext, fontsize='small')
+    pylab.xlim(xlim[0], xlim[1])
+    pylab.ylim(0, 1.0)
+    pylab.title("Atmosphere at X=%.2f" %(secz))
 
     return
 
@@ -276,13 +280,14 @@ if __name__ == '__main__' :
         pass
 
     this_seczlist = [seczlist[0], seczlist[10], seczlist[15]]
-    this_comp = ('H2O',)
-    plotAbs(this_seczlist, wavelen[this_seczlist[0]], atmo_templates, this_comp)
+    this_comp = ('rayleigh',)
+    #plotAbs(this_seczlist, wavelen[this_seczlist[0]], atmo_templates, this_comp)
+    #plotAtm(this_seczlist, wavelen[this_seczlist[0]], atmo_trans, this_comp)
+    #plotAtmosRatio(this_seczlist, wavelen[this_seczlist[0]], atmo_trans, this_comp)
 
-    #plotAtmosRatio(seczlist[0], wavelen[seczlist[0]], atmo_trans[seczlist[0]], seczlist[15], wavelen[seczlist[15]], atmo_trans[seczlist[10]], atmo_ind)
-
-    secz = seczlist[2]
+    z = seczlist[10]
     print secz
-    #buildAtmos(secz, wavelen, atmo, atm_comp, seczlist)
-
+    C = {'O3':0.9, 'to':3.9/100.0, 't1':0.02/100.0, 't2':-0.03/100.0, 'alpha':-1.7, 
+         'mol':0.96, 'BP':782, 'H2O':0.9}
+    buildAtmos(z, wavelen[seczlist[0]], atmo_templates, atmo_ind, seczlist, C)
     pylab.show()
