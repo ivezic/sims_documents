@@ -1221,6 +1221,15 @@ absorption from the atmosphere to be fit for each auxiliary telescope
 observation. The resulting spectra will be fit with 
 
 
+\begin{eqnarray}
+S^{fit}(alt,az,t, \lambda) & = & C^{gray} \,e^{-\tau_{aerosol}(alt,az,t,\lambda)\,X} \nonumber \\
+ & & \times \, (1 - C_{mol}\, (BP(t) / BP_o) \, A_{rayleigh}(X, \lambda)) \nonumber \\
+ & & \times \, (1 - \sqrt{ C_{mol}\, (BP(t) / BP_o)} \, A_{O2}(X, \lambda)) \nonumber \\
+ & & \times \, (1 - C_{O3} \, A_{O3}(\lambda, X)) \nonumber \\
+ & & \times \, (1 - C_{H2O}(alt,az,t)\,A_{H2O}(X, \lambda)
+\label{eqn:atmo_fit}
+\end{eqnarray}
+
  The resulting spectra will be fit to state-of-the-art
 atmospheric models (such as MODTRAN4 \citep{modtran4a, modtran4b}) to
 determine the components responsible for absorption in the spectra,
