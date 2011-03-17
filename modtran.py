@@ -139,7 +139,22 @@ def plotAtmosRatio(secz_a, wavelen_a, trans_a, secz_b, wavelen_b, trans_b, atm_c
         pylab.ylabel("Ratio of Transmission (%.2f) and Transmission (%.2f)" %(secz_b, secz_a))
     return
         
-
+def plotAbs(seczlist, wavelen, abs_atm, atm_comp, xlim=(300, 1100),
+            newfig=True, savefig=False, figroot='atmos_ratio'):
+    for comp in atm_comp: #atm_comp:
+        pylab.figure()
+        for z in seczlist:
+            pylab.plot(wavelen, abs_atm[z][comp], label='X=%.2f' %(z))
+        #pylab.plot(wavelen, abs_atm[z][comp]/numpy.sqrt(2.5), label="2.5X * 1.3")
+        pylab.legend(loc='upper left', fancybox=True, numpoints=1)
+        #pylab.xlim(xlim[0], xlim[1])
+        pylab.xlim(600, 1100)
+        pylab.ylim(0, 0.62)
+        pylab.xlabel("Wavelength (nm)")
+        pylab.ylabel("Absorption")
+        pylab.title("Absorption due to component %s" %(comp))
+    return
+        
 
 def buildAtmos(secz, wavelenDict, transDict, comp_ratios, atmo_ind, seczlist):
     # wavelenDic and transDict = dictionaries of all secz, containing atmosphere components
@@ -254,10 +269,15 @@ if __name__ == '__main__' :
     #for secz in seczlist:
     #    plotAtmos(secz, wavelen[secz], atmo[secz], atm_comp, newfig=True, savefig=False, figroot='atmos')    
     #    writeUsefulAtmos(secz, wavelen[secz], atmo[secz])
-    
+
     for secz in seczlist[0], seczlist[10]:
-        plotAtmos(secz, wavelen[secz], atmo_trans[secz], atmo_ind, newfig=True, savefig=False, figroot='atmos')
-        #plotTemplates(secz, wavelen[secz], atmo_templates[secz], atmo_ind, newfig=True, savefig=False, figroot='atmos')
+        #plotAtmos(secz, wavelen[secz], atmo_trans[secz], atmo_ind, newfig=True, savefig=False, figroot='atmos')
+        #plotTemplates(secz, wavelen[secz], atmo_templates[secz], atmo_ind, newfig=True, savefig=False,figroot='atmos')
+        pass
+
+    this_seczlist = [seczlist[0], seczlist[10], seczlist[15]]
+    this_comp = ('H2O',)
+    plotAbs(this_seczlist, wavelen[this_seczlist[0]], atmo_templates, this_comp)
 
     #plotAtmosRatio(seczlist[0], wavelen[seczlist[0]], atmo_trans[seczlist[0]], seczlist[15], wavelen[seczlist[15]], atmo_trans[seczlist[10]], atmo_ind)
 

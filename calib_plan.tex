@@ -1165,15 +1165,15 @@ an absorption curve with a variable wavelength dependence, where $\tau
 \propto (\lambda/675 \rm{nm})^{\alpha}$, $\alpha$ measured to range
 between -0.9 to -1.7 in observations from CTIO
 \citep{Burke2010b}. Both molecular and aerosol scattering produce
-transmission curves that scale almost linearly with airmass,
-$S(\lambda, X) \propto e^{-\tau X}$.  Molecular absorption produces a
-more complex set of absorption bands and features, originating from
-line absorption due to ozone (O3), oxygen (O2), water (H2O) and other
-trace elements (OH, N2O, etc.).  The molecular absorption is largely
-due to narrow saturated Lorentzian-shaped lines spaced closely in
-wavelength and thus scales closer to the square root of the airmass,
-$S(\lambda, X) \propto e^{-\tau\,\sqrt(X)}$
-\citep{Burke2010b}. Figure~\ref{fig:absorption_comps} demonstrates the
+transmission curves that scale directly with airmass, $S(\lambda, X)
+\propto e^{-\tau X}$.  Molecular absorption produces a more complex
+set of absorption bands and features, originating from line absorption
+due to ozone (O3), oxygen (O2), water (H2O) and other trace elements
+(OH, N2O, etc.). The resulting atmospheric absorption features are largely due
+to narrow saturated Lorentzian-shaped lines spaced closely in
+wavelength and, due to this saturation, scale non-linearly with airmass,
+$S(\lambda, X) \propto e^{-\tau\,\sqrt X}$
+\citep{Stubbs2007b}. Figure~\ref{fig:absorption_comps} demonstrates the
 wavelength dependency of each of these components.
 
 \begin{figure}
@@ -1196,17 +1196,19 @@ illustrative atmosphere; under actual observing conditions the
 molecular absorption components will vary in strength with time and
 the square root of the airmass, the molecular and aerosol scattering
 will depend on airmass, and the aerosol scattering profile will vary
-slightly with time.  }}
+slightly with time.}}
 \label{fig:absorption_comps}
 \end{figure}
 
-The contribution of each component toward the final total atmospheric
-absorption 
+
+The total column height of each component determines its final contribution
+toward the total atmospheric absorption - a larger fraction of water vapor
+will result in deeper water vapor absorption lines. To determine 
+
 We expect the Rayleigh scattering to be axisymmetric about the zenith,
-with a time dependence driven only by pressure variations. The O2
+with a column height dependence driven only by pressure variations. The O2
 molecular absorption is similar, although proportional to only the
 square root of the barometric pressure.
-
 
 
 
@@ -1214,11 +1216,15 @@ The auxiliary telescope will be a 1.2m telescope equipped with a
 spectroscope which will monitor a set of probe stars as they traverse
 the sky each night. The spectra from the auxiliary telescope will be
 processed to correct for the efficiency of the spectroscope itself,
-leaving the spectra of the star and the signature of absorption from
-the atmosphere. The resulting spectra will be fit to state-of-the-art
-atmospheric models (such as MODTRAN4 \citep{modtran4a, modtran4b}) to determine
-the components responsible for absorption in the spectra, including
-molecular scattering, aerosol scattering, and molecular line
+leaving the (unchanging) spectra of the star and the (variable) signature of
+absorption from the atmosphere to be fit for each auxiliary telescope
+observation. The resulting spectra will be fit with 
+
+
+ The resulting spectra will be fit to state-of-the-art
+atmospheric models (such as MODTRAN4 \citep{modtran4a, modtran4b}) to
+determine the components responsible for absorption in the spectra,
+including molecular scattering, aerosol scattering, and molecular line
 absorption from oxygen, nitrogen, ozone and other trace elements, and
 specifically absorption from water vapor. The fitted values of these
 atmospheric components can then be interpolated to calculate the
@@ -1236,9 +1242,10 @@ temperature and surface gravity) for each of the probe stars along
 with the atmospheric constituents. These probe stars will be observed
 with a sufficient sampling rate and spacing across the sky to allow
 determination of the variation of atmospheric absorption coefficients
-within each science image. 
+within each science image.
 
-
+ORDER of mag of correction
+ORDER of mag of correction that can't be measured
 
 
 \subsubsection{Correcting for the shape of the hardware and atmospheric response}
@@ -1249,7 +1256,9 @@ shape of the hardware and atmospheric response curves and the standard
 normalized bandpass, $phi_b^{std}(\lambda)$, requires knowledge of the
 SED of each star. However, with this knowledge, it is possible to create
 lookup tables of $\delta k(x,y,alt,az,SED,t)$ (as in Equation~\ref{eqn:defnatmags2})
-for various locations in the focal plane in each exposure. 
+for various locations in the focal plane in each exposure. This is
+not easy to illustrate here in a compact form, but a rough example
+is given in Table~\ref{tab:delta_mags}.
 
 Generate: errors due to bad knowledge of SED
 
