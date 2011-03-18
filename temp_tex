@@ -1,0 +1,79 @@
+\section{Illumination Correction alternate version}
+
+{\it This is text I wrote and then cut from the illumination correction section above.
+Looking at the most recent CCOB review, this is what had been suggested for generating
+the illumination correction. However, I believe this is confusing and hard to read. 
+It's not entirely clear to me that the IC could be determined in this way, rather than
+as described above, at least not without describing a model for the IC as above. However,
+I'm saving the equations here in case consensus is that they need to be in the IC section.}
+
+
+After acquiring the CCOB, narrow band dome flat fields, and rastor
+scan data, it is then possible to create a model for the illumination
+correction by minimizing (in each filter)
+\begin{eqnarray}
+ \chi^2 & = & \Sigma_{N_{stars}} \left( { m^{star}_{meas}(x,y) - m^{star}_{model}(x,y)
+\over \sigma_b} \right)^2  \\
+  & & +\, \Sigma_{N_{DS}, x,y,\lambda} \left( {
+    ADU^{DS}_{meas}(x,y,\lambda) - ADU^{DS}_{ model}(x,y,\lambda) \over
+    \sigma_{DS \, x,y,\lambda } } \right)^2  \nonumber  \\
+ & & +\,  \Sigma_{N_{CCOB},x,y,\theta,\phi,\lambda} \left( { 
+   ADU^{CCOB}_{meas}(x,y,\theta,\phi,\lambda) - ADU^{CCOB}_{model}(x,y,\theta,\phi,\lambda) \over
+   \sigma_{CCOB \,x,y,\theta,\phi,\lambda}}  \right)^2   \nonumber
+\end{eqnarray}
+where the measured values above are the measured magnitudes of the stars
+from the dense rastor scan (corrected only by the raw synthetic flat
+without illumination correction), the measured ADU values from each pixel of the narrow band
+flat fields, and the measured ADU values from each pixel from the CCOB
+measurements, reported over a range of pixel locations ($x,y$) and incident
+angles ($\theta,\phi$) corresponding to the range of light paths for
+incoming photons. The model values come from best-fit parameters for each
+of these, when the illumination correction is included: 
+\begin{eqnarray}
+m^{star}_{model}(x,y) & = &  \int {d\lambda \over \lambda} \int d\theta d\phi \, {\textbf[} FP(x,y,\theta,\phi,\lambda) \times \nonumber \\
+&& F_\nu^{star}(x,y,\lambda)\,\, S^{atm}(x,y,\lambda)\, \,M(\theta,\phi,\lambda)\,\,R(\theta,\phi,\lambda) {\textbf]} \nonumber \\
+ & = & m^{star}_{best} - \delta k_{b}^{atm+sys}(x,y,alt,az,SED,t) - \int d\lambda \, Z_{IC}(x,y,\lambda)
+\end{eqnarray}
+
+
+\begin{eqnarray}
+ADU^{DS}_{model}(x,y,\lambda) & = & \int d\theta d\phi \, FP(x,y,\theta,\phi,\lambda) \times  \nonumber \\
+& & {\textbf[}  (F_\nu^{DS}(x,y,\theta,\phi,\lambda)\,\, M(\theta,\phi,\lambda)\,\, R(\theta,\phi,\lambda)) 
++ SS^{DS}(x,y,\theta,\phi,\lambda) +  \nonumber \\ 
+& & \Sigma_{(x',y')} \int d\theta' d\phi' \,F_\nu^{DS}(x',y',\theta', \phi',\lambda)\,M(\theta',\phi',\lambda)\,G(x',y',\theta',\phi'; x,y,\theta,\phi,\lambda) {\textbf]} \nonumber  \\
+ & = & ADU^{DS}_{best}(x,y,\lambda) - 10^{-0.4 \, Z_{IC}(x,y,\lambda)} 
+\end{eqnarray}
+
+
+\begin{eqnarray}
+ADU^{CCOB}_{model}(x,y,\theta,\phi,\lambda) & = &  FP(x,y,\theta,\phi,\lambda) \times \nonumber \\
+& & {\textbf[}  F_\nu^{CCOB}(x,y,\theta,\phi,\lambda)\,R(\theta,\phi,\lambda) + \nonumber \\
+&& \Sigma_{(x',y')} \int d\theta' d\phi' \,F_\nu^{CCOB}(x',y',\theta',\phi',\lambda)\,G(x',y',\theta',\phi';x,y,\theta,\phi,\lambda) {\textbf]} \nonumber \\
+& = & ADU^{CCOB}_{best}(x,y,\theta,\phi,\lambda) - 10^{-0.4\,Z_{IC}}(x,y,\lambda) + SS^{DS}_{best}(x,y,\lambda) 
+\end{eqnarray} 
+where $Z_{IC}$ represents the entire illumination correction,
+including pixel scale variations, corrections for ghosting and
+corrections for stray light in the synthetic flat, and $FP$ stands for
+focal plane response, $M$ for the mirror transmission response, $R$ for the
+refractive optics transmission, $G$ is the ghosting expected in this bandpass (calculated from
+the ZEMAX model), and $SS$ stands for all other stray/scattered light
+that is present in the dome screen flats. The form for
+$Z^{IC}$ must account for possible sharp changes at amp boundaries,
+and should be multiplied back into the synthetic flat (changing pixel
+values in the synthetic flat) rather than just applied as a series of
+zeropoint offsets, to improve galaxy photometry. The best fit values ($best$)
+for the stars represent their best-fit natural magnitude values, corrected for the wavelength-dependent color
+terms from the flat field and atmospheric transmission in order 
+to match the observed bandpass, as well as the illumination
+correction. The best fit values for the dome screen would be the
+best-fit value for the raw ADU counts at each wavelength (generally simply the
+photodiode value with some best-fit spatial
+variation), combined with the illumination
+correction. The best fit value for the CCOB comes directly from the
+photodiode measurement - no model fit necessary - however the
+stray and scattered light coming from outside the dome screen beam is
+not present in the CCOB apparatus (but is part of the illumination
+correction) and so must be added back in; in addition,
+since the CCOB measures throughput at particular beam incident
+angles, the model ADU values are not just evaluated at a particular
+wavelength, but also at a particular set of incident angles. 

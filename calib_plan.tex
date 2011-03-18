@@ -1142,13 +1142,11 @@ of the scale in the previous figure. }}
 \label{sec:phi_atmo}
 
 The atmospheric transmission curve appropriate for each observation
-will be interpolated from atmospheric extinction coefficients fit to a
-series of spectroscopic measurements of atmospheric absorption
-gathered by the auxiliary telescope.  It is worth noting that the
-auxiliary telescope measurements will not correct for cloud extinction
-or any other normalization variation due to the atmosphere; the goal
-for the auxiliary telescope to compensate for changes in the shape of
-the atmospheric transmission curve only.
+will be generated using a combination of spectroscopic measurements of
+bright stars obtained with the auxiliary telescope and an atmospheric
+extinction model that combines knowledge of the spatial and temporal
+variation of the atmosphere and atmospheric transmission profiles
+generated using MODTRAN4 \citep{modtran4a, modtran4b}.
 
 The shape of the atmospheric transmission curve, $\phi^{atm}(\lambda,
 alt, az, t)$, is determined by three major sources of atmospheric
