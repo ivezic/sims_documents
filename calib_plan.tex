@@ -1187,6 +1187,7 @@ wavelength dependency of each of these components.
 \begin{figure}
 \centering
 \subfloat[]{\includegraphics[width=4in]{absorption_compsA}}\\
+\vspace{-10pt}
 \subfloat[]{\includegraphics[width=4in]{absorption_compsB}} 
 \caption{{\small
 {\bf Components of atmospheric absorption.} The wavelength dependence
@@ -1227,12 +1228,13 @@ S^{fit}(alt,az,t, \lambda) & = & C^{gray} \,e^{-\tau_{aerosol}(alt,az,t,\lambda)
 \label{eqn:atmo_fit}
 \end{eqnarray}
 where each of the $A_{rayleigh/O2/O3/H2O}$ values are taken as one
-minus the transmission template ($A_{O2}(X) = 1 - T_{O2}(X)$,
-$T_{O2}(X)$ from MODTRAN). Each of $C_{mol/O3/H2O}$ are values which 
-describe the composition of the atmospheric extinction, and are what are
-fit from the auxiliary telescope data along with the aerosol extinction, 
-$e^{\tau_{aerosol}}$. An example of an atmosphere generated in this fashion
-is shown in Figure~\ref{fig:absorption_comps2}. 
+minus the transmission template ($A_{O2}(X) = 1 - T_{O2}(X)$, where
+$T_{O2}(X)$ is the template profile from MODTRAN). Each of
+$C_{mol/O3/H2O}$ are values which describe the composition of the
+atmospheric extinction, and are what are fit from the auxiliary
+telescope data along with the aerosol extinction,
+$e^{\tau_{aerosol}}$. An example of an atmosphere generated in this
+fashion is shown in Figure~\ref{fig:absorption_comps2}.
 
 \begin{figure}
 \centering
@@ -1249,20 +1251,21 @@ curve in red.}
 }
 \end{figure}
 
+The coefficients $C_{mol/O3/H2O}$ and aerosol extinction are
+determined using spectra of bright stars obtained from the 1.2-m LSST
+auxiliary telescope which will be equipped with a modest resolution
+(R$\sim400$) spectrograph. The auxiliary telescope will generally
+not observe stars along the line of sight of LSST
+
+The stars observed with the auxiliary telescope
+will generally not be 
+
+
 We expect the Rayleigh scattering to be axisymmetric about the zenith,
 with a total column height dependence driven only by pressure variations. The O2
 molecular absorption is similar, although proportional to only the
 square root of the barometric pressure.
 
-
-
-The auxiliary telescope will be a 1.2m telescope equipped with a
-spectroscope which will monitor a set of probe stars as they traverse
-the sky each night. The spectra from the auxiliary telescope will be
-processed to correct for the efficiency of the spectroscope itself,
-leaving the (unchanging) spectra of the star and the (variable) signature of
-absorption from the atmosphere to be fit for each auxiliary telescope
-observation. The resulting spectra will be fit with 
 
 
  The resulting spectra will be fit to state-of-the-art
