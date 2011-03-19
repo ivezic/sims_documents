@@ -176,7 +176,7 @@ class AtmoComp:
         self.trans_total = None
         return                      
 
-    def buildAtmos(self, secz, xlim=[300, 1100]):
+    def buildAtmos(self, secz, xlim=[300, 1100], doplot=False):
         """Generate the total atmospheric transmission profile at this airmass, using the coefficients C."""
         # Burke paper says atmosphere put together as 
         # Trans_total (alt/az/time) = Tgray * (e^-Z*tau_aerosol(alt/az/t)) * 
@@ -207,33 +207,34 @@ class AtmoComp:
                       * ( 1 - self.C['H2O'] * self.atmo_abs['H2O']) \
                       * ( 1 - self.atmo_abs['aerosol'])
         # now we can plot the atmosphere
-        pylab.figure()
-        pylab.subplot(212)
-        colorindex = 0
-        for comp in self.atmo_ind:
-            pylab.plot(self.wavelen, self.atmo_abs[comp], colors[colorindex], label='%s' %(comp))
-            colorindex = self.next_color(colorindex)        
-        leg =pylab.legend(loc=(0.88, 0.3), fancybox=True, numpoints=1, shadow=True)
-        ltext = leg.get_texts()
-        pylab.setp(ltext, fontsize='small')
-        coefflabel = ""
-        for comp in ('mol', 't0', 'alpha', 'O3', 'H2O'):
-            coefflabel = coefflabel + "C[%s]:%.2f  " %(comp, self.C[comp])
-            if (comp=='alpha') | (comp=='mol'):
-                coefflabel = coefflabel + "\n"
-        pylab.figtext(0.2, 0.35, coefflabel, fontsize='small')
-        pylab.xlim(xlim[0], xlim[1])
-        pylab.ylim(0, 1.0)
-        pylab.xlabel("Wavelength (nm)")
-        pylab.subplot(211)
-        pylab.plot(self.wavelen, self.atmo_trans[self.seczToString(1.0)]['comb'], 'r-', label='Standard (no aerosols)')
-        pylab.plot(self.wavelen, self.trans_total, 'k-', label='Observed')
-        leg = pylab.legend(loc=(0.12, 0.1), fancybox=True, numpoints=1, shadow=True)
-        ltext = leg.get_texts()
-        pylab.setp(ltext, fontsize='small')
-        pylab.xlim(xlim[0], xlim[1])
-        pylab.ylim(0, 1.0)
-        pylab.title("Example Atmosphere at X=%.2f" %(secz))
+        if doplot:
+            pylab.figure()
+            pylab.subplot(212)
+            colorindex = 0
+            for comp in self.atmo_ind:
+                pylab.plot(self.wavelen, self.atmo_abs[comp], colors[colorindex], label='%s' %(comp))
+                colorindex = self._next_color(colorindex)        
+            leg =pylab.legend(loc=(0.88, 0.3), fancybox=True, numpoints=1, shadow=True)
+            ltext = leg.get_texts()
+            pylab.setp(ltext, fontsize='small')
+            coefflabel = ""
+            for comp in ('mol', 't0', 'alpha', 'O3', 'H2O'):
+                coefflabel = coefflabel + "C[%s]:%.2f  " %(comp, self.C[comp])
+                if (comp=='alpha') | (comp=='mol'):
+                    coefflabel = coefflabel + "\n"
+            pylab.figtext(0.2, 0.35, coefflabel, fontsize='small')
+            pylab.xlim(xlim[0], xlim[1])
+            pylab.ylim(0, 1.0)
+            pylab.xlabel("Wavelength (nm)")
+            pylab.subplot(211)
+            pylab.plot(self.wavelen, self.atmo_trans[self.seczToString(1.2)]['comb'], 'r-', label='Standard X=1.2 (no aerosols)')
+            pylab.plot(self.wavelen, self.trans_total, 'k-', label='Observed')
+            leg = pylab.legend(loc=(0.12, 0.05), fancybox=True, numpoints=1, shadow=True)
+            ltext = leg.get_texts()
+            pylab.setp(ltext, fontsize='small')
+            pylab.xlim(xlim[0], xlim[1])
+            pylab.ylim(0, 1.0)
+            pylab.title("Example Atmosphere at X=%.2f" %(secz))
         return
 
 
@@ -247,7 +248,7 @@ class AtmoComp:
         colorindex = 0
         for comp in self.atmo_ind:
             pylab.plot(self.wavelen, (1.0-self.atmo_abs[comp]), colors[colorindex], label=comp)
-            colorindex = self.next_color(colorindex)
+            colorindex = self._next_color(colorindex)
         if self.trans_total != None:
             pylab.plot(self.wavelen, self.trans_total, 'k:')
         leg = pylab.legend(loc='lower right', numpoints=1, fancybox=True)
@@ -269,7 +270,7 @@ class AtmoComp:
         colorindex = 0
         for comp in self.atmo_ind:
             pylab.plot(self.wavelen, self.atmo_abs[comp], colors[colorindex], label=comp)
-            colorindex = self.next_color(colorindex)
+            colorindex = self._next_color(colorindex)
         leg = pylab.legend(loc=(0.85, 0.7), numpoints=1, fancybox=True)
         ltext = leg.get_texts()
         pylab.setp(ltext, fontsize='small')
@@ -339,7 +340,7 @@ class AtmoComp:
         f.close()
         return
 
-    def next_color(self, colorindex):
+    def _next_color(self, colorindex):
         colorindex = colorindex + 1
         if colorindex > len(colors):
             colorindex = 0

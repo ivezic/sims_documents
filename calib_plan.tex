@@ -1065,7 +1065,7 @@ nonuniformities is specified to be less than 1\% across the focal
 plane, most likely in the form of a bandpass shift as shown in
 Figure~\ref{fig:filtershift}. For main sequence stars, the resulting
 changes in observed magnitude as the bandpass shifts by 1\% of the
-central wavelength can be as much or more than 0.02~magnitudes (20
+central wavelength can be as much or more than 0.04~magnitudes (40
 mmag) - even larger in the $u$ band (see
 Figure~\ref{fig:dmag_filtershift}). However, as long as the variation
 in the hardware response curve is measured to better than 0.05\% --
@@ -1074,17 +1074,17 @@ calibration of the monochromatic light source throughout the bandpass
 or a 0.5\% error in photodiode calibration assuming that the shape of
 each bandpass is determined using at least 100 independent
 measurements (i.e. 1 measurement every few nanometers within the bandpass) --
-the error contribution towards calibrating these observed magnitudes
-will be less than 1~mmag for all bandpasses other than $u$, where the
+the maximum error contribution towards calibrating these observed magnitudes
+will be less than 2~mmag for all bandpasses other than $u$, where the
 error could be as much as 5~mmag for certain main sequence stars (see
-Figure~\ref{fig:dmag_filtershift_small}).
+Figure~\ref{fig:dmag_filtershift_small}). 
 
 Because the shape of the hardware response curve varies as a function
 of filter radius, it is also necessary to monitor any offsets of the
 filter position from dead center after any filter changes. Assuming
 the filter response curve varies linearly with radius, the filter
 location must be measured to better than 0.025\%  for the filter
-positioning to remain less than a 0.5~mmag source of error. 
+positioning to remain less than a 1~mmag source of error. 
 %Given the
 %filters are approximately 75~cm in diameter, this means the filter 
 %positioning must be recorded to better than 0.18~mm. 
@@ -1126,13 +1126,13 @@ steps of 1 dex between -5.0 (blue) to 1.0 (magenta).} }
 \centering
 \includegraphics[width=6in]{delta_mags_filtershift_small}
 \caption{{\small 
-{\bf Changes in observed magnitude (measured counts) due 
-to a hardware response curve shift of 0.05\% of the central wavelength
-of each bandpass.} Similar to Fig~\ref{fig:dmag_filtershift} except
-that the hardware response was shifted by only 0.05\% of the central
+{\bf Changes in observed magnitude (measured counts) due to a hardware
+response curve shift of 0.05\% of the central wavelength of each
+bandpass.} Similar to Fig~\ref{fig:dmag_filtershift} except that the
+hardware response was shifted by only 0.05\% of the central
 wavelength, an amount representing an unmeasured shift in the hardware
-response and thus contributing directly to the final error in the calibration
-of the observed magnitudes. Note that the y scale here is 1/10th 
+response and thus contributing directly to the final error in the
+calibration of the observed magnitudes. Note that the y scale here is 1/10th
 of the scale in the previous figure. }}
 \label{fig:dmag_filtershift_small} 
 \end{figure}
@@ -1143,10 +1143,11 @@ of the scale in the previous figure. }}
 
 The atmospheric transmission curve appropriate for each observation
 will be generated using a combination of spectroscopic measurements of
-bright stars obtained with the auxiliary telescope and an atmospheric
-extinction model that combines knowledge of the spatial and temporal
-variation of the atmosphere and atmospheric transmission profiles
-generated using MODTRAN4 \citep{modtran4a, modtran4b}.
+bright stars obtained with the auxiliary telescope and a model of
+the atmospheric extinction which uses our knowledge of the
+typical spatial and temporal variation of the atmosphere plus
+atmospheric transmission profiles generated using MODTRAN
+\citep{modtran4a, modtran4b}.
 
 The shape of the atmospheric transmission curve, $\phi^{atm}(\lambda,
 alt, az, t)$, is determined by three major sources of atmospheric

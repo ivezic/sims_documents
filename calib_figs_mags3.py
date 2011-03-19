@@ -3,6 +3,7 @@ import numpy
 import pylab
 import lsst.sims.catalogs.measures.photometry.Sed as Sed
 import lsst.sims.catalogs.measures.photometry.Bandpass as Bandpass
+import AtmoComp as ac
 
 filterlist = ('u', 'g', 'r', 'i', 'z', 'y')
 colors = ['b', 'g', 'y', 'r', 'm', 'k']
@@ -44,22 +45,37 @@ def read_filtersonly(shift_perc=None):
             filters[f].wavelen = filters[f].wavelen + shift
             filters[f].resampleBandpass()
     return filters
-        
-def read_atmos():
-    # Read some atmosphere throughputs.
-    atmosdir = "."
+
+###
+def get_atmosDict():
     atmos = {}
-    key = "Standard"
-    atmos[key]= Bandpass()
-    atmos[key].readThroughput(os.path.join(atmosdir, "atmos_std.dat"))
-    key = "X=1.0" # H2O=0.7
-    atmos[key] = Bandpass()
-    atmos[key].readThroughput(os.path.join(atmosdir, "atmos_85233890.dat"))
-    key = "X=1.5" # H2O=1.4
-    atmos[key] = Bandpass()
-    atmos[key].readThroughput(os.path.join(atmosdir, "atmos_85488653.dat"))
+    atmos['Standard'] = read_stdatmo()
+    atmocmp = ac.AtmoComp()
+    for X in ('1.2', '2.0'):
+        if X=='1.2':
+            update_atmos(atmocmp, X=1.2, t0=5.6/100.0, alpha=-1.8, O3=1.5, H2O=1.3)
+        if X=='2.0':
+            update_atmos(atmocmp, X=1.2, t0=0.2/100.0, alpha=-0.5, O3=0.6, H2O=0.5)
+        atmos[X] = atmo_BP(atmocmp)
     return atmos
 
+def read_stdatmo():
+    atmosdir = "."
+    atmos_bp = Bandpass()
+    atmos_bp.readThroughput(os.path.join(atmosdir, "atmos_std.dat"))
+    return atmos_bp
+
+def update_atmos(atmocmp, X=1.0, t0=(3.9/100.0), t1=(0.02/100.0), t2=(-0.03/100.0), alpha=-1.7,
+                 mol=0.96, BP=782, O3=0.9, H2O=0.9):
+    atmocmp.setCoefficients(t0=t0, t1=t1, t2=t2, alpha=alpha, mol=mol, BP=BP, O3=O3, H2O=H2O)
+    atmocmp.buildAtmos(secz=X, doplot=True)
+    return atmocmp
+
+def atmo_BP(atmocmp):
+    atmos_bp = Bandpass(wavelen=atmocmp.wavelen, sb=atmocmp.trans_total)    
+    return atmos_bp
+
+###
 def combine_throughputs(atmos, sys):
     # Set up the total throughput for this system bandpass, using the variety of atmospheres. 
     total = {}
@@ -71,7 +87,7 @@ def combine_throughputs(atmos, sys):
             total[key][f].sbTophi()
     return total
 
-
+###
 def read_stars():
     # read MS, g40 stars SEDs
     stars = {}
@@ -108,7 +124,7 @@ def read_stars():
     for s in starlist:
         stars[s] = Sed()
         stars[s].readSED_flambda(os.path.join(stardir,s))
-    print "#Read %d stars from %s" %(len(starlist), stardir)
+    print "#Kept %d stars from %s" %(len(starlist), stardir)
     return stars, starlist, temperature, met
 
 
@@ -117,43 +133,57 @@ if __name__ == "__main__":
     # shift the filters by nothing (standard)
     sys_std = read_hardware(shift_perc=None)
     # shift the filters by one percent
-    #shift_perc = 1.0    
     shift_perc = 0.05
     sys_shift = read_hardware(shift_perc=shift_perc)
-    # read in a few different atmospheres
-    atmokeylist = ['standard', 'X=1.0', 'X=1.5']
-    atmos = read_atmos()
+
+    # generate some atmospheres
+    atmos = get_atmosDict()
+
+    print atmos.keys()
+
     # combine to total throughputs 
     total_std = combine_throughputs(atmos, sys_std)    
     total_shift = combine_throughputs(atmos, sys_shift)
     # read the stars
     stars, starlist, temperatures, metallicity = read_stars()
+
     print temperatures.max(), temperatures.min(), metallicity.max(), metallicity.min()
     print len(starlist)
+
     # calculate the standard and shifted magnitudes for each of these stars
     mags_std = {}
     mags_shift = {}
-    for f in filterlist:
-        mags_std[f] = numpy.zeros(len(starlist), dtype='float')
-        mags_shift[f] = numpy.zeros(len(starlist), dtype='float')
-        i = 0
-        for s in starlist:
-            mags_std[f][i] = stars[s].calcMag(total_std['Standard'][f])
-            #mags_shift[f][i] = stars[s].calcMag(total_shift['X=1.5'][f])
-            atmo_choice = 'Standard'  # atmo='X=1.5'
-            mags_shift[f][i] = stars[s].calcMag(total_shift[atmo_choice][f])
-            i = i + 1
-    gi = mags_std['g'] - mags_std['i']
-    ur = mags_std['u'] - mags_std['r']
+    for atm in atmos.keys():
+        mags_std[atm] = {}
+        mags_shift[atm] = {}
+        for f in filterlist:
+            mags_std[atm][f] = numpy.zeros(len(starlist), dtype='float')
+            #mags_shift[atm][f] = numpy.zeros(len(starlist), dtype='float')
+            i = 0
+            for s in starlist:
+                mags_std[atm][f][i] = stars[s].calcMag(total_std[atm][f])
+                #mags_shift[atm][f][i] = stars[s].calcMag(total_shift[atm][f])
+                i = i + 1
+    # calculate some colors, in the std bandpass
+    gi = mags_std['Standard']['g'] - mags_std['Standard']['i']
+    ur = mags_std['Standard']['u'] - mags_std['Standard']['r']
     print gi.min(), gi.max(), ur.min(), ur.max()
+
+    # calculate changes in mag due to
+    # changes in the atmosphere
     shifts = {}
     for f in filterlist:
-        shifts[f] = mags_shift[f] - mags_std[f]
-        shifts[f] = shifts[f]*1000.0
+        #shifts[atm][f] = mags_shift[atm][f] - mags_std[atm][f]        
+        shifts[f] = mags_std['1.2'][f] - mags_std['2.0'][f]
+        # translate to millimags
+        shifts[f] = shifts[f] * 1000.0
     print len(gi), len(shifts['u'])
 
+
+    # make figure
     pylab.figure()
     pylab.subplots_adjust(top=0.93, wspace=0.3, hspace=0.32, bottom=0.09, left=0.12, right=0.96)
+    # set colors of data points based on their metallicity (tried first with ur color, but better w/ met)
     urcolors = ['c', 'c', 'b', 'g', 'y', 'r', 'm']
     urbinsize = abs(ur.min() - ur.max())/6.0
     urbins = numpy.arange(ur.min(), ur.max()+urbinsize, urbinsize)
@@ -181,21 +211,26 @@ if __name__ == "__main__":
             return "%.1f" %(x)
         formatter = pylab.FuncFormatter(axis_formatter)
         ax.yaxis.set_major_formatter(formatter)
+        """
         if f == 'u':
-            #pylab.ylim(-100, 25)
-            pylab.ylim(-5, 1.5)
+            pylab.ylim(-10, 4)
         elif f=='g':
-            #pylab.ylim(-40, 25)
-            pylab.ylim(-2.5, 1.5)
+            pylab.ylim(-5, 3)
+        elif f=='i':
+            pylab.ylim(-1, 1)
+        elif f=='r':
+            pylab.ylim(-1, 1)
         else:
-            #pylab.ylim(-20, 25)
-            pylab.ylim(-1, 1.5)
+            pylab.ylim(-4, 1)
+        """
         pylab.grid(True)
         i = i + 1
-    pylab.figtext(0.15, 0.95, "Change in observed magnitude: %s atmosphere and Filter shift of %.2f%s" %(atmo_choice, shift_perc, "%"))
+    #pylab.figtext(0.2, 0.95, "Change in magnitude for %s atmosphere and filter shift of %s" %(atmo_choice, shift_perc, "%"))
+    pylab.figtext(0.2, 0.95, r"Change in observed magnitude: X=1.2, Max change in parameters")
     #pylab.savefig("delta_mags2.eps", format='eps')
 
-    if True:
+                  
+    if False:
         # plot the shift in the filters 
         pylab.figure()
         filters_std = read_filtersonly()

@@ -112,7 +112,8 @@ def combine_throughputs(atmos, sys_std, sys_edge):
 def read_seds(total):
     # read SEDs - one blue star, one red star
     stars = {}
-    seddir = "/Users/rhiannonjones/seds/kurucz_r/"
+    homedir = os.getenv("HOME")
+    seddir = os.path.join(homedir, 'seds/kurucz_r')
     key = "red"
     stars[key] = Sed()
     stars[key].readSED_flambda(os.path.join(seddir, "km01_6000.fits_g40"))
