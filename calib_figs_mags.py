@@ -53,12 +53,12 @@ def read_atmos():
     key = "Standard"
     atmos[key]= Bandpass()
     atmos[key].readThroughput(os.path.join(atmosdir, "atmos_std.dat"))
-    key = "X=1.0, H2O=0.7"
+    key = "X=1.0, H2O=0.5"
     atmos[key] = Bandpass()
-    atmos[key].readThroughput(os.path.join(atmosdir, "atmos_85233890.dat"))
-    key = "X=1.5, H2O=1.4"
+    atmos[key].readThroughput(os.path.join(atmosdir, "atmos_lo.dat"))
+    key = "X=1.8, H2O=1.5"
     atmos[key] = Bandpass()
-    atmos[key].readThroughput(os.path.join(atmosdir, "atmos_85488653.dat"))
+    atmos[key].readThroughput(os.path.join(atmosdir, "atmos_hi.dat"))
     return atmos
 
 def combine_throughputs(atmos, sys_std, sys_edge):
@@ -79,25 +79,25 @@ def combine_throughputs(atmos, sys_std, sys_edge):
     key = 'low X, center'
     total[key] = {}
     for f in filterlist:
-        wavelen, sb = sys_std[f].multiplyThroughputs(atmos['X=1.0, H2O=0.7'].wavelen, atmos['X=1.0, H2O=0.7'].sb)
+        wavelen, sb = sys_std[f].multiplyThroughputs(atmos['X=1.0, H2O=0.5'].wavelen, atmos['X=1.0, H2O=0.5'].sb)
         total[key][f] = Bandpass(wavelen, sb)
         total[key][f].sbTophi()
     key = 'hi X, center'
     total[key] = {}
     for f in filterlist:
-        wavelen, sb = sys_std[f].multiplyThroughputs(atmos['X=1.5, H2O=1.4'].wavelen, atmos['X=1.5, H2O=1.4'].sb)
+        wavelen, sb = sys_std[f].multiplyThroughputs(atmos['X=1.8, H2O=1.5'].wavelen, atmos['X=1.8, H2O=1.5'].sb)
         total[key][f] = Bandpass(wavelen, sb)
         total[key][f].sbTophi()
     key = 'low X, edge'
     total[key] = {}
     for f in filterlist:
-        wavelen, sb = sys_edge[f].multiplyThroughputs(atmos['X=1.0, H2O=0.7'].wavelen, atmos['X=1.0, H2O=0.7'].sb)
+        wavelen, sb = sys_edge[f].multiplyThroughputs(atmos['X=1.0, H2O=0.5'].wavelen, atmos['X=1.0, H2O=0.5'].sb)
         total[key][f] = Bandpass(wavelen, sb)
         total[key][f].sbTophi()
     key = 'hi X, edge'
     total[key] = {}
     for f in filterlist:
-        wavelen, sb = sys_edge[f].multiplyThroughputs(atmos['X=1.5, H2O=1.4'].wavelen, atmos['X=1.5, H2O=1.4'].sb)
+        wavelen, sb = sys_edge[f].multiplyThroughputs(atmos['X=1.8, H2O=1.5'].wavelen, atmos['X=1.8, H2O=1.5'].sb)
         total[key][f] = Bandpass(wavelen, sb)
         total[key][f].sbTophi()
     pylab.figure()
@@ -157,6 +157,7 @@ def calc_mags(stars, total):
     for f in filterlist:
         for skey in stars.keys():
             mags_delta[skey][key][f] = stars[skey].calcMag(total[tkey][f]) - mags_std[skey][f]
+            mags_delta[skey][key][f] = mags_delta[skey][key][f]*1000.0
         writestring1 = writestring1 + "& %.3f " %(mags_delta['red'][key][f])
         writestring2 = writestring2 + "& %.3f " %(mags_delta['blue'][key][f])
     print writestring1 + "\\\\"
@@ -170,6 +171,7 @@ def calc_mags(stars, total):
     for f in filterlist:
         for skey in stars.keys():
             mags_delta[skey][key][f] = stars[skey].calcMag(total[tkey][f]) - mags_std[skey][f]
+            mags_delta[skey][key][f] = mags_delta[skey][key][f]*1000.0
         writestring1 = writestring1 + "& %.3f " %(mags_delta['red'][key][f])
         writestring2 = writestring2 + "& %.3f " %(mags_delta['blue'][key][f])
     print writestring1 + "\\\\"
@@ -183,32 +185,35 @@ def calc_mags(stars, total):
     for f in filterlist:
         for skey in stars.keys():
             mags_delta[skey][key][f] = stars[skey].calcMag(total[tkey][f]) - mags_std[skey][f]
+            mags_delta[skey][key][f] = mags_delta[skey][key][f]*1000.0
         writestring1 = writestring1 + "& %.3f " %(mags_delta['red'][key][f])
         writestring2 = writestring2 + "& %.3f " %(mags_delta['blue'][key][f])
     print writestring1 + "\\\\"
     print writestring2 + "\\\\ \\hline"
     tkey = "hi X, center"
-    key = "X=1.5, std sys"
+    key = "X=1.8, std sys"
     mags_delta['blue'][key] = {}
     mags_delta['red'][key] = {}
-    writestring1  = "X=1.5, std sys  & red "
-    writestring2  = "X=1.5, std sys  & blue "
+    writestring1  = "X=1.8, std sys  & red "
+    writestring2  = "X=1.8, std sys  & blue "
     for f in filterlist:
         for skey in stars.keys():
             mags_delta[skey][key][f] = stars[skey].calcMag(total[tkey][f]) - mags_std[skey][f]
+            mags_delta[skey][key][f] = mags_delta[skey][key][f]*1000.0
         writestring1 = writestring1 + "& %.3f " %(mags_delta['red'][key][f])
         writestring2 = writestring2 + "& %.3f " %(mags_delta['blue'][key][f])
     print writestring1 + "\\\\"
     print writestring2 + "\\\\ \\hline"
     tkey = "hi X, edge"
-    key = "X=1.5, +1% sys"
+    key = "X=1.8, +1% sys"
     mags_delta['blue'][key] = {}
     mags_delta['red'][key] = {}
-    writestring1 = "X=1.5, +1\% sys shift & red "
-    writestring2  = "X=1.5, +1\% sys shift & blue "
+    writestring1 = "X=1.8, +1\% sys shift & red "
+    writestring2  = "X=1.8, +1\% sys shift & blue "
     for f in filterlist:
         for skey in stars.keys():
             mags_delta[skey][key][f] = stars[skey].calcMag(total[tkey][f]) - mags_std[skey][f]
+            mags_delta[skey][key][f] = mags_delta[skey][key][f]*1000.0
         writestring1 = writestring1 + "& %.3f " %(mags_delta['red'][key][f])
         writestring2 = writestring2 + "& %.3f " %(mags_delta['blue'][key][f])
     print writestring1 + "\\\\"
@@ -239,7 +244,7 @@ def make_figures(stars, sys_std, sys_edge, atmos, total, mags_delta):
     ax = pylab.subplot(534)
     key = "Standard"
     ax.plot(atmos[key].wavelen, atmos[key].sb, 'b:', label=key)
-    key = "X=1.0, H2O=0.7"
+    key = "X=1.0, H2O=0.5"
     ax.plot(atmos[key].wavelen, atmos[key].sb, 'g-', label=key)
     ax.tick_params(axis='y', labelsize='small')
     ax.tick_params(axis='x', labelbottom='off') #labelsize='small')
@@ -261,7 +266,7 @@ def make_figures(stars, sys_std, sys_edge, atmos, total, mags_delta):
     ax = pylab.subplot(536)
     key = "Standard"
     ax.plot(atmos[key].wavelen, atmos[key].sb, 'b:',  label=key)
-    key = "X=1.5, H2O=1.4"
+    key = "X=1.8, H2O=1.5"
     ax.plot(atmos[key].wavelen, atmos[key].sb, 'g-', label=key)
     ax.tick_params(axis='y', labelleft='off') #labelsize='small')
     ax.tick_params(axis='x', labelbottom='off') #labelsize='small')
@@ -269,7 +274,7 @@ def make_figures(stars, sys_std, sys_edge, atmos, total, mags_delta):
     #pylab.xlabel("Wavelength (nm)", fontsize='small')        
     #pylab.ylabel("Transmission",  fontsize='small')
     pylab.xlim(300, 1100)
-    pylab.title("X=1.5",  fontsize='small')
+    pylab.title("X=1.8",  fontsize='small')
     #pylab.legend(numpoints=1, fancybox=True, loc=(0.1, 0.05))
 
     # plot system throughputs    
@@ -333,14 +338,14 @@ def make_figures(stars, sys_std, sys_edge, atmos, total, mags_delta):
         ax.plot(xspace[i], mags_delta['blue'][key][f], colors[i]+"o")
         ax.plot(xspace[i], mags_delta['red'][key][f], colors[i]+'o')
         i = color_counter_next(i)
-    pylab.ylim(-0.05, 0.03)
+    pylab.ylim(-50, 30)
     ax.tick_params(axis='y', labelsize='small')
     #pylab.yticks(ticks)
     ax.tick_params(axis='x', labelsize='small')
     pylab.xlim(-1, 6)
     pylab.grid(which='major')
     pylab.xticks(xspace, filterlist)
-    pylab.title("Delta Mag (X=1.0)",  fontsize='small')
+    pylab.title(r"$\Delta$ Mag (mmag) (X=1.0)",  fontsize='small')
     
     ax = pylab.subplot(5,3,14)
     i = 0
@@ -354,32 +359,32 @@ def make_figures(stars, sys_std, sys_edge, atmos, total, mags_delta):
         ax.plot(xspace[i], mags_delta['blue'][key][f], colors[i]+"o")
         ax.plot(xspace[i], mags_delta['red'][key][f], colors[i]+"o")
         i = color_counter_next(i)
-    pylab.ylim(-0.05, 0.03)
+    pylab.ylim(-50, 30)
     ax.tick_params(axis='y', labelleft='off')
     ax.tick_params(axis='x', labelsize='small')
     pylab.xlim(-1, 6)
     pylab.grid(which='major')
     pylab.xticks(xspace, filterlist)
-    pylab.title("Delta Mag (Std)",  fontsize='small')
+    pylab.title(r"$\Delta$ Mag (mmag) (Std)",  fontsize='small')
     
     ax = pylab.subplot(5,3,15)
     i = 0
     xspace = [0, 1, 2, 3, 4, 5]
     for f in filterlist:
-        key = 'X=1.5, std sys'
+        key = 'X=1.8, std sys'
         ax.plot(xspace[i], mags_delta['blue'][key][f], colors[i]+"*")
         ax.plot(xspace[i], mags_delta['red'][key][f], colors[i]+"*")
-        key = 'X=1.5, +1% sys'
+        key = 'X=1.8, +1% sys'
         ax.plot(xspace[i], mags_delta['blue'][key][f], colors[i]+"o")
         ax.plot(xspace[i], mags_delta['red'][key][f], colors[i]+'o')
         i = color_counter_next(i)
-    pylab.ylim(-0.05, 0.03)
+    pylab.ylim(-50, 30)
     pylab.xlim(-1, 6)
     pylab.grid(which='major')
     ax.tick_params(axis='x', labelsize='small')
     pylab.xticks(xspace, filterlist)
     ax.tick_params(axis='y', labelleft='off', labelright='on', labelsize='small')
-    pylab.title("Delta Mag (X=1.5)",  fontsize='small')                       
+    pylab.title(r"$\Delta$ Mag (mmag) (X=1.8)",  fontsize='small')                       
 
 
 

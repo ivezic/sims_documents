@@ -52,12 +52,12 @@ def read_atmos():
     key = "Standard"
     atmos[key]= Bandpass()
     atmos[key].readThroughput(os.path.join(atmosdir, "atmos_std.dat"))
-    key = "X=1.0" # H2O=0.7
+    key = "X=1.0" # H2O=0.5
     atmos[key] = Bandpass()
-    atmos[key].readThroughput(os.path.join(atmosdir, "atmos_85233890.dat"))
-    key = "X=1.5" # H2O=1.4
+    atmos[key].readThroughput(os.path.join(atmosdir, "atmos_lo.dat"))
+    key = "X=1.8" # H2O=1.5
     atmos[key] = Bandpass()
-    atmos[key].readThroughput(os.path.join(atmosdir, "atmos_85488653.dat"))
+    atmos[key].readThroughput(os.path.join(atmosdir, "atmos_hi.dat"))
     return atmos
 
 def combine_throughputs(atmos, sys):
@@ -117,11 +117,11 @@ if __name__ == "__main__":
     # shift the filters by nothing (standard)
     sys_std = read_hardware(shift_perc=None)
     # shift the filters by one percent
-    #shift_perc = 1.0    
-    shift_perc = 0.05
+    shift_perc = 1.0    
+    #shift_perc = 0.05
     sys_shift = read_hardware(shift_perc=shift_perc)
     # read in a few different atmospheres
-    atmokeylist = ['standard', 'X=1.0', 'X=1.5']
+    atmokeylist = ['standard', 'X=1.0', 'X=1.8']
     atmos = read_atmos()
     # combine to total throughputs 
     total_std = combine_throughputs(atmos, sys_std)    
@@ -139,8 +139,9 @@ if __name__ == "__main__":
         i = 0
         for s in starlist:
             mags_std[f][i] = stars[s].calcMag(total_std['Standard'][f])
-            #mags_shift[f][i] = stars[s].calcMag(total_shift['X=1.5'][f])
-            atmo_choice = 'Standard'  # atmo='X=1.5'
+            #mags_shift[f][i] = stars[s].calcMag(total_shift['X=1.8'][f])
+            atmo_choice = 'Standard'  # atmo='X=1.8'
+            atmo_choice = 'X=1.8'
             mags_shift[f][i] = stars[s].calcMag(total_shift[atmo_choice][f])
             i = i + 1
     gi = mags_std['g'] - mags_std['i']
@@ -182,14 +183,14 @@ if __name__ == "__main__":
         formatter = pylab.FuncFormatter(axis_formatter)
         ax.yaxis.set_major_formatter(formatter)
         if f == 'u':
-            #pylab.ylim(-100, 25)
-            pylab.ylim(-5, 1.5)
+            pylab.ylim(-120, 25)
+            #pylab.ylim(-5, 1.5)
         elif f=='g':
-            #pylab.ylim(-40, 25)
-            pylab.ylim(-2.5, 1.5)
+            pylab.ylim(-50, 25)
+            #pylab.ylim(-2.5, 1.5)
         else:
-            #pylab.ylim(-20, 25)
-            pylab.ylim(-1, 1.5)
+            pylab.ylim(-25, 30)
+            #pylab.ylim(-1, 1.5)
         pylab.grid(True)
         i = i + 1
     pylab.figtext(0.15, 0.95, "Change in observed magnitude: %s atmosphere and Filter shift of %.2f%s" %(atmo_choice, shift_perc, "%"))

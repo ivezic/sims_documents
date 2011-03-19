@@ -333,9 +333,9 @@ class AtmoComp:
         f = open(filename, 'w')
         print >>f, "# Test atmosphere "
         print >>f, "# Airmass = %.3f" %(self.secz)
-        for coef in self.C.keys():
-            print >>f, "# Coefficient: C['%s'] = %f" %(coeff, C[coeff])
-        for i in len(self.wavelen):
+        for coeff in self.C.keys():
+            print >>f, "# Coefficient: C['%s'] = %f" %(coeff, self.C[coeff])
+        for i in range(len(self.wavelen)):
             print >>f, "%.3f  %.8f" %(self.wavelen[i], self.trans_total[i])
         f.close()
         return

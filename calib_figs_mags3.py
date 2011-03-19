@@ -55,8 +55,14 @@ def get_atmosDict():
     # min atmo = update_atmos(atmocmp, X=1.2, t0=0.2/100.0, alpha=-0.5, O3=0.6, H2O=0.5)
     # 30p atmo = update_atmos(atmocmp, X=2.5, t0=(0.8/100), alpha=-1.0, O3=0.9, H2O=0.8)
     # 30p atmo = update_atmos(atmocmp, X=2.5, t0=(2.4/100.0), alpha=-1.4, O3=1.17, H2O=1.04)
+    # 10p/30 atmo = update_atmos(atmocmp, X=1.2, t0=(0.8/100.0), alpha=-1.0, O3=0.9, H2O=0.8)
+    # 10p/30 atmo = update_atmos(atmocmp, X=1.2, t0=(1.3/100.0), alpha=-1.13, O3=0.99, H2O=1.04)
     for X in ('1.2', '2.5'):
-        update_atmos(atmocmp, X=float(X))
+        #update_atmos(atmocmp, X=float(X))
+        if X=='1.2':
+            atmo = update_atmos(atmocmp, X=2.0, t0=(0.8/100.0), alpha=-1.0, O3=0.9, H2O=0.8)
+        if X=='2.5':
+            atmo = update_atmos(atmocmp, X=2.0, t0=(1.3/100.0), alpha=-1.13, O3=0.99, H2O=1.04)
         atmos[X] = atmo_BP(atmocmp)
     return atmos
 
@@ -175,7 +181,7 @@ if __name__ == "__main__":
     shifts = {}
     for f in filterlist:
         #shifts[atm][f] = mags_shift[atm][f] - mags_std[atm][f]        
-        shifts[f] = mags_std['1.2'][f] - mags_std['2.0'][f]
+        shifts[f] = mags_std['1.2'][f] - mags_std['2.5'][f]
         # translate to millimags
         shifts[f] = shifts[f] * 1000.0
     print len(gi), len(shifts['u'])
@@ -213,19 +219,19 @@ if __name__ == "__main__":
         formatter = pylab.FuncFormatter(axis_formatter)
         ax.yaxis.set_major_formatter(formatter)
         if f == 'u':
-            pylab.ylim(-2, 6)
+            pylab.ylim(-1, 1)
         #elif f=='g':
         #    pylab.ylim(-5, 3)
         #elif f=='i':
         #    pylab.ylim(-1, 1)
         elif f=='y':
-            pylab.ylim(-4, 1)
+            pylab.ylim(-2, 1)
         else:
-            pylab.ylim(-1.5, 1.5)
+            pylab.ylim(-1, 1)
         pylab.grid(True)
         i = i + 1
     #pylab.figtext(0.2, 0.95, "Change in magnitude for %s atmosphere and filter shift of %s" %(atmo_choice, shift_perc, "%"))
-    pylab.figtext(0.2, 0.95, r"Change in observed magnitude: X=2.5, 30% change in parameters")
+    pylab.figtext(0.1, 0.95, r"Change in observed magnitude: X=2.0, 10% change in O3/$\tau_0$/$\alpha$, 30% change in H2O")
     #pylab.savefig("delta_mags2.eps", format='eps')
 
                   
