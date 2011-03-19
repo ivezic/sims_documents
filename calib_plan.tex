@@ -171,7 +171,7 @@ variations (including their time and spatial scales for variability)
 might arise in the LSST system to affect the final ADU counts. This is
 the `truth' that the calibration procedure must attempt to recreate. 
 
-Note - while $F_nu(\lambda,t)$ and other quantities that are functions of time
+Note - while $F_\nu(\lambda,t)$ and other quantities that are functions of time
 could vary more quickly than the standard LSST exposure time of 15s, it is
 assumed that all such quantities are averaged over that short exposure time, so 
 that $t$ refers to quantities that can vary from exposure to exposure. 
@@ -1004,21 +1004,28 @@ variations in the wavelength dependence (shape) of the hardware and
 atmospheric response curves, $\phi_b^{sys}(\lambda)$ and
 $\phi^{atm}(\lambda)$, will be done using independent measurements of
 the hardware response curve (from the narrow band flat fields) and the
-atmospheric response curve (from MODTRAN4 models generated from
-measurements from the auxiliary telescope).  While the measurement of
-the shapes of the hardware and atmosphere curves are independent, the
-actual correction that must be applied depends on the combination of
-atmospheric and hardware response curves as well as the SED of the
-astronomical object.  This correction is necessary for precision
-photometry, but as it requires knowledge of the object's SED, most
-LSST reported magnitudes will include either no correction or a
-(potentially rough) correction along with an indication of what SED
-was assumed to generate this value. However, for stars which will be
-used in self-calibration (see subsection~\ref{sec:selfcalib}) to
+atmospheric response curve (from atmospheric extinction models
+generated from measurements from the auxiliary telescope).  While the
+measurement of the shapes of the hardware and atmosphere curves are
+independent, the actual correction that must be applied depends on the
+combination of atmospheric and hardware response curves as well as the
+SED of the astronomical object.  This correction is necessary for
+precision photometry, but as it requires knowledge of the object's
+SED, most LSST reported magnitudes will include either no correction
+or a (potentially rough) correction along with an indication of what
+SED was assumed to generate this value. However, for stars which will
+be used in self-calibration (see subsection~\ref{sec:selfcalib}) to
 determine photometric zeropoints in each exposure, a model SED
 well-matched to the object's colors will be chosen and used to
 generate the $\delta k_b^{atm+sys}$ corrections described in this
 section.
+
+It is worth emphasizing as we start this section that $\delta
+k_b^{atm+sys}$ is a correction for changes in the {\it shape} of the
+bandpass only; any grayscale components to the changes in bandpass
+shape discussed here are not part of $\delta k_b^{atm+sys}$ and instead
+belong to either the hardware or atmospheric {\it normalization}
+corrections.
 
 \subsubsection{Measuring the shape of the hardware response curve}
 \label{sec:phi_hardware}
@@ -1142,12 +1149,14 @@ of the scale in the previous figure. }}
 \label{sec:phi_atmo}
 
 The atmospheric transmission curve appropriate for each observation
-will be generated using a combination of spectroscopic measurements of
-bright stars obtained with the auxiliary telescope and a model of
-the atmospheric extinction which uses our knowledge of the
-typical spatial and temporal variation of the atmosphere plus
-atmospheric transmission profiles generated using MODTRAN
-\citep{modtran4a, modtran4b}.
+will be generated using data from spectroscopic measurements of bright
+stars obtained with the LSST auxiliary telescope, which is fit to an atmospheric 
+extinction model to determine the atmospheric transmission profile at all
+points on the sky at all times. This atmospheric extinction model is a combination of 
+a basic model of the sources of atmospheric extinction, some prior knowledge
+of how these sources change with time and location on the sky, and the actual
+atmospheric extinction profiles of these sources at various airmasses generated
+using MODTRAN \citep{modtran4a, modtran4b}.
 
 The shape of the atmospheric transmission curve, $\phi^{atm}(\lambda,
 alt, az, t)$, is determined by three major sources of atmospheric
@@ -1194,18 +1203,54 @@ of these effects and is shown with the dotted black line. This is an
 illustrative atmosphere; under actual observing conditions the
 molecular absorption components will vary in strength with time and
 the square root of the airmass, the molecular and aerosol scattering
-will depend on airmass, and the aerosol scattering profile will vary
-slightly with time.}}
+will depend on airmass, and the aerosol scattering profile will also 
+vary with time.}}
 \label{fig:absorption_comps}
 \end{figure}
 
+Using MODTRAN we can generate atmospheric transmission profiles for
+each of these major sources of atmospheric extinction -- molecular
+(Rayleigh) scattering, aerosol (Mie) scattering, and molecular
+absorption from each of O3, H2O, and combined O2/trace elements, as is
+shown in Figure~\ref{fig:absorption_comps}, for a standard atmospheric
+composition (the 1976 US Standard) at a variety of airmasses. These
+profiles capture the wavelength dependence of each component
+individually, at each of these airmasses, and can then be used as
+templates to generate new atmospheric transmission curves for any
+desired atmospheric composition as follows:
+\begin{eqnarray}
+S^{fit}(alt,az,t, \lambda) & = & C^{gray} \,e^{-\tau_{aerosol}(alt,az,t,\lambda)\,X} \nonumber \\
+ & & \times \, (1 - C_{mol}\, (BP(t) / BP_o) \, A_{rayleigh}(X, \lambda)) \nonumber \\
+ & & \times \, (1 - \sqrt{ C_{mol}\, (BP(t) / BP_o)} \, A_{O2}(X, \lambda)) \nonumber \\
+ & & \times \, (1 - C_{O3} \, A_{O3}(\lambda, X)) \nonumber \\
+ & & \times \, (1 - C_{H2O}(alt,az,t)\,A_{H2O}(X, \lambda)
+\label{eqn:atmo_fit}
+\end{eqnarray}
+where each of the $A_{rayleigh/O2/O3/H2O}$ values are taken as one
+minus the transmission template ($A_{O2}(X) = 1 - T_{O2}(X)$,
+$T_{O2}(X)$ from MODTRAN). Each of $C_{mol/O3/H2O}$ are values which 
+describe the composition of the atmospheric extinction, and are what are
+fit from the auxiliary telescope data along with the aerosol extinction, 
+$e^{\tau_{aerosol}}$. An example of an atmosphere generated in this fashion
+is shown in Figure~\ref{fig:absorption_comps2}. 
 
-The total column height of each component determines its final contribution
-toward the total atmospheric absorption - a larger fraction of water vapor
-will result in deeper water vapor absorption lines. To determine 
+\begin{figure}
+\centering
+\includegraphics[width=6in]{atmo_airmass12}
+\caption{{\small
+{\bf Example of an atmosphere generated from a typical mix of
+atmospheric components.} The bottom panel shows the MODTRAN absorption
+templates at this airmass used in generating the final atmosphere
+(the $A_{rayleigh/O2/O3/H2O}$ and $A_{aerosol} = 1-e^{\tau_{aerosol}}$ from
+Equation~\ref{eqn:atmo_fit}). The top panel shows the final combined atmospheric
+transmission curve in black, as well as a `standardized' atmospheric transmission
+curve in red.}
+\label{fig:absorption_comps2}
+}
+\end{figure}
 
 We expect the Rayleigh scattering to be axisymmetric about the zenith,
-with a column height dependence driven only by pressure variations. The O2
+with a total column height dependence driven only by pressure variations. The O2
 molecular absorption is similar, although proportional to only the
 square root of the barometric pressure.
 
@@ -1219,15 +1264,6 @@ leaving the (unchanging) spectra of the star and the (variable) signature of
 absorption from the atmosphere to be fit for each auxiliary telescope
 observation. The resulting spectra will be fit with 
 
-
-\begin{eqnarray}
-S^{fit}(alt,az,t, \lambda) & = & C^{gray} \,e^{-\tau_{aerosol}(alt,az,t,\lambda)\,X} \nonumber \\
- & & \times \, (1 - C_{mol}\, (BP(t) / BP_o) \, A_{rayleigh}(X, \lambda)) \nonumber \\
- & & \times \, (1 - \sqrt{ C_{mol}\, (BP(t) / BP_o)} \, A_{O2}(X, \lambda)) \nonumber \\
- & & \times \, (1 - C_{O3} \, A_{O3}(\lambda, X)) \nonumber \\
- & & \times \, (1 - C_{H2O}(alt,az,t)\,A_{H2O}(X, \lambda)
-\label{eqn:atmo_fit}
-\end{eqnarray}
 
  The resulting spectra will be fit to state-of-the-art
 atmospheric models (such as MODTRAN4 \citep{modtran4a, modtran4b}) to

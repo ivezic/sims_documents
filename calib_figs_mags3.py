@@ -51,11 +51,12 @@ def get_atmosDict():
     atmos = {}
     atmos['Standard'] = read_stdatmo()
     atmocmp = ac.AtmoComp()
-    for X in ('1.2', '2.0'):
-        if X=='1.2':
-            update_atmos(atmocmp, X=1.2, t0=5.6/100.0, alpha=-1.8, O3=1.5, H2O=1.3)
-        if X=='2.0':
-            update_atmos(atmocmp, X=1.2, t0=0.2/100.0, alpha=-0.5, O3=0.6, H2O=0.5)
+    # max atmo = update_atmos(atmocmp, X=1.2, t0=5.6/100.0, alpha=-1.8, O3=1.5, H2O=1.3)
+    # min atmo = update_atmos(atmocmp, X=1.2, t0=0.2/100.0, alpha=-0.5, O3=0.6, H2O=0.5)
+    # 30p atmo = update_atmos(atmocmp, X=2.5, t0=(0.8/100), alpha=-1.0, O3=0.9, H2O=0.8)
+    # 30p atmo = update_atmos(atmocmp, X=2.5, t0=(2.4/100.0), alpha=-1.4, O3=1.17, H2O=1.04)
+    for X in ('1.2', '2.5'):
+        update_atmos(atmocmp, X=float(X))
         atmos[X] = atmo_BP(atmocmp)
     return atmos
 
@@ -211,22 +212,20 @@ if __name__ == "__main__":
             return "%.1f" %(x)
         formatter = pylab.FuncFormatter(axis_formatter)
         ax.yaxis.set_major_formatter(formatter)
-        """
         if f == 'u':
-            pylab.ylim(-10, 4)
-        elif f=='g':
-            pylab.ylim(-5, 3)
-        elif f=='i':
-            pylab.ylim(-1, 1)
-        elif f=='r':
-            pylab.ylim(-1, 1)
-        else:
+            pylab.ylim(-2, 6)
+        #elif f=='g':
+        #    pylab.ylim(-5, 3)
+        #elif f=='i':
+        #    pylab.ylim(-1, 1)
+        elif f=='y':
             pylab.ylim(-4, 1)
-        """
+        else:
+            pylab.ylim(-1.5, 1.5)
         pylab.grid(True)
         i = i + 1
     #pylab.figtext(0.2, 0.95, "Change in magnitude for %s atmosphere and filter shift of %s" %(atmo_choice, shift_perc, "%"))
-    pylab.figtext(0.2, 0.95, r"Change in observed magnitude: X=1.2, Max change in parameters")
+    pylab.figtext(0.2, 0.95, r"Change in observed magnitude: X=2.5, 30% change in parameters")
     #pylab.savefig("delta_mags2.eps", format='eps')
 
                   
