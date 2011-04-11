@@ -40,7 +40,7 @@ def read_filtersonly(shift_perc=None):
         effwavelenphi, effwavelensb = filters[f].calcEffWavelen()
         if shift_perc != None:
             shift = effwavelensb * shift_perc/100.0
-            print f, shift
+            print f, shift, " nm = ", shift*10.0, " A"
             filters[f].wavelen = filters[f].wavelen + shift
             filters[f].resampleBandpass()
     return filters
@@ -117,8 +117,9 @@ if __name__ == "__main__":
     # shift the filters by nothing (standard)
     sys_std = read_hardware(shift_perc=None)
     # shift the filters by one percent
-    shift_perc = 1.0    
+    #shift_perc = 1.0    
     #shift_perc = 0.05
+    shift_perc = 0.05
     sys_shift = read_hardware(shift_perc=shift_perc)
     # read in a few different atmospheres
     atmokeylist = ['standard', 'X=1.0', 'X=1.8']
@@ -141,7 +142,7 @@ if __name__ == "__main__":
             mags_std[f][i] = stars[s].calcMag(total_std['Standard'][f])
             #mags_shift[f][i] = stars[s].calcMag(total_shift['X=1.8'][f])
             atmo_choice = 'Standard'  # atmo='X=1.8'
-            atmo_choice = 'X=1.8'
+            #atmo_choice = 'X=1.8'
             mags_shift[f][i] = stars[s].calcMag(total_shift[atmo_choice][f])
             i = i + 1
     gi = mags_std['g'] - mags_std['i']
@@ -196,7 +197,7 @@ if __name__ == "__main__":
     pylab.figtext(0.15, 0.95, "Change in observed magnitude: %s atmosphere and Filter shift of %.2f%s" %(atmo_choice, shift_perc, "%"))
     #pylab.savefig("delta_mags2.eps", format='eps')
 
-    if True:
+    if False:
         # plot the shift in the filters 
         pylab.figure()
         filters_std = read_filtersonly()
