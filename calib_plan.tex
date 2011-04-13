@@ -17,6 +17,9 @@
 \def\Mo               {\hbox{$M_{\odot}$}}
 \def\Lo               {\hbox{$L_{\odot}$}}
 \def\comm#1           {{\tt (COMMENT: #1)}}
+\newcommand\water   {H$^2$O}
+\newcommand\ozone    {O$^3$}
+\newcommand\mol     {O$^2$}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -25,29 +28,59 @@
 \title{Level 2 Photometric Calibration for the LSST Survey}
 
 \author{
-Lynne Jones, David Burke, \v{Z}eljko Ivezi\'{c}, and the Photometric Calibration Team
+The Photometric Calibration Team
 }
 
-%\begin{abstract}
-%\end{abstract}
-
+\begin{abstract}
+This document describes the photometric calibration procedure for LSST
+Data Release catalogs. This procedure will use specialized hardware
+(an auxiliary telescope and narrow-band dome screen projector) to
+measure the wavelength dependence of the atmospheric and hardware
+response functions, together with a self-calibration procedure that
+leverages multiple observations of the same sources over many epochs,
+to deliver 1\%-level photometry across the observed sky.
+\end{abstract}
 
 \section{Introduction}
 
+LSST aims to deliver 1\%-level photometry across the observed sky
+(0.5\%-level for repeat observations of the same source), 
+representing about a factor of two improvement over the current
+state-of-the-art wide-field optical photometry delivered by SDSS. This
+factor of two improvement will have a major impact on science
+deliverables because it implies that the error volume in the
+five-dimensional LSST color space will be almost two orders of
+magnitude smaller than for SDSS-like photometry. This smaller error
+volume will improve source classification and the precision of quantities
+such as photometric redshifts for galaxies and photometric metallicty
+for stars.
 
-Two levels of LSST photometric calibration will be carried out at
-differing cadences and with differing performance targets. A nightly
-data calibration based on the best available set of prior calibrated
-observations will provide best-effort precision and accuracy. This
-calibration will be used for quality assurance, generation of alerts
-for transient objects, and other quantities appropriate for nightly
-data generation (Level 1 Data Product in LSST Data Management terms).
-A more complete analysis will recalibrate the data accumulated by the
-survey at periodic Data Release dates (aka Level 2 Data products).  It
-is this repeated calibration of the accumulated survey that will be
-held to the survey requirements for photometric repeatability,
-uniformity, and accuracy.  This document describes the calibration
-requirements and processes for the Level 2 photometric calibration.
+This factor of two improvement results from two major differences
+between LSST and SDSS. First, each source will receive hundreds of
+observations over the ten years of the LSST survey. These series of
+repeat observations will be used to self-calibrate the photometric
+system across the sky and for each observation (akin, but not
+identical to, the uber-calibration procedure used by SDSS
+\citep{Padmanabhan2008}), allowing LSST to operate in a wide variety
+of conditions. Secondly, the wavelength dependence of the hardware and
+atmospheric transmission response functions will be measured with
+auxiliary instrumentation on sufficiently fine angular and temporal
+scales to enable their explicit inclusion in the calibration
+procedure, rather than resorting to traditional approximations such as
+linear color terms. CFHT Legacy Survey listed these
+wavelength-dependent effects as their primary remaining source of
+error \citep{Regnault2009}.
+
+This document describes the calibration requirements and processes for
+LSST Data Release photometry. This is a complete recalibration of the
+data carried out at periodic Data Release dates, approximately
+annually (aka Level 2 Data products, in LSST Data Management
+terms). There will also be a real-time data calibration process, based
+on the best available set of prior calibrated observations, to provide
+best-effort precision and accuracy for photometry for quality
+assurance, generation of alerts, and other quantities appropriate for
+nightly data generation (aka Level 1 Data Product).  The Level 1
+photometric calibration is not discussed here.
 
 Section~\ref{sec:photoreq} reviews the survey requirements for
 photometric calibration, while Section~\ref{sec:calib_overview}
@@ -60,43 +93,49 @@ each step of the calibration procedure, including how each calibration
 measurement is obtained and applied to the science data along with
 expected errors originating from each step.
 
-LJ - add exciting info somewhere here on why 2x better (-> 10x better in color/color
-space). and why we think we can do 2x better. 
 
 \section{Photometric Requirements}
 \label{sec:photoreq}
 
-The LSST Science Requirements Document (SRD) specifies that the survey
-must deliver photometry with the following characteristics: 
+The LSST Science Requirements Document (SRD) provides a set of
+requirements on the annual Data Release (Level 2) photometry based on
+measurements of bright, unresolved, isolated, non-variable objects
+from individual LSST visits. Bright implies that the
+measurement of the star's brightness is not dominated by photon
+statistics, approximately 1-4 magnitudes fainter than the saturation
+limit in a given filter. Isolated implies that the star does not have
+de-blending problems with background galaxies or nearby
+stars. Non-variable objects are intrinsically not variable; these will
+be identified in an iterative fashion from the many epochs of LSST
+observations. The SRD specifications are: 
 \begin{enumerate}
-\item{{\bf Repeatability:} the median value of the rms of calibrated magnitude
-measurements around the mean calibrated magnitude for each
-star will not exceed 5 millimags in $gri$, 7.5 millimags in $uzy$
-for bright unresolved objects (bright implying that the measurement
-of the star's brightness is not dominated by photon statistics,
-approximately 1-4 magnitudes fainter than the saturation limit in a
-given filter).  No more than 10\% of these objects should have an rms larger
-than 15 mmag in $gri$, 22.5 mmag in $uzy$.  This specifies the
-distribution of random photometric errors ($\sigma$) and constrains
-both the repeatability of extracting counts from images and the
-ability to monitor (or model) the changes in normalized system
-response ($\phi$). It could be thought of as making the photometry of
-a single source consistent over time. \label{repeatability_req}}
+\item{{\bf Repeatability:} the median value of the rms of calibrated
+magnitude measurements around the mean calibrated magnitude for each
+star will not exceed 5 millimags in $gri$, 7.5 millimags in $uzy$ for
+bright, unresolved, isolated, non-variable objects. No more
+than 10\% of these objects should have an rms larger than 15 mmag in
+$gri$, 22.5 mmag in $uzy$.  This specifies the distribution of random
+photometric errors ($\sigma$) and constrains both the repeatability of
+extracting counts from images and the ability to monitor (or model)
+the changes in normalized system response ($\phi$). It could be
+thought of as making the photometry of a single source consistent over
+time. \label{repeatability_req}}
 \item{{\bf Uniformity:} the rms of the internal photometric zeropoint
-error will not exceed 10 millimags in $grizy$, 20 millimags in $uzy$,
-again for bright unresolved sources. No more than 10\% of these
-sources should be more than 15 mmag in $gri$ or 22.5 mmag in $uzy$
-from the mean internal zeropoint.  This places a constraint on the
-stability of the photometric system across the sky as well as places
-an upper limit on various systematic errors, such as any correlation
-of photometric calibration with varying stellar populations (or
-colors). This makes the photometry of many sources comparable over the
-entire sky, which when combined with the previous requirements creates
-a stable photometric system across the sky and over time, in a single
-filter. \label{uniformity_req}}
+error (for each visit) will not exceed 10 millimags in $grizy$, 20 millimags in $uzy$,
+where the zeropoint for each visit is determined using bright, unresolved, isolated, non-variable
+sources. No more than 10\% of these sources should be more than 15
+mmag in $gri$ or 22.5 mmag in $uzy$ from the mean internal zeropoint.
+This places a constraint on the stability of the photometric system
+across the sky as well as places an upper limit on various systematic
+errors, such as any correlation of photometric calibration with
+varying stellar populations (or colors). This makes the photometry of
+many sources comparable over the entire sky, which when combined with
+the previous requirements creates a stable photometric system across
+the sky and over time, in a single filter. \label{uniformity_req}}
 \item{{\bf Band-to-band photometric calibration:} The absolute
 band-to-band zeropoint calibration for main sequence stars must be
-known with an accuracy of 5 millimags for any color not involving $u$
+known with an rms\footnote{this is actually 1 number per band ... how
+  can one number have an rms?} accuracy of 5 millimags for any color not involving $u$
 band, 10 millimags for colors constructed with $u$ band
 photometry. This places an upper limit on the systematic error in
 the measurement of the system throughput as a function of
@@ -106,36 +145,32 @@ with unknown spectral energy distributions (SEDs) or (for sources with known SED
 different filters to be directly compared. \label{color_req}}
 \item{{\bf Absolute photometric calibration:} The LSST photometric
 system must transform to an external physical scale ({\it e.g.} AB
-mags) with an accuracy of 10 millimags. This requirement ties LSST
-internal photometry to a physical scale, and places a constraint on
-the upper limit of the systematic error in the measurement of the
-total system throughput. This final step enables LSST photometry to be
-compared with photometry from other telescopes using other photometric
+mags) with an rms\footnote{Again, one number .. we could have an
+uncertainty of 10 mmag, but I don't understand how this becomes an
+rms} accuracy of 10 millimags. This requirement ties LSST internal
+photometry to a physical scale, and places a constraint on the upper
+limit of the systematic error in the measurement of the total system
+throughput. This final step enables LSST photometry to be compared
+with photometry from other telescopes using other photometric
 systems. \label{abs_req}}
 \end{enumerate}
 
 Requirements \ref{repeatability_req} and \ref{uniformity_req} must be
-met by compensating for changes in system sensitivity as a function of
-time, location in the sky or focal plane, and result in a relative
-calibration within a single filter. Requirements \ref{color_req} and
-\ref{abs_req} require additional measurements of sources with known
-colors and absolute magnitudes, providing a relative calibration from
-filter to filter as well as an absolute physical scale for the overall
-system.
+met by measuring and then correcting for changes in hardware and
+atmospheric transmission as a function of time, location in the sky or
+focal plane, and result in a relative calibration within a single
+filter. Requirements \ref{color_req} and \ref{abs_req} require
+additional measurements of sources with known colors and absolute
+magnitudes, providing a relative calibration from filter to filter as
+well as an absolute physical scale for the overall system.
 
-Only photometric measurements released as part of the data release
-products (generated annually) will be held to the requirements
-above. On a nightly timescale, photometric measurements needed for
-alert generation, quality assurance, or other short-timescale data
-products will be generated to ``best-effort'' precision and accuracy
-using the best-available prior calibrated observations.
 
 \section{Overview of the photometric calibration process}
 \label{sec:calib_overview}
 
 In traditional photometric calibration, a set of standard stars are
 observed at a range of airmasses to calculate zeropoint offsets and
-(typically) a single color-dependent extinction term. This is
+(typically) a single color-dependent extinction term per night. This is
 sufficient for photometry at the few percent level on photometric
 nights, however, historical weather data from Cerro Pachon tells us
 only 53\% of the available observing time can be considered
@@ -150,13 +185,54 @@ normalization} of the throughput in each observation (the gray-scale
 zeropoint) from the {\it shape} of the throughput curve (the color
 dependent terms), and further, using separate procedures to measure
 the contributions of the telescope hardware response (to the total
-normalization and bandpass shape) from the atmospheric throughput (to
+normalization and bandpass shape) and the atmospheric throughput (to
 normalization and shape). This allows the use of optimized methods to
 measure each individual component affecting the final measured
 magnitudes, allowing us to achieve photometric calibration at the
 required levels.
 
-This section will provide an overview of the calibration measurements
+A flowchart showing an overview of the steps from science observation
+to calibrated photometric measurements, together with the required
+calibration data products is shown in
+Figure~\ref{fig:overview_flowchart}.  The {\it normalization} of the
+throughput will be corrected by using a flat field (for small spatial
+scale variations) and the self-calibration procedure (for larger
+spatial scale variations, as this is fundamentally limited by the
+spacing between calibration stars in each visit). The flat field can
+only correct for variations in the throughput of the hardware; the
+self-calibration procedure can correct for variations in throughput
+due to atmospheric conditions (such as cloud extinction).  The {\it shape} of
+the throughput curve will be measured using both the narrow band dome
+screen projector, to correct for variations in the shape of the
+hardware bandpass response across the field of view, and the auxiliary
+telescope, to correct for variations in the atmospheric absorption
+curve from visit to visit. 
+
+\begin{figure}[htbp]
+\includegraphics[width=6.5in]{calib_overview}
+\caption{ {\small {\bf A flowchart of the Data Release photometric
+      calibration process.} Everything to the left of the dashed line
+    could be thought of as a calibration product, to be applied to
+    data from each visit on the right of the dashed line. Each of the
+    darker gray boxes indicates data or calibration products required
+    to reach the final goal: calibrated photometric measurements. The
+    red circles point out significant LSST-specific calibration
+    systems. The separation of the measurement and correction for 
+    wavelength dependent (shape) and wavelength independent
+    (normalization) variations in the throughput can be seen in the
+    three sections of the `calibration products' on the left hand
+    side. The upper portion, consisting mainly of flat-field effects,
+    corrects primarily for small spatial scale gray-scale variations (although
+    the illumination correction can have larger spatial scale
+    structure), the middle portion in the dark triangle corrects only
+    for bandpass shape variations, while the bottom portion,
+    consisting of the zeropoint corrections calculated from the
+    self-calibration procedure, will only correct for larger spatial
+    scale variations. }
+\label{fig:overview_flowchart} }
+\end{figure}
+
+The rest of this section will provide a more in-depth overview of the calibration measurements
 required and motivate the process itself, starting with a review of
 what is physically happening to photons in their path toward the focal
 plane (the `truth') then followed by an outline of how the measured
