@@ -134,8 +134,7 @@ the previous requirements creates a stable photometric system across
 the sky and over time, in a single filter. \label{uniformity_req}}
 \item{{\bf Band-to-band photometric calibration:} The absolute
 band-to-band zeropoint calibration for main sequence stars must be
-known with an rms\footnote{this is actually 1 number per band ... how
-  can one number have an rms?} accuracy of 5 millimags for any color not involving $u$
+known with an rms accuracy of 5 millimags for any color not involving $u$
 band, 10 millimags for colors constructed with $u$ band
 photometry. This places an upper limit on the systematic error in
 the measurement of the system throughput as a function of
@@ -145,9 +144,7 @@ with unknown spectral energy distributions (SEDs) or (for sources with known SED
 different filters to be directly compared. \label{color_req}}
 \item{{\bf Absolute photometric calibration:} The LSST photometric
 system must transform to an external physical scale ({\it e.g.} AB
-mags) with an rms\footnote{Again, one number .. we could have an
-uncertainty of 10 mmag, but I don't understand how this becomes an
-rms} accuracy of 10 millimags. This requirement ties LSST internal
+mags) with an rms accuracy of 10 millimags. This requirement ties LSST internal
 photometry to a physical scale, and places a constraint on the upper
 limit of the systematic error in the measurement of the total system
 throughput. This final step enables LSST photometry to be compared
@@ -216,7 +213,7 @@ curve from visit to visit.
     data from each visit on the right of the dashed line. Each of the
     darker gray boxes indicates data or calibration products required
     to reach the final goal: calibrated photometric measurements. The
-    red circles point out significant LSST-specific calibration
+    light green circles point out significant LSST-specific calibration
     systems. The separation of the measurement and correction for 
     wavelength dependent (shape) and wavelength independent
     (normalization) variations in the throughput can be seen in the
@@ -232,32 +229,34 @@ curve from visit to visit.
 \label{fig:overview_flowchart} }
 \end{figure}
 
-The rest of this section will provide a more in-depth overview of the calibration measurements
-required and motivate the process itself, starting with a review of
-what is physically happening to photons in their path toward the focal
-plane (the `truth') then followed by an outline of how the measured
-ADU counts can be translated back to photons above the atmosphere (the
-`model').
+The rest of this section will provide a more in-depth overview of the
+calibration measurements required. To motivate the process itself, we
+will start with a review of what is physically happening to photons in
+their path toward the focal plane (the `truth'). This is then followed
+by an outline of how LSST will translate the measured ADU counts back
+to photons above the atmosphere (the `model').
 
-\subsection{From photons to counts}
+\subsection{Truth: From photons to counts}
 
 Let us first consider how the photons from an astronomical object are
-converted into ADUs in the detector, paying attention to what
-variations (including their time and spatial scales for variability)
-might arise in the LSST system to affect the final ADU counts. This is
-the `truth' that the calibration procedure must attempt to recreate. 
+converted into ADUs in the detector, paying attention to the various
+temporal or spatial scales for variability might arise in the LSST
+system to affect the final ADU counts. This is the `truth' that the
+calibration procedure must attempt to recreate, but as the truth, does
+not include any errors arising from count extraction, measurement of
+the transmission curves, or zeropoint errors.
 
 Note - while $F_\nu(\lambda,t)$ and other quantities that are functions of time
 could vary more quickly than the standard LSST exposure time of 15s, it is
 assumed that all such quantities are averaged over that short exposure time, so 
 that $t$ refers to quantities that can vary from exposure to exposure. 
 
-Given $F_\nu(\lambda)$, the specific flux of an object at
+Given $F_\nu(\lambda)$, the specific flux of an astronomical object at
 the top of the atmosphere, at a position described by ($alt$,$az$),
-the flux transmitted through the atmosphere to the telescope pupil is
+the total flux from the object transmitted through the atmosphere to the telescope pupil is
 \begin{equation}
 \label{eqn:Fpupil}
-   F_\nu^{pupil}(\lambda,alt,az,t) = F_\nu(\lambda) \, S^{atm}(\lambda,alt,az,t),
+   F_\nu^{pupil}(\lambda,alt,az,t) = F_\nu(\lambda, t) \, S^{atm}(\lambda,alt,az,t),
 \end{equation}
 where $S^{atm}(\lambda,alt,az)$ is the (dimensionless) probability that a photon of 
 wavelength $\lambda$ makes it through the atmosphere,
@@ -268,25 +267,28 @@ wavelength $\lambda$ makes it through the atmosphere,
 Here $\tau^{atm}(\lambda,alt,az)$ is the optical depth of the
 atmospheric layer at wavelength $\lambda$ towards the position
 ($alt$,$az$). Observational data \citep{Stubbs2007b, Burke2010b} show
-that $\tau^{atm}$ can vary as a function of wavelength and position
-($alt,az$) on the order of 5-10\% per hour due to changes in water
-absorption, aerosol scattering, rayleigh scattering, and molecular
-absorption. Clouds represent an additional gray (non-wavelength
+that the various atmospheric components which contribute to absorption
+(water vapor, aerosol scattering, Rayleigh scattering and molecular
+absorption) can lead to variations in $S^{atm}(\lambda,t)$ on the
+order of 10\% per hour. Clouds represent an additional gray (non-wavelength
 dependent) contribution to $\tau^{atm}$ that can vary even more
-rapidly, on the order of 2-10\% of the total extinction at $1^{\circ}$
+rapidly, on the order of 2--10\% of the total extinction at $1^{\circ}$
 scales within minutes \citep{Ivezic2007}.
 
-Given the above $F_\nu^{pupil}(\lambda,alt,az,t)$, then the ADU counts
-recorded at a position within the field of view described by ($x$,$y$)
-can be written as
+Given the above $F_\nu^{pupil}(\lambda,alt,az,t)$, the total ADU
+counts transmitted from the object to a footprint within the field of
+view at ($x$, $y$) can be written as
 \begin{equation}
 \label{eqn:Fpupil2counts}
     C_b(alt,az,x,y,t) = C \, \int_0^\infty {F_\nu^{pupil}(\lambda,alt,az,t) \, S_b^{sys}(\lambda,x,y,t) \lambda^{-1}d\lambda}.
 \end{equation}
 Here, $S_b^{sys}(\lambda,x,y,t)$ is the (dimensionless) probability
-that a photon will be converted into an ADU count, and the term
+that a photon will pass through the telescope's optical path to be
+converted into an ADU count, and 
+includes the mirror reflectivity, lens transmission, filter
+transmision, and detector sensitivity. The term
 $\lambda^{-1}$ comes from the conversion of energy per unit frequency
-into the number of photons per unit wavelength (and $b$ refers to a particular filter, $ugrizy$). The
+into the number of photons per unit wavelength and $b$ refers to a particular filter, $ugrizy$. The
 dimensional conversion constant $C$ is
 \begin{equation}
 \label{eqn:Cconstant}
@@ -295,25 +297,23 @@ dimensional conversion constant $C$ is
 where $D$ is the effective primary mirror diameter, $\Delta t$ is the
 exposure time, $g$ is the gain of the readout electronics (number of
 photoelectrons per ADU count, a number greater than one), and $h$ is
-the Planck constant. The system response function,
-$S_b^{sys}(\lambda,x,y)$, includes the effects of the mirror
-reflectance, optics transmission and detector sensitivity. Here the
-wavelength-dependent variations in $S_b^{sys}$ generally change quite
-slowly in time; over periods of months, the mirror reflectance and
-filter transmission will degrade as their coatings age. A more rapidly
-time-varying wavelength-dependent change in detector sensitivity
-(particularly at very red wavelengths in the $y$ band) results from
-temperature changes in the detector, but only on scales equivalent to
-a CCD or larger.  There will also be wavelength-dependent spatial
-variations in $S_b^{sys}$ due to irregularities in the filter
-material; these are expected to vary slowly from the center of the
-field of view to the outer edges, equivalent to a bandpass shift on
-the order of 1-2\% of the effective wavelength of the
-filter. Wavelength-independent (gray-scale) variations in $S_b^{sys}$
-occur more rapidly, on the timescale of a day, and at spatial scales
-as small as the pixel level. There are a range of causes for these
-variations: dust particles on the filter or dewar window, gain changes
-between amplifiers, or pixel-to-pixel detector sensitivity variations.
+the Planck constant. The wavelength-dependent variations in
+$S_b^{sys}$ generally change quite slowly in time; over periods of
+months, the mirror reflectance and filter transmission will degrade as
+their coatings age. A more rapidly time-varying wavelength-dependent
+change in detector sensitivity (particularly at very red wavelengths
+in the $y$ band) results from temperature changes in the detector, but
+only on scales equivalent to a CCD or larger.  There will also be
+wavelength-dependent spatial variations in $S_b^{sys}$ due to
+irregularities in the filter material; these are expected to vary
+slowly from the center of the field of view to the outer edges,
+equivalent to a bandpass shift on the order of 1-2\% of the effective
+wavelength of the filter. Wavelength-independent (gray-scale)
+variations in $S_b^{sys}$ can occur more rapidly, on timescales of a
+day for variations caused by dust particles on the filter or dewar
+window, and on spatial scales ranging from the amplifier level,
+arising from gain changes between amplifiers, down to the pixel level,
+in the case of pixel-to-pixel detector sensitivity variations.
 
 From equation~\ref{eqn:Fpupil2counts} and the paragraphs above, we can
 see that the generation of counts $C_b(alt,az,x,y,t)$ from photons is
@@ -1239,20 +1239,31 @@ using MODTRAN \citep{modtran4a, modtran4b}.
 The shape of the atmospheric transmission curve, $\phi^{atm}(\lambda,
 alt, az, t)$, is determined by three major sources of atmospheric
 extinction: molecular scattering (Rayleigh scattering), aerosol
-scattering (Mie scattering), and molecular absorption. Molecular
+scattering (Mie scattering), and molecular absorption. 
+\begin{itemize}
+\item{Molecular
 scattering, or Rayleigh scattering, is due to elastic scattering off
 atoms and molecules in the air. Atmospheric absorption due to Rayleigh
 scattering has an optical depth $\tau \propto (\lambda/
 \lambda_o)^{-4}\, (BP/BP_o)$, where $BP$ is the barometric pressure
-\citep{Hansen1974}.  Aerosol scattering, or Mie scattering, occurs
-when visible light is scattered by particles suspended in the
-atmosphere with a size similar to its wavelength.  This gives rise to
-an absorption curve with a variable wavelength dependence, where $\tau
-\propto (\lambda/675 \rm{nm})^{\alpha}$, $\alpha$ measured to range
-between -0.9 to -1.7 in observations from CTIO
-\citep{Burke2010b}. Both molecular and aerosol scattering produce
-transmission curves that scale directly with airmass, $S(\lambda, X)
-\propto e^{-\tau X}$.  Molecular absorption produces a more complex
+\citep{Hansen1974}, and is thus driven only by pressure variations
+with a total extinction also proportional to airmass and axisymmetric
+around zenith. Changes in the optical depth due to Rayleigh scattering
+typically will produce $<1$~mmag change in the observed counts.}
+\item{Aerosol scattering, or Mie scattering, occurs when visible light
+is scattered by particles suspended in the atmosphere with a size
+similar to its wavelength.  This gives rise to an absorption curve
+with a variable total column depth as well as a variable wavelength
+dependence, where $\tau \propto (\lambda/675 \rm{nm})^{\alpha}$. The
+index $\alpha$ has been measured to range between -0.9 to -1.7 in
+observations from CTIO \citep{Burke2010b}.  From \citep{Stubbs2007b}
+optical depth measurements from Mauna Loa, the total aerosol optical
+depth at zenith varied from 0 to 0.3 (generally <0.1) at
+$\lambda=440$~nm, with max rate of change $\approx0.02$/hr. The
+aerosol extinction scales directly with airmass, however is not
+necessarily axisymmetric around zenith and often has an East-West
+trend. }
+\item{Molecular absorption produces a more complex
 set of absorption bands and features, originating from line absorption
 due to ozone (O3), oxygen (O2), water (H2O) and other trace elements
 (OH, N2O, etc.). The resulting atmospheric absorption features are largely due
@@ -1260,7 +1271,10 @@ to narrow saturated Lorentzian-shaped lines spaced closely in
 wavelength and, due to this saturation, scale non-linearly with airmass,
 $S(\lambda, X) \propto e^{-\tau\,\sqrt X}$
 \citep{Stubbs2007b}. Figure~\ref{fig:absorption_comps} demonstrates the
-wavelength dependency of each of these components.
+wavelength dependency of each of these components. 
+XXX
+}
+\end{itemize}
 
 \begin{figure}
 \centering

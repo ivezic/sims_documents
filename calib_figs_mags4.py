@@ -63,9 +63,9 @@ def get_atmosDict():
     for key in ('1', '2'):
         X = 1.2  # float(key)
         if key=='1':
-            atmocmp, atmos[key] = get_atmos(atmocmp, X=X, t0=(0.8/100.0), alpha=-1.0, O3=0.9, H2O=0.8)
+            atmocmp, atmos[key] = get_atmos(atmocmp, X=X, t0=5.6/100.0, alpha=-1.8, O3=1.5, H2O=1.3)
         if key=='2':
-            atmocmp, atmos[key] = get_atmos(atmocmp, X=X, t0=(1.3/100.0), alpha=-1.13, O3=0.99, H2O=1.04)
+            atmocmp, atmos[key] = get_atmos(atmocmp, X=X, t0=0.2/100.0, alpha=-0.5, O3=0.6, H2O=0.5)
         # examples
         # max atmo = get_atmos(atmocmp, X=X, t0=5.6/100.0, alpha=-1.8, O3=1.5, H2O=1.3)
         # min atmo = get_atmos(atmocmp, X=X, t0=0.2/100.0, alpha=-0.5, O3=0.6, H2O=0.5)
