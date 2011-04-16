@@ -29,6 +29,8 @@
 \title{Level 2 Photometric Calibration for the LSST Survey}
 
 \author{
+Lynne Jones, {\v Z}eljko Ivezi{\'c}, David Burke, Tim Axelrod 
+on behalf of 
 The Photometric Calibration Team
 }
 
@@ -447,25 +449,25 @@ Table~\ref{tab:delta_mags}. }
 
 \begin{center}
 \begin{table}[htb]
-\caption{{\bf Changes in observed magnitudes due variations in system and atmospheric
+\caption{{\bf Changes in observed magnitudes due to variations in system and atmospheric
  bandpass shape (see also Fig~\ref{fig:delta_mags}). The first two
 rows show the baseline (`true') magnitude of the star. All other rows show the 
 {\it change} in magnitude (in mmag) due to the changes listed at left. } }
 \begin{tabular}{l l | c c c c c c}
-& & $u$ & $g$ & $r$ & $i$ & $z$ & $y$ \\ 
-\hline \hline
-Standard atm, std sys &  red & 21.472 & 20.378 & 20.000 & 19.911 & 19.913 & 19.913 \\
+Bandpass & star &  $u$ (mag) & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
+Standard atm, std sys  &  red & 21.472 & 20.378 & 20.000 & 19.911 & 19.913 & 19.913 \\
 Standard atm, std sys  &  blue & 19.102 & 19.503 & 20.000 & 20.378 & 20.672 & 20.886 \\ \hline \hline
-Standard atm, +1\% sys shift & red  & -30.509 & -21.591 & -8.016 & -1.505 & 0.889 & 0.944 \\
-Standard atm, +1\% sys shift & blue  & 9.480 & 16.838 & 19.624 & 20.462 & 16.088 & 16.300 \\ \hline
-X=1.0, std sys & red  & 7.470 & 1.747 & 0.332 & 0.045 & -0.132 & -0.522 \\
-X=1.0, std sys & blue  & -2.864 & -1.319 & -0.964 & -0.279 & 0.870 & -3.839 \\ \hline
-X=1.0, +1\% sys shift & red & -23.780 & -20.165 & -7.673 & -1.463 & 0.695 & 0.451 \\
-X=1.0, +1\% sys shift & blue & 6.966 & 15.703 & 18.601 & 20.249 & 17.553 & 12.099 \\ \hline
-X=1.8, std sys  & red & -20.742 & -9.581 & -1.546 & -0.189 & 0.145 & 0.634 \\
-X=1.8, std sys  & blue & 7.698 & 7.515 & 4.328 & 1.554 & -0.584 & 5.657 \\ \hline
-X=1.8, +1\% sys shift & red & -49.921 & -30.023 & -9.531 & -1.677 & 1.088 & 1.540 \\
-X=1.8, +1\% sys shift & blue & 16.480 & 23.797 & 24.042 & 21.880 & 14.780 & 22.326 \\ \hline
+ & & $\Delta u$ (mmag) & $\Delta g$  & $\Delta r$  & $\Delta i$ & $\Delta z$  & $\Delta y$ \\ \hline
+Standard atm, +1\% sys shift & red  & -31 & -22 & -8 & -2 & 1 & 1 \\
+Standard atm, +1\% sys shift & blue  & 9 & 17 & 20 & 20 & 16 & 16 \\ \hline
+X=1.0, std sys & red  & 7 & 2 & 0 & 0 & -0 & -1 \\
+X=1.0, std sys & blue  & -3 & -1 & -1 & -0 & 1 & -4 \\ \hline
+X=1.0, +1\% sys shift & red & -24 & -20 & -8 & -1 & 1 & 0 \\
+X=1.0, +1\% sys shift & blue & 7 & 16 & 19 & 20 & 18 & 12 \\ \hline
+X=1.8, std sys  & red & -21 & -10 & -2 & -0 & 0 & 1 \\
+X=1.8, std sys  & blue & 8 & 8 & 4 & 2 & -1 & 6 \\ \hline
+X=1.8, +1\% sys shift & red & -50 & -30 & -10 & -2 & 1 & 2 \\
+X=1.8, +1\% sys shift & blue & 16 & 24 & 24 & 22 & 15 & 22 \\ \hline
 \end{tabular}
 \label{tab:delta_mags}
 \end{table}
@@ -712,20 +714,19 @@ with above-the-atmosphere fluxes.
 \section{The internal calibration process}
 \label{sec:calib_details}
 
-The next subsections expand on each of the internal calibration steps
-leading to natural magnitude measurements described above, including
-how each correction is measured, calculated and applied.  These steps
+The next subsections expand on each of the photometric calibration steps
+leading to natural magnitude and standard magnitude measurements described above, including
+how each correction is measured, calculated and applied.  The steps
 described in this section are applied to each filter
 independently. The end result of the internal calibration process is a
-set of natural magnitudes, $m_b^{nat}$, measured for each object in
-each visit, together with a record of $\phi_b^{sys}(\lambda,x,y,t)$
-and $\phi^{atm}(\lambda,alt,az,t)$ (the shape of $S_b^{sys}$ and
-$S^{atm}$), the flat field applied (normalization of $S_b^{sys}$), the
-zeropoint offset calculated for cloud extinction (normalization of
-$S^{atm}$) and the spectral energy distribution assumed for the object
-to calculate $m_b^{nat}$ (which may be a flat SED, in which case
-$m_b^{nat}$ only includes normalization corrections).
-
+record of $m_b^{nat}$ and $\phi_b^{sys+atm}(\lambda)$ measured for
+each object in each observation. In addition, there will be a reported
+spectral energy distribution (SED) assumed for each object
+($f_\nu(\lambda)$) and an associated $m_b^{std}$ that is the natural
+magnitude corrected for variations in the bandpass shape. In cases
+where the assumed SED is flat, $m_b^{std}$ will be equal to
+$m_b^{nat}$. 
+ 
 \subsection{Normalization of the hardware transmission}
 \label{sec:narrowband}
 
@@ -1072,15 +1073,16 @@ would produce changes of more than 0.25\% in the focal plane, adding a
 further 0.7~mmag rms scatter, for a final total of 3~mmag expected
 error in the normalization of the hardware throughput.
 
-\subsection{Shape of the Hardware and Atmospheric Response}
+\subsection{Correcting for the Shape of the Hardware and Atmospheric
+  Response Curve}
 \label{sec:phi_correction}
 
 Compensation for the changes in observed magnitudes caused by
 variations in the wavelength dependence (shape) of the hardware and
 atmospheric response curves, $\phi_b^{sys}(\lambda)$ and
 $\phi^{atm}(\lambda)$, will be done using independent measurements of
-the hardware response curve (from the narrow band flat fields) and the
-atmospheric response curve (from atmospheric extinction models
+the hardware response curve (generated from the narrow band flat fields) and the
+atmospheric response curve (generated from atmospheric extinction models
 generated from measurements from the auxiliary telescope).  While the
 measurement of the shapes of the hardware and atmosphere curves are
 independent, the actual correction that must be applied depends on the

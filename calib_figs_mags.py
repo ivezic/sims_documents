@@ -133,9 +133,13 @@ def read_seds(total):
 
 def calc_mags(stars, total):
     tkey = "standard"
+    # write header for latex table
+    writestring1 = "Bandpass & star &  $u$ (mag) & $g$ & $r$ & $i$ & $z$ & $y$ \\\\ \\hline"
+    print writestring1
     mags_std = {}
     mags_std['blue'] = {}
     mags_std['red'] = {}
+    # write standard mag lines
     writestring1  = "Standard atm, std sys  &  red "
     writestring2 =  "Standard atm, std sys  &  blue "
     for f in filterlist:
@@ -145,6 +149,10 @@ def calc_mags(stars, total):
         writestring2 = writestring2 + "& %.3f " %(mags_std['blue'][f])
     print writestring1 + "\\\\"
     print writestring2 + "\\\\ \\hline \\hline"
+    # write header for rest of table
+    writestring1 = " & & $\Delta u$ (mmag) & $\Delta g$  & $\Delta r$  & $\Delta i$ & $\Delta z$  & $\Delta y$ \\\\ \\hline"
+    print writestring1
+    # write other changes in magnitudes
     tkey = "standard, edge"
     mags_delta = {}
     mags_delta['blue'] = {}
@@ -158,8 +166,8 @@ def calc_mags(stars, total):
         for skey in stars.keys():
             mags_delta[skey][key][f] = stars[skey].calcMag(total[tkey][f]) - mags_std[skey][f]
             mags_delta[skey][key][f] = mags_delta[skey][key][f]*1000.0
-        writestring1 = writestring1 + "& %.3f " %(mags_delta['red'][key][f])
-        writestring2 = writestring2 + "& %.3f " %(mags_delta['blue'][key][f])
+        writestring1 = writestring1 + "& %.0f " %(mags_delta['red'][key][f])
+        writestring2 = writestring2 + "& %.0f " %(mags_delta['blue'][key][f])
     print writestring1 + "\\\\"
     print writestring2 + "\\\\ \\hline"
     tkey = "low X, center"
@@ -172,8 +180,8 @@ def calc_mags(stars, total):
         for skey in stars.keys():
             mags_delta[skey][key][f] = stars[skey].calcMag(total[tkey][f]) - mags_std[skey][f]
             mags_delta[skey][key][f] = mags_delta[skey][key][f]*1000.0
-        writestring1 = writestring1 + "& %.3f " %(mags_delta['red'][key][f])
-        writestring2 = writestring2 + "& %.3f " %(mags_delta['blue'][key][f])
+        writestring1 = writestring1 + "& %.0f " %(mags_delta['red'][key][f])
+        writestring2 = writestring2 + "& %.0f " %(mags_delta['blue'][key][f])
     print writestring1 + "\\\\"
     print writestring2 + "\\\\ \\hline"
     tkey = "low X, edge"
@@ -186,8 +194,8 @@ def calc_mags(stars, total):
         for skey in stars.keys():
             mags_delta[skey][key][f] = stars[skey].calcMag(total[tkey][f]) - mags_std[skey][f]
             mags_delta[skey][key][f] = mags_delta[skey][key][f]*1000.0
-        writestring1 = writestring1 + "& %.3f " %(mags_delta['red'][key][f])
-        writestring2 = writestring2 + "& %.3f " %(mags_delta['blue'][key][f])
+        writestring1 = writestring1 + "& %.0f " %(mags_delta['red'][key][f])
+        writestring2 = writestring2 + "& %.0f " %(mags_delta['blue'][key][f])
     print writestring1 + "\\\\"
     print writestring2 + "\\\\ \\hline"
     tkey = "hi X, center"
@@ -200,8 +208,8 @@ def calc_mags(stars, total):
         for skey in stars.keys():
             mags_delta[skey][key][f] = stars[skey].calcMag(total[tkey][f]) - mags_std[skey][f]
             mags_delta[skey][key][f] = mags_delta[skey][key][f]*1000.0
-        writestring1 = writestring1 + "& %.3f " %(mags_delta['red'][key][f])
-        writestring2 = writestring2 + "& %.3f " %(mags_delta['blue'][key][f])
+        writestring1 = writestring1 + "& %.0f " %(mags_delta['red'][key][f])
+        writestring2 = writestring2 + "& %.0f " %(mags_delta['blue'][key][f])
     print writestring1 + "\\\\"
     print writestring2 + "\\\\ \\hline"
     tkey = "hi X, edge"
@@ -214,8 +222,8 @@ def calc_mags(stars, total):
         for skey in stars.keys():
             mags_delta[skey][key][f] = stars[skey].calcMag(total[tkey][f]) - mags_std[skey][f]
             mags_delta[skey][key][f] = mags_delta[skey][key][f]*1000.0
-        writestring1 = writestring1 + "& %.3f " %(mags_delta['red'][key][f])
-        writestring2 = writestring2 + "& %.3f " %(mags_delta['blue'][key][f])
+        writestring1 = writestring1 + "& %.0f " %(mags_delta['red'][key][f])
+        writestring2 = writestring2 + "& %.0f " %(mags_delta['blue'][key][f])
     print writestring1 + "\\\\"
     print writestring2 + "\\\\ \\hline"
     return mags_delta
@@ -228,16 +236,17 @@ def make_figures(stars, sys_std, sys_edge, atmos, total, mags_delta):
     scolor = ['b', 'r']
     i =0 
     for key in stars.keys():
-        ax.plot(stars[key].wavelen, stars[key].flambda*1e15, scolor[i], label=key)
+        stars[key].flambdaTofnu()
+        ax.plot(stars[key].wavelen, stars[key].fnu, scolor[i], label=key)
         i = i +1
     #pylab.legend(numpoints=1, fancybox=True, loc='upper right')
     pylab.xlim(300, 1100)
-    pylab.ylim(0, 4)
+    #pylab.ylim(0, 4)
     ax.tick_params(axis='y', labelleft='off')
     ax.tick_params(axis='x', labelbottom='off') #labelsize='small')
     pylab.xticks(rotation=-45)
     #pylab.xlabel("Wavelength (nm)", fontsize='small')
-    pylab.ylabel("F_lambda",  fontsize='small')    
+    pylab.ylabel(r"$F_{\nu}(\lambda)$",  fontsize='small')    
     pylab.title("Example Stellar SEDs",  fontsize='small')
 
     # plot atmospheres
