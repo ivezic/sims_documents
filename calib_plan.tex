@@ -200,7 +200,7 @@ scale variations) and the self-calibration procedure (for larger
 spatial scale variations, as this is fundamentally limited by the
 spacing between calibration stars in each visit). The flat field can
 only correct for variations in the throughput of the hardware; the
-self-calibration procedure can correct for variations in throughput
+self-calibration procedure will primarily correct for variations in throughput
 due to atmospheric conditions (such as cloud extinction).  The {\it shape} of
 the throughput curve will be measured using both the narrow band dome
 screen projector, to correct for variations in the shape of the
@@ -233,28 +233,34 @@ curve from visit to visit.
 \end{figure}
 
 The rest of this section will provide a more in-depth overview of the
-calibration measurements required. To motivate the process itself, we
-will start with a review of what is physically happening to photons in
-their path toward the focal plane (the `truth'). This is then followed
-by an outline of how LSST will translate the measured ADU counts back
-to photons above the atmosphere (the `model').
+calibration measurements required. We will start with a review of what
+is physically happening to photons in their path toward the focal
+plane (the `truth'), and then outline how LSST will translate the
+measured ADU counts back to photons above the atmosphere (the
+calibration `model').
 
 \subsection{Truth: From photons to counts}
 
 Let us first consider how the photons from an astronomical object are
 converted into ADUs in the detector, paying attention to the various
 temporal or spatial scales for variability might arise in the LSST
-system to affect the final ADU counts. This is the `truth' that the
-calibration procedure must attempt to recreate, but as the truth, does
-not include any errors arising from count extraction, measurement of
-the transmission curves, or zeropoint errors.
+system to affect the final ADU counts (and ignoring errors in
+measurement, as this is the `truth' of the flux transmission). This section is intended
+to motivate the separate measurement of the normalization and shape of
+the bandpass and introduce some important concepts, such as the
+normalized system response.
 
-Note - while $F_\nu(\lambda,t)$ and other quantities that are functions of time
-could vary more quickly than the standard LSST exposure time of 15s, it is
-assumed that all such quantities are averaged over that short exposure time, so 
-that $t$ refers to quantities that can vary from exposure to exposure. 
-
-Given $F_\nu(\lambda)$, the specific flux of an astronomical object at
+Given $F_\nu(\lambda, t)$\footnote{Hereafter, the units for specific
+flux are Jansky (1 Jy = 10$^{-23}$ erg cm$^{-2}$ s$^{-1}$
+Hz$^{-1}$). The choice of $F_\nu$ vs. $F_\lambda$ makes the flux
+conversion to the AB magnitude scale more transparent, and the choice
+of $\lambda$ as the running variable is more convenient than the
+choice of $\nu$. Note also, while $F_\nu(\lambda,t)$ (and other
+quantities that are functions of time) could vary more quickly than
+the standard LSST exposure time of 15s, it is assumed that all such
+quantities are averaged over that short exposure time, so that $t$
+refers to quantities that can vary from exposure to exposure. }
+the specific flux of an astronomical object at
 the top of the atmosphere, at a position described by ($alt$,$az$),
 the total flux from the object transmitted through the atmosphere to the telescope pupil is
 \begin{equation}
@@ -283,7 +289,7 @@ counts transmitted from the object to a footprint within the field of
 view at ($x$, $y$) can be written as
 \begin{equation}
 \label{eqn:Fpupil2counts}
-    C_b(alt,az,x,y,t) = C \, \int_0^\infty {F_\nu^{pupil}(\lambda,alt,az,t) \, S_b^{sys}(\lambda,x,y,t) \lambda^{-1}d\lambda}.
+    C_b(alt, az, x,y,t) = C \, \int_0^\infty {F_\nu^{pupil}(\lambda,alt,az,t) \, S_b^{sys}(\lambda,x,y,t) \lambda^{-1}d\lambda}.
 \end{equation}
 Here, $S_b^{sys}(\lambda,x,y,t)$ is the (dimensionless) probability
 that a photon will pass through the telescope's optical path to be
@@ -329,30 +335,52 @@ motivate us to separate the measurement of the normalization of
 $S_b^{sys}$ and $S^{atm}$ from the measurement of the
 wavelength-dependent shape of the bandpass.
 
-This then leads us to introduce a `normalized bandpass response function', $\phi_b(\lambda,alt,az,x,y,t)$,
+\subsubsection{Normalized bandpass response}
+\label{sec:phi}
+
+This then leads us to introduce a `normalized bandpass response
+function', $\phi_b^{obs}(\lambda,t)$, for each observation
 \begin{equation}
 \label{eqn:PhiDef}
-   \phi_b(\lambda,alt,az,x,y,t) =  {
+   \phi_b^{obs}(\lambda,t) =  {
      {S^{atm}(\lambda,alt,az,t)\, S_b^{sys}(\lambda,x,y,t) \,
        \lambda^{-1}} \over
      \int_0^\infty { {S^{atm}(\lambda,alt,az,t) \,
          S_b^{sys}(\lambda,x,y,t) \, \lambda^{-1}} \,d\lambda}}.
 \end{equation}
-for each observation. Note
-that $\phi_b$ only represents {\it shape} information about the
-bandpass, as by definition, $\int_0^\infty {\phi_b(\lambda) d\lambda}=1$. 
+Note that $\phi_b$ only represents {\it shape} information about the
+bandpass, as by definition
+\begin{equation}
+$\int_0^\infty {\phi_b(\lambda)  d\lambda}=1$. 
+\end{equation}. 
+Using $\phi_b^{obs}(\lambda, t)$ we can represent the 
+in-band flux of an object for each observation as
+\begin{equation}
+\label{eqn:Fb}
+F_b^[obs}(t) = \int_0^\infty {F_\nu(\lambda,t) \,\phi_b^{obs}(\lambda,t) \, d\lambda},
+\end{equation}
+where the normalization of $F_b(t)$ corresponds to the top of the
+atmosphere. 
 
-From Equations~\ref{eqn:Fpupil} and~\ref{eqn:Fpupil2counts}, we can then 
-recast the counts received from an object as
-\begin{eqnarray}
+
+Okay so here - write how F_b^{obs} varies observation to observation
+and introduce standard bandpass. 
+Then introduce magnitude (standard) and natural. Then add Zeropoint
+and tie back to observed counts! Tada. Drop next few scary equations. 
+XXXX
+
+
+Combining Equations~\ref{eqn:Fpupil} and
+~\ref{eqn:Fpupil2counts}, 
+\begin{equation}
 \label{eqn:fullcounts}
 C_b(alt,az,x,y,t) & = & C \, \int_0^\infty {F_\nu(\lambda,t) \,
   S^{atm}(\lambda,alt,az,t) \, S_b^{sys}(\lambda,x,y,t)
-  \lambda^{-1} d\lambda} \nonumber \\
-&= & {C'}^{atm}(alt,az,t) \, {C'}_b^{sys}(x,y,t) \,
-     \int_0^\infty {F_\nu(\lambda,t)\phi_b(\lambda,alt,az,x,y,t)
-       d\lambda} 
-\end{eqnarray}
+  \lambda^{-1} d\lambda}
+\end{equation}
+
+
+
 where ${C'}^{atm}(alt,az,x,y,t)$ and ${C'}_b^{sys}$ are
 wavelength-independent values that depend only on the {\it
 normalization} of the independent atmospheric and system
@@ -496,7 +524,7 @@ metallicity, in steps of 1 dex between -5.0 (blue) to 1.0 (magenta).}
 \end{figure}
 
 
-\subsection{From counts to photons}
+\subsection{Model: Calibrating counts}
 \label{sec:counts2photons}
 
 The previous section laid out the origins of ADU count variability
