@@ -339,7 +339,8 @@ wavelength-dependent shape of the bandpass.
 \label{sec:phi}
 
 This then leads us to introduce a `normalized bandpass response
-function', $\phi_b^{obs}(\lambda,t)$, for each observation
+function', $\phi_b^{obs}(\lambda,t)$, that represents the true
+bandpass response shape for each observation,
 \begin{equation}
 \label{eqn:PhiDef}
    \phi_b^{obs}(\lambda,t) =  {
@@ -353,20 +354,33 @@ bandpass, as by definition
 \begin{equation}
 $\int_0^\infty {\phi_b(\lambda)  d\lambda}=1$. 
 \end{equation}. 
-Using $\phi_b^{obs}(\lambda, t)$ we can represent the 
+Using $\phi_b^{obs}(\lambda, t)$ we can represent the (true)
 in-band flux of an object for each observation as
 \begin{equation}
 \label{eqn:Fb}
 F_b^[obs}(t) = \int_0^\infty {F_\nu(\lambda,t) \,\phi_b^{obs}(\lambda,t) \, d\lambda},
 \end{equation}
 where the normalization of $F_b(t)$ corresponds to the top of the
-atmosphere. 
+atmosphere. Unless $F_\nu(\lambda,t)$ is a flat SED, $F_b^{obs}$ will
+vary with changes in $\phi_b^{obs}(\lambda,t)$ due only to changes in the
+bandpass shape with position in the focal plane or differing
+atmospheric absorption characteristics, {\it even if the source is
+  non-variable}. 
+
+For this reason, we also introduce a standardized bandpass response
+function, $\phi_b^{std}(\lambda)$, a curve that will be defined before
+the start of LSST operations (most likely during
+commissioning). $\phi_b^{std}(\lambda)$ represents a typical hardware
+and atmospheric transmission curve, minimizing the difference between
+$\phi_b^{obs}(\lambda,t)$ and the standardized reported bandpass.  
+
 
 
 Okay so here - write how F_b^{obs} varies observation to observation
 and introduce standard bandpass. 
 Then introduce magnitude (standard) and natural. Then add Zeropoint
 and tie back to observed counts! Tada. Drop next few scary equations. 
+
 XXXX
 
 
