@@ -29,10 +29,11 @@
 \title{Level 2 Photometric Calibration for the LSST Survey}
 
 \author{
-Lynne Jones, {\v Z}eljko Ivezi{\'c}, David Burke, Tim Axelrod 
+Lynne Jones, {\v Z}eljko Ivezi{\'c}, David Burke, Tim Axelrod \\
 on behalf of 
 The Photometric Calibration Team
 }
+
 
 \begin{abstract}
 This document describes the photometric calibration procedure for LSST
@@ -43,6 +44,8 @@ response functions, together with a self-calibration procedure that
 leverages multiple observations of the same sources over many epochs,
 to deliver 1\%-level photometry across the observed sky.
 \end{abstract}
+
+\tableofcontents
 
 \section{Introduction}
 
@@ -335,7 +338,7 @@ motivate us to separate the measurement of the normalization of
 $S_b^{sys}$ and $S^{atm}$ from the measurement of the
 wavelength-dependent shape of the bandpass.
 
-\subsubsection{Normalized bandpass response}
+\subsubsection{Normalized bandpass response, $\phi_b(\lambda)$}
 \label{sec:phi}
 
 This then leads us to introduce a `normalized bandpass response
@@ -352,95 +355,76 @@ bandpass response shape for each observation,
 Note that $\phi_b$ only represents {\it shape} information about the
 bandpass, as by definition
 \begin{equation}
-$\int_0^\infty {\phi_b(\lambda)  d\lambda}=1$. 
-\end{equation}. 
-Using $\phi_b^{obs}(\lambda, t)$ we can represent the (true)
+\int_0^\infty {\phi_b(\lambda)  d\lambda}=1. 
+\end{equation}
+Using $\phi_b^{obs}(\lambda, t)$ we can represent the (true, total)
 in-band flux of an object for each observation as
 \begin{equation}
 \label{eqn:Fb}
-F_b^[obs}(t) = \int_0^\infty {F_\nu(\lambda,t) \,\phi_b^{obs}(\lambda,t) \, d\lambda},
+F_b^{obs}(t) = \int_0^\infty {F_\nu(\lambda,t) \,\phi_b^{obs}(\lambda,t) \, d\lambda},
 \end{equation}
 where the normalization of $F_b(t)$ corresponds to the top of the
 atmosphere. Unless $F_\nu(\lambda,t)$ is a flat SED, $F_b^{obs}$ will
-vary with changes in $\phi_b^{obs}(\lambda,t)$ due only to changes in the
-bandpass shape with position in the focal plane or differing
+vary with changes in $\phi_b^{obs}(\lambda,t)$ due simply to changes in the
+bandpass shape, such as changes with position in the focal plane or differing
 atmospheric absorption characteristics, {\it even if the source is
   non-variable}. 
 
-For this reason, we also introduce a standardized bandpass response
-function, $\phi_b^{std}(\lambda)$, a curve that will be defined before
+To provide a reported $F_b^{std}(t)$ which is constant for
+non-variable sources, we also introduce the `standardized bandpass response
+function', $\phi_b^{std}(\lambda)$, a curve that will be defined before
 the start of LSST operations (most likely during
 commissioning). $\phi_b^{std}(\lambda)$ represents a typical hardware
 and atmospheric transmission curve, minimizing the difference between
-$\phi_b^{obs}(\lambda,t)$ and the standardized reported bandpass.  
-
-
-
-Okay so here - write how F_b^{obs} varies observation to observation
-and introduce standard bandpass. 
-Then introduce magnitude (standard) and natural. Then add Zeropoint
-and tie back to observed counts! Tada. Drop next few scary equations. 
-
-XXXX
-
-
-Combining Equations~\ref{eqn:Fpupil} and
-~\ref{eqn:Fpupil2counts}, 
+$\phi_b^{obs}(\lambda,t)$ and the standardized reported bandpass.
+Now, 
 \begin{equation}
-\label{eqn:fullcounts}
-C_b(alt,az,x,y,t) & = & C \, \int_0^\infty {F_\nu(\lambda,t) \,
-  S^{atm}(\lambda,alt,az,t) \, S_b^{sys}(\lambda,x,y,t)
-  \lambda^{-1} d\lambda}
+F_b^{std}(t) = \int_0^{\infty} {F_\nu(\lambda,t) \,
+  \phi_b^{std}(\lambda) \, d\lambda}, 
 \end{equation}
+is a constant value for non-variable sources. 
 
-
-
-where ${C'}^{atm}(alt,az,x,y,t)$ and ${C'}_b^{sys}$ are
-wavelength-independent values that depend only on the {\it
-normalization} of the independent atmospheric and system
-throughputs. We can thus measure and apply corrections for the
-normalization of the atmospheric and hardware transmission separately, without
-consideration of the shape of the bandpass.  We can also introduce
-a well-defined `standard' bandpass response, $\phi_b^{std}(\lambda)$, chosen
-during commisioning, so that
+Magnitudes provide an easy way to conceptualize the relationship
+between $F_b^{obs}$ and $F_b^{std}$, provided that we define a
+`natural magnitude' 
+\begin{equation}
+\label{eqn:natmag}
+m_b^{nat}  = -2.5\, log_{10} \, {F_b^{obs} \over F_{AB}} 
+\end{equation}
+where $F_{AB}$ = 3631 Jy. The natural magnitude, like $F_b^{obs}$ will
+vary from observation to observation as $\phi_b^{obs}(\lambda,t)$
+changes. The natural magnitude can be translated to a `standard
+magnitude', $m_b^{std}$, as follows: 
 \begin{eqnarray}
-\label{eqn:counts}
-C_b(alt,az,x,y,t) & = & {C'}^{atm}(alt,az,t)\,{C'}_b^{sys}(x,y,t) \times
-\nonumber \\
-&& \left( {\int_0^\infty {f_\nu(\lambda,t)\phi_b^{obs}(\lambda,alt,az,x,y,t) d\lambda} \over 
-\int_0^\infty {f_\nu(\lambda,t)\phi_b^{std}(\lambda) d\lambda}} 
-\right)\times  \nonumber \\ 
-&& \int_0^\infty {F_\nu(\lambda,t)\phi_b^{std}(\lambda)  d\lambda}
-\nonumber \\ 
+m_b^{nat} & = &-2.5\, log_{10} \, {F_b^{obs} \over F_{AB}}  \\
+& = & -2.5 \, log_{10} \, { \int_0^\infty {F_\nu(\lambda,t) \,
+    \phi_b^{obs}(\lambda,t) \, d\lambda} \over F_{AB} }  \\
+& = & -2.5 \, log_{10} \, \left( { \int_0^\infty {F_\nu(\lambda,t) \,
+    \phi_b^{obs}(\lambda,t) \, d\lambda} \over \int_0^\infty {F_\nu(\lambda,t) \,
+    \phi_b^{std}(\lambda,t) \, d\lambda}} \right) \, \left( {\int_0^\infty {F_\nu(\lambda,t) \,
+    \phi_b^{std}(\lambda,t) \, d\lambda} \over F_{AB}} \right) \\
+m_b^{nat} & = & \Delta m_b^{obs} + m_b^{std} 
 \end{eqnarray}
-where $F_{\nu}(\lambda,t) = F_o(t)\,f_{\nu}(\lambda,t)$, separating the
-normalization ($F_o$) and shape ($f_\nu$) of the source spectral energy
-distribution ($m_{AB} = 2.5 \log_{10}({F_o / 3631\, {\rm Jy}})$).  It's
-worth noting that $\int_0^\infty
-{F_\nu(\lambda,t)\phi_b^{std}(\lambda) d\lambda}$ is a constant value
-for a non-variable source.  For convenience, the middle term above can be written as
-\begin{eqnarray}
-\label{eqn:counts_b}
-K'(\int {f_\nu\,\phi_b^{obs} d\lambda}) = \left( {\int_0^\infty {f_\nu(\lambda,t)\phi_b^{obs}(\lambda,alt,az,x,y,t) d\lambda} \over 
-\int_0^\infty {f_\nu(\lambda,t)\phi_b^{std}(\lambda) d\lambda}} 
-\right)
-\end{eqnarray}
-where $K'$ is a value that depends only on the {\it shape} of the
-system throughput during a particular observation and the {\it shape}
-of the SED of the astronomical object, but does not depend on the
-normalization of the total throughput or the total flux of the
-object. Note that $K'$ simplifies to unity if the source SED,
-$f_\nu(\lambda)$, is constant with wavelength (i.e. a flat SED).  The
-variation in the total counts arising from the $K'$ term is dependent
-on the cumulative effect of both the atmosphere and the hardware
-transmission curves on the source SED, thus while the underlying
-wavelength-dependent (shape) variations in $S_b^{sys}$ and $S^{atm}$
-are independent and can be measured separately, the resulting effect
-can only applied as a combined correction.
+where $\Delta m_b^{obs}$ varies with the {\it shape} of the source
+spectrum, $f_\nu(\lambda,t)$ and the {\it shape}  of the bandpass
+$\phi_b^{obs}(\lambda,t)$ in each observation.  For non-variable
+sources, $m_b^{std}$ will be non-variable as it represents the
+throughput in a standardized bandpass,
+$\phi_b^{std}(\lambda)$.  
 
-Examples of the effects of variations in the $\phi_b^{sys}(\lambda)$
-(hardware response) and $\phi^{atm}(\lambda)$ (atmospheric response)
-curves on the final observed counts are shown in
+The natural and standard magnitudes can be tied back to the counts
+produced by the system by adding the correct zeropoint offsets. As
+$\Delta m_b^{obs}$ removes all wavelength dependent variations in $m_b^{std}$,
+\begin{equation}
+\label{fig:mag2counts}
+m_b^{std} = -2.5\,log_{10}(C_b^{obs}) \, + \Delta m_b^{obs} + Z_b^{obs}
+\end{equation}
+the zeropoint correction here, $Z_b^{obs}$, contains only gray-scale
+{\it normalization} effects, such as variations due to the flat field
+or cloud extinction. 
+
+Examples of the $\Delta m_b^{obs}$ due to variations in the shape of
+the hardware and atmospheric response curves are shown in
 Figure~\ref{fig:delta_mags} and Table~\ref{tab:delta_mags}. Two main
 sequence stellar models \citep{Kurucz1993} -- one with temperature 35000K
 (blue) and one 6000K (red) -- were combined with three different
@@ -460,11 +444,11 @@ will increase the scatter in observed magnitudes.
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{delta_mags}
-\caption{ {\small {\bf Changes in observed magnitudes (counts) due to variations in
+\caption{ {\small {\bf $\Delta m_b^{obs}$ due to variations in
 hardware and atmospheric bandpass shape.} Two main sequence kurucz model
 stars, one blue (35000 K) and one red (6000 K), were used to generate
-observed magnitudes (equivalent to $-2.5\, log(C_b)$ - the counts in
-Eqn~\ref{eqn:counts}) using three different atmospheric transmission
+natural magnitudes (see 
+Eqn~\ref{eqn:natmag}) using three different atmospheric transmission
 profiles and two different hardware transmission profiles. The stellar
 flux profiles are shown in the top center panel, while the atmospheric
 transmission functions ($S^{atm}(\lambda)$) are shown across the
@@ -491,10 +475,10 @@ Table~\ref{tab:delta_mags}. }
 
 \begin{center}
 \begin{table}[htb]
-\caption{{\bf Changes in observed magnitudes due to variations in system and atmospheric
+\caption{{\bf $\Delta m_b^{obs}$ due to variations in system and atmospheric
  bandpass shape (see also Fig~\ref{fig:delta_mags}). The first two
-rows show the baseline (`true') magnitude of the star. All other rows show the 
-{\it change} in magnitude (in mmag) due to the changes listed at left. } }
+rows show the baseline (`standard') magnitude of the star. All other rows show the 
+{\it change} in magnitude (in mmag) due to the variations listed at left. } }
 \begin{tabular}{l l | c c c c c c}
 Bandpass & star &  $u$ (mag) & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
 Standard atm, std sys  &  red & 21.472 & 20.378 & 20.000 & 19.911 & 19.913 & 19.913 \\
@@ -517,7 +501,7 @@ X=1.8, +1\% sys shift & blue & 16 & 24 & 24 & 22 & 15 & 22 \\ \hline
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{delta_mags2}
-\caption{ {\small {\bf Changes in observed magnitudes (counts) due to
+\caption{ {\small {\bf $\Delta m_b^{obs}$ due to
 a change in bandpass shape corresponding to a filter shift of $1\%$
 and an $X=1.8$ atmosphere.} 850 Kurucz models with temperatures
 between 5000K and 35000K and metallicity indexes between -5.0 and 1.0
@@ -525,15 +509,15 @@ between 5000K and 35000K and metallicity indexes between -5.0 and 1.0
 atmosphere and standard hardware bandpasses), then with a total system
 response where the atmosphere was replaced by an X=1.8 atmosphere and
 the filter component of the hardware transmission was shifted by 1\%
-(as in Fig~\ref{fig:delta_mags}).  It can be seen that the
-relationship between $\Delta m$ and $g-i$ can be parameterized,
+(as in Fig~\ref{fig:delta_mags}). The points in each plot are color-coded by
+metallicity, in steps of 1 dex between -5.0 (blue) to 1.0 (magenta).  It can be seen that the
+relationship between $\Delta m_b^{obs}$ and $g-i$ can be parameterized,
 although generally not with a simple linear relationship. In some
 cases (such as seen in the $\Delta u$ and $\Delta g$ panels),
-calculating $\Delta m$ to SRD levels may require more than a simple
+calculating $\Delta m_b^{obs}$ to SRD levels may require more than a simple
 $g-i$ color, but this is then primarily a function of metallicity
-which is possible to determine given the $u-g$ color in addition to
-the $g-i$ information. The points in each plot are color-coded by
-metallicity, in steps of 1 dex between -5.0 (blue) to 1.0 (magenta).}
+(which is possible to determine given the $u-g$ color in addition to
+the $g-i$ information). }
 \label{fig:delta_mags2} }
 \end{figure}
 
@@ -1236,7 +1220,7 @@ shifted redward by 1\% of the central wavelength.}}
 \centering
 \includegraphics[width=6in]{delta_mags_filtershift}
 \caption{{\small 
-{\bf Changes in observed magnitude (measured counts)
+{\bf $\Delta m_b^{obs}$
 due to a hardware response curve shift of 1\% of the central
 wavelength of each bandpass.}  850 Kurucz models with temperatures
 between 5000K and 35000K and metallicity indexes between -5.0 and 1.0
@@ -1244,11 +1228,13 @@ between 5000K and 35000K and metallicity indexes between -5.0 and 1.0
 hardware bandpass, and then with a total system response where the
 atmosphere remained constant but the hardware response was shifted by
 1\% of the central wavelength of each bandpass (as in
-Fig~\ref{fig:filtershift}).  Changes in magnitude on the order of
-20~mmag are typical, except in $u$ band where the shift can create a
+Fig~\ref{fig:filtershift}). The points in each plot are color-coded by metallicity, in
+steps of 1 dex between -5.0 (blue) to 1.0 (magenta). The resulting
+changes in observed 
+natural magnitudes are on the order of
+20~mmag typically, except in $u$ band where the shift can create a
 $\delta u$ of closer to 80~mmag for certain kinds of main sequence
-stars. The points in each plot are color-coded by metallicity, in
-steps of 1 dex between -5.0 (blue) to 1.0 (magenta).} }
+stars. } }
 \label{fig:dmag_filtershift}
 \end{figure}
 
@@ -1256,13 +1242,13 @@ steps of 1 dex between -5.0 (blue) to 1.0 (magenta).} }
 \centering
 \includegraphics[width=6in]{delta_mags_filtershift_small}
 \caption{{\small 
-{\bf Changes in observed magnitude (measured counts) due to a hardware
+{\bf $\Delta m_b^{obs}$ due to a hardware
 response curve shift of 0.05\% of the central wavelength of each
 bandpass.} Similar to Fig~\ref{fig:dmag_filtershift} except that the
 hardware response was shifted by only 0.05\% of the central
 wavelength, an amount representing an unmeasured shift in the hardware
 response and thus contributing directly to the final error in the
-calibration of the observed magnitudes. Note that the y scale here is 1/10th
+calibration of the natural magnitudes. Note that the y scale here is 1/10th
 of the scale in the previous figure. }}
 \label{fig:dmag_filtershift_small} 
 \end{figure}
@@ -1482,10 +1468,10 @@ to our set of main sequence star Kurucz models. Varying
 $C_{\water}$ only affects the $z$ and $y$ bands, while changing $C_{\ozone}$,
 $\tau_0$, and $\alpha$ affect the $u$ and $g$ and, to a lesser extent, $r$
 bands. Using these `worst-case' parameters, at $X=1.2$ we find
-differences of $\Delta u$=14~mmag, $\Delta g$=7~mmag, $\Delta r$=4.5~mmag,
+differences in the observed natural magnitudes on the order of $\Delta u$=14~mmag, $\Delta g$=7~mmag, $\Delta r$=4.5~mmag,
 $\Delta i$=1.5~mmag, $\Delta z$=2~mmag, and $\Delta y$=7~mmag. The 
-atmosphere transmission curves used to generate this info, and a plot
-of the resulting changes in magnitudes are in Figures~\ref{fig:atm_changes}
+atmosphere transmission curves used to generate this data, and a plot
+of the resulting $\Delta m_b^{obs}$ are in Figures~\ref{fig:atm_changes}
 and \ref{fig:dmag_atm_max}.  These represent the induced changes in
 observed counts due to changes in the bandpass shape; however, by
 achieving 10\% accuracy on $\tau^{aerosol}$, $C_{\ozone}$, and
@@ -1500,7 +1486,7 @@ remains 2~mmag. The limits on remaining uncorrected effects are shown in Figure~
 \subfloat[]{\label{c}\includegraphics[width=3.2in]{delta_mags_O3full}}
 \subfloat[]{\label{d}\includegraphics[width=3.2in]{delta_mags_H2Ofull}} 
 \caption{{\small
-{\bf Changes in observed magnitudes due to variations of each
+{\bf $\Delta m_b^{obs}$ due to variations of each
 individual absorption component.} Each atmospheric transmission curve
 (at X=1.2) was combined with the set of main sequence Kurucz curves to
 determine the resulting changes in observed magnitudes, as in
@@ -1530,7 +1516,7 @@ with $X=1.2$ were created using Equation~\ref{eqn:atmo_fit}. }}
 \centering
 \includegraphics[width=6in]{delta_mags_max}
 \caption{{\small
-{\bf Changes in observed magnitudes due to `extreme' variations of 
+{\bf$\Delta m_b^{obs}$ due to `extreme' variations of 
 atmospheric transmission.} Two atmospheric transmission curves were 
 created using Equation~\ref{eqn:atmo_fit} and the widest variations of
 atmospheric extinction coefficients from \citet{Burke2010b}. The wavelength
@@ -1538,7 +1524,7 @@ profile of these atmospheres is shown in Figure~\ref{fig:atm_changes}.
 These atmospheric transmission curves were combined with the baseline LSST 
 hardware transmission curves, and used to generate magnitudes for 850 Kurucz
 models with temperatures between 5000~K and 35000~K and metallicities between
--5.0 and 1.0 (solar). The differences in observed magnitudes between 
+-5.0 and 1.0 (solar). The resulting differences in natural magnitudes between 
 the two extremes of the atmospheric transmission in each filter are shown above. 
 }}
 \label{fig:dmag_atm_max}
@@ -1548,7 +1534,7 @@ the two extremes of the atmospheric transmission in each filter are shown above.
 \centering
 \includegraphics[width=6in]{delta_mags_10}
 \caption{{\small
-{\bf Changes in observed magnitudes due to 10\% variations of 
+{\bf $\Delta m_b^{obs}$ due to 10\% variations of 
 atmospheric transmission in \ozone and aerosol, with 30\% variation of \water.} 
 This is similar to Figure~\ref{fig:dmag_atm_max}, except $C_{\ozone}$,
 $\tau_0$ and $\alpha$ were only varied by 10\% of the total range of
@@ -1557,7 +1543,7 @@ of the total range. }}
 \label{fig:dmag_atm_10}
 \end{figure}
 
-Changes in airmass have a larger effect on observed magnitudes
+Changes in airmass have a larger effect on observed natural magnitudes
 (Figure~\ref{fig:dmag_airmass}) than the variation in atmospheric
 extinction coefficients. However, these are included in the atmospheric extinction
 templates generated by MODTRAN and can be accurately corrected.
@@ -1569,7 +1555,7 @@ be included in the model.
 \centering
 \includegraphics[width=6in]{delta_mags_airmass_big}
 \caption{{\small
-{\bf Changes in observed magnitudes due to changes in airmass from $X=1.0$ 
+{\bf $\Delta m_b^{obs}$ due to changes in airmass from $X=1.0$ 
 to $X=2.1$, for a typical atmospheric transmission response curve.}
 }}
 \label{fig:dmag_airmass}
@@ -1596,8 +1582,6 @@ the final error in observed magnitude due to both of these effects would be $<3$
 in $grizy$ and 5~mmag in $u$. There is an additional potential source of error in these
 $\delta k_b^{atm+sys}$ corrections -- the understanding of the true SED of the 
 source. 
-
-LJ - Generate: errors due to bad knowledge of SED
 
 
 \subsection{Normalization of the Atmospheric Transmission}
@@ -1791,7 +1775,8 @@ for some main sequence stars these corrections can easily be on the
 order of 20 mmag for $gri$, or even 100 mmag in $u$ band. For more
 extreme SEDS, these corrections may be even larger.
 
-CREATE FIGURE: the likely magnitude of these corrections 
+CREATE FIGURE: the likely magnitude of these corrections - actually,
+already done but need to include here.
 
 Data management could record a full
 $\phi_b^{meas}(\lambda,alt,az,x,y,t)$ value for every object in every
