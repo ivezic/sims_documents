@@ -145,9 +145,8 @@ band, 10 millimags for colors constructed with $u$ band
 photometry. This places an upper limit on the systematic error in
 the measurement of the system throughput as a function of
 wavelength. This requirement ties photometric measurements in
-different filters together, enabling colors to be measured for sources
-with unknown spectral energy distributions (SEDs) or (for sources with known SEDs) magnitudes in
-different filters to be directly compared. \label{color_req}}
+different filters together, enabling precision measurement of colors. 
+\label{color_req}}
 \item{{\bf Absolute photometric calibration:} The LSST photometric
 system must transform to an external physical scale ({\it e.g.} AB
 mags) with an rms accuracy of 10 millimags. This requirement ties LSST internal
@@ -162,11 +161,22 @@ Requirements \ref{repeatability_req} and \ref{uniformity_req} must be
 met by measuring and then correcting for changes in hardware and
 atmospheric transmission as a function of time, location in the sky or
 focal plane, and result in a relative calibration within a single
-filter. Requirements \ref{color_req} and \ref{abs_req} require
+filter. Performance of the LSST system regarding requirement
+\ref{repeatability_req} can be verified by simply measuring the rms of
+the calibrated magnitude measurements. Verification of requirement
+\ref{uniformity_req} is more complicated; in a simulated system it is
+simple to compare the (simulated, thus known) true magnitudes of the
+stars to the best-fit magnitudes produced after calibration. In
+operations, this will be verified using a combination of simulations
+(to test whether the observational cadence itself is suitable for
+the self-calibration procedure described below), comparisons to
+known standards, and evaluation of science outputs such as stellar
+locus diagrams. These last two are also relevant to verifying the
+final two requirements, \ref{color_req} and \ref{abs_req}. 
+Requirements \ref{color_req} and \ref{abs_req} require
 additional measurements of sources with known colors and absolute
 magnitudes, providing a relative calibration from filter to filter as
 well as an absolute physical scale for the overall system.
-
 
 \section{Overview of the photometric calibration process}
 \label{sec:calib_overview}
@@ -428,19 +438,22 @@ the hardware and atmospheric response curves are shown in
 Figure~\ref{fig:delta_mags} and Table~\ref{tab:delta_mags}. Two main
 sequence stellar models \citep{Kurucz1993} -- one with temperature 35000K
 (blue) and one 6000K (red) -- were combined with three different
-atmospheric response curves and two different hardware response curves
-to illustrate the resulting changes in observed magnitudes. In
-Figure~\ref{fig:delta_mags2}, the $X=1.5$ atmospheric response is
+atmospheric response curves (with X=1.0 with minimal \water vapor,
+X=1.2 with a nominal amount of \water (the `standard'), and X=1.8 with
+a large \water vapor content) and two different hardware response
+curves (one `standard' and one shifted in wavelength by 1\%)
+to illustrate the resulting changes in observed natural magnitudes. In
+Figure~\ref{fig:delta_mags2}, the $X=1.8$ atmospheric response is
 combined with the $1\%$ shift in filter bandpass (altering the
 hardware response) for many main sequence kurucz models, spanning a
-range of $g-i$ colors, and the resulting changes in observed
+range of $g-i$ colors, and the resulting changes in natural
 magnitudes are plotted.  These examples demonstrate that the scatter in
-observed magnitudes induced by expected atmospheric and hardware transmission
+natural magnitudes induced by expected atmospheric and hardware transmission
 curve shape changes alone (without any gray-scale changes) can be larger
 than the SRD repeatability requirements would permit. Adding variations 
 in the gray-scale normalization due to the hardware response (typically on the
 order of 0.01 magnitudes) and cloud extinction (could be up to a few magnitudes)
-will increase the scatter in observed magnitudes. 
+will increase the scatter in the observed magnitudes. 
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{delta_mags}
@@ -481,11 +494,11 @@ rows show the baseline (`standard') magnitude of the star. All other rows show t
 {\it change} in magnitude (in mmag) due to the variations listed at left. } }
 \begin{tabular}{l l | c c c c c c}
 Bandpass & star &  $u$ (mag) & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
-Standard atm, std sys  &  red & 21.472 & 20.378 & 20.000 & 19.911 & 19.913 & 19.913 \\
-Standard atm, std sys  &  blue & 19.102 & 19.503 & 20.000 & 20.378 & 20.672 & 20.886 \\ \hline \hline
+Standard (X=1.2) atm, std sys  &  red & 21.472 & 20.378 & 20.000 & 19.911 & 19.913 & 19.913 \\
+Standard (X=1.2) atm, std sys  &  blue & 19.102 & 19.503 & 20.000 & 20.378 & 20.672 & 20.886 \\ \hline \hline
  & & $\Delta u$ (mmag) & $\Delta g$  & $\Delta r$  & $\Delta i$ & $\Delta z$  & $\Delta y$ \\ \hline
-Standard atm, +1\% sys shift & red  & -31 & -22 & -8 & -2 & 1 & 1 \\
-Standard atm, +1\% sys shift & blue  & 9 & 17 & 20 & 20 & 16 & 16 \\ \hline
+Standard (X=1.2), +1\% sys shift & red  & -31 & -22 & -8 & -2 & 1 & 1 \\
+Standard (X=1.2), +1\% sys shift & blue  & 9 & 17 & 20 & 20 & 16 & 16 \\ \hline
 X=1.0, std sys & red  & 7 & 2 & 0 & 0 & -0 & -1 \\
 X=1.0, std sys & blue  & -3 & -1 & -1 & -0 & 1 & -4 \\ \hline
 X=1.0, +1\% sys shift & red & -24 & -20 & -8 & -1 & 1 & 0 \\
@@ -1820,5 +1833,38 @@ to regenerate a higher precision $m_b^{nat}$.
 
 %may provide useful SDQA data (especially for alerts/nightly data
 %stream)
+
+
+\section{Glossary}
+\label{sec:glossary}
+
+\begin{itemize}
+
+\item{{\bf Level 1 Data Product.} A data product, such as a measurement
+  of an astronomical object's position or flux in a single image, that
+is computed on a nightly basis. Level 1 data products primarily
+consist of alerts on transient, variable and moving objects. The
+photometric calibration process outlined in this paper does not apply
+to Level 1 data products. Level 1 data products will be calibrated
+using all applicable prior knowledge (including secondary standard
+catalogs generated from previous Data Release calibration of all
+LSST-observed stars in the field). }
+
+\item{{\bf Level 2 Data Product.} A data product, such a measurement
+    of an astronomical object's position or flux in either a single
+    image or a series of images, that is computed on the Data Release
+    schedule, on a six-month or yearly schedule. Level 2 data products
+    leverage all previous observations of the same object, as well as
+    all knowledge of the LSST system accumulated to that point. The
+    photometric calibration process outlined in this paper is used to
+    generate Level 2 data products. }
+
+\item{{\bf Normalized system response, $\phi_b(\lambda)$.} The normalized
+    system response describes the shape of the bandpass transmission
+    curve, separating this from the normalization of the throughput
+    curve which can be determined separately.  $phi_b(\lambda)$ is
+    described by Equation~\ref{eqn:PhiDef}. }
+
+
 
 \end{document}
