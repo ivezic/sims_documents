@@ -8,16 +8,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% author-defined commands
 \newcommand\x         {\hbox{$\times$}}
-\newcommand\othername {\hbox{$\dots$}}
-\def\eq#1{\begin{equation} #1 \end{equation}}
-\def\eqarray#1{\begin{eqnarray} #1 \end{eqnarray}}
-\def\eqarraylet#1{\begin{mathletters}\begin{eqnarray} #1 %
-                  \end{eqnarray}\end{mathletters}}
 \def\mic              {\hbox{$\mu{\rm m}$}}
 \def\about            {\hbox{$\sim$}}
 \def\Mo               {\hbox{$M_{\odot}$}}
 \def\Lo               {\hbox{$L_{\odot}$}}
-\def\comm#1           {{\tt (COMMENT: #1)}}
 \newcommand\water   {H\textsubscript{2}O}
 \newcommand\ozone    {O\textsubscript{3}}
 \newcommand\oxy     {O\textsubscript{2}}
@@ -1214,7 +1208,7 @@ positioning to remain less than a 1~mmag source of error.
 %filters are approximately 75~cm in diameter, this means the filter 
 %positioning must be recorded to better than 0.18~mm. 
 
-LJ - beamsize 100mm, plus review filter location requirement ... 0.025% is too small
+LJ - beamsize 100mm, plus review filter location requirement ... 0.025\% is too small
 Plus need to include shift in bandpass due to change in incident angle ? 
 
 \begin{figure}
@@ -1866,6 +1860,13 @@ LSST-observed stars in the field). }
     curve which can be determined separately.  $phi_b(\lambda)$ is
     described by Equation~\ref{eqn:PhiDef}. }
 
+\item{{\bf Illumination Correction.} }
+
+\item{{\bf Natural magnitude.}} 
+
+\item{{\bf Standard magnitude.}}
+
+\end{itemize}
 
 
 \end{document}
