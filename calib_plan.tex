@@ -428,7 +428,7 @@ The natural and standard magnitudes can be tied back to the counts
 produced by the system by adding the correct zeropoint offsets. As
 $\Delta m_b^{obs}$ removes all wavelength dependent variations in $m_b^{std}$,
 \begin{equation}
-\label{fig:mag2counts}
+\label{eqn:mag2counts}
 m_b^{std} = -2.5\,log_{10}(C_b^{obs}) \, + \Delta m_b^{obs} + Z_b^{obs}
 \end{equation}
 the zeropoint correction here, $Z_b^{obs}$, contains only gray-scale
@@ -730,7 +730,7 @@ flat field to images directly.}
 correction, etc) extract ADU counts of sources from images. }
 \item{Acquire the data cube of narrow band flat field images,
 approximately monthly. Apply wavelength-dependent illumination
-correction. Measure $\phi_b^{sys}(\lambda,t,x,y)$.
+correction. Measure $\phi_b^{sys}(\lambda,t,x,y)$. }
 \item{Acquire spectra of known stars on a 5--10 minute timeline
 throughout each night, fit for atmospheric absorption coefficients and
 generate $\phi_b^{atm}(\lambda,t)$ for each science images. }
@@ -1133,16 +1133,16 @@ precision photometry, but as it requires knowledge of the object's
 SED, most LSST reported magnitudes will include either no correction
 or a (potentially rough) correction along with an indication of what
 SED was assumed to generate this value. However, for stars which will
-be used in self-calibration (see subsection~\ref{sec:selfcalib}) to
+be used in self-calibration (see subsection~\ref{sec:atmo_norm}) to
 determine photometric zeropoints in each exposure, a model SED
 well-matched to the object's colors will be chosen and used to
-generate the $\delta k_b^{atm+sys}$ corrections described in this
+generate the $\Delta m_b^{meas}$ corrections described in this
 section.
 
-It is worth emphasizing as we start this section that $\delta
-k_b^{atm+sys}$ is a correction for changes in the {\it shape} of the
+It is worth emphasizing as we start this section that $\Delta
+m_b^{meas}$ is a correction for changes in the {\it shape} of the
 bandpass only; any grayscale components to the changes in bandpass
-shape discussed here are not part of $\delta k_b^{atm+sys}$ and instead
+shape discussed here are not part of $\Delta m_b^{meas}$ and instead
 belong to either the hardware or atmospheric {\it normalization}
 corrections.
 
@@ -1584,8 +1584,8 @@ Correcting observed counts for the difference between the measured
 shape of the hardware and atmospheric response curves and the standard
 normalized bandpass, $phi_b^{std}(\lambda)$, requires knowledge of the
 SED of each star. However, with this knowledge, it is possible to
-create lookup tables of $\delta k_b^{atm+sys}(x,y,alt,az,SED,t)$ (as
-in Equation~\ref{eqn:defnatmags2}) for various locations in the focal
+create lookup tables of $\Delta m_b^{meas}(x,y,alt,az,SED,t)$ (as
+in Equation~\ref{eqn:magsFromCounts}) for various locations in the focal
 plane in each exposure. A rough example is given in
 Table~\ref{tab:delta_mags}.
 
@@ -1595,7 +1595,7 @@ in $grizy$,  5~mmag error in $u$ due to the hardware response curve;
 1~mmag in $ugriz$, 2~mmag error in $y$ due to the atmospheric response curve), 
 the final error in observed magnitude due to both of these effects would be $<3$~mmag
 in $grizy$ and 5~mmag in $u$. There is an additional potential source of error in these
-$\delta k_b^{atm+sys}$ corrections -- the understanding of the true SED of the 
+$\Delta m_b^{meas}$ corrections -- the understanding of the true SED of the 
 source. 
 
 
@@ -1784,8 +1784,8 @@ $m_b^{nat}$.
 
 For many objects, LSST will assume a flat SED when generating
 $m_b^{nat}$ values, implying that no $\delta k(alt, az, x, y, SED, t)$
-correction was applied. Sections~\ref{sec:phi_hardware} and
-~\ref{sec:phi_atmo} outline the typical magnitudes of these corrections;
+correction was applied. Sections~\ref{sec:hardware_phi} and
+~\ref{sec:atmo_phi} outline the typical magnitudes of these corrections;
 for some main sequence stars these corrections can easily be on the
 order of 20 mmag for $gri$, or even 100 mmag in $u$ band. For more
 extreme SEDS, these corrections may be even larger.
