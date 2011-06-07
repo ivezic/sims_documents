@@ -12,9 +12,9 @@
 \def\about            {\hbox{$\sim$}}
 \def\Mo               {\hbox{$M_{\odot}$}}
 \def\Lo               {\hbox{$L_{\odot}$}}
-\newcommand\water   {H\textsubscript{2}O}
-\newcommand\ozone    {O\textsubscript{3}}
-\newcommand\oxy     {O\textsubscript{2}}
+\newcommand{\water}   {H\textsubscript{2}O}
+\newcommand{\ozone}    {O\textsubscript{3}}
+\newcommand{\oxy}     {O\textsubscript{2}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -69,19 +69,20 @@ scales to enable their explicit inclusion in the calibration
 procedure, rather than resorting to traditional approximations such as
 linear color terms. SNLS re-processing of CFHT Legacy Survey data
 found these color-dependent terms to be a significant contributor to
-the required photometric calibration process\citep{Regnault2009}, on
+the required photometric calibration process \citep{Regnault2009}, on
 the level of a few to several percent. 
 
 This document describes the calibration requirements and processes for
-LSST Data Release photometry. This is a complete recalibration of the
-data carried out at periodic Data Release dates, approximately
-annually (aka Level 2 Data products, in LSST Data Management
-terms). There will also be a real-time data calibration process, based
-on the best available set of prior calibrated observations, to provide
-best-effort precision and accuracy for photometry for quality
-assurance, generation of alerts, and other quantities appropriate for
-nightly data generation (aka Level 1 Data Product).  The Level 1
-photometric calibration is not discussed here.
+LSST Data Release photometry. At each Data Release, there will be a
+complete recalibration of all data acquired to that point, on
+approximately an annual schedule.  These data products are referred to
+as Level 2 Data Products, in LSST Data Management terms.  There will
+also be a real-time data calibration process, based on the best
+available set of prior calibrated observations, to provide best-effort
+precision and accuracy for photometry for quality assurance,
+generation of alerts, and other quantities appropriate for nightly
+data generation (aka Level 1 Data Products).  The Level 1 photometric
+calibration is not discussed here.
 
 Section~\ref{sec:photoreq} reviews the survey requirements for
 photometric calibration, while Section~\ref{sec:calib_overview}
@@ -127,11 +128,11 @@ where the zeropoint for each visit is determined using bright, unresolved, isola
 sources. No more than 10\% of these sources should be more than 15
 mmag in $gri$ or 22.5 mmag in $uzy$ from the mean internal zeropoint.
 This places a constraint on the stability of the photometric system
-across the sky as well as places an upper limit on various systematic
+across the sky as well as an upper limit on various systematic
 errors, such as any correlation of photometric calibration with
 varying stellar populations (or colors). This makes the photometry of
-many sources comparable over the entire sky, which when combined with
-the previous requirements creates a stable photometric system across
+many sources comparable over the entire sky, and when combined with
+the previous requirement, creates a stable photometric system across
 the sky and over time, in a single filter. \label{uniformity_req}}
 \item{{\bf Band-to-band photometric calibration:} The absolute
 band-to-band zeropoint calibration for main sequence stars must be
@@ -140,7 +141,7 @@ band, 10 millimags for colors constructed with $u$ band
 photometry. This places an upper limit on the systematic error in
 the measurement of the system throughput as a function of
 wavelength. This requirement ties photometric measurements in
-different filters together, enabling precision measurement of colors. 
+different filters together, enabling precise measurement of colors. 
 \label{color_req}}
 \item{{\bf Absolute photometric calibration:} The LSST photometric
 system must transform to an external physical scale ({\it e.g.} AB
@@ -156,22 +157,23 @@ Requirements \ref{repeatability_req} and \ref{uniformity_req} must be
 met by measuring and then correcting for changes in hardware and
 atmospheric transmission as a function of time, location in the sky or
 focal plane, and result in a relative calibration within a single
-filter. Performance of the LSST system regarding requirement
+filter. Requirements \ref{color_req} and \ref{abs_req} require
+comparison of LSST measurements to externally calibrated
+spectrophotometric standards, providing a relative calibration from
+filter to filter as well as an absolute physical scale for the overall
+system.  Performance of the LSST system regarding requirement
 \ref{repeatability_req} can be verified by simply measuring the rms of
 the calibrated magnitude measurements. Verification of requirement
 \ref{uniformity_req} is more complicated; in a simulated system it is
 simple to compare the (simulated, thus known) true magnitudes of the
 stars to the best-fit magnitudes produced after calibration. In
 operations, this will be verified using a combination of simulations
-(to test whether the observational cadence itself is suitable for
-the self-calibration procedure described below), comparisons to
-known standards, and evaluation of science outputs such as stellar
-locus diagrams. These last two are also relevant to verifying the
-final two requirements, \ref{color_req} and \ref{abs_req}. 
-Requirements \ref{color_req} and \ref{abs_req} require
-additional measurements of sources with known colors and absolute
-magnitudes, providing a relative calibration from filter to filter as
-well as an absolute physical scale for the overall system.
+(to test whether the observational cadence itself is suitable for the
+self-calibration procedure described below), comparisons to known
+standards, and evaluation of science outputs such as stellar locus
+diagrams. These last two tests are also relevant to verifying the
+final two requirements, \ref{color_req} and \ref{abs_req}.
+
 
 \section{Overview of the photometric calibration process}
 \label{sec:calib_overview}
@@ -208,13 +210,15 @@ scale variations) and the self-calibration procedure (for larger
 spatial scale variations, as this is fundamentally limited by the
 spacing between calibration stars in each visit). The flat field can
 only correct for variations in the throughput of the hardware; the
-self-calibration procedure will primarily correct for variations in throughput
-due to atmospheric conditions (such as cloud extinction).  The {\it shape} of
-the throughput curve will be measured using both the narrow band dome
-screen projector, to correct for variations in the shape of the
-hardware bandpass response across the field of view, and the auxiliary
-telescope, to correct for variations in the atmospheric absorption
-curve from visit to visit. 
+self-calibration procedure will primarily correct for variations in
+throughput due to atmospheric conditions (such as cloud extinction),
+although it can be extended to apply additional corrections for large
+spatial scale errors (illumination corrections) in the flat field.
+The {\it shape} of the throughput curve will be measured using both
+the narrow band dome screen projector, to correct for variations in
+the shape of the hardware bandpass response across the field of view,
+and the auxiliary telescope, to correct for variations in the
+atmospheric absorption curve from visit to visit. 
 
 \begin{figure}[htbp]
 \includegraphics[width=6.5in]{calib_overview}
@@ -369,11 +373,12 @@ in-band flux of an object for each observation as
 F_b^{obs}(t) = \int_0^\infty {F_\nu(\lambda,t) \,\phi_b^{obs}(\lambda,t) \, d\lambda},
 \end{equation}
 where the normalization of $F_b(t)$ corresponds to the top of the
-atmosphere. Unless $F_\nu(\lambda,t)$ is a flat SED, $F_b^{obs}$ will
-vary with changes in $\phi_b^{obs}(\lambda,t)$ due simply to changes in the
-bandpass shape, such as changes with position in the focal plane or differing
+atmosphere. Unless $F_\nu(\lambda,t)$ is a flat ($F_\nu(\lambda)=$
+constant) SED, $F_b^{obs}$ will vary with changes in
+$\phi_b^{obs}(\lambda,t)$ due simply to changes in the bandpass shape,
+such as changes with position in the focal plane or differing
 atmospheric absorption characteristics, {\it even if the source is
-  non-variable}. 
+non-variable}.
 
 To provide a reported $F_b^{std}(t)$ which is constant for
 non-variable sources, we also introduce the `standardized bandpass response
@@ -398,8 +403,9 @@ m_b^{nat}  = -2.5\, log_{10} \, {F_b^{obs} \over F_{AB}}
 \end{equation}
 where $F_{AB}$ = 3631 Jy. The natural magnitude, like $F_b^{obs}$ will
 vary from observation to observation as $\phi_b^{obs}(\lambda,t)$
-changes. The natural magnitude can be translated to a `standard
-magnitude', $m_b^{std}$, as follows: 
+changes, even if the source itself is non-variable. The natural
+magnitude can be translated to a `standard magnitude', $m_b^{std}$, as
+follows:
 \begin{eqnarray}
 m_b^{nat} & = &-2.5\, log_{10} \, {F_b^{obs} \over F_{AB}}  \\
 & = & -2.5 \, log_{10} \, { \int_0^\infty {F_\nu(\lambda,t) \,
@@ -411,11 +417,12 @@ m_b^{nat} & = &-2.5\, log_{10} \, {F_b^{obs} \over F_{AB}}  \\
 m_b^{nat} & = & \Delta m_b^{obs} + m_b^{std} 
 \end{eqnarray}
 where $\Delta m_b^{obs}$ varies with the {\it shape} of the source
-spectrum, $f_\nu(\lambda,t)$ and the {\it shape}  of the bandpass
-$\phi_b^{obs}(\lambda,t)$ in each observation.  For non-variable
-sources, $m_b^{std}$ will be non-variable as it represents the
-throughput in a standardized bandpass,
-$\phi_b^{std}(\lambda)$.  
+spectrum, $f_\nu(\lambda,t)$ and the {\it shape} of the bandpass
+$\phi_b^{obs}(\lambda,t)$ in each observation. Note that $\Delta
+m_b^{obs}=0$ for flat (constant) SEDs, as the integral of
+$\phi_b(\lambda)$ is always one.  For non-variable sources,
+$m_b^{std}$ will be non-variable as it represents the throughput in a
+standardized bandpass, $\phi_b^{std}(\lambda)$.
 
 The natural and standard magnitudes can be tied back to the counts
 produced by the system by adding the correct zeropoint offsets. As
@@ -538,7 +545,7 @@ from one observation to another. Now we will consider how we can, in
 practice, acquire the information necessary to convert a particular
 observed ADU count to a measurement of $F_\nu(\lambda,t)$ above the
 atmosphere for a particular object.  In other words, how we can
-recreate the `truth' by compensating for the variations in
+recreate the `truth' by measuring and then compensating for the variations in
 $S^{atm}(\lambda,alt,az,t)$ and $S_b^{sys}(\lambda,x,y,t)$, using the
 separability of the normalization and shape of the total system
 response.
@@ -1854,11 +1861,12 @@ LSST-observed stars in the field). }
     photometric calibration process outlined in this paper is used to
     generate Level 2 data products. }
 
-\item{{\bf Normalized system response, $\phi_b(\lambda)$.} The normalized
-    system response describes the shape of the bandpass transmission
-    curve, separating this from the normalization of the throughput
-    curve which can be determined separately.  $phi_b(\lambda)$ is
-    described by Equation~\ref{eqn:PhiDef}. }
+\item{{\bf Normalized system response, $\phi_b(\lambda)$.} The
+    normalized system response describes the shape of the bandpass
+    transmission curve, separating this from the normalization of the
+    throughput curve which can be determined separately.
+    $phi_b(\lambda)$ is described by Equation~\ref{eqn:PhiDef}. The
+    integral of $phi_b(\lambda)$ is always 1. }
 
 \item{{\bf Illumination Correction.} }
 
