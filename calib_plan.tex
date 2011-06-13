@@ -786,21 +786,38 @@ $m_b^{nat}$.
 \label{sec:hardware_norm}
 
 Compensation for variations (in $x,y,t$) in the normalization of the
-hardware transmission ($S_b^{sys}$) will be done using a white-light flat field 
-generated using a broad band source illuminating the specialized dome screen projector
-discussed further in section~\ref{sec:hardware_phi}. For the white-light
-flat field generation, the relevant pieces of information are that 
-the `white-light' source can be tuned to have a chosen spectral profile and that 
-the dome screen is required to provide very uniform illumination to the LSST etendue. 
-[blah, what the spectral profile might/should be - night sky seems good choice?-, 
-how it will be chosen. also, what the uniformity specs are, and mention these specs 
-also call for minimizing stray light.]
+hardware transmission ($S_b^{sys}$) will be done using a white-light
+flat field generated using a broad band source illuminating a
+specialized dome screen projector. This is the first step in
+photometric calibration and is necessary to correct for variations in
+the normalization of $S_b^{sys}$ that are smaller than a few times the
+PSF (and in the current calibration implementation, smaller than the
+scale of a CCD).
 
-This is the first step in photometric calibration and is necessary to
-correct for variations in the normalization of $S_b^{sys}$ that are
-smaller than a few times the PSF (and in the current calibration
-implementation, smaller than the scale of a CCD).
+The dome screen projector is an array of projectors mounted in the
+dome of the LSST enclosure, specially designed to provide very uniform
+illumination to the LSST etendue while minimizing any light straying
+beyond the etendue. In addition, the dome screen will be able to
+project both broadband and tunable narrow band (essentially
+monochromatic) light sources, providing both broadband (white-light)
+and narrow band flat fielding capabilities.  More details of the
+narrow band flat field capabilities are provided in
+section~\ref{sec:hardware_phi}. The dome projector system is different from a
+traditional dome screen in that the `screen' is a series of light sources,
+rather than a screen reflecting a single light source. 
 
+For both white-light and narrow band flat field flat fields, the
+projectors are designed to fill the LSST etendue with a uniform
+illumination smoothly varying by less than 1\% across the camera field
+of view (corresponding to less than 10\% variability across the
+projector surface) and less than 0.25\% on scales smaller than
+$0.5^{\circ}$ (a little larger than the size of a CCD). The projectors
+will also be designed to limit the extent of light emitted outside the
+range of angles seen by the camera to reduce stray light in the flat
+fields \citep{Gressler2010}. The broadband light source can be tuned
+to have any chosen spectral profile; this will be chosen during
+commissioning. For simplicity in discussing the next few sections, let
+us assume that this is a flat $F_\nu(\lambda)$ profile.
 
 %\begin{figure}[htbp]
 %\includegraphics[width=6in]{narrowband_flat}
@@ -822,9 +839,10 @@ implementation, smaller than the scale of a CCD).
 %\end{figure}
 
 
-
 \subsubsection{Generating the illumination correction}
 \label{sec:ic}
+
+Before the white-light flat field can be applied to the 
 
 The ideal flat field would demonstrate the hardware response to a
 focal plane illuminated exactly as it would be with a dark night sky,
@@ -1097,94 +1115,29 @@ corrections.
 \subsubsection{Measuring the shape of the hardware response curve}
 \label{sec:hardware_phi}
 
-The specialized hardware for this flat field measurement is an array
-of projectors mounted in the dome of the LSST enclosure instead of the
-traditional `dome screen'. These projectors will be illuminated with
-both broadband (e.g. quartz lamp) and tunable narrow band (essentially
-monochromatic) light sources.  Adjustment of the wavelength of the
-tuneable narrow band light source can be as fine as 1~nm. The
-projectors are designed to fill the LSST etendue with a uniform
-illumination, smoothly varying by less than 1\% across the camera
-field of view (corresponding to less than 10\% variability across the
-projector surface) and less than 0.25\% on scales smaller than
-$0.5^{\circ}$ (a little larger than the size of a CCD).  The
-projectors will also be designed to limit the extent of light emitted
-outside the range of angles seen by the camera to reduce stray light
-in the flat fields \citep{Gressler2010}. A set of precision diodes
-will be used to normalize the photon flux integrated during flat field
-exposures, thus allowing a precise comparison of the system response
-at different wavelengths when using the narrow band light sources.
-These photodiodes, together with their read-out electronics, will be
-calibrated at the U.S. National Institute of Standards (NIST) to
-$\approx0.1\%$ relative accuracy across wavelengths from 450~nm to
-950~nm. The response of these diodes varies smoothly across this range
-of wavelength and provides a well-behaved reference for determination
-of $S_b^{sys}(\lambda)$.  Further details of the LSST narrow band flat
-field apparatus can be found in \citet{Gressler2010}.  Preliminary
-results from a similar apparatus tested at PanSTARRS can be found in
-\citet{Stubbs2010a}, as well as earlier experiments from CTIO described
-in \citet{Stubbs2007a}.
+The dome screen projector system introduced in
+section~\ref{sec:hardware_norm} will be used to generate a series of
+narrow band flat fields at wavelengths covering the range of LSST's
+sensitivity (approximately 350-1100~nm) in each filter.  The same dome
+screen uniformity requirements for the white-light flat field apply to
+the narrow band dome screen illumination; $<1\%$ across the camera
+field of view (corresponding to $<10\%$ variability across the
+projector surface) and $<0.25\%$ variability in the focal plane on
+scales smaller than $0.5^{\circ}$.
 
-In each filter, a set of narrow band flats will taken at a series of
-wavelengths to form a data cube of flat fields in
-($x,y,\lambda$). Using the photodiode measurements of the light
-emitted at each wavelength, the data cube can be collapsed to a single
-`synthetic flat field' image ($x,y$) by choosing a desired spectral
-energy distribution, then combining the individual narrow band images
-after applying an appropriate illumination correction (see
-subsection~\ref{sec:ic} for details on the illumination correction) for each
-wavelength and weighting by the goal SED and the photodiode
-measurements. The desired SED could be a single, constant SED or could
-be a set of SEDS, but will be clearly defined during the commissioning
-period. One choice might be a night sky SED to match the majority of
-pixels in each image; the goal SED would then vary throughout the
-lunar cycle.
-
-The narrow band flats are time-consuming to acquire. Scanning through
-all 6 filters at 1~nm intervals requires many hours worth of
-exposures, but must also be done in minimal levels of ambient
-light. Luckily, any wavelength dependent variations in the synthetic
-flat are expected to change relatively slowly so the full set of
-narrow band flats only need to be acquired approximately once a month,
-which could be done during cloudy nights. However, gray-scale
-variations in the hardware normalization (due to dust particles on the
-filters, etc.) will occur on a much shorter timescale.  Thus, it is
-necessary to use a standard white-light flat to correct for these
-short timescale gray-scale variations in the system throughput.  The
-white-light flat fields will be obtained with the same apparatus as
-the narrow band dome flats, but as the number of exposures required to
-characterize a filter is dramatically reduced, these white-light flats
-can be obtained at the start and end of every night of observing.
-
-The white-light flat is not applied directly to images, as it
-does not have the desired spectral energy distribution. Instead,
-changes in the white-light flat from night to night will be
-transferred to the data cube of narrow band flat fields, adjusting the
-narrow band flats for small-scale changes in gray-scale
-throughput. This can be done by taking a white-light flat
-simultaneously with the acquisition of the narrow band flat data
-cube. White-light flats obtained over the next month are compared to
-the `simultaneous' white-light flat, and then the narrow band flat
-data cube can be multiplied by any observed differences.
-
-The illumination pattern and color of the quartz lamp must be stable
-over the time interval between monthly narrow band flat measurements,
-to reduce changes in ghosting or color-dependent sensitivity
-variations in the white light flats.
-
-
-The hardware response curve is measured directly using the individual
-narrowband flat fields described in section~\ref{sec:hardware_norm}. At
-each wavelength, the narrowband flat field will be illumination
-corrected and then used to measure the total hardware response over
-all $x,y$ positions. The dome screen photodiodes will be used to track
-the relative intensity of the light produced by the projectors at each
-wavelength. These NIST-calibrated photodiodes are expected to be
-accurate to within 0.1\% between 400-900~nm ($g,r,i,z$ bandpasses)
-with current technology, which can be extended to 1600~nm (into the
-$y$ band) using techniques under development (which also have the
-possibility of achieving 0.01\% accuracy in the diode calibration at
-NIST) \citep{Eppeldauer09}, as shown in Figure~\ref{fig:NIST_diode}. 
+The narrow band light sources can be adjusted at intervals as fine as
+1~nm.  A set of precision diodes will be used to normalize the photon
+flux integrated during flat field exposures, thus allowing a precise
+comparison of the system response at different wavelengths when using
+the narrow band light sources.  These photodiodes, together with their
+read-out electronics, can be calibrated at the U.S. National Institute
+of Standards (NIST) to $\approx0.1\%$ relative accuracy across
+wavelengths from 400~nm to 900~nm ($g$, $r$, $i$, $z$ bandpasses)
+using current technology.  This can be extended to 1600~nm (into and
+beyond the $y$ band) using techniques under development, which also
+have the posssibility of achieving 0.01\% accuracy in the diode
+calibration at NIST \citep{Eppeldauer09}, as shown in
+Figure~\ref{fig:NIST_diode}.
 
 \begin{figure}
 \centering
@@ -1205,9 +1158,35 @@ multiple scans of a single source using the same photodiode.} }
 \label{fig:NIST_diode}
 \end{figure}
 
-These measurements will be updated on a monthly basis, as the hardware
-response curve is expected to change only slowly over time due to
-aging in the filter and mirror coatings. It is expected that the shape
+Further details of the LSST narrow band flat field apparatus can be
+found in \citet{Gressler2010}.  Preliminary results from a similar
+apparatus tested at PanSTARRS can be found in \citet{Stubbs2010a}, as
+well as earlier experiments from CTIO described in
+\citet{Stubbs2007a}.
+
+In each filter, a series of narrow band flats will taken at a range of
+wavelengths to form a data cube of flat fields in ($x,y,\lambda$). The
+narrow band flats are time-consuming to acquire; scanning through all
+6 filters at 1~nm intervals requires many hours worth of exposures,
+but must also be done in minimal levels of ambient light. Luckily, any
+wavelength dependent variations in the synthetic flat are expected to
+change relatively slowly so the full set of narrow band flats only
+need to be acquired approximately once a month, which could be done
+during cloudy nights.
+
+\subsubsubsection{The narrow band flat field illumination correction}
+
+At each wavelength, the narrowband flat field must be illumination
+corrected and then used to measure the total hardware response over
+all $x,y$ positions, while the photodiodes track the relative intensity of 
+the light produced by the dome screen projectors as a function of wavelength.
+The illumination correction for the narrow band flat fields suffers from
+similar problems as the white-light flat field illumination correction, but
+becomes more complicated as ghosting becomes more problematic. 
+
+\subsubsubsection{The expected effect of $\phi_b^{sys}(\lambda)$ variations}
+
+It is expected that the shape
 of the response curve will be primarily a function of radius due to
 variations in the thickness of the filter coatings caused by the
 mechanism used to deposit those coatings. The variation due to filter
@@ -1238,7 +1217,6 @@ positioning to remain less than a 1~mmag source of error.
 %Given the
 %filters are approximately 75~cm in diameter, this means the filter 
 %positioning must be recorded to better than 0.18~mm. 
-
 %LJ - beamsize 100mm, plus review filter location requirement ... 0.025\% is too small
 %Plus need to include shift in bandpass due to change in incident angle ? 
 
@@ -1490,13 +1468,16 @@ atmospheric extinction. By observing the same grid of stars on
 multiple nights, even if the SEDs are not well determined initially,
 they can be bootstrapped from the many epochs of data. 
 
-Generally, the auxiliary telescope will not observe stars along the
+Generally, the auxiliary telescope will {\it not} observe stars along the
 same line of sight as LSST, as the values for
 $C_{mol/\ozone/\water}$ and $\tau^{aerosol}$ are better
 constrained by observing a wide variety of airmasses and locations on
 the sky that cover a wide range in N/S/E/W directions, as well as utilizing
 repeat observations of the same star throughout each night, and then
-fitting the spectroscopic data from the entire night. 
+fitting the spectroscopic data from the entire night. This improves the 
+signal to noise for the atmospheric absorption profiles generated for each science observation.
+
+\subsubsubsection{The expected effect of $\phi_b^{atm}(\lambda)$ variations}
 
 \citet{Burke2010b} describes a series of observing runs at CTIO carried out over several
 months, where spectroscopic observations of stars were fit using this method. Using the extremes of the range of $C_{mol}$,
