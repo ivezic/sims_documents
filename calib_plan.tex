@@ -819,6 +819,19 @@ to have any chosen spectral profile; this will be chosen during
 commissioning. For simplicity in discussing the next few sections, let
 us assume that this is a flat $F_\nu(\lambda)$ profile.
 
+Although the dome screen is engineered to illuminate the LSST etendue
+very uniformly on scales approximately the size of a CCD (the
+engineering requirement of less than 0.25\% variability translates to
+an RMS variation of 0.7~mmag on these scales), the variability across
+the full focal plane will exceed LSST SRD requirements. However, even
+if the dome screen illumination were perfectly uniform and no stray or
+scattered light entered the telescope, the observed flat field still
+{\it cannot} be applied directly to science images with the
+expectation of achieving photometric uniformity in measurements of
+stellar sources. The difference between the desired `photometric' flat
+and the observed flat field is the `illumination
+correction'. Generating the illumination correction is discussed next. 
+
 %\begin{figure}[htbp]
 %\includegraphics[width=6in]{narrowband_flat}
 %\caption{ {\small
@@ -842,7 +855,40 @@ us assume that this is a flat $F_\nu(\lambda)$ profile.
 \subsubsection{Generating the illumination correction}
 \label{sec:ic}
 
-Before the white-light flat field can be applied to the 
+Generating a truly ideal photometric flat field (for measuring stellar
+sources) would require a point source of known illumination at
+infinity, extending over an infinitesimally small angular patch of
+sky, and movable to any location in the telescope field of view and
+observed with no atmosphere -- essentially, a controllable stellar
+source. This source's emittance is a Lambertian with uniform surface
+brightness that is independent of location on the sky, and it would
+emit the same spectral energy distribution (SED) as the source we wish
+to measure. We could then raster this point source over the telescope
+field of view in steps of a pixel's angular size, and at each location
+measure the counts within a fixed aperture centered on the central ray
+from those coordinates.  After normalizing the measured array of
+intensities to unity, the resulting data can be viewed as an image --
+the `ideal photometric flat' for the selected SED.  This would appear
+slightly different than a usual flat field image; {\it e.g.} dead
+pixels would not stand out, as they would be averaged into each
+aperture which overlapped them. When performing photometry, its use
+would be slightly different as well; instead of dividing the raw
+pixels by the flat, stellar photometry would consist of doing the
+aperture sum on the raw pixels and then dividing by the value of the
+photometric flat at the aperture center.
+
+In practice, this ideal must be recreated in other ways. Typical
+astronomical flat fields generated from dome screens, the twilight sky
+or dark sky flats all contain light sources that illuminate the entire
+telescope field of view simulateously and is only approximately Lambertian. 
+In addition, these sources are only approximately uniform over the field 
+of view, and each has an SED which differs from that of the source to be
+measured. 
+
+-- WORKING HERE (problem from each of these .. describe ghosting .. describe scattered light,
+describe SED problem & reference bandpass section) - describe how we will generate 
+illumination correction using model + `cleanup' with selfcal )
+(incorporate some text from below, some from Tim, + new) 
 
 The ideal flat field would demonstrate the hardware response to a
 focal plane illuminated exactly as it would be with a dark night sky,
@@ -1048,37 +1094,17 @@ least factor of 2 more accurate.
 
 \subsubsection{Error in the Normalization of the Hardware Transmission}
 
-The dome screen projectors will be designed to be uniform to bertter than
-0.25\% (2.5~mmag) over scales less than $0.5^{\circ}$ (slightly larger
-than a CCD). Translating from this engineering requirement (a strict
-limit) to the RMS of expected measurements implies a resulting RMS of
-0.7~mmag (=2.5~mmag/$\sqrt(12)$) in the dome illumination uniformity
-on scales smaller than a CCD. After using the measurements from the
-CCOB to model ghost reflections and scattering within the camera, the
-uniformity of the dome screen projectors is expected to be the
-limiting factor on these small scales. Applying the dense rastor scan
-of stars to correct for larger illumination variations from the dome
-screen projectors on the scale of the entire field of view, plus to
-correct for the effects of 1--2\% stray light and systematic exposure
-differences due to camera shutter travel, adds an additional error of
-about 2.8~mmag, increasing the expected error in the illumination
-corrected synthetic flat field to 2.9~mmag.
+The dome screen projectors will be designed to be uniform to bertter
+than 1\% (10~mmag) across the LSST field of view. After
+applying the ZEMAX model to generate expected ghost reflections and
+scattering within the camera, and adding dense rastor scans of stars to 
+generate a preliminary illumination correction, this variation will be 
+reduced to approximately 5~mmag (based on the SNLS experience \citep{Regnault2009}).
+With the addition of further improvements from the self-calibration procedure,
+we expect the error due to the hardware normalization to be $<3$~mmag. 
 
-The illumination corrected synthetic flats are created on a monthly
-basis and then must be updated for gray-scale nightly changes in the
-hardware transmission (due to dust,etc) using the white-light flat
-fields acquired using the quartz lamp in the dome screen
-projectors. As this update only depends on changes in the white light
-flats, not their absolute values, the only requirement is that the
-quartz lamps produce an illumination pattern in the focal plane which
-is stable over time at the same level as the initial illumination
-uniformity requirement, or stable to within 0.25\% within a CCD. This
-means that the quartz lamps should not change their spectral profile
-(which may change the ghosting pattern due to wavelength dependent
-effects) or their illumination pattern by more than an amount which
-would produce changes of more than 0.25\% in the focal plane, adding a
-further 0.7~mmag rms scatter, for a final total of 3~mmag expected
-error in the normalization of the hardware throughput.
+%LJ - ok, but actually also .. 10mmag / sqrt(12) to calculate RMS from the *strict* limit, gives
+% 3mmag here too ...
 
 \subsection{Correcting for the Shape of the Hardware and Atmospheric
   Response Curve}
