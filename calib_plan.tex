@@ -562,11 +562,16 @@ the variations in the filter bandpass across the focal plane or
 deterioration of coatings on mirrors or lenses over time. We measure
 and correct for these variations in different ways.
 
-We can measure the rapidly time variable gray-scale relative
+We will measure the rapidly time variable gray-scale relative
 normalization changes in the hardware using standard white-light flat
 fields acquired at the start and end of each night through each
 filter, in a manner similar to traditional dome flats. This is
-discussed in detail in section~\ref{sec:hardware_norm}. 
+discussed in detail in section~\ref{sec:hardware_norm}.  This
+calibration stage is particularly important for corrections on very
+small size scales. Later calibration stages depend on photometric
+measurements of stars using an aperture proportional to the Point
+Spread Function (PSF), and thus primarily contribute to calibration on
+scales larger than the PSF.
 
 To measure the wavelength-dependent shape of the hardware response
 curve as a function of position in the focal plane, we will use a
@@ -583,12 +588,7 @@ repeated every 30 days, a time interval adequate for measurement of
 the more slowly variable $\phi_b^{sys}(\lambda,t)$. This measurement
 is discussed in detail in section~\ref{sec:hardware_phi}.
 
-These calibration stages are particularly important for corrections at
-very small size scales.  All later calibration stages depend on
-photometric measurements of stars, thus can only contribute to
-calibration at scales larger than the Point Spread Function (PSF).
-
-It is worth noting that before these flat fields (both the white-light
+It is important to consider that before these flat fields (both the white-light
 and the narrow band flats) can be used to measure $S_b^{sys}$, they
 must be modified to correctly produce {\it photometrically} uniform
 measurements of stars of a defined reference SED across the field of
@@ -635,11 +635,10 @@ atmospheric absorption profile, $\phi_b^{atm}(\lambda,alt,az,t)$, for
 each observation. This process is discussed in detail in
 section~\ref{sec:atmo_phi}.  
 
-In order to correct for the higher
-frequency gray-scale variations in the relative normalization of
-$S^{atm}(alt,az,t)$ due to cloud extinction, we must use the
-observations of stars in the images themselves, as the cloud
-extinction can vary by 0.01 magnitudes on the scale of a CCD
+In order to correct for the more rapid gray-scale variations in the
+relative normalization of $S^{atm}(alt,az,t)$ due to cloud extinction,
+we must use the observations of stars in the images themselves, as the
+cloud extinction can vary by 0.01 magnitudes on the scale of a CCD
 \citep{Ivezic2007} on timescales as fast as a few minutes. This
 `self-calibration' procedure could be thought of as creating a massive
 calibration `standard' star catalog, where the calibration stars are
@@ -672,17 +671,17 @@ every observation, allowing us to correct for atmospheric extinction
 on the scale of a CCD. By adopting a more complex model, this
 procedure can also correct for variations in the relative
 normalization of the total system throughput beyond those contributed
-by cloud extinctio (such as remaining errors in the illumination
-correction), but is generally limited by the number of stars and
-number of observations of each star that are obtained. A CCD size
-patch provides about 100 stars per patch, allowing good signal to
-noise when determining cloud extinction which varies from observation
-to observation, but longer term effects (such as the illumination
-correction) may be possible to determine on scales down to approximately
-the PSF.  This is similar in nature to the ubercal method applied to
-SDSS in \citet{Padmanabhan2008}, and is discussed in more detail in
+by cloud extinction (such as remaining errors in the illumination
+correction for the white-light and narrowband flat fields), but is
+generally limited by the number of stars and number of observations of
+each star that are obtained. A CCD size patch provides about 100 stars
+per patch, allowing good signal to noise when determining cloud
+extinction which varies from observation to observation.  Longer
+term effects (such as the illumination correction) may be possible to
+determine on scales down to approximately the PSF.  This is similar in
+nature to the ubercal method applied to SDSS in
+\citet{Padmanabhan2008}, and is discussed in more detail in
 section~\ref{sec:atmo_norm}.
-
 
 Repeating Equation~\ref{eqn:mag2counts} above, adjusting ${obs}$ indexes to ${meas}$ to 
 reflect the difference between the true and measured quantities,
@@ -793,30 +792,31 @@ hardware transmission ($S_b^{sys}$) will be done using a white-light
 flat field generated using a broad band source illuminating a
 specialized dome screen projector. This is the first step in
 photometric calibration and is necessary to correct for variations in
-the normalization of $S_b^{sys}$ that are smaller than a few times the
-PSF (and in the current calibration implementation, smaller than the
-scale of a CCD).
+the normalization of $S_b^{sys}$ that are than the PSF (and in the
+current calibration implementation, smaller than the scale of a CCD).
 
 The dome screen projector is an array of projectors mounted in the
 dome of the LSST enclosure, specially designed to provide very uniform
-illumination to the LSST etendue while minimizing any light straying
-beyond the etendue. In addition, the dome screen will be able to
-project both broadband and tunable narrow band (essentially
-monochromatic) light sources, providing both broadband (white-light)
-and narrow band flat fielding capabilities.  More details of the
-narrow band flat field capabilities are provided in
-section~\ref{sec:hardware_phi}. The dome projector system is different from a
-traditional dome screen in that the `screen' is a series of light sources,
-rather than a screen reflecting a single light source. 
+illumination to the LSST etendue (the incoming aperture of the
+telescope, taking into consideration the desired angle of the incoming
+light) while minimizing any light straying beyond the etendue. In
+addition, the dome screen will be able to project both broadband and
+tunable narrow band (essentially monochromatic) light sources,
+providing both broadband (white-light) and narrow band flat fielding
+capabilities.  More details of the narrow band flat field capabilities
+are provided in section~\ref{sec:hardware_phi}. The dome projector
+system is different from a traditional dome screen in that the
+`screen' is a series of light sources, rather than a screen reflecting
+a single light source.
 
 For both white-light and narrow band flat field flat fields, the
 projectors are designed to fill the LSST etendue with a uniform
-illumination smoothly varying by less than 1\% across the camera field
-of view (corresponding to less than 10\% variability across the
+illumination smoothly varying by less than 1\% across the camera focal
+plane (corresponding to less than 10\% variability across the
 projector surface) and less than 0.25\% on scales smaller than
 $0.5^{\circ}$ (a little larger than the size of a CCD). The projectors
 will also be designed to limit the extent of light emitted outside the
-range of angles seen by the camera to reduce stray light in the flat
+etendue seen by the camera to reduce stray light in the flat
 fields \citep{Gressler2010}. The broadband light source can be tuned
 to have any chosen spectral profile; this will be chosen during
 commissioning. For simplicity in discussing the next few sections, let
@@ -829,11 +829,13 @@ an RMS variation of 0.7~mmag on these scales), the variability across
 the full focal plane will exceed LSST SRD requirements. However, even
 if the dome screen illumination were perfectly uniform and no stray or
 scattered light entered the telescope, the observed flat field still
-{\it cannot} be applied directly to science images with the
-expectation of achieving photometric uniformity in measurements of
-stellar sources. The difference between the desired `photometric' flat
-and the observed flat field is the `illumination
-correction'. Generating the illumination correction is discussed next. 
+could not be applied directly to science images with the expectation
+of achieving photometric uniformity in measurements of stellar
+sources, due the presence of ghost images in the observed flat field
+and the effect of plate scale variation from the center to the edge of
+the field of view. The correction which must be applied to the
+observed flat to produce the desired photometrically correct flat is
+called the `illumination correction'.
 
 %\begin{figure}[htbp]
 %\includegraphics[width=6in]{narrowband_flat}
@@ -863,8 +865,8 @@ sources) would require a point source of known illumination at
 infinity, extending over an infinitesimally small angular patch of
 sky, and movable to any location in the telescope field of view and
 observed with no atmosphere -- essentially, a controllable stellar
-source. This source's emittance is a Lambertian with uniform surface
-brightness that is independent of location on the sky, and it would
+source. This source's emittance would be a Lambertian with uniform surface
+brightness independent of location on the sky, and it would
 emit the same spectral energy distribution (SED) as the source we wish
 to measure. We could then raster this point source over the telescope
 field of view in steps of a pixel's angular size, and at each location
@@ -878,15 +880,19 @@ aperture which overlapped them. When performing photometry, its use
 would be slightly different as well; instead of dividing the raw
 pixels by the flat, stellar photometry would consist of doing the
 aperture sum on the raw pixels and then dividing by the value of the
-photometric flat at the aperture center.
+photometric flat at the aperture center.  The resulting magnitudes for
+stars (of the selected SED) measured with this technique would be
+uniform across the entire field of view. 
 
-In practice, this ideal must be recreated in other ways. Typical
-astronomical flat fields generated from dome screens, the twilight sky
-or dark sky flats all contain light sources that illuminate the entire
-telescope field of view simulateously and is only approximately Lambertian. 
-In addition, these sources are only approximately uniform over the field 
-of view, and each has an SED which differs from that of the source to be
-measured. 
+In practice, we do not have a point source of this nature to create
+this ideal photometric flat. Typical astronomical flat fields generated from dome
+screens, the twilight sky or dark sky flats all contain light sources
+that illuminate the entire telescope field of view simulateously and
+which are only approximately Lambertian.  In addition, these sources
+are only approximately uniform over the field of view, and each has an
+SED which differs from that of the source to be measured.
+
+
 
 -- WORKING HERE (problem from each of these .. describe ghosting .. describe scattered light,
 describe SED problem \& reference bandpass section) - describe how we will generate 
