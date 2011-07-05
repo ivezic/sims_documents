@@ -460,7 +460,7 @@ def calc_deltamags(seds, sedkeylist, bpDict1, bpDict2):
             i = i + 1
     return dmags
 
-def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, newfig=True):
+def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlims=None, newfig=True):
     # ylims = dictionary (ylim['u'] = [0, 0])
     sedtypes = ['kurucz', 'mlt', 'quasar', 'white_dwarf', 'sn']
     # make figure of change in magnitude
@@ -573,6 +573,13 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, newf
                 pylab.ylim(ylims[f][0], ylims[f][1])
             except KeyError:
                 pass
+        if xlims == None:
+            pass
+        else:
+            try:
+                pylab.xlim(xlims[f][0], xlims[f][1])
+            except KeyError:
+                pass
     # put a grid in the background
     if newfig:
         for i in range(1, 7):
@@ -608,9 +615,10 @@ if __name__ == "__main__":
 
     # now calculate change in magnitude between the two quantities we want to compare
     t1 = total_std['1']
-    t2 = total_std['2']
+    t2 = total_shift['1']
     #titletext = "Maximum changes in atmosphere, all SED types"
-    titletext = "10% / 30% H2O atmosphere changes"
+    #titletext = "10% / 30% H2O atmosphere changes"
+    titletext = "1% filter shift"
     dmags = calc_deltamags(stars, starlist, t1, t2)
     for f in filterlist:        
         print f, dmags[f].min(), dmags[f].max()
@@ -621,7 +629,11 @@ if __name__ == "__main__":
     #ylims['i'] = [-20, 25]
     #ylims['z'] = [-20, 25]
     #ylims['y'] = [-20, 25]
-    ylims = None
+    ylims = {}
+    xlims = {}
+    for f in filterlist:
+        ylims[f] = [-10, 0]
+        xlims[f] = [-0.06, 0.01]
 
     #plot_throughputs(t1, t2)
 
@@ -675,7 +687,7 @@ if __name__ == "__main__":
         print "SN " , snlist
         for f in filterlist:
             print f, dmags[f].min(), dmags[f].max()
-        plot_dmags(gi, dmags, snlist, 'sn', titletext=titletext, ylims=ylims, newfig=False)
+        plot_dmags(gi, dmags, snlist, 'sn', titletext=titletext, ylims=ylims, xlims=xlims, newfig=False)
 
         
     pylab.show()

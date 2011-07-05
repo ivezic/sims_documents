@@ -1,0 +1,23 @@
+Measuring throughput from PS, found points in focal plane where throughput exceeded 100%. Problem! 
+Source was light (full aperture) into the etendue. 
+Another problem is measuring throughput without filter in place gives different baffling/stray light because losing stray light from filter holder as well. 
+
+Decided to take data with a collimated source - 6in aperture telesope, put fiber at its focus, projected collimated beam. Doesn't illluminate whole pupil, but does make small spot on focal plane. Can make ghost map of system, but limited incident angles (not full pupil). 
+
+*One of the things LSST should do is do conceptual equivalent of putting little spot at focus of each collimator, projecting collimated beam whose extent is less than full field of view (so can measure ghosting, but with full aperture). 
+
+Ghosting really obvious from PS. One extra problem was that one of PS ghosts is nearly in-focus (due to optics configuration). Other ghosts not in focus, but give out of focus donuts. Tens of percent of light at certain wavelengths ends up in ghosted images! 
+
+For PS, will end up taking optical bench scans of filters, then compare to throughput without filters.  (and hardware throughput will be without filter holder, because can't put into beam without filter). 
+
+Ideally, pick emission line sources and raster across focal plane (Chris will dig up manuscript and circulate it to us for some thoughts on this). 
+
+PS - dealing with clouds well, so Chris and Zeljko should ask about cloud extinction! Then we can have data on what the cloud structure looks like. 
+
+# Could get spectrophotometric stars of many stars in given magnitude range - can make a calibration field with real spectra.  Project for Chris + MMT + LSST folk. 
+
+LJ + TA : next draft of paper (TA : IC section)
+
+
+
+
