@@ -2000,11 +2000,12 @@ sequence stellar locus in addition to WD stars will provide a valuable
 check on systematic effects that may arise from using (primarily)
 white dwarfs in the determination of $\phi^{atm}(\lambda,alt,az,t)$,
 as white dwarfs are bluer than most of the main sequence stars used
-for the bulk of the remainder of the calibration procedures.  The
-quasar locus will also provide an additional check on systematic
-effects, particularly useful due to the fact that quasars will exhibit 
-different levels of dust extinction through the sky than either the
-main sequence stellar locus or the white dwarfs.
+for the bulk of the remainder of the calibration procedures.
+Additional checks on the quality of color calibration will be based on
+color residuals when determining photometric redshifts for
+galaxies. Analyzing these residuals as a function of galaxy brightness
+and color, and across the LSST footprint, will yield detailed
+quantiative estimates of the calibration quality.
 
 The values for $\Delta_{br}$ will be determined by generating model
 $m_b^{std}$ values for each band-band calibration object, then
@@ -2031,21 +2032,20 @@ Several WDs in the Northern hemisphere have been very precisely
 calibrated with HST STIS measurements \citep{2004AJ....128.3053B} and
 it should be possible to obtain similar HST measurements of one or
 more targets for use in the Southern hemisphere. Identification of
-these targets has not yet been completed. 
+these targets has not yet been completed. Nevertheless, as a result of
+calibration efforts to support the SDSS-II SNe survey, the absolute
+calibration of the SDSS Stripe 82 region in the $r$ band is believed
+to be accurate at the 0.01 mag level \citep{Frieman2008}. 
 
 Another route to calibrating to an external flux system is to use
 standards from Gaia. These will have the advantage of being numerous
 and widely spread across the sky, with a useful overlapping magnitude range between
-$r=16$ to $r=20$.  After using synthetic photometry to transform these
-stars from Gaia bandpasses to LSST $r$ band, the magnitude measurements of stars
-calibrated with the LSST calibration procedure described in this
-document can be compared with the measurements from Gaia (and
-translated to the LSST bandpass). The residuals between the LSST
-measurements and the Gaia measurements can be fit using a variety of
-methods and then evaluated for calibration to an external system, 
-as well as providing a check on the overall uniformity of the LSST
-photometric calibration. 
-
+$r=16$ to $r=20$.  The magnitude measurements of stars calibrated with
+the LSST calibration procedure described in this document can be
+transformed to synthetic magnitudes in Gaia's bandpasses and compared
+to Gaia measurements. This comparison across the LSST footprint and as
+a function of stellar brightness and color will provide a powerful
+independent test of the quality of LSST photometric calibration. 
 
 \bibliographystyle{apj}
 \bibliography{calib_plan}
@@ -2082,7 +2082,7 @@ areas.
 \begin{itemize}
 
 \item{Hardware response curve - $\phi_b^{sys}(\lambda,t)$. There is a
-    narrow band dome screen projector system installed at PanStarrs
+    narrow band dome screen projector system installed at Pan-STARRS
     which would be extremely useful to study for comparison to the
     planned LSST dome screen. The PS system has demonstrated that
     ghosting is a significant problem in the narrow band flat fields;
@@ -2141,40 +2141,38 @@ areas.
 \end{itemize}
 
 
-\section{Improvements in photometric accuracy}
+\section{Photometric measurements for non-main sequence stars}
 \label{sec:photo_better}
 
-LSST will record series of $m_b^{nat}$ measurements for each
-astronomical object in each visit, resulting in approximately
-$s\times10^{13}$ measurements. These $m_b^{nat}$ measurements are
-generated directly from the counts recorded in each image, as well as
-a normalization offset, which compensates for flat field changes, the
-illumination correction, and gray (cloud) atmospheric extinction
-effects.  However, these $m_b^{nat}$ measurements will vary as the
-shape of the bandpass changes, whether as a function of position in
-the focal plane or as a function of changes in atmospheric absorption
-components. Correcting for these effects requires assuming a
-particular SED for each source, and produces $m_b^{std}$ values after
-applying $\Delta m_b^{meas}$ offsets (see the overview of calibration
-in section~\ref{sec:counts2photons} for a review). 
+LSST will record a series of $m_b^{nat}$ measurements for each
+astronomical object in each visit. These $m_b^{nat}$ measurements are
+generated directly from the counts recorded in each image, corrected
+with the photometrically uniform, broad-band flat field and for gray
+(cloud) atmospheric extinction effects. However, these $m_b^{nat}$
+measurements will vary as the shape of the bandpass changes, whether
+as a function of position in the focal plane or as a function of
+changes in atmospheric absorption components. Correcting for these
+effects requires assuming a particular SED for each source, and
+produces $m_b^{std}$ values after applying $\Delta m_b^{meas}$ offsets
+(see the overview of calibration in section~\ref{sec:counts2photons}
+for a review).
 
-In order to permit scientists to generate higher precision photometry
-for objects using arbitrary SEDs, the value of
-$\phi_b^{meas}(\lambda,alt,az,x,y,t)$ as well as the normalization
-zeropoint offsets must be available. With these additional pieces of
-information, scientists can generate more precise $\Delta m_b^{meas}$
-corrections, using their own chosen object SED to generate
-$m_b^{std}$.
+For most objects, LSST will simply assume the source has a flat SED,
+which means that $m_b^{std}$ is exactly equal to $m_b^{nat}$, as by
+definition then $\Delta m_b^{meas}$ is zero. To permit scientists to
+generate higher precision photometry for objects using arbitrary SEDs,
+LSST must provide a record of $\phi_b^{meas}(\lambda,alt,az,x,y,t)$ as
+well as the normalization zeropoint offsets for each observation. With
+these additional pieces of information, scientists can generate more
+appropriate $\Delta m_b^{meas}$ corrections, using their own chosen
+object SED to generate $m_b^{std}$. Sections~\ref{sec:hardware_phi}
+and ~\ref{sec:atmo_phi} outline the typical magnitudes of these
+corrections for main sequence stars; $\Delta m_b^{meas}$ can easily be
+on the order of 20 mmag for $gri$, or even 100 mmag in $u$ band. For
+more extreme SEDs, these corrections may be even larger.
 
-For many objects, LSST will assume a flat SED when generating
-$m_b^{nat}$ values, implying that no $\Delta m_b^{meas}$
-correction was applied. Sections~\ref{sec:hardware_phi} and
-~\ref{sec:atmo_phi} outline the typical magnitudes of these corrections;
-for some main sequence stars these corrections can easily be on the
-order of 20 mmag for $gri$, or even 100 mmag in $u$ band. For more
-extreme SEDS, these corrections may be even
-larger. Figure~\ref{fig:dmag_allseds} illustrates the likely magnitude of
-these corrections for a variety of SEDs. In each plot, the main
+Figure~\ref{fig:dmag_allseds} illustrates the likely magnitude of
+these $\Delta m_b^{meas}$ corrections for a wide variety of SEDs. In each plot, the main
 sequence stars are shown as in the figures in the main paper (small
 dots, color-coded by metallicity), although given the increased scale
 here they only appear as a purple series of circles. M dwarfs are now
@@ -2189,20 +2187,21 @@ $\lambda>800$nm), and redshifted from $z=0$ to $z=3$; also a sample of
 SN Ia from templates generated by Peter Nugent \citep{Nugent2002}, redshifted
 from $z=0$ to $z=1$.  
 
-The figure shows the $\Delta m_b^{obs}$ values that would be expected
+The figure shows the $\Delta m_b^{meas}$ values that would be expected
 under a maximum change of atmospheric parameters and under a likely
-bandpass shift. This also shows how much the reported $m_b^{nat}$
+bandpass shift. This demonstrates how much the reported $m_b^{nat}$
 values could vary for each object. If LSST was to just calculate an
 offset between $m_b^{nat}$ and $m_b^{std}$ based on an object's color
 (and assuming that the object had an SED similar to a main sequence
 star), the resulting $m_b^{std}$ values would be incorrect by the
-value of the offset between the true $\Delta m_b^{obs}$ for the SED
-and the main sequence $\Delta m_b^{obs}$ values at each color; this
-could easily be more than 20mmag.  This is why applying $\Delta
-m_b^{meas}$ values appropriate for each SED is required to generate
-$m_b^{std}$ magnitudes precise to better than 1\%, and why LSST Data
-Management must record $\phi_b^{meas}(\lambda,x,y,t)$ for each
-observation. 
+value of the offset between the true $\Delta m_b^{meas}$ for the SED
+and the main sequence $\Delta m_b^{meas}$ values at each color; this
+could easily be more than 20mmag.  
+
+With the wide variety of objects and SEDs that will be possible in the
+LSST data set, providing the information and tools so that
+scientists may calculate highly precise $m_b^{std}$ magnitudes for
+their objects of interest is crucial. 
 
 \begin{figure}
 \centering
