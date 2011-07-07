@@ -266,8 +266,8 @@ def make_skywflat():
     pixgrid = sky
     starval1, bkgd1 = measure_star(pixgrid, star1)
     starval2, bkgd2 = measure_star(pixgrid, star2)
-    pylab.annotate("%d" %(round(starval1)), [star1[0]+5,star1[1]+12])
-    pylab.annotate("%d" %(round(starval2)), [star2[0]-50,star2[1]+12])
+    pylab.annotate("%d" %(round(starval1)), [star1[0]+5,star1[1]+12], color='white')
+    pylab.annotate("%d" %(round(starval2)), [star2[0]-50,star2[1]+12], color='white')
     step = (sky.max() - sky.min())/5.0
     ticks = numpy.arange(sky.min()-step, sky.max()+2*step, step)
     ticks = numpy.round(ticks)
@@ -287,8 +287,8 @@ def make_skywflat():
     pylab.colorbar(im, shrink=0.65, ticks=ticks)
     starval1, bkgd1 = measure_star(pixgrid, star1)
     starval2, bkgd2 = measure_star(pixgrid, star2)
-    pylab.annotate("%d" %(round(starval1)), [star1[0]+5,star1[1]+12])
-    pylab.annotate("%d" %(round(starval2)), [star2[0]-50,star2[1]+12])
+    pylab.annotate("%d" %(round(starval1)), [star1[0]+5,star1[1]+12], color='white')
+    pylab.annotate("%d" %(round(starval2)), [star2[0]-50,star2[1]+12], color='white')
     ax.tick_params(axis='x', labelbottom='off')
     ax.tick_params(axis='y', labelleft='off')
     pylab.grid(which='major')
@@ -308,8 +308,8 @@ def make_skywflat():
     pixgrid = sky
     starval1, bkgd1 = measure_star(pixgrid, star1)
     starval2, bkgd2 = measure_star(pixgrid, star2)
-    pylab.annotate("%d" %(round(starval1)), [star1[0]+5,star1[1]+12])
-    pylab.annotate("%d" %(round(starval2)), [star2[0]-50,star2[1]+12])
+    pylab.annotate("%d" %(round(starval1)), [star1[0]+5,star1[1]+12], color='white')
+    pylab.annotate("%d" %(round(starval2)), [star2[0]-50,star2[1]+12], color='white')
     step = (sky.max() - sky.min())/5.0
     ticks = numpy.arange(sky.min()-step, sky.max()+2*step, step)
     ticks = numpy.round(ticks)
@@ -332,8 +332,8 @@ def make_skywflat():
     pylab.xticks(rotation=-45)
     starval1, bkgd1 = measure_star(pixgrid, star1)
     starval2, bkgd2 = measure_star(pixgrid, star2)
-    pylab.annotate("%d" %(round(starval1)), [star1[0]+5,star1[1]+12])
-    pylab.annotate("%d" %(round(starval2)), [star2[0]-50,star2[1]+12])
+    pylab.annotate("%d" %(round(starval1)), [star1[0]+5,star1[1]+12], color='white')
+    pylab.annotate("%d" %(round(starval2)), [star2[0]-50,star2[1]+12], color='white')
     pylab.xlim(0,skysize-1)
     pylab.ylim(0,skysize-1)
 

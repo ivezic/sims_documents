@@ -43,14 +43,16 @@ to deliver 1\%-level photometry across the observed sky.
 
 \section{Introduction}
 
-LSST aims to deliver 1\%-level photometry across the observed sky
-(0.5\%-level for repeat observations of the same source), 
-representing about a factor of two improvement over the current
-state-of-the-art wide-field optical photometry delivered by SDSS. This
+LSST is required to deliver 1\%-level photometry across the observed
+sky and under a wide range of observing conditions
+(0.5\%-level for repeat observations of the same source). This
+represents about a factor of two improvement over the current
+state-of-the-art wide-field optical photometry delivered by SDSS under
+photometric conditions. This
 factor of two improvement will have a major impact on science
 deliverables because it implies that the error volume in the
-five-dimensional LSST color space will be almost two orders of
-magnitude smaller than for SDSS-like photometry. This smaller error
+five-dimensional LSST color space will be over thirty times
+smaller than for SDSS-like photometry. This smaller error
 volume will improve source classification and the precision of quantities
 such as photometric redshifts for galaxies and photometric metallicty
 for stars.
@@ -69,7 +71,7 @@ scales to enable their explicit inclusion in the calibration
 procedure, rather than resorting to traditional approximations such as
 linear color terms. SNLS re-processing of CFHT Legacy Survey data
 found these color-dependent terms to be a significant contributor to
-the required photometric calibration process \citep{Regnault2009}, on
+the photometric calibration process \citep{Regnault2009}, on
 the level of a few to several percent. 
 
 This document describes the calibration requirements and processes for
@@ -111,16 +113,16 @@ stars. Non-variable objects are intrinsically not variable; these will
 be identified in an iterative fashion from the many epochs of LSST
 observations. The SRD specifications are: 
 \begin{enumerate}
-\item{{\bf Repeatability:} the median value of the rms of calibrated
-magnitude measurements around the mean calibrated magnitude for each
-star will not exceed 5 millimags in $gri$, 7.5 millimags in $uzy$ for
+\item{{\bf Repeatability:} the median value of the photometric scatter
+   for each star (the rms of calibrated
+magnitude measurements around the mean calibrated magnitude) will not exceed 5 millimags in $gri$, 7.5 millimags in $uzy$ for
 bright, unresolved, isolated, non-variable objects. No more
-than 10\% of these objects should have an rms larger than 15 mmag in
-$gri$, 22.5 mmag in $uzy$.  This specifies the distribution of random
+than 10\% of these objects should have a photometric scatter larger than 15 mmag in
+$gri$, 22.5 mmag in $uzy$.  This specifies the distribution of 
 photometric errors ($\sigma$) and constrains both the repeatability of
 extracting counts from images and the ability to monitor (or model)
 the changes in normalized system response ($\phi$). It could be
-thought of as making the photometry of a single source consistent over
+thought of as requiring the photometry of a single source to be consistent over
 time. \label{repeatability_req}}
 \item{{\bf Uniformity:} the rms of the internal photometric zeropoint
 error (for each visit) will not exceed 10 millimags in $grizy$, 20 millimags in $uzy$,
@@ -145,12 +147,15 @@ different filters together, enabling precise measurement of colors.
 \label{color_req}}
 \item{{\bf Absolute photometric calibration:} The LSST photometric
 system must transform to an external physical scale ({\it e.g.} AB
-mags) with an rms accuracy of 10 millimags. This requirement ties LSST internal
-photometry to a physical scale, and places a constraint on the upper
-limit of the systematic error in the measurement of the total system
-throughput. This final step enables LSST photometry to be compared
-with photometry from other telescopes using other photometric
-systems. \label{abs_req}}
+mags) with an rms accuracy of 10 millimags. This requirement not only
+ties LSST internal photometry to photometry obtained from other
+telescopes, using other photometric systems, but also ties LSST
+internal photometry to a real physical scale. This places a constraint
+on the upper limit of the systematic error in the measurement of the
+total system throughput. This final step enables LSST photometry to be
+compared directly to data from other telescopes or to models ({\it
+e.g.} such as determining the albedo of an asteroid with a known
+diameter). \label{abs_req}}
 \end{enumerate}
 
 Requirements \ref{repeatability_req} and \ref{uniformity_req} must be
@@ -167,12 +172,11 @@ the calibrated magnitude measurements. Verification of requirement
 \ref{uniformity_req} is more complicated; in a simulated system it is
 simple to compare the (simulated, thus known) true magnitudes of the
 stars to the best-fit magnitudes produced after calibration. In
-operations, this will be verified using a combination of simulations
-(to test whether the observational cadence itself is suitable for the
-self-calibration procedure described below), comparisons to known
-standards, and evaluation of science outputs such as stellar locus
-diagrams. These last two tests are also relevant to verifying the
-final two requirements, \ref{color_req} and \ref{abs_req}.
+operations, this will be verified using a combination of simulations,
+comparisons to known standards, and evaluation of science outputs such
+as stellar locus diagrams. These last two tests are also relevant to
+verifying the final two requirements, \ref{color_req} and
+\ref{abs_req}.
 
 
 \section{Overview of the photometric calibration process}
@@ -194,9 +198,8 @@ This new approach lies in splitting the measurement of the {\it
 normalization} of the throughput in each observation (the gray-scale
 zeropoint) from the {\it shape} of the throughput curve (the color
 dependent terms), and further, using separate procedures to measure
-the contributions of the telescope hardware response (to the total
-normalization and bandpass shape) and the atmospheric throughput (to
-normalization and shape). This allows the use of optimized methods to
+the individual contributions of the telescope hardware response and the
+atmospheric throughput. This allows the use of optimized methods to
 measure each individual component affecting the final measured
 magnitudes, allowing us to achieve photometric calibration at the
 required levels.
@@ -215,7 +218,7 @@ throughput due to atmospheric conditions (such as cloud extinction),
 although it can be extended to apply additional corrections for large
 spatial scale errors (illumination corrections) in the flat field.
 The {\it shape} of the throughput curve will be measured using both
-the narrow band dome screen projector, to correct for variations in
+the narrow-band dome screen projector, to correct for variations in
 the shape of the hardware bandpass response across the field of view,
 and the auxiliary telescope, to correct for variations in the
 atmospheric absorption curve from visit to visit. 
@@ -326,7 +329,8 @@ change in detector sensitivity (particularly at very red wavelengths
 in the $y$ band) results from temperature changes in the detector, but
 only on scales equivalent to a CCD or larger.  There will also be
 wavelength-dependent spatial variations in $S_b^{sys}$ due to
-irregularities in the filter material; these are expected to vary
+irregularities in the filter material; these are required by the
+camera specifications to vary (at a maximum)
 slowly from the center of the field of view to the outer edges,
 equivalent to a bandpass shift on the order of 1-2\% of the effective
 wavelength of the filter. Wavelength-independent (gray-scale)
@@ -453,9 +457,9 @@ magnitudes are plotted.  These examples demonstrate that the scatter in
 natural magnitudes induced by expected atmospheric and hardware transmission
 curve shape changes alone (without any gray-scale changes) can be larger
 than the SRD repeatability requirements would permit. Adding variations 
-in the gray-scale normalization due to the hardware response (typically on the
-order of 0.01 magnitudes) and cloud extinction (could be up to a few magnitudes)
-will increase the scatter in the observed magnitudes. 
+in the gray-scale normalization due to the hardware response and cloud
+extinction will increase the scatter in the observed magnitudes even
+further. 
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{delta_mags}
@@ -493,7 +497,9 @@ Table~\ref{tab:delta_mags}. }
 \caption{{\bf $\Delta m_b^{obs}$ due to variations in system and atmospheric
  bandpass shape (see also Fig~\ref{fig:delta_mags}). The first two
 rows show the baseline (`standard') magnitude of the star. All other rows show the 
-{\it change} in magnitude (in mmag) due to the variations listed at left. } }
+{\it change} in magnitude (in mmag) due to the variations listed at
+left. Any value larger than 5~mmag would be larger than the RMS
+scatter allowed by the SRD.} }
 \begin{tabular}{l l | c c c c c c}
 Bandpass & star &  $u$ (mag) & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
 Standard (X=1.2) atm, std sys  &  red & 21.472 & 20.378 & 20.000 & 19.911 & 19.913 & 19.913 \\
@@ -563,7 +569,7 @@ deterioration of coatings on mirrors or lenses over time. We measure
 and correct for these variations in different ways.
 
 We will measure the rapidly time variable gray-scale relative
-normalization changes in the hardware using standard white-light flat
+normalization changes in the hardware using standard broadband flat
 fields acquired at the start and end of each night through each
 filter, in a manner similar to traditional dome flats. This is
 discussed in detail in section~\ref{sec:hardware_norm}.  This
@@ -576,51 +582,55 @@ scales larger than the PSF.
 To measure the wavelength-dependent shape of the hardware response
 curve as a function of position in the focal plane, we will use a
 dome-screen system that is capable of producing light at a range of
-individual wavelengths - producing a data cube of `narrow band flat
+individual wavelengths - producing a data cube of `narrow-band flat
 fields'.  At each $x$,$y$ location in the focal plane, this data cube
-records $\phi_b^{sys}(\lambda,t)$. While this data cube of narrow band
+records $\phi_b^{sys}(\lambda,t)$. While this data cube of narrow-band
 flats could potentially be used as a `synthetic flat field' by
-combining the individual narrow band flats according to a chosen
+combining the individual narrow-band flats according to a chosen
 spectral energy distribution, generation of the entire data cube of
-narrow band flats is too time-consuming to complete on a daily
-basis. Instead, the full narrow band flat field scan will only be
-repeated every 30 days, a time interval adequate for measurement of
-the more slowly variable $\phi_b^{sys}(\lambda,t)$. This measurement
+narrow-band flats is too time-consuming to complete on a daily
+basis. Instead, the full narrow-band flat field scan will only be
+repeated on a time interval adequate for measurement of
+the more slowly variable $\phi_b^{sys}(\lambda,t)$, approximately
+monthly (but to be determined during commissioning). This measurement
 is discussed in detail in section~\ref{sec:hardware_phi}.
 
-It is important to consider that before these flat fields (both the white-light
-and the narrow band flats) can be used to measure $S_b^{sys}$, they
-must be modified to correctly produce {\it photometrically} uniform
-measurements of stars of a defined reference SED across the field of
-view. This correction is called the `illumination correction'.  The
-illumination correction must correct the observed flat fields for
-effects resulting from non-uniform illumination of the dome screen,
-for the effect of pixel scale variations across the field of view, for
-ghosting caused by internal reflections in the camera, and for the
-presence of stray or scattered light arriving in the focal plane on
-non-optical paths. See figures~\ref{fig:flatfield} and
+It is important to consider that before these flat fields (both the
+broadband and the narrow-band flats) can be used to measure
+$S_b^{sys}$, they must be modified to correctly produce {\it
+photometrically} uniform measurements of stars of a defined reference
+SED across the field of view. This correction is called the
+`illumination correction'.  The illumination correction must correct
+the observed flat fields for effects resulting from non-uniform
+illumination of the dome screen, for the effect of pixel scale
+variations across the field of view, for ghosting caused by internal
+reflections in the camera, and for the presence of stray or scattered
+light arriving in the focal plane on path that are not part of the
+optical design (such as light bouncing from the dome floor or glinting
+off a filter holder). See figures~\ref{fig:flatfield} and
 \ref{fig:iceffect} for a visual example of the illumination correction
 and its importance to image processing. The illumination correction
-will be wavelength dependent; for the narrow band flat fields, an
+will be wavelength dependent; for the narrow-band flat fields, an
 illumination correction for each wavelength must be generated.  The
 illumination correction (including ghost corrections) will be
 generated by combining measurements of bright, dense star fields
 rastered across the field of view during specialized observing
 sequences and further corrections generated by the self-calibration
 stage (discussed below in section~\ref{sec:hardware_norm}). For the
-narrow band flat fields, forward modeling (ZEMAX modeling, constrained
-with measurements from the `camera calibration optical bench' (CCOB)
-and/or with measurements where the dome screen was illuminated in
-narrow band mode at a single location only) will be used to generate
-models of the ghost patterns at each wavelength, again with some
-further corrections generated by the self-calibration stage (discussed
+narrow-band flat fields, forward modeling will be useful in generating
+the illumination correction. This may include ZEMAX modeling,
+constrained with measurements from the `camera calibration optical
+bench' (CCOB) and/or with measurements where the dome screen was
+illuminated in narrow-band mode at a single location only.  Further
+corrections will be generated by the self-calibration stage (discussed
 below in section~\ref{sec:hardware_phi}).  The illumination correction
 is expected to be stable with time and will be remeasured only when
-the optical path of the telescope is altered. 
+the optical path of the telescope is altered.
 
 Next, considering $S^{atm}(\lambda,alt,az,t)$, we will again separate
 the measurement of the shape of the atmospheric response and the
-measurement of normalization of the transmission.  The
+measurement of normalization of the transmission.  The currently
+available data is still incomplete, but suggests that the
 wavelength-dependent variations in $\phi^{atm}(\lambda,t)$ change
 smoothly over spatial scales larger than the field of view and over
 several minutes.  By using an auxiliary telescope equipped with a
@@ -647,7 +657,7 @@ the main difference is that the true magnitudes of the calibration
 stars have to be bootstrapped from the many different observations of
 the survey. For every main sequence star identified as non-variable,
 isolated, and in the desired (bright) magnitude range, corrections for
-the white-light flat field and $\phi_b^{sys+atm}(\lambda,t)$ must be
+the broadband flat field and $\phi_b^{sys+atm}(\lambda,t)$ must be
 applied to produce a standardized magnitude, $m_b^{std}$, then in the
 self-calibration procedure we minimize the difference between the
 standardized magnitude and a model magnitude,
@@ -672,7 +682,7 @@ on the scale of a CCD. By adopting a more complex model, this
 procedure can also correct for variations in the relative
 normalization of the total system throughput beyond those contributed
 by cloud extinction (such as remaining errors in the illumination
-correction for the white-light and narrowband flat fields), but is
+correction for the broadband and narrow-band flat fields), but is
 generally limited by the number of stars and number of observations of
 each star that are obtained. A CCD size patch provides about 100 stars
 per patch, allowing good signal to noise when determining cloud
@@ -739,21 +749,22 @@ which can be compared to absolute physical flux scales.
 
 The sequence for photometric calibration is then:
 \begin{enumerate}
-\item{Acquire a white-light flat in each filter at the start and end
+\item{Acquire a broadband flat in each filter at the start and end
 of each observing night. Generate a full, wavelength-dependent
-illumination correction for the flats on a many-monthly basis. Apply
-the appropriate illumination correction to the white-light flat. Apply
+illumination correction for the flats on a much longer time interval
+(timescale to be determined, but much longer than monthly). Apply
+the appropriate illumination correction to the broadband flat. Apply
 flat field to images directly.}
 \item{After remaining image processing (bias correction, fringe
 correction, etc) extract ADU counts of sources from images. }
-\item{Acquire the data cube of narrow band flat field images,
+\item{Acquire the data cube of narrow-band flat field images,
 approximately monthly. Apply wavelength-dependent illumination
 correction. Measure $\phi_b^{sys}(\lambda,t,x,y)$. }
 \item{Acquire spectra of known stars on a 5--10 minute timeline
 throughout each night, fit for atmospheric absorption coefficients and
 generate $\phi_b^{atm}(\lambda,t)$ for each science images. }
 \item{Combine $\phi_b^{atm}$ and $\phi_b^{sys}$ with a range of model
-SEDs to create lookup tables for $\Delta m_b^{meas}$ at various
+SEDs to create lookup tables for $\Delta m_b^{meas}$ for various
 locations in the focal plane. }
 \item{At appropriate intervals (such as at Data Release), run the
 self-calibration procedure, applying $\Delta m_b^{meas}$ to stars
@@ -776,7 +787,8 @@ steps leading to natural magnitude and standard magnitude measurements
 described above, including how each correction is measured, calculated
 and applied.  The steps described in this section are applied to each
 filter independently. The end result of the internal calibration
-process is a record of $m_b^{nat}$ and $\phi_b^{sys+atm}(\lambda)$
+process is a record of $m_b^{nat}$ and $\phi_b^{sys+atm}(\lambda)$ (or
+the parameters which allow reconstruction of $\phi_b^{sys+atm}(\lambda)$)
 measured for each object in each observation. In addition, there will
 be a reported spectral energy distribution (SED) assumed for each
 object ($f_\nu(\lambda)$) and an associated $m_b^{std}$ that is the
@@ -788,7 +800,7 @@ $m_b^{nat}$.
 \label{sec:hardware_norm}
 
 Compensation for variations (in $x,y,t$) in the normalization of the
-hardware transmission ($S_b^{sys}$) will be done using a white-light
+hardware transmission ($S_b^{sys}$) will be done using a broadband
 flat field generated using a broad band source illuminating a
 specialized dome screen projector. This is the first step in
 photometric calibration and is necessary to correct for variations in
@@ -803,15 +815,15 @@ illumination to the LSST etendue (the incoming aperture of the
 telescope, taking into consideration the desired angle of the incoming
 light) while minimizing any light straying beyond the etendue. In
 addition, the dome screen will be able to project both broadband and
-tunable narrow band (essentially monochromatic) light sources,
-providing both broadband (white-light) and narrow band flat fielding
-capabilities.  More details of the narrow band flat field capabilities
+tunable narrow-band (essentially monochromatic) light sources,
+providing both broadband (broadband) and narrow-band flat fielding
+capabilities.  More details of the narrow-band flat field capabilities
 are provided in section~\ref{sec:hardware_phi}. The dome projector
 system is different from a traditional dome screen in that the
 `screen' is a series of light sources, rather than a screen reflecting
 a single light source.
 
-For both white-light and narrow band flat field flat fields, the
+For both broadband and narrow-band flat field flat fields, the
 projectors are designed to fill the LSST etendue with a uniform
 illumination smoothly varying by less than 1\% across the camera focal
 plane (corresponding to less than 10\% variability across the
@@ -928,10 +940,10 @@ reflections from the surface of the detector onto the back surface of
 lens 3, between the back and front surfaces of the filter, and from
 the surface of the detector and the front side of lens 3. In general,
 the ghosts produced by reflections between len3 and the detector are
-expected to have an amplitude $5\times\approx10^{-4}$ relative to the
+expected to have an amplitude $\approx 5\times 10^{-4}$ relative to the
 flux of the source.  The ghosts due to filter reflections become
 especially prominent at wavelengths where the filter transmission
-approaches 50\%.  Tests with the PanStarrs narrow band flat field
+approaches 50\%.  Tests with the PanStarrs narrow-band flat field
 system \citep{Stubbs2010a} show that at these wavelengths, the
 fraction of light in ghosts can reach about 15\% of the total light in
 the focal plane.  Other ghost images, due to reflections between lens
@@ -964,11 +976,12 @@ light in a particular pixel depends on the details of the optical
 path, the amount of light coming each region of the dome screen, and
 the SED of the dome screen.
 
-We can produce a correction to the observed flat field to removed
+We can produce an initial correction to the observed flat field to removed
 ghost light by using a ZEMAX model of the optics (including the
 details of the optical coatings of each surface, including the
 filters), and by assuming that the dome screen is uniform and the SED
-is known. The ZEMAX model will be constrained by observations of the
+is known. This initial correction will later be refined as part of the
+self-calibration process. The ZEMAX model will be constrained by observations of the
 optical system, which will come a combination of measurements from the
 Camera Calibration Optical Bench (CCOB), in-laboratory measurements of
 the filter transmission as a function of radius, and by illluminating
@@ -980,28 +993,6 @@ that the ghost images are a small fraction of the direct light should
 reduce errors induced by this assumption to below the SRD limit. The
 SED of the light generated by the dome screen is well-controlled by
 the nature of the dome screen projectors.
-
-This paragraph contains text which was preserved from earlier versions
-of the documents. I'm no longer convinced whether it is necessary or
-not.  The {\bf Camera Calibration Optical Bench (CCOB)}, provides a
-method to calibrate the spatial and wavelength-dependent response of
-the focal plane, unmounted from the telescope, using a well
-controlled, wavelength-variable, light source calibrated using a NIST
-photodiode. This light source, which produces a spot in the focal
-plane approximately the size of or smaller than the PSF, will be
-scanned across the detector ($x,y$) at a variety of beam incident
-angles, ($\theta,\phi$) and at a variety of wavelengths ($\lambda$).
-The response of the detector will be measured in two different
-configurations: one with only the detector and the dewar window -
-which doubles as lens 3 (L3) - and one with the detector, L3, L2, L1,
-the filters and the camera shutter. In the L3-only configuration, the
-detector response should include only relative simple ghosting,
-primarily 3 ghost images from reflections between the CCD surface and
-L3. In the full refractive optics configuration (with L3, L2, L1, the
-filter and camera shutter), the detector response will include a more
-complicated ghost pattern.  More details about the requirements and
-physical apparatus of the CCOB are available in LSST-10015 and
-LSST-8217.
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{r-bandGhost}
@@ -1031,8 +1022,7 @@ view due to projection effects in the optical system. As pixels in the
 center of the field of view then view a slightly larger solid angle
 than pixels near the edges, the number of photons captured from the
 dome screen (or the night sky background) in these pixels is slightly
-higher. For most wide-field cameras, this is typically on the order of
-a few percent.
+higher. For LSST, this variation is on the order of a few percent.
 
 Although the light captured from the night sky background shows the
 same effect as the flat field, the total flux from astronomical
@@ -1202,7 +1192,7 @@ Compensation for the changes in observed magnitudes caused by
 variations in the wavelength dependence (shape) of the hardware and
 atmospheric response curves, $\phi_b^{sys}(\lambda)$ and
 $\phi^{atm}(\lambda)$, will be done using independent measurements of
-the hardware response curve (generated from the narrow band flat fields) and the
+the hardware response curve (generated from the narrow-band flat fields) and the
 atmospheric response curve (generated from atmospheric extinction models
 generated from measurements from the auxiliary telescope).  While the
 measurement of the shapes of the hardware and atmosphere curves are
@@ -1231,19 +1221,19 @@ corrections.
 
 The dome screen projector system introduced in
 section~\ref{sec:hardware_norm} will be used to generate a series of
-narrow band flat fields at wavelengths covering the range of LSST's
+narrow-band flat fields at wavelengths covering the range of LSST's
 sensitivity (approximately 350-1100~nm) in each filter.  The same dome
-screen uniformity requirements for the white-light flat field apply to
-the narrow band dome screen illumination; $<1\%$ across the camera
+screen uniformity requirements for the broadband flat field apply to
+the narrow-band dome screen illumination; $<1\%$ across the camera
 field of view (corresponding to $<10\%$ variability across the
 projector surface) and $<0.25\%$ variability in the focal plane on
 scales smaller than $0.5^{\circ}$.
 
-The narrow band light sources can be adjusted at intervals as fine as
+The narrow-band light sources can be adjusted at intervals as fine as
 1~nm.  A set of precision diodes will be used to normalize the photon
 flux integrated during flat field exposures, thus allowing a precise
 comparison of the system response at different wavelengths when using
-the narrow band light sources.  These photodiodes, together with their
+the narrow-band light sources.  These photodiodes, together with their
 read-out electronics, can be calibrated at the U.S. National Institute
 of Standards (NIST) to $\approx0.1\%$ relative accuracy across
 wavelengths from 400~nm to 900~nm ($g$, $r$, $i$, $z$ bandpasses)
@@ -1272,31 +1262,31 @@ multiple scans of a single source using the same photodiode.} }
 \label{fig:NIST_diode}
 \end{figure}
 
-Further details of the LSST narrow band flat field apparatus can be
+Further details of the LSST narrow-band flat field apparatus can be
 found in \citet{Gressler2010}.  Preliminary results from a similar
 apparatus tested at PanSTARRS can be found in \citet{Stubbs2010a}, as
 well as earlier experiments from CTIO described in
 \citet{Stubbs2007a}.
 
-In each filter, a series of narrow band flats will be taken at a range
+In each filter, a series of narrow-band flats will be taken at a range
 of wavelengths to form a data cube of flat fields in ($x,y,\lambda$).
-To measure the total hardware response, each of the narrowband flats
+To measure the total hardware response, each of the narrow-band flats
 in this datacube must be illumination corrected then the hardware
 response curve can be measured at all (or a subset of) $x,y$ positions
 while the photodiodes track the relative intensity of light produced
-by the dome screen as a function of wavelength.  The narrow band flats
+by the dome screen as a function of wavelength.  The narrow-band flats
 are time-consuming to acquire; scanning through all 6 filters at 1~nm
-intervals requires many hours worth of exposures, but must also be
+intervals requires many hours worth of exposures and must be
 done in minimal levels of ambient light. However, any wavelength
 dependent variations in the synthetic flat are expected to change
-relatively slowly so the full set of narrow band flats only need to be
+relatively slowly so the full set of narrow-band flats only need to be
 acquired approximately once a month, which could be done during cloudy
 nights.
 
-\subsubsubsection{The narrow band flat field illumination correction}
+\subsubsubsection{The narrow-band flat field illumination correction}
 
-The illumination correction for the narrow band flat fields suffers
-from similar problems as the white-light flat field illumination
+The illumination correction for the narrow-band flat fields suffers
+from similar problems as the broadband flat field illumination
 correction described in section~\ref{sec:ic} but will consist
 primarily of corrections for ghosting, rather than the other
 effects. This is because we are interested in measuring the shape of
@@ -1304,7 +1294,7 @@ the hardware transmission curve at a variety of $x,y$ locations; we
 are only interested in the sensitivity at each wavelength relative to
 the sensitivity at other wavelengths at that particular $x,y$
 location. Thus, the `illumination correction' necessary for the
-narrowband flat fields is slightly different than the illumination
+narrow-band flat fields is slightly different than the illumination
 correction necessary for the broadband flat used for hardware
 normalization; only wavelength-dependent quantities need to be
 considered. Non-uniformities in the dome screen illumination, as long as
@@ -1330,10 +1320,10 @@ contributor to the illumination correction necessary
 
 The same ZEMAX model that is used to generate corrections to the
 broadband flat field will be used to generate corrections for the
-ghosts in the narrow band flat fields (which assumes that the dome
-screen illumination is uniform; we know the SED of the narrow band
+ghosts in the narrow-band flat fields (which assumes that the dome
+screen illumination is uniform; we know the SED of the narrow-band
 light emitted by the dome screen itself).  This will provide the
-overwhelming majority of the correction necessary for the narrow band
+overwhelming majority of the correction necessary for the narrow-band
 flats.  Further checks on this correction can be achieved by measuring
 the wavelength-dependent sensitivity of individual components of the
 LSST system; \citet{Regnault2009} found that the color-dependent terms
@@ -1782,15 +1772,15 @@ incorrect $\Delta m_b^{meas}$ is less than 1mmag.
 
 After applying each of the previous corrections, the raw counts have
 been corrected to a `standard' bandpass for each filter,
-$\phi_b^{std}(\lambda)$, using both the narrow band flats and the
+$\phi_b^{std}(\lambda)$, using both the narrow-band flats and the
 atmospheric model derived from the auxiliary telescope
 observations. Gray-scale zeropoint variations (particularly on small
 scales, $<$ several times the PSF) across the focal plane due to the
 telescope hardware system have also been removed by the synthetic
 flat. However, there still remain variations in the normalization of
-the system response that result from gray-scale extinction due to
+the system response that result from gray extinction due to
 clouds. The primary driver for the self-calibration procedure to
-correct for these gray-scale zeropoint offsets that result from
+correct for these gray zeropoint offsets that result from
 atmospheric variations; a secondary use for the self-calibration can
 be to reduce any other systematic errors. 
 
@@ -1956,7 +1946,7 @@ some amount of dither is required. These investigations have shown
 that dither patterns where the overlap is one quarter of the field of
 view or more produce results meeting the SRD requirements. 
 
-It is good to note that $m_{b,i}^{best})$ and $\delta z_j$ are
+It is good to note that $m_{b,i}^{best}$ and $\delta z_j$ are
 constrained only up to an arbitrary additive constant. For
 convenience, this constant can be set so that stars have roughly
 correct AB magnitudes, however the goal after self-calibration is
@@ -1979,7 +1969,7 @@ determining $\Delta_{br}$ and $\Delta_r$ from Eqn~\ref{eqn:extmags}.
 
 The band to band calibration for each filter $b$ (the $\Delta_{br}$
 values) will be determined by measuring the flux from one or more
-celestial objects whose physics and chemistry are believed to be well
+celestial objects whose physics are believed to be well
 understood. In principle, a single object with known colors would be
 sufficient, however many objects across the LSST footprint
 will be used to evaluate possible systematic effects in the internal
@@ -2082,10 +2072,10 @@ areas.
 \begin{itemize}
 
 \item{Hardware response curve - $\phi_b^{sys}(\lambda,t)$. There is a
-    narrow band dome screen projector system installed at Pan-STARRS
+    narrow-band dome screen projector system installed at Pan-STARRS
     which would be extremely useful to study for comparison to the
     planned LSST dome screen. The PS system has demonstrated that
-    ghosting is a significant problem in the narrow band flat fields;
+    ghosting is a significant problem in the narrow-band flat fields;
     it will be extremely interesting to follow how this ghosting
     problem is resolved. Some methods for measuring the ghosts in the
     PS system as a function of wavelength have already been
@@ -2273,20 +2263,54 @@ LSST-observed stars in the field). }
     $\phi_b(\lambda)$ is described by Equation~\ref{eqn:PhiDef}. The
     integral of $\phi_b(\lambda)$ is always 1. }
 
+\item{{\bf Broadband flat field.} An image obtained by observing a
+light source which generates photons with a wide range of wavelengths
+(as opposed to a narrow-band flat), with relatively uniform
+illumination across the field of view. Night sky flats, twilight
+flats, and white-light or broadband dome screen flats would all
+generate broadband flat fields.}
+
+\item{{\bf Narrow-band flat field.} An image obtained by
+    observing a light source which generates photons with a very
+    narrow range of wavelengths (hypothetically, even a single
+    wavelength), with relatively uniform illumination across the field
+    of view. A dome screen illuminated with a narrow-band laser light
+    source will generate a narrow-band flat field. }
+
+\item{{\bf `Observed' flat field.} A flat field, as obtained by
+    observing the dome screen projectors. Generally would refer to a
+    broadband flat field.}
+
+\item{{\bf Photometric flat field.} A flat field which produces
+    uniform photometric measurements across the field of view for a
+    flat $F_\nu(\lambda)$ source. A photometric flat field must be
+    based on a broadband flat.}
+
 \item{{\bf Illumination Correction.} The ratio between the
-    `photometric' flat field  and the observed flat field. 
+    photometric flat field  and the observed flat field. 
 \begin{equation}
 \rm{Flat}_{photometric} = \rm{Flat}_{observed} * \rm{Illumination
  Correction}
 \end{equation}. 
 }
 
-\item{{\bf Photometric flat field.} A flat field which produces
-    uniform photometric measurements across the field of view for a
-    flat $F_\nu(\lambda)$ source.}
 
-\item{{\bf Observed flat field.} A flat field, as obtained by
-    observing the dome screen projectors.}
+\item{{\bf Camera Calibration Optical Bench (CCOB)}. The CCOB provides a
+method to calibrate the spatial and wavelength-dependent response of
+the focal plane, unmounted from the telescope, using a well
+controlled, wavelength-variable, light source calibrated using a NIST
+photodiode. This light source, which produces a spot in the focal
+plane approximately the size of or smaller than the PSF, will be
+scanned across the detector ($x,y$) at a variety of beam incident
+angles, ($\theta,\phi$) and at a variety of wavelengths ($\lambda$).
+The response of the detector will be measured in two different
+configurations: one with only the detector and the dewar window -
+which doubles as lens 3 (L3) - and one with the detector, L3, L2, L1,
+the filters and the camera shutter. The CCOB provides test data about
+the camera assembly for camera acceptance and to constrain the optical
+ZEMAX model. More details about the requirements and
+physical apparatus of the CCOB are available in LSST-10015 and
+LSST-8217.}
 
 \item{{\bf Natural magnitude.} A magnitude measurement which relates
     directly to the number of counts measurement in an image (after
