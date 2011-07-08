@@ -44,18 +44,37 @@ to deliver 1\%-level photometry across the observed sky.
 \section{Introduction}
 
 LSST is required to deliver 1\%-level photometry across the observed
-sky and under a wide range of observing conditions
-(0.5\%-level for repeat observations of the same source). This
-represents about a factor of two improvement over the current
-state-of-the-art wide-field optical photometry delivered by SDSS under
-photometric conditions. This
-factor of two improvement will have a major impact on science
-deliverables because it implies that the error volume in the
-five-dimensional LSST color space will be over thirty times
-smaller than for SDSS-like photometry. This smaller error
-volume will improve source classification and the precision of quantities
-such as photometric redshifts for galaxies and photometric metallicty
-for stars.
+sky and under a wide range of observing conditions (0.5\%-level for
+repeat observations of the same source). This represents about a
+factor of two improvement over the current state-of-the-art wide-field
+optical photometry delivered by SDSS under photometric
+conditions. This factor of two improvement will have a major impact on
+science deliverables because it implies that the error volume in the
+five-dimensional LSST color space will be over thirty times smaller
+than for SDSS-like photometry. This smaller error volume will improve
+source classification and the precision of quantities such as
+photometric redshifts for galaxies and photometric metallicity for
+stars.  For example, a given spectral energy distribution (SED)
+corresponding to some galaxy type produces a line in the $ugrizy$
+multi-dimensional color space when redshifted, where the position of
+the galaxy along that line in $ugrizy$ space is a function of
+redshift. Different galaxy SEDs produce lines that are often close to
+each other in $ugrizy$ space and sometimes even cross. The smaller the
+error volume around an observed galaxy's measured $ugrizy$ colors, the
+smaller the number of different lines (thus, different SEDs) and
+different positions along the line (thus, different redshifts) which
+will be consistent with the measurement. The same conclusion is valid
+in the case of algorithms that estimate stellar effective temperature
+and metallicity, as well as any other model-based interpretation of
+measurements. Furthermore, the smaller error volume per source is
+advantageous even in the absence of any models. Two sources whose
+color differences produce a value of $\chi^2$ per degree of freedom of
+1, will have a $\chi^2$ per degree of freedom of 4 when the errors are
+halved. In case of five degrees of freedom, $\chi^2$ pdf$>4$ will
+happen by chance in only 0.1\% of all cases. Therefore, the ability to
+reliably detect color differences between sources is a strong function
+of photometric errors.
+
 
 The factor of two reduction in photometric error results from two major differences
 between LSST and SDSS. First, each source will receive hundreds of
@@ -107,25 +126,26 @@ measurements of bright, unresolved, isolated, non-variable objects
 from individual LSST visits. Bright implies that the
 measurement of the star's brightness is not dominated by photon
 statistics, approximately 1-4 magnitudes fainter than the saturation
-limit in a given filter. Isolated implies that the star does not have
-de-blending problems with background galaxies or nearby
+limit in a given filter. Isolated implies that the star can be
+successfully de-blended from background galaxies and other
 stars. Non-variable objects are intrinsically not variable; these will
 be identified in an iterative fashion from the many epochs of LSST
 observations. The SRD specifications are: 
 \begin{enumerate}
 \item{{\bf Repeatability:} the median value of the photometric scatter
-   for each star (the rms of calibrated
-magnitude measurements around the mean calibrated magnitude) will not exceed 5 millimags in $gri$, 7.5 millimags in $uzy$ for
-bright, unresolved, isolated, non-variable objects. No more
-than 10\% of these objects should have a photometric scatter larger than 15 mmag in
-$gri$, 22.5 mmag in $uzy$.  This specifies the distribution of 
-photometric errors ($\sigma$) and constrains both the repeatability of
-extracting counts from images and the ability to monitor (or model)
-the changes in normalized system response ($\phi$). It could be
-thought of as requiring the photometry of a single source to be consistent over
+for each star (the rms of calibrated magnitude measurements around the
+mean calibrated magnitude) shall not exceed 5 millimags in $gri$, 7.5
+millimags in $uzy$ for bright, unresolved, isolated, non-variable
+objects. No more than 10\% of these objects should have a photometric
+scatter larger than 15 mmag in $gri$, 22.5 mmag in $uzy$.  This
+specifies the distribution of photometric errors ($\sigma$) and
+constrains both the repeatability of extracting counts from images and
+the ability to monitor (or model) the changes in the system
+response. It could be thought of as requiring the photometry
+of a single source to be consistent over
 time. \label{repeatability_req}}
 \item{{\bf Uniformity:} the rms of the internal photometric zeropoint
-error (for each visit) will not exceed 10 millimags in $grizy$, 20 millimags in $uzy$,
+error (for each visit) shall not exceed 10 millimags in $grizy$, 20 millimags in $uzy$,
 where the zeropoint for each visit is determined using bright, unresolved, isolated, non-variable
 sources. No more than 10\% of these sources should be more than 15
 mmag in $gri$ or 22.5 mmag in $uzy$ from the mean internal zeropoint.
@@ -186,7 +206,7 @@ In traditional photometric calibration, a set of standard stars are
 observed at a range of airmasses to calculate zeropoint offsets and
 (typically) a single color-dependent extinction term per night. This is
 sufficient for photometry at the few percent level on photometric
-nights, however, historical weather data from Cerro Pachon tells us
+nights. However, historical weather data from Cerro Pach\'{o}n tells us
 only 53\% of the available observing time can be considered
 photometric even at the 1--2\% level. To take advantage of the full
 85\% of the available observing time which is usable (total cloud
@@ -198,10 +218,21 @@ This new approach lies in splitting the measurement of the {\it
 normalization} of the throughput in each observation (the gray-scale
 zeropoint) from the {\it shape} of the throughput curve (the color
 dependent terms), and further, using separate procedures to measure
-the individual contributions of the telescope hardware response and the
-atmospheric throughput. This allows the use of optimized methods to
-measure each individual component affecting the final measured
-magnitudes, allowing us to achieve photometric calibration at the
+the individual contributions of the telescope hardware response and
+the atmospheric throughput. The telescope hardware gray-scale
+zeropoint will be measured with a broadband flat field (detailed in
+section~\ref{sec:hardware_norm}), while the hardware throughput
+response curve shape will be measured with narrow-band flat fields
+(detailed in section~\ref{sec:hardware_phi}). The atmospheric
+gray-scale zeropoint will be calculated using the self-calibration
+procedure (detailed in section~\ref{sec:atmo_norm}), while the
+atmospheric response curve shape will be measured with the auxiliary
+telescope (detailed in section~\ref{sec:atmo_phi}).  The separation of
+the normalization and shape of the throughput curve, as well as the
+separation of the telescope hardware from the atmospheric throughput,
+allows the use of methods optimized to measure the effect of each
+individual component of the system at the appropriate spatial and
+temporal scales, allowing us to achieve photometric calibration at the
 required levels.
 
 A flowchart showing an overview of the steps from science observation
@@ -237,8 +268,8 @@ atmospheric absorption curve from visit to visit.
     (normalization) variations in the throughput can be seen in the
     three sections of the `calibration products' on the left hand
     side. The upper portion, consisting mainly of flat-field effects,
-    corrects primarily for small spatial scale gray-scale variations (although
-    the illumination correction can have larger spatial scale
+    corrects primarily for small ($<<$ CCD) spatial scale gray-scale variations (although
+    the illumination correction can also have larger spatial scale
     structure), the middle portion in the dark triangle corrects only
     for bandpass shape variations, while the bottom portion,
     consisting of the zeropoint corrections calculated from the
@@ -442,30 +473,32 @@ or cloud extinction.
 Examples of the $\Delta m_b^{obs}$ due to variations in the shape of
 the hardware and atmospheric response curves are shown in
 Figure~\ref{fig:delta_mags} and Table~\ref{tab:delta_mags}. Two main
-sequence stellar models \citep{Kurucz1993} -- one with temperature 35000K
-(blue) and one 6000K (red) -- were combined with three different
-atmospheric response curves (with X=1.0 with minimal \water vapor,
-X=1.2 with a nominal amount of \water (the `standard'), and X=1.8 with
-a large \water vapor content) and two different hardware response
-curves (one `standard' and one shifted in wavelength by 1\%)
-to illustrate the resulting changes in observed natural magnitudes. In
-Figure~\ref{fig:delta_mags2}, the $X=1.8$ atmospheric response is
-combined with the $1\%$ shift in filter bandpass (altering the
-hardware response) for many main sequence kurucz models, spanning a
-range of $g-i$ colors, and the resulting changes in natural
-magnitudes are plotted.  These examples demonstrate that the scatter in
-natural magnitudes induced by expected atmospheric and hardware transmission
-curve shape changes alone (without any gray-scale changes) can be larger
-than the SRD repeatability requirements would permit. Adding variations 
-in the gray-scale normalization due to the hardware response and cloud
-extinction will increase the scatter in the observed magnitudes even
-further. 
+sequence stellar models \citep{Kurucz1993} -- one with temperature
+35000K (blue) and one 6000K (red) -- were combined with three
+different atmospheric response curves (with airmass X=1.0 with minimal
+\water\, vapor, X=1.2 with a nominal amount of \water\,(the
+`standard'), and X=1.8 with a large \water\,vapor content) and two
+different hardware response curves (one `standard' and one shifted in
+wavelength by 1\%) to illustrate the resulting changes in observed
+natural magnitudes. In Figure~\ref{fig:delta_mags2}, the $X=1.8$
+atmospheric response is combined with a $1\%$ shift (the maximum
+allowed in the filter manufacturing specification from center to edge)
+in filter bandpass, thus altering the hardware response, for many main
+sequence Kurucz models spanning a range of $g-i$ colors; the resulting
+changes in natural magnitudes are plotted.  These examples demonstrate
+that the scatter in natural magnitudes induced by expected atmospheric
+and hardware transmission curve shape changes alone (without any
+gray-scale changes) can be larger than the SRD repeatability
+requirements would permit. Adding variations in the gray-scale
+normalization due to the hardware response and cloud extinction will
+increase the scatter in the observed magnitudes even further.
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{delta_mags}
 \caption{ {\small {\bf $\Delta m_b^{obs}$ due to variations in
-hardware and atmospheric bandpass shape.} Two main sequence kurucz model
-stars, one blue (35000 K) and one red (6000 K), were used to generate
+hardware and atmospheric bandpass shape.} Two main sequence Kurucz model
+stars, one blue (35000 K, approximately O type) and one red (6000 K
+approximately G type), were used to generate
 natural magnitudes (see 
 Eqn~\ref{eqn:natmag}) using three different atmospheric transmission
 profiles and two different hardware transmission profiles. The stellar
@@ -473,7 +506,7 @@ flux profiles are shown in the top center panel, while the atmospheric
 transmission functions ($S^{atm}(\lambda)$) are shown across the
 second row and the two hardware transmission profiles
 ($S_b^{sys}(\lambda)$) are duplicated across the third row. The
-atmospheric transmission profiles correspond to an airmass=1.0, 1.2
+atmospheric transmission profiles correspond to an airmass X=1.0, 1.2
 and 1.8 (from left to right), with variable atmospheric absorption
 components. The X=1.0 atmosphere is very similar but not
 identical to the current LSST default X=1.2 atmosphere throughput
@@ -481,7 +514,7 @@ curve, which is used as `standard' here. The hardware transmission
 profiles consist of a `standard' profile (matching the LSST current
 expected values) and version where the filter throughputs have been
 shifted by 1\% of the effective wavelength of each filter (consistent
-with the shift expected near the edge of each filter). The final row
+with the shift expected near the spatial edge of each filter). The final row
 demonstrates the changes in observed magnitudes produced by the X=1.0,
 `standard' and X=1.8 atmospheres (left to right, respectively),
 combined with both the `standard' hardware transmission (represented by
@@ -574,10 +607,10 @@ fields acquired at the start and end of each night through each
 filter, in a manner similar to traditional dome flats. This is
 discussed in detail in section~\ref{sec:hardware_norm}.  This
 calibration stage is particularly important for corrections on very
-small size scales. Later calibration stages depend on photometric
-measurements of stars using an aperture proportional to the Point
-Spread Function (PSF), and thus primarily contribute to calibration on
-scales larger than the PSF.
+small size scales, particularly on the pixel-to-pixel level. Later
+calibration stages depend on photometric measurements of stars using
+an aperture proportional to the Point Spread Function (PSF), and thus
+primarily contribute to calibration on scales larger than the PSF.
 
 To measure the wavelength-dependent shape of the hardware response
 curve as a function of position in the focal plane, we will use a
@@ -647,8 +680,8 @@ section~\ref{sec:atmo_phi}.
 
 In order to correct for the more rapid gray-scale variations in the
 relative normalization of $S^{atm}(alt,az,t)$ due to cloud extinction,
-we must use the observations of stars in the images themselves, as the
-cloud extinction can vary by 0.01 magnitudes on the scale of a CCD
+we must use the observations of stars in the images themselves, as
+SDSS observations suggest that cloud extinction can vary by 0.01 magnitudes on the scale of a CCD
 \citep{Ivezic2007} on timescales as fast as a few minutes. This
 `self-calibration' procedure could be thought of as creating a massive
 calibration `standard' star catalog, where the calibration stars are
@@ -686,9 +719,11 @@ correction for the broadband and narrow-band flat fields), but is
 generally limited by the number of stars and number of observations of
 each star that are obtained. A CCD size patch provides about 100 stars
 per patch, allowing good signal to noise when determining cloud
-extinction which varies from observation to observation.  Longer
-term effects (such as the illumination correction) may be possible to
-determine on scales down to approximately the PSF.  This is similar in
+extinction which varies from observation to observation.  Using this
+self-calibration procedure, It may be
+possible to determine longer term term effects (such as the
+illumination correction) down to scales approximately equivalent to
+the PSF. This is similar in
 nature to the ubercal method applied to SDSS in
 \citet{Padmanabhan2008}, and is discussed in more detail in
 section~\ref{sec:atmo_norm}.
@@ -702,7 +737,7 @@ m_b^{std} = -2.5\,log_{10}(C_b^{meas}) \, + \Delta m_b^{meas} + Z_b^{meas}
 we can relate the terms in this equation to the corrections just
 described above.  $\Delta m_b^{meas}$ originates from the difference
 between $\phi_b^{meas}(\lambda,t,x,y)$ and $\phi_b^{std}(\lambda)$
-convolved with the source SED, thus depends on the shape of the total
+convolved with the source SED, and thus it depends on the shape of the total
 system response as well as the shape of the source SED. $\Delta
 m_b^{meas}$ will be calculated by combining a series of model SEDs
 with $\phi_b^{meas}(\lambda,t,x,y)$ at various locations in the focal
@@ -760,13 +795,13 @@ correction, etc) extract ADU counts of sources from images. }
 \item{Acquire the data cube of narrow-band flat field images,
 approximately monthly. Apply wavelength-dependent illumination
 correction. Measure $\phi_b^{sys}(\lambda,t,x,y)$. }
-\item{Acquire spectra of known stars on a 5--10 minute timeline
+\item{Acquire spectra of known stars roughly every 5--10 minutes
 throughout each night, fit for atmospheric absorption coefficients and
 generate $\phi_b^{atm}(\lambda,t)$ for each science images. }
 \item{Combine $\phi_b^{atm}$ and $\phi_b^{sys}$ with a range of model
 SEDs to create lookup tables for $\Delta m_b^{meas}$ for various
 locations in the focal plane. }
-\item{At appropriate intervals (such as at Data Release), run the
+\item{At appropriate intervals (such as at Data Releases), run the
 self-calibration procedure, applying $\Delta m_b^{meas}$ to stars
 chosen for self-calibration procedure and minimizing $\chi^2$ from
 equation~\ref{eqn:chi2}.}
@@ -803,7 +838,7 @@ Compensation for variations (in $x,y,t$) in the normalization of the
 hardware transmission ($S_b^{sys}$) will be done using a broadband
 flat field generated using a broad band source illuminating a
 specialized dome screen projector. This is the first step in
-photometric calibration and is necessary to correct for variations in
+photometric calibration and is necessary to correct for spatial variations in
 the normalization of $S_b^{sys}$ that are smaller than a few times the
 PSF (and with the simple self-calibration model described above, is
 necessary to correct for any variations smaller than the scale of a
@@ -811,9 +846,9 @@ CCD).
 
 The dome screen projector is an array of projectors mounted in the
 dome of the LSST enclosure, specially designed to provide very uniform
-illumination to the LSST etendue (the incoming aperture of the
+illumination to the LSST \'{e}tendue (the incoming aperture of the
 telescope, taking into consideration the desired angle of the incoming
-light) while minimizing any light straying beyond the etendue. In
+light) while minimizing any light straying beyond the \'{e}tendue. In
 addition, the dome screen will be able to project both broadband and
 tunable narrow-band (essentially monochromatic) light sources,
 providing both broadband (broadband) and narrow-band flat fielding
@@ -824,19 +859,19 @@ system is different from a traditional dome screen in that the
 a single light source.
 
 For both broadband and narrow-band flat field flat fields, the
-projectors are designed to fill the LSST etendue with a uniform
+projectors are designed to fill the LSST \'{e}tendue with a uniform
 illumination smoothly varying by less than 1\% across the camera focal
 plane (corresponding to less than 10\% variability across the
 projector surface) and less than 0.25\% on scales smaller than
 $0.5^{\circ}$ (a little larger than the size of a CCD). The projectors
 will also be designed to limit the extent of light emitted outside the
-etendue seen by the camera to reduce stray light in the flat
+\'{e}tendue seen by the camera to reduce stray light in the flat
 fields \citep{Gressler2010}. The broadband light source can be tuned
 to have any chosen spectral profile; this will be chosen during
 commissioning. For simplicity in discussing the next few sections, let
 us assume that this is a flat $F_\nu(\lambda)$ profile.
 
-Although the dome screen is engineered to illuminate the LSST etendue
+Although the dome screen is engineered to illuminate the LSST \'{e}tendue
 very uniformly on scales approximately the size of a CCD (the
 engineering requirement of less than 0.25\% variability translates to
 an RMS variation of 0.7~mmag on these scales), the variability across
@@ -845,7 +880,7 @@ if the dome screen illumination were perfectly uniform and no stray or
 scattered light entered the telescope, the observed flat field still
 could not be applied directly to science images with the expectation
 of achieving photometric uniformity in measurements of stellar
-sources, due the presence of ghost images in the observed flat field
+sources, due to the presence of ghost images in the observed flat field
 and the effect of plate scale variation from the center to the edge of
 the field of view.  The correction which must be applied to the
 observed flat to produce the desired photometrically correct flat is
@@ -888,7 +923,7 @@ sequence of exposures, which limit the capabilities of these
 scans). Typical astronomical flat fields are generated from dome
 screens, the twilight sky or dark sky flats, all of which contain
 light sources that illuminate the entire telescope field of view
-simulateously. These sources are also only approximately Lambertian,
+simulanteously. These sources are also only approximately Lambertian,
 as they do not emit light uniformly over all angles, and are only
 approximately uniform over the field of view. In addition, each has an
 SED which differs from that of the source to be measured. Each of
@@ -904,16 +939,17 @@ flat. While the dome screen projectors will be designed to be
 uniformly illuminated to 1\% over the focal plane, this is already
 beyond the SRD specifications for photometric uniformity.  There will
 be also light scattered within the camera dewar and some fraction of
-the light within the etendue will have undergone multiple reflections
+the light within the \'{e}tendue will have undergone multiple reflections
 within the camera refractive optics (creating `ghost' images of the
 light from the dome screen). Estimates by Photon Engineering,
 Inc. (Tucson, AZ) indicate that $\approx1-2\%$ of the light that
 reaches the camera focal plane may be stray light that did not
-originate within the LSST etendue. In addition, projection effects
+originate within the LSST \'{e}tendue. In addition, projection effects
 associated with the telescope optics will cause a variation in the
-pixel scale from the center to the outer edges of the field of view
+pixel scale from the center to the outer edges of the field of view on
+the order of a few percent
 (very typical of telescopes with large fields of view), so that the
-pixels near the center of the field subtend a larger area and so
+pixels near the center of the field subtend a larger area and 
 gather more light from the dome screen. All of these effects must be
 removed from the observed flat field by the illumination correction;
 we will define the illumination correction to be the ratio between the
@@ -939,11 +975,11 @@ In the LSST system, we expect the primary sources of ghosting to be
 reflections from the surface of the detector onto the back surface of
 lens 3, between the back and front surfaces of the filter, and from
 the surface of the detector and the front side of lens 3. In general,
-the ghosts produced by reflections between len3 and the detector are
+the ghosts produced by reflections between lens 3 and the detector are
 expected to have an amplitude $\approx 5\times 10^{-4}$ relative to the
 flux of the source.  The ghosts due to filter reflections become
 especially prominent at wavelengths where the filter transmission
-approaches 50\%.  Tests with the PanStarrs narrow-band flat field
+approaches 50\%.  Tests with the Pan-STARRS narrow-band flat field
 system \citep{Stubbs2010a} show that at these wavelengths, the
 fraction of light in ghosts can reach about 15\% of the total light in
 the focal plane.  Other ghost images, due to reflections between lens
@@ -955,8 +991,11 @@ into a ring in the focal plane -- this special case is called the
 have a dependency on the position of the source in the image, the
 pupil ghost (because it is focused), does not and thus contains light
 from {\it every} source in the image, and thus can become a
-significant ghost, if the total light in the image is sufficiently
-large. The distribution of ghosts in the focal plane from a single
+significant ghost, if the total light in the image (from sources and
+from background) is sufficiently
+large. The distribution of ghosts in the focal plane predicted from
+raytracing the LSST optical design (including the expected performance
+of the lens and filter coatings) from a single
 source is shown in Figure~\ref{fig:ghosts}.
 
 The distribution of ghost light creates in the focal plane is
@@ -983,7 +1022,8 @@ filters), and by assuming that the dome screen is uniform and the SED
 is known. This initial correction will later be refined as part of the
 self-calibration process. The ZEMAX model will be constrained by observations of the
 optical system, which will come a combination of measurements from the
-Camera Calibration Optical Bench (CCOB), in-laboratory measurements of
+Camera Calibration Optical Bench (CCOB) (see more information in the
+Glossary, Section~\ref{sec:glossary}), in-laboratory measurements of
 the filter transmission as a function of radius, and by illluminating
 a single point in the array of dome screen projectors (creating a
 semi-scannable, semi-Lambertian `star' to create identifiable ghosts
@@ -1010,7 +1050,7 @@ location of the star itself, and are shown in blue. The `pupil ghost'
 is visible as the large ring nearly tangent to the edge of the field
 of view, and would contain ghost light from {\it any} source in the
 field of view, thus can potentially be the brightest ghost in an image
-with many sources. }}
+with a large number of sources or high background counts. }}
 \label{fig:ghosts}
 \end{figure}
 
@@ -1051,7 +1091,7 @@ The illumination from the dome screen could vary by up to 1\% across
 the field of view. Stray light scattered from other unmodeled sources
 (such as light bouncing off the dome floor and back into the telescope
 optical path) could contribute 1-2\% of the total light in the flat
-field according to estimates from Photon Engineering, Inc. (Tucson,
+field, according to estimates from Photon Engineering, Inc. (Tucson,
 AZ).  There may be systematic differences in exposure time across the
 field of view due to camera shutter movement. These effects are
 difficult to model accurately. 
@@ -1066,7 +1106,8 @@ each star will be corrected for varying color terms in the atmosphere
 and hardware response, as further described in
 subsection~\ref{sec:phi_correction}.  The updated illumination
 correction can then be determined by minimizing over all
-stars $i$ in all observations $j$,
+stars $i$ in all observations $j$ (as in Equation~\ref{eqn:chi2}, but
+in slightly different circumstances),
 \begin{equation}
  \chi^2 =  \Sigma_{i=N_{stars},j=N_{obs}} \left( { m_{ij}^{meas}(x,y) - m_{ij}^{model}(x,y)
 \over \sigma_b} \right)^2  
@@ -1081,7 +1122,7 @@ in this filter, $k_{b,j}^{atm+sys}$ is the color-term correction
 hardware throughput curve and partially determined by the varying with
 each exposure atmospheric throughput curve), and $dZ_{IC}$ is the
 update to the illumination correction which is produced by this dense
-rastor scan. Similar applications of raster scans have been
+raster scan. Similar applications of raster scans have been
 successfully used in previous surveys, ({\it e.g} \citet{Regnault2009,
 Magnier2004, Manfroid1996}), providing an illumination correction
 accurate to the sub-percent level.  With the additional information
@@ -1145,11 +1186,11 @@ introduced in this simulation. }}  \label{fig:flatfield}
 \caption{ {\small
 {\bf Effect of illumination correction on photometry.}
 The left top panel shows a flat field obtained from a dome screen,
-creating with the same conditions (including the same dust ring) as in Figure~\ref{fig:flatfield},
+created with the same conditions (including the same dust ring) as in Figure~\ref{fig:flatfield},
 without multiplying by an illumination correction. The central top
 panel shows a raw `image' of the sky, generated by adding a background
 sky value of 1500 counts per pixel (scaled by the pixel area, as in
-Fig.~\ref{fig:flatfield}, to two stars. The stars were generated by
+Fig.~\ref{fig:flatfield}), to two stars. The stars were generated by
 placing 5000 counts over a circular aperture the size of the PSF at
 the location of the star. A ghost image was created as in
 Fig.~\ref{fig:flatfield}.  The right top panel demonstrates the result
@@ -1172,10 +1213,10 @@ variation in pixel to pixel sensitivities. }} \label{fig:iceffect}
 
 \subsubsection{Error in the Normalization of the Hardware Transmission}
 
-The dome screen projectors will be designed to be uniform to bertter
+The dome screen projectors will be designed to be uniform to better
 than 1\% (10~mmag) across the LSST field of view. After
 applying the ZEMAX model to generate expected ghost reflections and
-scattering within the camera, and adding dense rastor scans of stars to 
+scattering within the camera, and adding dense raster scans of stars to 
 generate a preliminary illumination correction, this variation will be 
 reduced to approximately 5~mmag (based on the SNLS experience \citep{Regnault2009}).
 With the addition of further improvements from the self-calibration procedure,
@@ -1264,32 +1305,33 @@ multiple scans of a single source using the same photodiode.} }
 
 Further details of the LSST narrow-band flat field apparatus can be
 found in \citet{Gressler2010}.  Preliminary results from a similar
-apparatus tested at PanSTARRS can be found in \citet{Stubbs2010a}, as
+apparatus tested at Pan-STARRS can be found in \citet{Stubbs2010a}, as
 well as earlier experiments from CTIO described in
 \citet{Stubbs2007a}.
 
 In each filter, a series of narrow-band flats will be taken at a range
 of wavelengths to form a data cube of flat fields in ($x,y,\lambda$).
 To measure the total hardware response, each of the narrow-band flats
-in this datacube must be illumination corrected then the hardware
-response curve can be measured at all (or a subset of) $x,y$ positions
-while the photodiodes track the relative intensity of light produced
-by the dome screen as a function of wavelength.  The narrow-band flats
-are time-consuming to acquire; scanning through all 6 filters at 1~nm
-intervals requires many hours worth of exposures and must be
-done in minimal levels of ambient light. However, any wavelength
-dependent variations in the synthetic flat are expected to change
-relatively slowly so the full set of narrow-band flats only need to be
-acquired approximately once a month, which could be done during cloudy
-nights.
+in this datacube must be adjusted by an illumination correction,
+primarily for ghosting effects (which can be strongly wavelength
+dependent). The hardware response curve can then be measured at all
+(or a subset of) $x,y$ positions while the photodiodes track the
+relative intensity of light produced by the dome screen as a function
+of wavelength.  The narrow-band flats are time-consuming to acquire;
+scanning through all 6 filters at 1~nm intervals requires many hours
+worth of exposures and must be done in minimal levels of ambient
+light. However, any wavelength dependent variations in the synthetic
+flat are expected to change relatively slowly so the full set of
+narrow-band flats only need to be acquired approximately once a month,
+which could be done during cloudy nights.
 
 \subsubsubsection{The narrow-band flat field illumination correction}
 
 The illumination correction for the narrow-band flat fields suffers
 from similar problems as the broadband flat field illumination
 correction described in section~\ref{sec:ic} but will consist
-primarily of corrections for ghosting, rather than the other
-effects. This is because we are interested in measuring the shape of
+primarily of corrections for ghosting; the other
+effects are less important. This is because we are interested in measuring the shape of
 the hardware transmission curve at a variety of $x,y$ locations; we
 are only interested in the sensitivity at each wavelength relative to
 the sensitivity at other wavelengths at that particular $x,y$
@@ -1305,7 +1347,7 @@ important).  Stray and scattered light, as long as it is relatively
 wavelength independent, will not be important for the same
 reason. Pixel scale variations, being constant over all wavelengths,
 are also not important.  However, the ghosting can be strongly wavelength dependent; in
-particular, near the edges of the bandpass the ghosting resulting from
+particular, at wavelengths near the edges of the bandpass, the ghosting resulting from
 reflections off the surfaces of the filter itself becomes a
 significant factor (since the chances of transmission or reflection
 hover at 50\%, increasing the chances of eventually scattering light
@@ -1316,7 +1358,7 @@ looking for relative sensitivities as a function of wavelength at
 particular $x,y$ locations, an increase in the total photons captured
 by the detector due to an increase in ghosting (rather than direct
 light from the dome screen projector) will be the most significant
-contributor to the illumination correction necessary 
+contributor to the illumination correction.
 
 The same ZEMAX model that is used to generate corrections to the
 broadband flat field will be used to generate corrections for the
@@ -1334,13 +1376,67 @@ response as a function of radius.
 As with the overall normalization of the hardware throughput (the
 broadband flat fields), further refinements to the hardware throughput
 curves can be determined by incorporating additional terms into the
-self-calibration model magnitudes (see section~\ref{sec:atmo_norm}),
-however it is important to note that these additional refinements will
+self-calibration model magnitudes (see section~\ref{sec:atmo_norm}).
+However it is important to note that these additional refinements will
 only be completely correct for main sequence stars (the calibration
-stars themselves).
+stars themselves), as the main sequence stars (and thus their SEDs)
+are the only objects incorporated into the self-calibration
+procedure. 
 
-% LJ do I need to show what the effect of this illumination correction
-% being incorrect could be? 
+\begin{figure}
+\centering
+\includegraphics[width=6in]{filter_shifts}
+\caption{{\small 
+{\bf Baseline filter curves and a potential (1\% of the central
+  wavelength) shift due to nonuniformity in the filter bandpass.}
+The solid lines indicate standard filter bandpasses (top panel: filter
+alone, bottom panel: filter plus standard mirror, lens, detector and atmosphere
+response curves) while the dashed lines indicate the same bandpass
+shifted redward by 1\% of the central wavelength.}}
+\label{fig:filtershift}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=6in]{delta_mags_filtershift}
+\caption{{\small 
+{\bf $\Delta m_b^{obs}$
+due to a hardware response curve shift of 1\% of the central
+wavelength of each bandpass.}  850 main sequence star Kurucz models with temperatures
+between 5000K and 35000K and metallicity indexes between -5.0 and 1.0
+(solar) were combined with a standard atmosphere and standard
+hardware bandpass, and then with a total system response where the
+atmosphere remained constant but the hardware response was shifted by
+1\% of the central wavelength of each bandpass (as in
+Fig~\ref{fig:filtershift}). The points in each plot are color-coded by metallicity, in
+steps of 1 dex between -5.0 (blue) to 1.0 (magenta). The resulting
+changes in observed 
+natural magnitudes are on the order of
+20~mmag typically, except in $u$ band where the shift can create a
+$\delta u$ of closer to 80~mmag for certain temperatures of main sequence
+stars. By measuring the bandpass shape as a function of radius and the
+colors of the main sequence stars, we can remove these effects.} }
+\label{fig:dmag_filtershift}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=6in]{delta_mags_filtershift_small}
+\caption{{\small 
+{\bf $\Delta m_b^{obs}$ due to a hardware
+response curve shift of 0.05\% of the central wavelength of each
+bandpass.} Similar to Fig~\ref{fig:dmag_filtershift} except that the
+hardware response was shifted by only 0.05\% of the central
+wavelength, an amount representing an unmeasured shift in the hardware
+response and thus contributing directly to the final error in the
+calibration of the natural magnitudes. Note that the $y$ scale in
+these plots is reduced by a factor of 20 from
+Figure~\ref{fig:dmag_filtershift}, consistent with measuring and
+compensating for the
+bandpass shift to within a 0.05\% error. }}
+\label{fig:dmag_filtershift_small} 
+\end{figure}
+ 
 
 \subsubsubsection{The expected effect of $\phi_b^{sys}(\lambda)$ variations}
 
@@ -1352,19 +1448,19 @@ nonuniformities is specified to be less than 1\% across the focal
 plane, most likely in the form of a bandpass shift as shown in
 Figure~\ref{fig:filtershift}. For main sequence stars, the resulting
 changes in observed magnitude as the bandpass shifts by 1\% of the
-central wavelength can be as much or more than 0.04~magnitudes (40
-mmag) - even larger in the $u$ band (see
+central wavelength can be as much as than 0.04~magnitudes (40
+mmag) - and even larger in the $u$ band (see
 Figure~\ref{fig:dmag_filtershift}). However, as long as the variation
-in the hardware response curve at each $x,y$ location is measured to better than 0.05\% --
+in the hardware response curve at each $x,y$ location is measured to
+better than 0.05\%, the maximum error contribution towards calibrating these observed magnitudes
+will be less than 2~mmag for all bandpasses other than $u$, where the
+error could be as much as 5~mmag for certain main sequence stars (see
+Figure~\ref{fig:dmag_filtershift_small}). This is
 equivalent to approximately a 3~Angstrom error in wavelength
 calibration of the monochromatic light source throughout the bandpass
 or a 0.5\% error in photodiode calibration assuming that the shape of
 each bandpass is determined using at least 100 independent
-measurements (i.e. 1 measurement every few nanometers within the bandpass) --
-the maximum error contribution towards calibrating these observed magnitudes
-will be less than 2~mmag for all bandpasses other than $u$, where the
-error could be as much as 5~mmag for certain main sequence stars (see
-Figure~\ref{fig:dmag_filtershift_small}). 
+measurements (i.e. 1 measurement every few nanometers within the bandpass).
 
 Because the shape of the hardware response curve varies as a function
 of filter radius, it is also necessary to monitor any offsets of the
@@ -1379,56 +1475,6 @@ to better than 0.2~mm.
 %LJ - beamsize 100mm, plus review filter location requirement ... 0.025\% is too small
 %Plus need to include shift in bandpass due to change in incident angle ? 
 
-\begin{figure}
-\centering
-\includegraphics[width=6in]{filter_shifts}
-\caption{{\small 
-{\bf Baseline filter curves and a potential (1\% of the central
-  wavelength) shift due to nonuniformity.}
-The solid lines indicate standard filter bandpasses (top panel: filter
-alone, bottom panel: filter plus standard mirror, lens, detector and atmosphere
-response curves) while the dashed lines indicate the same bandpass
-shifted redward by 1\% of the central wavelength.}}
-\label{fig:filtershift}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=6in]{delta_mags_filtershift}
-\caption{{\small 
-{\bf $\Delta m_b^{obs}$
-due to a hardware response curve shift of 1\% of the central
-wavelength of each bandpass.}  850 Kurucz models with temperatures
-between 5000K and 35000K and metallicity indexes between -5.0 and 1.0
-(solar) were combined with a standard atmosphere and standard
-hardware bandpass, and then with a total system response where the
-atmosphere remained constant but the hardware response was shifted by
-1\% of the central wavelength of each bandpass (as in
-Fig~\ref{fig:filtershift}). The points in each plot are color-coded by metallicity, in
-steps of 1 dex between -5.0 (blue) to 1.0 (magenta). The resulting
-changes in observed 
-natural magnitudes are on the order of
-20~mmag typically, except in $u$ band where the shift can create a
-$\delta u$ of closer to 80~mmag for certain kinds of main sequence
-stars. } }
-\label{fig:dmag_filtershift}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[width=6in]{delta_mags_filtershift_small}
-\caption{{\small 
-{\bf $\Delta m_b^{obs}$ due to a hardware
-response curve shift of 0.05\% of the central wavelength of each
-bandpass.} Similar to Fig~\ref{fig:dmag_filtershift} except that the
-hardware response was shifted by only 0.05\% of the central
-wavelength, an amount representing an unmeasured shift in the hardware
-response and thus contributing directly to the final error in the
-calibration of the natural magnitudes. Note that the y scale here is 1/10th
-of the scale in the previous figure. }}
-\label{fig:dmag_filtershift_small} 
-\end{figure}
- 
 
 \subsubsection{Measuring the shape of the atmospheric transmission curve}
 \label{sec:atmo_phi}
@@ -1463,7 +1509,7 @@ variations and is proportional to airmass,
 \begin{equation}
 S(\lambda,X) \propto e^{-\tau, X},
 \end{equation} 
-and is also axisymmetric around zenith. Changes in the
+and is also axisymmetric around the zenith. Changes in the
 optical depth due to Rayleigh scattering typically will produce
 $<1$~mmag change in the observed counts.}
 \item{Aerosol scattering, or Mie scattering, occurs when visible light
@@ -1475,31 +1521,31 @@ dependence, where
 \tau \propto (\lambda/675 \rm{nm})^{\alpha}.
 \end{equation} 
 The index $\alpha$ has been measured to range between -0.9 to -1.7 in
-observations from CTIO \citep{Burke2010b}.  From \citep{Stubbs2007b}
-optical depth measurements from Mauna Loa, the total aerosol optical
-depth at zenith varied from 0 to 0.3 (generally <0.1) at
-$\lambda=440$~nm, with max rate of change $\approx0.02$/hr. The
-atmospheric extinction due to aerosol scattering scales directly with airmass but is not
-necessarily axisymmetric around zenith and often has an East-West
-trend.}
+observations from CTIO \citep{Burke2010b}.  \citet{Stubbs2007b}
+measured the aerosol optical depth at Mauna Loa, recording total aerosol optical
+depths at zenith varying from $\approx 0$ to 0.3 (generally $<0.1$) at
+$\lambda=440$~nm, with maximum rate of change $\approx0.02$/hr. The
+atmospheric extinction $\tau$ due to aerosol scattering scales directly with airmass, but is not
+necessarily axisymmetric around zenith, often showing a trend in the
+East-West direction. }
 \item{Molecular absorption produces a more complex
 set of absorption bands and features, originating from line absorption
 due to ozone (\ozone), water (\water), oxygen (\oxy) and other trace species
-(OH, N$^2$O, etc.). The resulting atmospheric absorption features are largely due
+(OH, N$_2$O, etc.). The resulting atmospheric absorption features are largely due
 to narrow saturated Lorentzian-shaped lines spaced closely in
 wavelength and, due to this saturation, scale non-linearly with
 airmass, 
 \begin{equation}
 S(\lambda, X) \propto e^{-\tau\,\sqrt X}
 \end{equation} 
-as in \citep{Stubbs2007b}. The total column depth for \oxy and other
+as in \citet{Stubbs2007b}. The total column depth for \oxy\, and other
 trace species is related directly to the square root of the column depth for molecular
 scattering, and is thus proportional only to the square root of the
-barometric pressure and airmass. However, \ozone and \water absorption
-is more variable. \ozone absorption can vary by
+barometric pressure and airmass. However, \ozone\,and \water\,absorption
+is more variable. \ozone\,absorption can vary by
 5--10\% day to day, with seasonal variations of 25\% or so, but is
 expected to be non-variable across the sky and closely correlated with
-satellite data on total ozone content. \water absorption can vary on timescales as short as
+satellite data on total ozone content. \water\,absorption can vary on timescales as short as
 10--20 minutes, and is expected to show linear trends across the sky
 (East-West and North-South). 
 }
@@ -1516,20 +1562,20 @@ with airmass.
 \caption{{\small
 {\bf Components of atmospheric absorption.} The wavelength dependence
 of the various components of atmospheric absorption at zenith (panel
-a) and at airmass=2.0 (panel b) is shown here.  The \water (blue) and \ozone
-(red) molecular absorption contributions are shown separately,
-while the \oxy absorption is combined with other trace elements (magenta). A
-typical example of aerosol scattering (Mie scattering) is included
-(yellow), as is molecular scattering (Rayleigh scattering)
+a) and at airmass=2.0 (panel b) is shown here.  The \water\,(blue) and
+\ozone\,(red) molecular absorption contributions are shown separately,
+while the \oxy\,absorption is combined with other trace elements
+(magenta). A typical example of aerosol scattering (Mie scattering) is
+included (yellow), as is molecular scattering (Rayleigh scattering)
 (green). All components except aerosol scattering were generated using
-MODTRAN4 with the US Standard option (aerosol scattering is not part of the US 
-Standard atmosphere). The resulting total absorption curve is the product of each
-of these effects and is shown with the dotted black line. This is an
-illustrative atmosphere; under actual observing conditions the
-molecular absorption components will vary in strength with time and
-the square root of the airmass, the molecular and aerosol scattering
-will depend on airmass, and the aerosol scattering profile will also 
-vary with time.}}
+MODTRAN4 with the US Standard option (aerosol scattering is not part
+of the US Standard atmosphere). The resulting total absorption curve
+is the product of each of these effects and is shown with the dotted
+black line. This is an illustrative atmosphere; under actual observing
+conditions the molecular absorption components will vary in strength
+with time and the square root of the airmass, the molecular and
+aerosol scattering will depend on airmass, and the aerosol scattering
+profile will also vary with time.}}
 \label{fig:absorption_comps}
 \end{figure}
 
@@ -1573,7 +1619,7 @@ S^{fit}(alt,az,t, \lambda) & = & \,e^{-\tau_{aerosol}(alt,az,t,\lambda)\,X} \non
 \end{eqnarray}
 The $A_{Rayleigh/\oxy/\ozone/\water}$ functions are
 absorption templates (i.e. 1 minus the transmission profiles from the
-MODTRAN models) and the $C_{mol,\ozone,\water}$ are
+MODTRAN models), the $C_{mol,\ozone,\water}$ are
 coefficients describing the composition of the atmosphere together
 with $\tau_{aerosol}$, and $BP(t)$ is measured. An example of an
 atmosphere generated in this fashion is shown in
@@ -1586,12 +1632,13 @@ throughout the night for the values of
 $C_{mol,\ozone,\water}$, increasing our SNR for these
 coefficients by modeling their expected behavior over time and across
 the sky as detailed in \ref{sec:atmo_behavior} above. The Rayleigh
-scattering and molecular absorption due to \oxy and other trace
+scattering and molecular absorption due to \oxy\,and other trace
 species are fit with a single coefficient, $C_{mol}$, which simply
 scales the MODTRAN templates to the appropriate level for Cerro
 Pachon, and then only change with the barometric pressure ($BP$). The
-\ozone absorption is fit with a single $C_{\ozone}$ value for each
-night. The aerosol absorption, as it is expected to have a small
+\ozone\,absorption is fit with a single $C_{\ozone}$ value for each
+night, as it is not expected to vary more than 5-10\% within a night. 
+The aerosol absorption, as it is expected to have a small
 spatial variation across the sky, is modeled as 
 \begin{equation}
 \label{eqn:tau_aerosol}
@@ -1602,7 +1649,7 @@ where EW and NS are defined as EW = cos($alt$)sin($az$), NS =
 cos($alt$)cos($az$), projections of the telescope pointing in the
 EW/NS directions. Single values of $\tau_0$, $\tau_1$, $\tau_2$ and $\alpha$ are
 fit for each night of observing, with $\tau_1$ and
-$\tau_2$ likely to be very small \citep{Burke2010b}. The \water
+$\tau_2$ likely to be very small \citep{Burke2010b}. The \water\,
 absorption is likewise expected to show spatial variation, but also
 time variability, and is modeled as
 \begin{equation}
@@ -1654,7 +1701,7 @@ of the resulting $\Delta m_b^{obs}$ are in Figures~\ref{fig:atm_changes}
 and \ref{fig:dmag_atm_max}.  These represent the induced changes in
 observed counts due to changes in the bandpass shape; however, by
 achieving 10\% accuracy on $\tau^{aerosol}$, $C_{\ozone}$, and
-$C_{mol}$, and 30\% accuracy for $C_\water$, we can correct for
+$C_{mol}$, and 30\% accuracy for $C_{\water}$, we can correct for
 these effects to within 1~mmag in all bands except $y$, where it
 remains 2~mmag. The limits on remaining uncorrected effects are shown in Figure~\ref{fig:dmag_atm_10}. 
 
@@ -1671,9 +1718,9 @@ individual absorption component.} Each atmospheric transmission curve
 determine the resulting changes in observed magnitudes, as in
 Figure~\ref{fig:dmag_filtershift}. \ref{a} and \ref{b} show the
 effects of varying aerosol absorption in $\tau_0$ and $\alpha$
-respectively, \ref{c} shows the effect of varying \ozone absorption. These
+respectively, \ref{c} shows the effect of varying \ozone\,absorption. These
 effects are concentrated in $u$ and $g$ bands, with a negligible effect
-in $izy$. \ref{d} shows the effect of varying the \water absorption,
+in $izy$. \ref{d} shows the effect of varying the \water\,absorption,
 which is strongest in $y$, with some effect in $z$ and no effect in
 $ugri$.
 }}
@@ -1714,7 +1761,7 @@ the two extremes of the atmospheric transmission in each filter are shown above.
 \includegraphics[width=6in]{delta_mags_10}
 \caption{{\small
 {\bf $\Delta m_b^{obs}$ due to 10\% variations of 
-atmospheric transmission in \ozone and aerosol, with 30\% variation of \water.} 
+atmospheric transmission in \ozone\,and aerosol, with 30\% variation of \water.} 
 This is similar to Figure~\ref{fig:dmag_atm_max}, except $C_{\ozone}$,
 $\tau_0$ and $\alpha$ were only varied by 10\% of the total range of
 values measured in \citet{Burke2010b}, and $C_{\water}$ was varied by 30\%
@@ -1746,8 +1793,9 @@ to $X=2.1$, for a typical atmospheric transmission response curve.}
 
 Correcting observed counts for the difference between the measured
 shape of the hardware and atmospheric response curves and the standard
-normalized bandpass, $phi_b^{std}(\lambda)$, requires knowledge of the
-SED of each star. However, with this knowledge, it is possible to
+normalized bandpass, $\phi_b^{std}(\lambda)$, requires knowledge of the
+SED of each star. However, with this knowledge (which comes from the
+colors of each star), it is possible to
 create lookup tables of $\Delta m_b^{meas}(x,y,alt,az,SED,t)$ (as in
 Equation~\ref{eqn:magsFromCounts}) for various locations in the focal
 plane in each exposure. A rough example is given in
@@ -1779,10 +1827,10 @@ scales, $<$ several times the PSF) across the focal plane due to the
 telescope hardware system have also been removed by the synthetic
 flat. However, there still remain variations in the normalization of
 the system response that result from gray extinction due to
-clouds. The primary driver for the self-calibration procedure to
+clouds. The primary driver for the self-calibration procedure is to
 correct for these gray zeropoint offsets that result from
-atmospheric variations; a secondary use for the self-calibration can
-be to reduce any other systematic errors. 
+atmospheric variations; a secondary use for the self-calibration is
+to reduce any other systematic errors. 
 
 The self-calibration procedure selects bright, isolated main sequence
 and white dwarf stars (or any star with well-known colors and a
@@ -1791,21 +1839,22 @@ $\delta k$ values) from the sample of all observed stars after they are
 corrected to the standard bandpass (`standardized'). Only non-variable stars will be
 selected for self-calibration, based on approximately calibrated data
 (say, a few percent) which will suffice in this context. It then uses
-the many repeat observations $j$ of each star $i$ in a particular filter to minimize
+the many repeat observations $j$ of each star $i$ in a particular
+filter to minimize Equation~\ref{eqn:chi2},
 \begin{equation}
-\label{eqn:selfcalmin}
+%\label{eqn:selfcalmin}
 \chi^2 = \Sigma_{ij} \left(  { m_{b,ij}^{std} - m_{b,ij}^{model} \over
-    \sigma_{b,ij}^{std} } \right)^2
+    \sigma_{b,ij}^{std} } \right)^2, \nonumber
 \end{equation}
 where the $m_{model}$ includes any remaining photometric corrections
 that must be applied. In the most basic calibration plan, the model
 magnitude would only include a single gray extinction zeropoint offset
-per patch due to clouds, applied as
+per patch due to clouds, applied as in Equation~\ref{eqn:modelmag},
 \begin{equation}
-\label{eqn:zp}
-m^{model}_{b,ij} = m^{best}_{b,i} - \delta z_{b,j},
+%\label{eqn:zp}
+m^{model}_{b,ij} = m^{best}_{b,i} - \delta z_{b,j}, \nonumber
 \end{equation}
-where the patch size is approximately one CCD in size and $\delta
+where the size of each patch is approximately one CCD and $\delta
 z_{b,j}$ is constant over the patch. A more complicated model
 magnitude could be used if found desireable. This could include a
 $\delta z_{b,j}(x,y)$ using higher order functional form in $x,y$ than
@@ -1822,7 +1871,7 @@ or terms which depend on the color of the stars (essentially, terms to
 refine the hardware bandpass calibration), assuming those terms were
 constant for long stretches (approximately a year's worth) of time.
 
-Minimizing Equation~\ref{eqn:selfcalmin} requires solving for
+Minimizing Equation~\ref{eqn:chi2} requires solving for
 approximately, $10^8$ $m_{b,i}^{best}$ and $10^8$ $\delta z_j$, in the
 basic calibration model. Adding additional terms to refine the
 calibration of the hardware normalization or bandpass shape increases
@@ -1832,25 +1881,25 @@ course, not all stars will be observed on all calibration patches, so
 there will be only about 10$^{10}$ non-zero values of
 $(m_b^{std})_{ij}$ (per band). Investigations using a conjugate
 gradient method to compute $m_{b}^{best}$ and $\delta z_j$ for
-approximately $10^6$ stars and $10^6$ patches was very successful; the
+approximately $10^6$ stars and $10^6$ patches were very successful; the
 same method could be relatively easily parallelized for the full data
-set.  We have also had preliminary success using a least squares
-method to solve for $m_{b,i}^{best}$ and $\delta z_j$. 
+set.  We have also had preliminary success with simulations using a least squares
+method to invert the matrix from Equation~\ref{eqn:chi2} and solve for $m_{b,i}^{best}$ and $\delta z_j$. 
 
-With the known values of $(\delta z)_j$, all measurements for all stars from a
-patch can be re-calibrated, then analyzed for systematics in
-$[(m_b^{std})_{ij} - (m_b^{best})_{i}]$ and $[(m_b^{obs})_{ij} -
+With the known values of $(\delta z)_j$, all measurements for all
+stars from a patch can be re-calibrated, then analyzed for systematics
+in $[(m_b^{std})_{ij} - (m_b^{best})_{i}]$ and $[(m_b^{obs})_{ij} -
 (m_b^{best})_{i}]$ residuals (e.g., as a function of observation time,
 position on the focal plane, airmass, seeing, stellar color,
 brightness, seeing, etc.). The self-calibration step can be repeated
-if necessary, with corrections for systematics incorporated in the
-next-iteration values for $(m_b^{std})_{ij}$ or fits for these
-systematics can be added directly into
-the model magnitudes used for the self-calibration solution, as
-described above.
+if necessary, with corrections for any discovered systematics
+incorporated in the next-iteration values for
+$(m_b^{std})_{ij}$. Alternatively, fits for parameterizations of these
+systematics can be added directly into the model magnitudes used for
+the self-calibration solution, as described above.
 
 Investigations of this final step in the internal calibration procedure are
-detailed in Docushare-XXX(Peter's doc). These investigations use a
+detailed in the LSST self-calibration document produced by Yoachim, et al. These investigations use a
 simulated stellar catalog generated with Mario Juric's GALFAST
 code. This stellar catalog covers the entire sky with the exception of
 the plane of the Milky Way, with more than $10^6$ stars over the
@@ -1885,7 +1934,7 @@ A set of example plots corresponding to a baseline self-calibration
 test are shown in Figure~\ref{fig:selfcal_fiducial}.  In this
 simulation, observations over two years with Declination between -80
 and 0 degrees were used; regions slightly further north or south are
-part of OpSim, but because they are not part of the main footprint of
+part of OpSim, but they because they are not part of the main footprint of
 the survey often receive fewer visits and thus skew the results of
 these investigations. Observations for each star were generated with
 the following offsets: random gray offsets for cloud extinction
@@ -1946,12 +1995,47 @@ some amount of dither is required. These investigations have shown
 that dither patterns where the overlap is one quarter of the field of
 view or more produce results meeting the SRD requirements. 
 
-It is good to note that $m_{b,i}^{best}$ and $\delta z_j$ are
+Note that $m_{b,i}^{best}$ and $\delta z_j$ are
 constrained only up to an arbitrary additive constant. For
 convenience, this constant can be set so that stars have roughly
 correct AB magnitudes, however the goal after self-calibration is
 primarily to have a rigid, self-consistent magnitude system,
-equivalent to the natural magnitudes.
+equivalent to the natural magnitudes. Accurately calibrating the internal
+magnitudes to an external scale is discussed in the next section, 
+Section~\ref{sec:calib_external}. 
+
+\subsubsection{Photometric vs. Non-photometric data}
+
+Correcting for the color terms resulting from the difference between
+$\phi_b^{meas}(\lambda,t)$ and $\phi_b^{std}(\lambda)$ requires some
+preliminary measurement of the color of each calibration star (to
+within 0.02 magnitudes).  This means we must either have some prior
+knowledge of the colors of each star (from Gaia, for example) or we
+must have some other method for measuring colors in the $ugi$ bands
+relevant to determining metallicity and the color corrections detailed
+in Section~\ref{sec:phi}, presumably by measuring the magnitudes of
+these stars in photometric data.  Without
+this requirement, we could just combine all photometric and
+non-photometric data in the self-calibration routine, leaving the
+self-calibration solver to determine the appropriate $\delta z_j$ to
+compensate for any non-photometric images.
+
+Assuming that we must first identify and use photometric data to
+determine the colors of each object, this could proceed as follows. 
+Identify all observations which were obtained in relatively
+photometric conditions by searching for images where the average
+scatter in magnitude measured for each source was less than some
+threshhold (say $<0.05$ magnitudes). Using these images and standard
+stars in these images, measure a preliminary color for each
+object. With this preliminary color, make a correction for $\Delta
+m_b^{meas}$ and run the self-calibration solver for this (photometric) subset of the
+data. Iterate the results of the self-calibration solver to improve
+the color determination for each star, until the color measurement
+converges to within 0.02 magnitudes. 
+
+At this point, we have colors accurate enough to apply a $\Delta
+m_b^{meas}$ correction sufficient to run self-calibration on all
+images, including the non-photometric data. 
 
 
 \section{Fixing LSST to an external scale}
@@ -1963,11 +2047,11 @@ to an external scale such that the flux in a single band can be compared to the
 flux in another filter band (SRD requirement \ref{color_req}) and that
 the flux in a particular filter band can be compared to an absolute
 external system (SRD requirement \ref{abs_req}). This is equivalent to
-determining $\Delta_{br}$ and $\Delta_r$ from Eqn~\ref{eqn:extmags}. 
+determining $\Delta_{b-r}$ and $\Delta_r$ from Eqn~\ref{eqn:extmags}. 
 
 \subsection{Band to band (color)}
 
-The band to band calibration for each filter $b$ (the $\Delta_{br}$
+The band to band calibration for each filter $b$ (the $\Delta_{b-r}$
 values) will be determined by measuring the flux from one or more
 celestial objects whose physics are believed to be well
 understood. In principle, a single object with known colors would be
@@ -1979,12 +2063,15 @@ Hot hydrogen (DA) and helium (DB) white dwarf stars have simple
 atmospheres that are reasonably well understood (model colors are
 currently reliable to about 0.01 magnitudes). It is estimated that
 there will be $\approx$ 100/10 DA/DB WD stars with $r<24$ in each LSST
-image at the South Galactic Pole. Catalogs of WD stars visible from
-Cerro Pachon have been constructed \citep{1992JRASC..86..309B,
-2004AJ....128.3053B}, and a `white dwarf calibration system' has been
-developed \citep{2006AJ....132.1221H}. The locus of main sequence
-stars in color-color space is also reasonably well understood and has
-been used to calibrate photometry with success in previous surveys
+image at the South Galactic Pole, although in theory only one of
+well-measured standard would be required. These WDs will be recognizable from
+color-color plots (see \citet{Ivezic2007} Figure 24 for an example).
+Catalogs of WD stars visible from Cerro Pachon have been constructed
+\citep{1992JRASC..86..309B, 2004AJ....128.3053B}, and a `white dwarf
+calibration system' has been developed
+\citep{2006AJ....132.1221H}. The locus of main sequence stars in
+color-color space is also reasonably well understood and has been used
+to calibrate photometry with success in previous surveys
 \citep{2004MNRAS.352.1255M, 2007AJ....134..973I}. The use of the main
 sequence stellar locus in addition to WD stars will provide a valuable
 check on systematic effects that may arise from using (primarily)
@@ -1995,9 +2082,13 @@ Additional checks on the quality of color calibration will be based on
 color residuals when determining photometric redshifts for
 galaxies. Analyzing these residuals as a function of galaxy brightness
 and color, and across the LSST footprint, will yield detailed
-quantiative estimates of the calibration quality.
+quantiative estimates of the calibration quality.  Although in theory
+one well-measured standard is all that would be necessary to determine
+$\Delta_{b-r}$ values for each bandpass, in practice having multiple
+standard with varying colors will serve as a check on systematics and
+provide estimates of the calibration uniformity throughout the survey.
 
-The values for $\Delta_{br}$ will be determined by generating model
+The values for $\Delta_{b-r}$ will be determined by generating model
 $m_b^{std}$ values for each band-band calibration object, then
 minimizing 
 \begin{equation}
@@ -2005,15 +2096,15 @@ minimizing
     - m_{r,i}^{std})^{model} \over  \sigma_{b-r,i}}\right) ^2. 
 \end{equation}
 This comparison can
-be done using subsets of objects from low galactic extinction regions,
+be done using subsets of objects from low Galactic extinction regions,
 and then bootstrapping to the entire sky to check for systematic
 effects. 
 
 \subsection{Single bandpass to external flux system (absolute scale)}
 
-After determining the band to band calibration, there is a single
-number required to calibrate the entire system to an absolute flux
-scale: $\Delta_r$.  This can again be determined using a single
+After determining the band to band calibration, there is a one further
+value required to calibrate the entire system to an absolute flux
+scale: $\Delta_r$.  This could again be determined using a single
 object with a well-known flux and spectral energy distribution,
 however multiple external calibrators provide a valuable check on
 systematic effects. 
@@ -2087,7 +2178,7 @@ areas.
     studying how the error induced by these ghosts propagates through
     the rest of calibration. }
 
-\item{Atmospheric absorption - $\phi_b^{atmo}(\lambda,t)$. Further
+\item{Atmospheric absorption - $\phi_b^{atm}(\lambda,t)$. Further
     observing runs where spectroscopic (and preferably, also
     broad-band photometry) observations of known sources under a
     variety of weather conditions and at a variety of pointings over
@@ -2098,10 +2189,10 @@ areas.
     considering $y$ band photometric calibration. }
 
 \item{Cloud extinction. The expected cloud structure function at Cerro
-    Pachon is not well understood; the extent of its `clumpiness' as a
+    Pach\'{o}n is not well understood; the extent of its `clumpiness' as a
     function of total cloud extinction is a significant unknown in the
     self-calibration procedure. LSST plans to install 
-    devices to measure cloud extinction across the sky and on small
+    small wide-field camera systems to measure cloud extinction across the sky and on small
     scales on Cerro Pachon to address this issue. }
 
 \item{Self-calibration. The self-calibration software must be
@@ -2162,20 +2253,20 @@ on the order of 20 mmag for $gri$, or even 100 mmag in $u$ band. For
 more extreme SEDs, these corrections may be even larger.
 
 Figure~\ref{fig:dmag_allseds} illustrates the likely magnitude of
-these $\Delta m_b^{meas}$ corrections for a wide variety of SEDs. In each plot, the main
-sequence stars are shown as in the figures in the main paper (small
-dots, color-coded by metallicity), although given the increased scale
-here they only appear as a purple series of circles. M dwarfs are now
-included, generally mimicking the behavior of the main sequence stars but
-further into the red. More unusual SEDs are also
-included; a quasar SED, based on a composite of many empirical quasars
-from SDSS from \citet{VandenBerk2001} that has been extended to the
-full LSST wavelength range through the addition of power law flux
-above and below the original range ($f_\nu \propto 1/\lambda^{0.5}$
-for $\lambda<89$nm \& $f_\nu \propto 1/\lambda^{1.5}$ for
-$\lambda>800$nm), and redshifted from $z=0$ to $z=3$; also a sample of
-SN Ia from templates generated by Peter Nugent \citep{Nugent2002}, redshifted
-from $z=0$ to $z=1$.  
+these $\Delta m_b^{meas}$ corrections for a wide variety of SEDs. In
+each plot, the main sequence stars are shown as in the figures in the
+main paper (small dots, color-coded by metallicity), although given
+the increased scale here they only appear as a purple series of
+circles. M dwarfs are now included, generally mimicking the behavior
+of the main sequence stars but extending further into the red. More
+unusual SEDs are also included; a quasar SED, based on a composite of
+many empirical quasars from SDSS from \citet{VandenBerk2001} that has
+been extended to the full LSST wavelength range through the addition
+of power law flux above and below the original range ($f_\nu \propto
+1/\lambda^{0.5}$ for $\lambda<89$nm \& $f_\nu \propto 1/\lambda^{1.5}$
+for $\lambda>800$nm), and redshifted from $z=0$ to $z=3$; also a
+sample of SN Ia from templates generated by Peter Nugent
+\citep{Nugent2002}, redshifted from $z=0$ to $z=1$.
 
 The figure shows the $\Delta m_b^{meas}$ values that would be expected
 under a maximum change of atmospheric parameters and under a likely
@@ -2189,9 +2280,11 @@ and the main sequence $\Delta m_b^{meas}$ values at each color; this
 could easily be more than 20mmag.  
 
 With the wide variety of objects and SEDs that will be possible in the
-LSST data set, providing the information and tools so that
+LSST data set, it is crucial to provide the information and tools so that
 scientists may calculate highly precise $m_b^{std}$ magnitudes for
-their objects of interest is crucial. 
+their objects of interest. This means recording or providing the means
+to recalculate $\phi_b^{sys+atm}(\lambda,t)$ for every object detected
+with LSST. 
 
 \begin{figure}
 \centering
@@ -2321,7 +2414,9 @@ LSST-8217.}
     wavelength-dependent corrections. For a non-variable source
     observed under variable atmospheric transmission conditions and/or at
     varying locations in the field of view, the natural magnitude
-    reported will change due to changes in the bandpass shape.} 
+    reported will change due to changes in the bandpass shape. The
+    natural magnitude is equivalent to an observed
+    magnitude, after the appropriate zeropoints have been applied.} 
 
 \item{{\bf Standard magnitude.} A magnitude measurement which includes
   not only corrections for the photometric flat field and a rough
