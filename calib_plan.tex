@@ -1473,7 +1473,7 @@ It is expected that the shape
 of the response curve will be primarily a function of radius due to
 variations in the thickness of the filter coatings caused by the
 mechanism used to deposit those coatings. The variation due to filter
-nonuniformities is specified to be less than 1\% across the focal
+nonuniformities is specified to be less than 1\% of the central wavelength across the focal
 plane, most likely in the form of a bandpass shift as shown in
 Figure~\ref{fig:filtershift}. For main sequence stars, the resulting
 changes in observed magnitude as the bandpass shifts by 1\% of the
@@ -1481,7 +1481,7 @@ central wavelength can be as much as than 0.04~magnitudes (40
 mmag) - and even larger in the $u$ band (see
 Figure~\ref{fig:dmag_filtershift}). However, as long as the variation
 in the hardware response curve at each $x,y$ location is measured to
-better than 0.05\%, the maximum error contribution towards calibrating these observed magnitudes
+better than 0.05\% of the central wavelength, the maximum error contribution towards calibrating these observed magnitudes
 will be less than 2~mmag for all bandpasses other than $u$, where the
 error could be as much as 5~mmag for certain main sequence stars (see
 Figure~\ref{fig:dmag_filtershift_small}). This is
@@ -1495,15 +1495,12 @@ Because the shape of the hardware response curve varies as a function
 of filter radius, it is also necessary to monitor any offsets of the
 filter position from dead center after any filter changes. Assuming
 the filter response curve varies linearly with radius, the filter
-location must be measured to better than 0.025\% (half of the 0.05\%
-error in hardware curve measurement above) for the filter
+location must be measured to better than 0.025\% times the central
+wavelength (half of the 0.05\% times central wavelength tolerable
+error in hardware curve measurement discussed above) for the filter
 positioning to remain less than a 1~mmag source of error.  Given the filters are approximately
 75~cm in diameter, this means the filter positioning must be recorded
-to better than (0.025\%*75cm=) 0.2~mm.
-
-%LJ - beamsize 100mm, plus review filter location requirement ... 0.025\% is too small
-%Plus need to include shift in bandpass due to change in incident angle ? 
-
+to better than (0.025\% / 1\%)$\times$37.5cm = 9.4~mm. 
 
 \subsubsection{Measuring the shape of the atmospheric transmission curve}
 \label{sec:atmo_phi}
