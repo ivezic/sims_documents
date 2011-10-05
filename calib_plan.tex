@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{subfig}
 \usepackage{fixltx2e}
+\usepackage{hyperref}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% author-defined commands
@@ -25,11 +26,25 @@
 \title{Level 2 Photometric Calibration for the LSST Survey}
 
 \author{
-Lynne Jones, {\v Z}eljko Ivezi{\'c}, David Burke, Tim Axelrod \\
+Lynne Jones\altaffilmark{1}, {\v Z}eljko Ivezi{\'c}\altaffilmark{1}, David Burke\altaffilmark{2}, Tim Axelrod\altaffilmark{3}, \\
+James G. Bartlett\altaffilmark{4}, Gurvan Bazin\altaffilmark{4},
+Guillaume Blanc\altaffilmark{4}, \\
+ Michel Cr{\'e}z{\'e}\altaffilmark{4}, C{\'e}cile Roucelle\altaffilmark{4},
+Michael Strauss\altaffilmark{5} \\
 on behalf of 
 The Photometric Calibration Team \\ 
-Docushare-8123, 7/8/11
+Docushare-8123, 7/8/11 \\
 }
+\altaffiltext{1}{University of Washington}
+\altaffiltext{2}{SLAC National Accelerator Laboratory}
+\altaffiltext{3}{LSST Corporation}
+\altaffiltext{4}{APC, Universite Paris Diderot}
+\altaffiltext{5}{Princeton University}
+% Gurvan Bazin
+% 1- Department of Physics, Ludwig-Maximilians-Universit\"at, Scheinerstr. 1, 81679 Munich, Germany
+%2- Excellence Cluster Universe, Boltzmannstr. 2, 85748 Garching, Germany
+%3. APC - Universite Paris Diderot - Paris 7, Paris, France
+
 
 
 \begin{abstract}
@@ -1480,11 +1495,11 @@ Because the shape of the hardware response curve varies as a function
 of filter radius, it is also necessary to monitor any offsets of the
 filter position from dead center after any filter changes. Assuming
 the filter response curve varies linearly with radius, the filter
-location must be measured to better than 0.025\% (half of the 0.5\%
+location must be measured to better than 0.025\% (half of the 0.05\%
 error in hardware curve measurement above) for the filter
 positioning to remain less than a 1~mmag source of error.  Given the filters are approximately
 75~cm in diameter, this means the filter positioning must be recorded
-to better than 0.2~mm.
+to better than (0.025\%*75cm=) 0.2~mm.
 
 %LJ - beamsize 100mm, plus review filter location requirement ... 0.025\% is too small
 %Plus need to include shift in bandpass due to change in incident angle ? 
