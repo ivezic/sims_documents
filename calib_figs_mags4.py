@@ -9,8 +9,9 @@ import AtmoComp as ac
 WMIN = 300
 WMAX = 1200
 WSTEP = 0.1
-filterlist = ('u', 'g', 'r', 'i', 'z', 'y3')
+filterlist = ('u', 'g', 'r', 'i', 'z', 'y4')
 colors = ['b', 'g', 'y', 'r', 'm', 'k']
+
 def color_counter_next(i):
     i = i + 1
     if i == len(colors):
@@ -63,9 +64,11 @@ def get_atmosDict():
     for key in ('1', '2'):
         X = 1.2  # float(key)
         if key=='1':
-            atmocmp, atmos[key] = get_atmos(atmocmp, X=X, t0=5.6/100.0, alpha=-1.8, O3=1.5, H2O=1.3)
+            #atmocmp, atmos[key] = get_atmos(atmocmp, X=X, t0=5.6/100.0, alpha=-1.8, O3=1.5, H2O=1.3)
+            atmocmp, atmos[key] = get_atmos(atmocmp, X=X, t0=0.8/100.0, alpha=-1.0, O3=0.9, H2O=0.8)
         if key=='2':
-            atmocmp, atmos[key] = get_atmos(atmocmp, X=X, t0=0.2/100.0, alpha=-0.5, O3=0.6, H2O=0.5)
+            #atmocmp, atmos[key] = get_atmos(atmocmp, X=X, t0=0.2/100.0, alpha=-0.5, O3=0.6, H2O=0.5)
+            atmocmp, atmos[key] = get_atmos(atmocmp, X=X, t0=1.3/100.0, alpha=-1.13, O3=0.99, H2O=1.04)
         # examples
         # max atmo = get_atmos(atmocmp, X=X, t0=5.6/100.0, alpha=-1.8, O3=1.5, H2O=1.3)
         # min atmo = get_atmos(atmocmp, X=X, t0=0.2/100.0, alpha=-0.5, O3=0.6, H2O=0.5)
@@ -295,6 +298,51 @@ def read_sn():
         sns[s].synchronizeSED(wavelen_min=WMIN, wavelen_max=WMAX, wavelen_step=WSTEP)
     return sns, snlist, days, redshifts
 
+
+def read_galaxies():
+    # read sn spectra and redshift
+    homedir = os.getenv("HOME")
+    galdir = os.path.join(homedir, "seds/galaxies")
+    allfilelist = os.listdir(galdir)
+    gallist_base = []
+    metal = ['002Z', '04Z', '25Z']
+    gtype = ['Const', 'Inst', 'Burst', 'Exp']
+    redshifts= numpy.arange(0, 1.7, 0.3)
+    # pull out the filenames we want
+    for filename in allfilelist:
+        if filename.endswith('.spec'):
+            tmp = filename.split('.')
+            metallicity = tmp[2]
+            galaxytype = tmp[0]
+            if (metallicity in metal) & (galaxytype in gtype):
+                gallist_base.append(filename)
+    # read base SEDs for these  galaxies
+    gals_base = {}
+    for g in gallist_base:
+        gals_base[g] = Sed()
+        gals_base[g].readSED_flambda(os.path.join(galdir, g))
+    # and redshift
+    gals = {}
+    gallist = []
+    for g in gallist_base:
+        for z in redshifts:
+            gal_name = "%s_%.1f" %(g, z)
+            wavelen, flambda = gals_base[g].redshiftSED(z, wavelen=gals_base[g].wavelen,
+                                                        flambda=gals_base[g].flambda)
+            gals[gal_name] = Sed(wavelen=wavelen, flambda=flambda)
+            gallist.append(gal_name)
+    print "# Generated %d galaxies at redshifts between %f and %f" %(len(gallist),
+                                                                     redshifts.min(), redshifts.max())
+    # resample onto the standard bandpass for Bandpass obj's and calculate fnu to speed later calculations
+    for g in gallist:
+        gals[g].synchronizeSED(wavelen_min=WMIN, wavelen_max=WMAX, wavelen_step=WSTEP)
+    # add dust
+    ax, bx = gals[gallist[0]].setupCCMab()
+    for g in gallist:
+        gals[g].addCCMDust(ax, bx, A_v=0.02)
+    return gals, gallist, redshifts
+    
+
 ###
 
 def calc_mags(seds, sedkeylist, bpDict):
@@ -306,7 +354,10 @@ def calc_mags(seds, sedkeylist, bpDict):
         i = 0
         for key in sedkeylist:
             mags[f][i] = seds[key].calcMag(bpDict[f])
+            if numpy.isnan(mags[f][i]):
+                print key, f, mags[f][i]
             i = i + 1
+        print f, mags[f].max(), mags[f].min()
     return mags
 
 def calc_stdcolors(mags_std):
@@ -370,6 +421,34 @@ def plot_colorcolor(seds, sedkeylist, sedcolorkey, sedtype, bpDict, titletext=No
             condition =((redshift>=redbins[redidx]) & (redshift<=redbins[redidx]+redbinsize))
             rcolor = redcolors[redidx]
             pylab.plot(gi[condition], magscolors[colorlabels[i+1]][f][condition], rcolor+'o')
+    elif sedtype == 'galaxy':
+        print "# looking at galaxies"
+        # set the colors of data points based on their redshift
+        gallist = sedcolorkey
+        redcolors = ['b', 'b', 'g', 'g', 'r', 'r' ,'m', 'm']
+        redbinsize = 0.3
+        redbins = numpy.arange(0.0, 1.7+redbinsize, redbinsize)
+        print redbinsize, redbins, redcolors
+        i = 1
+        # for each filter, use a different subplot
+        for f in filterlist:
+            ax = pylab.subplot(3,2,i)
+            j = 0
+            for g in gallist:
+                galbase, redshift = g.split('_')
+                redshift = float(redshift)
+                redidx = int(redshift / redbinsize)
+                pylab.plot(gi[j], dmags[f][j], redcolors[redidx])
+                j = j + 1
+            i = i + 1
+        ax = pylab.subplot(3,2,7)
+        j = 0
+        for g in gallist:
+            galbase, redshift = g.split('_')
+            redshift = float(redshift)
+            redidx = int(redshift / redbinsize)
+            pylab.plot(gi[j], dmags[f][j], redcolors[redidx])
+            j = j + 1
     elif sedtype == 'mlt':
         print "# looking at MLT"
         # set the colors of data points based on their type
@@ -502,6 +581,25 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlim
                 rcolor = redcolors[redidx]
                 pylab.plot(gi[condition], dmags[f][condition], rcolor+'o')
             i = i + 1
+    elif sedtype == 'galaxy':
+        print "# looking at galaxies"
+        # set the colors of data points based on their redshift
+        gallist = sedcolorkey
+        redcolors = ['b', 'b', 'g', 'g', 'r', 'r' ,'m', 'm']
+        redbinsize = 0.3
+        redbins = numpy.arange(0.0, 1.7+redbinsize, redbinsize)
+        print redbinsize, redbins, redcolors
+        i = 1
+        for f in filterlist:
+            ax = pylab.subplot(3,2,i)
+            j = 0
+            for g in gallist:
+                galbase, redshift = g.split('_')
+                redshift = float(redshift)
+                redidx = int(redshift / redbinsize)
+                pylab.plot(gi[j], dmags[f][j], redcolors[redidx]+'.')
+                j = j + 1
+            i = i + 1
     elif sedtype == 'mlt':
         print "# looking at MLT"
         # set the colors of data points based on their type
@@ -594,7 +692,8 @@ if __name__ == "__main__":
     # Read in standard hardware
     sys_std = read_hardware(shift_perc=None)
     # shift the filters by some percent
-    shift_perc = 1.0
+    #shift_perc = 1.0
+    shift_perc = 0.05
     sys_shift = read_hardware(shift_perc=shift_perc)
 
     # generate some atmospheres
@@ -615,10 +714,11 @@ if __name__ == "__main__":
 
     # now calculate change in magnitude between the two quantities we want to compare
     t1 = total_std['1']
-    t2 = total_shift['1']
+    t2 = total_shift['2']
     #titletext = "Maximum changes in atmosphere, all SED types"
     #titletext = "10% / 30% H2O atmosphere changes"
-    titletext = "1% filter shift"
+    #titletext = "1% filter shift"
+    titletext = '10% (other)/ 30% H2O atmosphere changes, 0.05% $\lambda_{eff}$ filter shift'
     dmags = calc_deltamags(stars, starlist, t1, t2)
     for f in filterlist:        
         print f, dmags[f].min(), dmags[f].max()
@@ -635,6 +735,8 @@ if __name__ == "__main__":
         ylims[f] = [-10, 0]
         xlims[f] = [-0.06, 0.01]
 
+    xlims = None
+    ylims = None
     #plot_throughputs(t1, t2)
 
     plot_dmags(gi, dmags, metallicity, 'kurucz', titletext=titletext, ylims=ylims, newfig=True)
@@ -665,6 +767,19 @@ if __name__ == "__main__":
         for f in filterlist:
             print f, dmags[f].min(), dmags[f].max()
         plot_dmags(gi, dmags, redshifts, 'quasar', titletext=titletext, ylims=ylims, newfig=False)
+
+    # and for the galaxies
+    do_galaxy = False
+    if do_galaxy:
+        galaxies, gallist, redshifts = read_galaxies()
+        mags_std = calc_mags(galaxies, gallist, total_std['Standard'])
+        gi  = calc_stdcolors(mags_std)
+        dmags = calc_deltamags(galaxies, gallist, t1, t2)
+        print "Galaxies ", redshifts
+        for f in filterlist:
+            print f, dmags[f].min(), dmags[f].max()
+        plot_dmags(gi, dmags, gallist, 'galaxy', titletext=titletext, ylims=ylims, newfig=True)
+
 
     do_whitedwarf = False
     if do_whitedwarf:
