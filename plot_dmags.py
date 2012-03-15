@@ -85,7 +85,7 @@ def combine_throughputs(atmos, sys):
     # Set up the total throughput for this system bandpass
     total = {}
     for f in filterlist:
-        wavelen, sb = sys[f].multiplyThroughputs(atmos[key].wavelen, atmos[key].sb)
+        wavelen, sb = sys[f].multiplyThroughputs(atmos.wavelen, atmos.sb)
         total[f] = Bandpass(wavelen, sb)
         total[f].sbTophi()
     return total
@@ -524,10 +524,10 @@ def calc_deltamags(mags1 ,mags2):
     dmags = {}
     for f in filterlist:
         # difference, in millimags
-        dmags[f] = (mags1 - mags2) * 1000.0
+        dmags[f] = (mags1[f] - mags2[f]) * 1000.0
     return dmags
 
-def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlims=None, newfig=True):
+def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlims=None, newfig=True, figname=None):
     # ylims = dictionary (ylim['u'] = [0, 0])
     sedtypes = ['kurucz', 'mlt', 'quasar', 'white_dwarf', 'sn']
     # make figure of change in magnitude
@@ -538,14 +538,15 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlim
     if sedtype == 'kurucz':
         print "# looking at kurucz"
         # set colors of data points based on their metallicity
-        metallicity = sedcolorkey[0]
-        logg = sedcolorkey[1]
+        metallicity = numpy.array(sedcolorkey[0])
+        logg = numpy.array(sedcolorkey[1])
         metcolors = ['c', 'c', 'b', 'g', 'y', 'r', 'm']
-        metbinsize = abs(sedcolorkey.min() - sedcolorkey.max())/6.0
-        metbins = numpy.arange(sedcolorkey.min(), sedcolorkey.max() + metbinsize, metbinsize)
+        metbinsize = abs(metallicity.min() - metallicity.max())/6.0
+        metbins = numpy.arange(metallicity.min(), metallicity.max() + metbinsize, metbinsize)
         print metbinsize, metbins
         i = 1
         # for each filter, use a different subplot
+        plot_logg2 = False
         for f in filterlist:
             ax = pylab.subplot(3,2,i)
             for metidx in range(len(metbins)):
@@ -553,10 +554,11 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlim
                             & (logg>3.5))
                 mcolor = metcolors[metidx]
                 pylab.plot(gi[condition], dmags[f][condition], mcolor+'.')
-                condition =((metallicity>=metbins[metidx]) & (metallicity<=metbins[metidx]+metbinsize) \
-                            & (logg<2.5))
-                mcolor = metcolors[metidx]
-                pylab.plot(gi[condition], dmags[f][condition], mcolor+'x')
+                if plot_logg2:
+                    condition =((metallicity>=metbins[metidx]) & (metallicity<=metbins[metidx]+metbinsize) \
+                        & (logg<2.5))
+                    mcolor = metcolors[metidx]
+                    pylab.plot(gi[condition], dmags[f][condition], mcolor+'x')
             i = i + 1
     elif sedtype == 'quasar':
         print "# looking at quasars"
@@ -678,10 +680,53 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlim
             ax = pylab.subplot(3, 2, i)
             pylab.grid(True)            
         pylab.suptitle(titletext)
-    #pylab.savefig("delta_mags2.eps", format='eps')
+    if figname!=None:
+        pylab.savefig(figname+'.png', format='png')
     return
 
 ############
+
+def do_airmassloop(stars, starlist, metallicity, logg, sys, standard, mags_std, gi, ylims):
+    airmasses = numpy.arange(1.0, 1.6, 0.1)
+    atmocomp = None
+    for X in airmasses:
+        # 10p/30 atmo = build_atmos(atmocmp, X=X, t0=(0.8/100.0), alpha=-1.0, O3=0.9, H2O=0.8)
+        # 10p/30 atmo = build_atmos(atmocmp, X=X, t0=(1.3/100.0), alpha=-1.13, O3=0.99, H2O=1.04)
+        # max atmo = build_atmos(atmocmp, X=X, t0=5.6/100.0, alpha=-1.8, O3=1.5, H2O=1.3)
+        # min atmo = build_atmos(atmocmp, X=X, t0=0.2/100.0, alpha=-0.5, O3=0.6, H2O=0.5)
+        atmocomp, atmos = build_atmos(atmocmp = atmocomp, X=X,
+                                      t0=(5.6/100.0), t1=(0.02/100.0), t2=(-0.03/100.0),
+                                      alpha=-1.8, mol=0.96, BP=782, \
+                                      O3=1.5, H2O=1.3)
+        comparison = combine_throughputs(atmos, sys)
+        mags1 = calc_mags(stars, starlist, comparison, filterlist)
+        dmags = calc_deltamags(mags_std, mags1)
+        titletext = "Standard v X=%.1f atmosphere (max)" %(X)
+        plot_dmags(gi, dmags, [metallicity, logg], 'kurucz', titletext=titletext, ylims=ylims, newfig=True,
+                   figname='dmag%d_max' %(X*10))
+    return
+
+def do_airmassloop_others(quasar, redshifts, sn, snlist, sys, standard,
+                          mags_std_quasar, gi_quasar, mags_std_sn, gi_sn, ylims):
+    airmasses = numpy.arange(1.0, 1.6, 0.1)
+    atmocomp = None
+    for X in airmasses:
+        atmocomp, atmos = build_atmos(atmocmp = atmocomp, X=X,
+                                      t0=(5.6/100.0), t1=(0.02/100.0), t2=(-0.03/100.0),
+                                      alpha=-1.8, mol=0.96, BP=782, \
+                                      O3=1.5, H2O=1.3)
+        comparison = combine_throughputs(atmos, sys)
+        mags_quasar = calc_mags(quasar, redshifts, comparison, filterlist)
+        dmags_quasar = calc_deltamags(mags_std_quasar, mags_quasar)
+        mags_sn = calc_mags(sn, snlist, comparison, filterlist)
+        dmags_sn = calc_deltamags(mags_std_sn, mags_sn)
+        titletext = "Standard v X=%.1f atmosphere (max)" %(X)
+        plot_dmags(gi_quasar, dmags_quasar, redshifts, 'quasar', titletext=titletext, ylims=ylims, newfig=True,
+                   figname='SNdmag%d_max' %(X*10))        
+        plot_dmags(gi_sn, dmags_sn, snlist, 'sn', titletext=titletext, ylims=ylims, newfig=False,
+                   figname='SNdmag%d_max' %(X*10))
+    return
+
 
 if __name__ == "__main__":
 
@@ -699,7 +744,7 @@ if __name__ == "__main__":
                 mol=0.96, BP=782, O3=0.9, H2O=0.9)
     # and maybe some other one (if not comparing against standard .. remember, need 'standard'
     #  to generate standard g-i colors every time)
-    atmocomp, atmos2 = build_atmos(atmocomp=atmocomp, X=1.1, t0=(3.9/100.0), t1=(0.02/100.0),
+    atmocomp, atmos2 = build_atmos(atmocmp=atmocomp, X=1.1, t0=(3.9/100.0), t1=(0.02/100.0),
                                    t2=(-0.03/100.0), alpha=-1.7,
                                    mol=0.96, BP=782, O3=0.9, H2O=0.9)
     
@@ -713,15 +758,15 @@ if __name__ == "__main__":
     print "Kurucz ", temperatures.max(), temperatures.min(), metallicity.max(), metallicity.min()
 
     # calculate the standard BP magnitudes for each of these stars
-    mags_std = calc_mags(stars, starlist, standard)
+    mags_std = calc_mags(stars, starlist, standard, filterlist)
     gi = calc_stdcolors(mags_std)
 
     # now calculate change in magnitude between the two quantities we want to compare
 
     titletext = "Standard vs X=1.0 atmosphere"
-    mags1 = calc_mags(stars, starlist, comparison1)
-    mags2 = calc_mags(stars, starlist, comparison2)
-    dmags = calc_deltamags(mags1, mags2)
+    mags1 = calc_mags(stars, starlist, comparison1, filterlist)
+    mags2 = calc_mags(stars, starlist, comparison2, filterlist)
+    dmags = calc_deltamags(mags_std, mags1)
     for f in filterlist:        
         print f, dmags[f].min(), dmags[f].max()
 
