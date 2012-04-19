@@ -66,7 +66,7 @@ def read_stdatmo(override_filename = None):
     return atmos_bp
 
 def build_atmos(atmocmp=None, X=1.0, t0=(3.9/100.0), t1=(0.02/100.0), t2=(-0.03/100.0), alpha=-1.7,
-                mol=0.96, BP=782, O3=0.9, H2O=0.9):
+                mol=0.96, BP=782, O3=0.9, H2O=0.9, doPlot=False):
     if atmocmp==None:
         atmocmp = ac.AtmoComp()
     # examples
@@ -77,7 +77,7 @@ def build_atmos(atmocmp=None, X=1.0, t0=(3.9/100.0), t1=(0.02/100.0), t2=(-0.03/
     # 10p/30 atmo = build_atmos(atmocmp, X=X, t0=(0.8/100.0), alpha=-1.0, O3=0.9, H2O=0.8)
     # 10p/30 atmo = build_atmos(atmocmp, X=X, t0=(1.3/100.0), alpha=-1.13, O3=0.99, H2O=1.04)
     atmocmp.setCoefficients(t0=t0, t1=t1, t2=t2, alpha=alpha, mol=mol, BP=BP, O3=O3, H2O=H2O)
-    atmocmp.buildAtmos(secz=X, doplot=True)
+    atmocmp.buildAtmos(secz=X, doPlot=doPlot)
     atmos_bp = Bandpass(wavelen=atmocmp.wavelen, sb=atmocmp.trans_total)    
     return atmocmp, atmos_bp
 
@@ -92,19 +92,27 @@ def combine_throughputs(atmos, sys):
 
 ###
 
-def plot_throughputs(bpDict1, bpDict2):
-    pylab.figure()
+def plot_throughputs(bpDict1, bpDict2, newfig=True, label=True, othercolor=None):
+    if newfig:
+        pylab.figure()
     i = 0
     for f in filterlist:
+        if othercolor==None:
+            pcolor = colors[i]
+        else:
+            pcolor = othercolor
+        pylab.plot(bpDict2[f].wavelen, bpDict2[f].sb, pcolor+"-")
         pylab.plot(bpDict1[f].wavelen, bpDict1[f].sb, colors[i]+"-", label=f)
-        pylab.plot(bpDict2[f].wavelen, bpDict2[f].sb, colors[i]+":")
         i = color_counter_next(i)
     pylab.ylim(0, 0.8)
-    pylab.xlim(300, 1200)
+    pylab.xlim(300, 1100)
     pylab.xlabel("Wavelength (nm)")
     pylab.ylabel("Transmission")
     pylab.grid(True)
-    pylab.legend(numpoints=1, fancybox=True, loc='upper right')
+    if label:
+        leg = pylab.legend(numpoints=1, fancybox=True, loc='upper right')
+        ltext = leg.get_texts()
+        pylab.setp(ltext, fontsize='small')
     return
 
 ###
@@ -356,6 +364,23 @@ def calc_mags(seds, sedkeylist, bpDict, filterlist):
         print f, mags[f].max(), mags[f].min()
     return mags
 
+
+def calc_adu(seds, sedkeylist, bpDict, filterlist):
+    # calculate change in counts(in magnitudes) for all sed objects using bpDict (a single bandpass dictionary keyed on filters)
+    # pass the sedkeylist so you know what order the magnitudes are arranged in
+    mags = {}
+    for f in filterlist:
+        mags[f] = numpy.zeros(len(sedkeylist), dtype='float')
+        i = 0
+        for key in sedkeylist:
+            mags[f][i] = seds[key].calcADU(bpDict[f])
+            mags[f][i] = -2.5*numpy.log10(mags[f][i])
+            if numpy.isnan(mags[f][i]):
+                print key, f, mags[f][i]
+            i = i + 1
+        print f, mags[f].max(), mags[f].min()
+    return mags
+
 def calc_stdcolors(mags_std):
     # calculate some colors in the standard atmosphere, should be also standard bandpass, not shifted)
     gi = mags_std['g'] - mags_std['i']
@@ -527,12 +552,19 @@ def calc_deltamags(mags1 ,mags2):
         dmags[f] = (mags1[f] - mags2[f]) * 1000.0
     return dmags
 
-def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlims=None, newfig=True, figname=None):
+
+def plot_dmags(gi, dmags, sedcolorkey, sedtype, plotfilterlist = filterlist,
+               titletext=None, ylims=None, xlims=None, newfig=True, figname=None):
     # ylims = dictionary (ylim['u'] = [0, 0])
     sedtypes = ['kurucz', 'mlt', 'quasar', 'white_dwarf', 'sn']
     # make figure of change in magnitude
     if newfig:
         pylab.figure()
+    yplots = 3
+    xplots = 2
+    if len(plotfilterlist) == 1:
+        yplots = 1
+        xplots = 1
     pylab.subplots_adjust(top=0.93, wspace=0.32, hspace=0.32, bottom=0.09, left=0.12, right=0.96)
     # For Kurucz models
     if sedtype == 'kurucz':
@@ -547,8 +579,8 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlim
         i = 1
         # for each filter, use a different subplot
         plot_logg2 = False
-        for f in filterlist:
-            ax = pylab.subplot(3,2,i)
+        for f in plotfilterlist:
+            ax = pylab.subplot(yplots, xplots,i)
             for metidx in range(len(metbins)):
                 condition =((metallicity>=metbins[metidx]) & (metallicity<=metbins[metidx]+metbinsize) \
                             & (logg>3.5))
@@ -570,8 +602,8 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlim
         print redbinsize, redbins, redcolors
         i = 1
         # for each filter, use a different subplot
-        for f in filterlist:
-            ax = pylab.subplot(3,2,i)
+        for f in plotfilterlist:
+            ax = pylab.subplot(yplots,xplots,i)
             for redidx in range(len(redbins)):
                 condition =((redshift>=redbins[redidx]) & (redshift<=redbins[redidx]+redbinsize))
                 rcolor = redcolors[redidx]
@@ -586,8 +618,8 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlim
         redbins = numpy.arange(0.0, 1.7+redbinsize, redbinsize)
         print redbinsize, redbins, redcolors
         i = 1
-        for f in filterlist:
-            ax = pylab.subplot(3,2,i)
+        for f in plotfilterlist:
+            ax = pylab.subplot(yplots,xplots,i)
             j = 0
             for g in gallist:
                 galbase, redshift = g.split('_')
@@ -604,8 +636,8 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlim
         llist = sedcolorkey[2]
         tlist = sedcolorkey[3]
         i = 1
-        for f in filterlist:
-            ax = pylab.subplot(3,2,i)
+        for f in plotfilterlist:
+            ax = pylab.subplot(yplots,xplots,i)
             for j in range(len(mltlist)):
                 if (mltlist[j] in mlist):
                     pylab.plot(gi[j], dmags[f][j], 'bx')
@@ -621,8 +653,8 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlim
         hlist = sedcolorkey[1]
         helist = sedcolorkey[2]
         i = 1
-        for f in filterlist:
-            ax = pylab.subplot(3,2,i)
+        for f in plotfilterlist:
+            ax = pylab.subplot(yplots,xplots,i)
             for j in range(len(wdlist)):
                 if (wdlist[j] in hlist):
                     pylab.plot(gi[j], dmags[f][j], 'y+')
@@ -632,15 +664,15 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlim
     elif sedtype == 'sn':
         print "# looking at SN"
         # set the color of data points based on their redshift and day
-        snlist = sedcolorkey
+        snlist = sedcolorkey[0]
         redcolors = ['b', 'b', 'g', 'g', 'r', 'r' ,'m', 'm']
         redbinsize = 0.18
         redbins = numpy.arange(0.0, 1.0+redbinsize, redbinsize)
         print redbinsize, redbins, redcolors
         day_symbol = {'0':'s', '20':'s', '40':'s'}
         i = 1
-        for f in filterlist:
-            ax = pylab.subplot(3,2,i)
+        for f in plotfilterlist:
+            ax = pylab.subplot(yplots,xplots,i)
             j = 0
             for s in snlist:
                 day, redshift = s.split('_')
@@ -650,9 +682,9 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlim
                 j = j + 1
             i = i + 1
     # set up generic items
-    for i in range(1, 7):
-        f = filterlist[i-1]
-        ax = pylab.subplot(3,2,i)
+    for i in range(0, len(plotfilterlist)):
+        f = plotfilterlist[i-1]
+        ax = pylab.subplot(yplots,xplots,i+1)
         pylab.xlabel("g-i")
         pylab.ylabel(r"$\Delta$ %s (mmag)" %(f))
         def axis_formatter(x, pos):
@@ -676,13 +708,16 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, titletext=None, ylims=None, xlim
                 pass
     # put a grid in the background
     if newfig:
-        for i in range(1, 7):
-            ax = pylab.subplot(3, 2, i)
-            pylab.grid(True)            
-        pylab.suptitle(titletext)
+        for i in range(0, len(plotfilterlist)):
+            ax = pylab.subplot(yplots,xplots, i+1)
+            pylab.grid(True)
+        if titletext!=None:
+            pylab.suptitle(titletext)
     if figname!=None:
         pylab.savefig(figname+'.png', format='png')
     return
+
+
 
 ############
 
@@ -740,6 +775,7 @@ if __name__ == "__main__":
     # Remember, we can only practically compare two atmospheres at once.
     std_atmos = read_stdatmo()
     # some other atmosphere
+    # std has H2O == 1 I think actually
     atmocomp, atmos1 = build_atmos(X=1.0, t0=(3.9/100.0), t1=(0.02/100.0), t2=(-0.03/100.0), alpha=-1.7,
                 mol=0.96, BP=782, O3=0.9, H2O=0.9)
     # and maybe some other one (if not comparing against standard .. remember, need 'standard'

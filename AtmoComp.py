@@ -176,7 +176,7 @@ class AtmoComp:
         self.trans_total = None
         return                      
 
-    def buildAtmos(self, secz, xlim=[300, 1100], doplot=False):
+    def buildAtmos(self, secz, xlim=[300, 1100], doPlot=False):
         """Generate the total atmospheric transmission profile at this airmass, using the coefficients C."""
         # Burke paper says atmosphere put together as 
         # Trans_total (alt/az/time) = Tgray * (e^-Z*tau_aerosol(alt/az/t)) * 
@@ -207,7 +207,7 @@ class AtmoComp:
                       * ( 1 - self.C['H2O'] * self.atmo_abs['H2O']) \
                       * ( 1 - self.atmo_abs['aerosol'])
         # now we can plot the atmosphere
-        if doplot:
+        if doPlot:
             pylab.figure()
             pylab.subplot(212)
             colorindex = 0
