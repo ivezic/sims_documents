@@ -6,6 +6,16 @@ where radius == the radii where AndyR calculated the direct (primary light path 
 and flatghost (the direct + ghosting light == the light that would be observed in a uniformly illuminated flat
 field image, could also be called 'flatfield'), and filter = the various LSST filters.
 
+Looks like AndyR's data includes the rest of the hardware system (detector, lenses, mirrors) although not
+the atmosphere. Which version, exactly, of the detector, lenses, mirrors was used is not entirely clear, but
+will add more info when available.
+This means that calculating the error due to misrepresenting the bandpass, we still need to add in the atmosphere,
+when calculating the dmag(color_term) for stars,
+but do not need to include the other throughput components. (need atmosphere because stars do pass through atmo).
+When calculating the gray-scale IC for the flatfield only, then should not include the atmosphere, as this
+would be a correction to the flat file itself only (although .. this shouldn't matter, because including the
+atmosphere or not, it should factor out of the difference assuming a flat fnu spectrum). 
+
 Requires pyfits and the Bandpass class (from catalogs_measures), as well as an LSST throughputs set, such as from
 the throughputs package.
 
@@ -19,8 +29,9 @@ import pyfits
 from lsst.sims.catalogs.measures.photometry.Bandpass import Bandpass
 
 class GhostData():
-    def __init__(self):
-        self.read_ghosting()
+    def __init__(self, ghostData=None, ghostDataDir=None, throughputsDir=None,
+                 filterlist=('u', 'g', 'r', 'i', 'z', 'y4')):
+        self.read_ghosting(ghostData, ghostDataDir, throughputsDir, filterlist)
         return
 
     def read_ghosting(self, ghostData=None, ghostDataDir=None,
@@ -30,10 +41,11 @@ class GhostData():
         # Read in the basic hardware and atmosphere
         if throughputsDir == None:
             throughputsDir = os.getenv('LSST_THROUGHPUTS_DEFAULT')
-        components = ('atmos.dat', 'm1.dat', 'm2.dat', 'm3.dat',
-                      'lens1.dat', 'lens2.dat', 'lens3.dat', 'detector.dat')
+        #components = ('atmos.dat', 'm1.dat', 'm2.dat', 'm3.dat',
+        #              'lens1.dat', 'lens2.dat', 'lens3.dat', 'detector.dat')
+        components = ('atmos.dat',)
         base = Bandpass()
-        base.readThroughputList(componentList=components, rootDir=throughputsDir)        
+        base.readThroughputList(componentList=components, rootDir=throughputsDir)
         # Open and read the (various vendor) ghost data files produced by AndyR.
         if ghostData == None:
             ghostData = 'camera_ghosting_ff_calibbias_jdsu_lsstcone_121128.fits'
@@ -84,11 +96,9 @@ class GhostData():
             self.flatghost_phiarray[f]=numpy.empty((len(self.radii), len(self.direct[f][r0].wavelen)),
                                                    dtype='float')
             self.wavelen_step[f] = self.direct[f][r0].wavelen[1] - self.direct[f][r0].wavelen[0]
-            i = 0
-            for r in self.radii:
+            for i, r in enumerate(self.radii):
                 self.direct_phiarray[f][i] = self.direct[f][r].phi
                 self.flatghost_phiarray[f][i] = self.flatghost[f][r].phi
-                i = i + 1
         return
 
     def plot_ghosting(self, f, vendor='', xlim=[300, 1100]):
@@ -158,8 +168,9 @@ class GhostData():
         This is essentially calculating the gray-scale illumination correction.
         Returns dmags (flatghost - direct, in mmags). """
         ic_gray = numpy.zeros(len(self.radii), 'float')
-        for rad, i in zip(self.radii, range(len(self.radii))):
-            ic_gray[i] = self.flatghost[f][rad].sb.sum() - self.direct[f][rad].sb.sum()
+        for i, rad in enumerate(self.radii):
+            ic_gray[i] = (self.flatghost[f][rad].sb.sum() - self.direct[f][rad].sb.sum()) * self.wavelen_step[f]
+        ic_gray = ic_gray - ic_gray.min()
         ic_gray = ic_gray * 1000.0
         return ic_gray
 
