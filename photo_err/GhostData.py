@@ -170,8 +170,8 @@ class GhostData():
         ic_gray = numpy.zeros(len(self.radii), 'float')
         for i, rad in enumerate(self.radii):
             ic_gray[i] = (self.flatghost[f][rad].sb.sum() - self.direct[f][rad].sb.sum()) * self.wavelen_step[f]
-        ic_gray = ic_gray - ic_gray.min()
-        ic_gray = ic_gray * 1000.0
+        ic_gray = -2.5 * numpy.log10(ic_gray)
+        ic_gray = (ic_gray - ic_gray.min()) * 1000.0
         return ic_gray
 
 
