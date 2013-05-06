@@ -6,6 +6,17 @@ from SedSets import SedSets
 ghostfile = 'camera_ghosting_ff_calibbias_jdsu_lsstcone_121128'
 filterlist = ('u', 'g', 'r', 'i', 'z','y4')
 gd = GhostData(ghostData=ghostfile+'.fits')
+graymags = {}
+for f in filterlist:
+    graymags[f] = gd.calc_grayscale(f)
+    pylab.figure()
+    pylab.plot(gd.radii, graymags[f])
+    pylab.xlabel('Radius')
+    pylab.ylabel('Delta Mag (mmag)')
+    pylab.title('Grayscale Illumination Correction\n %s -- %s' %(ghostfile, f))
+    pylab.savefig('%s_%s_dmag_ic.png' %(ghostfile, f), format='png')
+
+    #exit()
 
 kurucz = SedSets()
 kurucz.read_kurucz()
@@ -13,7 +24,6 @@ kurucz.read_kurucz()
 directmags = {}
 ghostmags = {}
 dmags = {}
-graymags = {}
 
 # Stars. 
 for f in filterlist:
@@ -22,7 +32,6 @@ for f in filterlist:
     dmags[f] = numpy.zeros((len(kurucz.starlist), len(gd.radii)), 'float')
     for i,s in enumerate(kurucz.starlist):
         directmags[f][i], ghostmags[f][i], dmags[f][i] = gd.calc_mags(kurucz.stars[s], f)
-    graymags[f] = gd.calc_grayscale(f)
 
 # Set up color info for stars.
 gi = directmags['g'][:,0] - directmags['i'][:,0]
@@ -55,12 +64,6 @@ for f in filterlist:
     pylab.legend(loc=(0.93, 0.2), fontsize='smaller', numpoints=1, fancybox=True)
     pylab.title('%s -- %s' %(ghostfile, f))
     pylab.savefig('%s_%s_dmag_radius.png' %(ghostfile, f), format='png')
-    pylab.figure()
-    pylab.plot(gd.radii, graymags[f])
-    pylab.xlabel('Radius')
-    pylab.ylabel('Delta Mag (mmag)')
-    pylab.title('Grayscale Illumination Correction\n %s -- %s' %(ghostfile, f))
-    pylab.savefig('%s_%s_dmag_ic.png' %(ghostfile, f), format='png')
 pylab.show()
 
 # SN

@@ -57,24 +57,38 @@ class GhostData():
         # Andy has always put these filters in extensions (1, 2, 3, 4, 5, 6) respectively,
         #  although in general this should be checked with a match against hdus.info()
         direct = {}
-        flatghost = {}    
+        direct_only = {}
+        flatghost = {}
+        flatghost_only = {}
         # Read information from file, reorganize. 
         for i, f in enumerate(filterlist):
             direct[f] = {}
+            direct_only[f] = {}
             flatghost[f] = {}
+            flatghost_only[f]= {}
             tbdata = hdus[i+1].data
             # Then order of this data is radius, wavelength, direct, flatghost [0, 1, 2, 3]
             radii = numpy.unique(tbdata.field(0))
             condition = (tbdata.field(0) == radii[0])
             wavelen = tbdata.field(1)[condition]
             for r in radii:
+                # Read direct throughput data from AndyR file
                 condition = (tbdata.field(0) == r)
                 tmp = tbdata.field(2)[condition]
+                direct_only[f][r] = Bandpass()
+                direct_only[f][r].setBandpass(wavelen=wavelen, sb=tmp)
+                direct_only[f][r].resampleBandpass()
+                # And combine with base components (atmosphere)
                 twavelen, tmp2 = base.multiplyThroughputs(wavelen, tmp)
                 direct[f][r] = Bandpass()
                 direct[f][r].setBandpass(wavelen=twavelen, sb=tmp2)
                 direct[f][r].sbTophi()
+                # Read ghost+direct throughput data from AndyR file
                 tmp = tbdata.field(3)[condition]
+                flatghost_only[f][r] = Bandpass()
+                flatghost_only[f][r].setBandpass(wavelen=wavelen, sb=tmp)
+                flatghost_only[f][r].resampleBandpass()
+                # And combine with base components (atmosphere)
                 twavelen, tmp2 = base.multiplyThroughputs(wavelen, tmp)
                 flatghost[f][r] = Bandpass()
                 flatghost[f][r].setBandpass(wavelen=twavelen, sb=tmp2)
@@ -82,7 +96,9 @@ class GhostData():
             del tbdata
         hdus.close()
         self.direct = direct
+        self.direct_only = direct_only
         self.flatghost = flatghost
+        self.flatghost_only = flatghost_only
         self.radii = radii
         self.filterlist = filterlist
         # Set up phi arrays (for fast mag calculations).
@@ -169,7 +185,8 @@ class GhostData():
         Returns dmags (flatghost - direct, in mmags). """
         ic_gray = numpy.zeros(len(self.radii), 'float')
         for i, rad in enumerate(self.radii):
-            ic_gray[i] = (self.flatghost[f][rad].sb.sum() - self.direct[f][rad].sb.sum()) * self.wavelen_step[f]
+            ic_gray[i] = (self.flatghost_only[f][rad].sb.sum() - self.direct[f][rad].sb.sum()) \
+                * self.wavelen_step[f]
         ic_gray = -2.5 * numpy.log10(ic_gray)
         ic_gray = (ic_gray - ic_gray.min()) * 1000.0
         return ic_gray
