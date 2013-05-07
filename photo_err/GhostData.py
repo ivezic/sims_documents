@@ -6,15 +6,16 @@ where radius == the radii where AndyR calculated the direct (primary light path 
 and flatghost (the direct + ghosting light == the light that would be observed in a uniformly illuminated flat
 field image, could also be called 'flatfield'), and filter = the various LSST filters.
 
-Looks like AndyR's data includes the rest of the hardware system (detector, lenses, mirrors) although not
-the atmosphere. Which version, exactly, of the detector, lenses, mirrors was used is not entirely clear, but
+After checking with AndyR, I found his data includes the rest of the *camera* hardware system
+(detector + lenses) but not the atmosphere or mirrors.
+Which version, exactly, of the detector + lenses was used is not entirely clear yet, but
 will add more info when available.
-This means that calculating the error due to misrepresenting the bandpass, we still need to add in the atmosphere,
-when calculating the dmag(color_term) for stars,
-but do not need to include the other throughput components. (need atmosphere because stars do pass through atmo).
-When calculating the gray-scale IC for the flatfield only, then should not include the atmosphere, as this
-would be a correction to the flat file itself only (although .. this shouldn't matter, because including the
-atmosphere or not, it should factor out of the difference assuming a flat fnu spectrum). 
+This means that calculating the error due to misrepresenting the bandpass, we still need to add in the atmosphere
+and mirrors when calculating the dmag(color_term) for stars, but do not need to include the other
+throughput components.
+When calculating the gray-scale IC for the flatfield only, then should not include the atmosphere
+(but should include the mirrors), for the flat-field measurement (i.e. in flatghost) but should include atmosphere
+as well as mirrors in the 'direct' path, as stars (real photometric measurements) will include the atmosphere.
 
 Requires pyfits and the Bandpass class (from catalogs_measures), as well as an LSST throughputs set, such as from
 the throughputs package.
@@ -38,14 +39,7 @@ class GhostData():
                       throughputsDir=None, filterlist=('u', 'g', 'r', 'i', 'z', 'y4')):
         """Read in the ghost file from AndyR's fits file, and read the throughputs files to combine with
         his (filter-only) data."""
-        # Read in the basic hardware and atmosphere
-        if throughputsDir == None:
-            throughputsDir = os.getenv('LSST_THROUGHPUTS_DEFAULT')
-        #components = ('atmos.dat', 'm1.dat', 'm2.dat', 'm3.dat',
-        #              'lens1.dat', 'lens2.dat', 'lens3.dat', 'detector.dat')
-        components = ('atmos.dat',)
-        base = Bandpass()
-        base.readThroughputList(componentList=components, rootDir=throughputsDir)
+        # Read in AndyR's data from the fits file he provides (for various vendors).
         # Open and read the (various vendor) ghost data files produced by AndyR.
         if ghostData == None:
             ghostData = 'camera_ghosting_ff_calibbias_jdsu_lsstcone_121128.fits'
@@ -56,15 +50,11 @@ class GhostData():
         hdus = pyfits.open(file)
         # Andy has always put these filters in extensions (1, 2, 3, 4, 5, 6) respectively,
         #  although in general this should be checked with a match against hdus.info()
-        direct = {}
         direct_only = {}
-        flatghost = {}
         flatghost_only = {}
         # Read information from file, reorganize. 
         for i, f in enumerate(filterlist):
-            direct[f] = {}
             direct_only[f] = {}
-            flatghost[f] = {}
             flatghost_only[f]= {}
             tbdata = hdus[i+1].data
             # Then order of this data is radius, wavelength, direct, flatghost [0, 1, 2, 3]
@@ -77,28 +67,58 @@ class GhostData():
                 tmp = tbdata.field(2)[condition]
                 direct_only[f][r] = Bandpass()
                 direct_only[f][r].setBandpass(wavelen=wavelen, sb=tmp)
+                # Resample so that we know it's on 'standard' wavelength grid we use for throughputs.
                 direct_only[f][r].resampleBandpass()
-                # And combine with base components (atmosphere)
-                twavelen, tmp2 = base.multiplyThroughputs(wavelen, tmp)
-                direct[f][r] = Bandpass()
-                direct[f][r].setBandpass(wavelen=twavelen, sb=tmp2)
-                direct[f][r].sbTophi()
+                direct_only[f][r].sbTophi()
                 # Read ghost+direct throughput data from AndyR file
                 tmp = tbdata.field(3)[condition]
                 flatghost_only[f][r] = Bandpass()
                 flatghost_only[f][r].setBandpass(wavelen=wavelen, sb=tmp)
                 flatghost_only[f][r].resampleBandpass()
-                # And combine with base components (atmosphere)
-                twavelen, tmp2 = base.multiplyThroughputs(wavelen, tmp)
-                flatghost[f][r] = Bandpass()
-                flatghost[f][r].setBandpass(wavelen=twavelen, sb=tmp2)
-                flatghost[f][r].sbTophi()
+                flatghost_only[f][r].sbTophi()
             del tbdata
         hdus.close()
-        self.direct = direct
+        # Now build throughput curves we need for calculating gray scale and color-terms.
+        # Add mirror throughputs to everything, add atmosphere throughputs to color-terms and
+        #   direct throughputs used in gray IC calculation (i.e. direct has only one version, flatghost has 2)
+        # Read in the basic hardware and atmosphere
+        if throughputsDir == None:
+            throughputsDir = os.getenv('LSST_THROUGHPUTS_DEFAULT')
+        #components = ('atmos.dat', 'm1.dat', 'm2.dat', 'm3.dat',
+        #              'lens1.dat', 'lens2.dat', 'lens3.dat', 'detector.dat')
+        components = ('atmos.dat', 'm1.dat', 'm2.dat', 'm3.dat')
+        base1 = Bandpass()
+        base1.readThroughputList(componentList=components, rootDir=throughputsDir)
+        components = ('m1.dat', 'm2.dat', 'm3.dat')
+        base2 = Bandpass()
+        base2.readThroughputList(componentList=components, rootDir=throughputsDir)
+        direct = {}
+        flatghost = {}
+        flatghost_gray = {}
+        for f in filterlist:
+            direct[f] = {}
+            flatghost[f] = {}
+            flatghost_gray[f] = {}
+            for r in radii:
+                # Combine base1 with AndyR's ghosting data for color-terms.
+                wavelen, tmp = base1.multiplyThroughputs(direct_only[f][r].wavelen, direct_only[f][r].sb)
+                direct[f][r] = Bandpass()
+                direct[f][r].setBandpass(wavelen=wavelen, sb=tmp)
+                direct[f][r].sbTophi()
+                wavelen, tmp = base1.multiplyThroughputs(flatghost_only[f][r].wavelen, flatghost_only[f][r].sb)
+                flatghost[f][r] = Bandpass()
+                flatghost[f][r].setBandpass(wavelen=wavelen, sb=tmp)
+                flatghost[f][r].sbTophi()
+                # Combine base2 with AndyR's ghosting data for flatghost (direct+ghost) gray-scale IC calculation.
+                wavelen, tmp = base2.multiplyThroughputs(flatghost_only[f][r].wavelen, flatghost_only[f][r].sb)
+                flatghost_gray[f][r] = Bandpass()
+                flatghost_gray[f][r].setBandpass(wavelen=wavelen, sb=tmp)
+                flatghost_gray[f][r].sbTophi()
         self.direct_only = direct_only
-        self.flatghost = flatghost
         self.flatghost_only = flatghost_only
+        self.direct = direct
+        self.flatghost = flatghost
+        self.flatghost_gray = flatghost_gray
         self.radii = radii
         self.filterlist = filterlist
         # Set up phi arrays (for fast mag calculations).
@@ -185,7 +205,7 @@ class GhostData():
         Returns dmags (flatghost - direct, in mmags). """
         ic_gray = numpy.zeros(len(self.radii), 'float')
         for i, rad in enumerate(self.radii):
-            ic_gray[i] = (-2.5*numpy.log10(self.flatghost_only[f][rad].sb.sum()*self.wavelen_step[f]) -
+            ic_gray[i] = (-2.5*numpy.log10(self.flatghost_gray[f][rad].sb.sum()*self.wavelen_step[f]) -
                           -2.5*numpy.log10(self.direct[f][rad].sb.sum()*self.wavelen_step[f]))
         ic_gray = (ic_gray - ic_gray.min()) * 1000.0
         return ic_gray
