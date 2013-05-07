@@ -16,8 +16,6 @@ for f in filterlist:
     pylab.title('Grayscale Illumination Correction\n %s -- %s' %(ghostfile, f))
     pylab.savefig('%s_%s_dmag_ic.png' %(ghostfile, f), format='png')
 
-    #exit()
-
 kurucz = SedSets()
 kurucz.read_kurucz()
 

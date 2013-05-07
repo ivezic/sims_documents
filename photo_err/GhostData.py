@@ -185,9 +185,8 @@ class GhostData():
         Returns dmags (flatghost - direct, in mmags). """
         ic_gray = numpy.zeros(len(self.radii), 'float')
         for i, rad in enumerate(self.radii):
-            ic_gray[i] = (self.flatghost_only[f][rad].sb.sum() - self.direct[f][rad].sb.sum()) \
-                * self.wavelen_step[f]
-        ic_gray = -2.5 * numpy.log10(ic_gray)
+            ic_gray[i] = (-2.5*numpy.log10(self.flatghost_only[f][rad].sb.sum()*self.wavelen_step[f]) -
+                          -2.5*numpy.log10(self.direct[f][rad].sb.sum()*self.wavelen_step[f]))
         ic_gray = (ic_gray - ic_gray.min()) * 1000.0
         return ic_gray
 
