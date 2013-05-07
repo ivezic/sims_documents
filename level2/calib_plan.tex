@@ -37,7 +37,7 @@ J. Allyn Smith\altaffilmark{7}
 Michael A. Strauss\altaffilmark{6} \\
 on behalf of 
 The Photometric Calibration Team \\ 
-Docushare-8123, 10/6/2011 \\
+Docushare-8123, --/--/-- \\
 }
 \altaffiltext{1}{University of Washington}
 \altaffiltext{2}{SLAC National Accelerator Laboratory}
@@ -114,7 +114,7 @@ procedure, rather than resorting to traditional approximations such as
 linear color terms. SNLS re-processing of CFHT Legacy Survey data
 found these color-dependent terms to be a significant contributor to
 the photometric calibration process \citep{Regnault2009}, on
-the level of a few to several percent. 
+the level of a few to several percent. {\bf TODO here on why it's hard - drift scan and all weather}
 
 This document describes the calibration requirements and processes for
 LSST Data Release photometry. At each Data Release, there will be a
@@ -146,7 +146,9 @@ expected errors originating from each step.
 The LSST Science Requirements Document (SRD) provides a set of
 requirements on the annual Data Release (Level 2) photometry based on
 measurements of bright, unresolved, isolated, non-variable objects
-from individual LSST visits. Bright implies that the
+from individual LSST visits. 
+{\bf TODO - address what these requirements actually apply to. MS stars vs other SEDs and reference App C. Also be explicit that calibration is based on objects with well-known SEDs - i.e. MS stars. }
+Bright implies that the
 measurement of the star's brightness is not dominated by photon
 statistics, approximately 1-4 magnitudes fainter than the saturation
 limit in a given filter. Isolated implies that the star can be
@@ -214,12 +216,14 @@ system.  Performance of the LSST system regarding requirement
 the calibrated magnitude measurements. Verification of requirement
 \ref{uniformity_req} is more complicated; in a simulated system it is
 simple to compare the (simulated, thus known) true magnitudes of the
-stars to the best-fit magnitudes produced after calibration. In
-operations, this will be verified using a combination of simulations,
+stars to the best-fit magnitudes produced after calibration. {\bf TODO forward reference new section on verification - Tim to write} 
+In operations, this will be verified using a combination of simulations,
 comparisons to known standards, and evaluation of science outputs such
 as stellar locus diagrams. These last two tests are also relevant to
 verifying the final two requirements, \ref{color_req} and
 \ref{abs_req}.
+
+{\bf TODO - Lynne (or someone) to verify consistency with new SRD reqs, *after* updating rest of doc and seeing effect of including new SEDs in SRD requirements. Plus need update of SRD to verify}. 
 
 
 \section{Overview of the photometric calibration process}
@@ -236,6 +240,7 @@ photometric even at the 1--2\% level. To take advantage of the full
 extinction less than 1.5 magnitudes), and to reach the SRD specified
 requirements -- 0.5\% level photometric repeatability and 1\%
 photometric uniformity -- requires a new approach.
+{\bf TODO include comment that we're not taking 'time out' to do photometric standards with wide range of colors, and thus not guaranteed leverage from survey itself}
 
 This new approach lies in splitting the measurement of the {\it
 normalization} of the throughput in each observation (the gray-scale
@@ -331,8 +336,9 @@ to motivate the separate measurement of the normalization and shape of
 the bandpass and introduce some important concepts, such as the
 normalized system response.
 
-Given $F_\nu(\lambda, t)$\footnote{Hereafter, the units for specific
-flux are Jansky (1 Jy = 10$^{-23}$ erg cm$^{-2}$ s$^{-1}$
+Given $F_\nu(\lambda, t)$ --
+the specific flux\footnote{Hereafter, the units for specific
+flux (flux per unit  are Jansky (1 Jy = 10$^{-23}$ erg cm$^{-2}$ s$^{-1}$
 Hz$^{-1}$). The choice of $F_\nu$ vs. $F_\lambda$ makes the flux
 conversion to the AB magnitude scale more transparent, and the choice
 of $\lambda$ as the running variable is more convenient than the
@@ -341,8 +347,8 @@ quantities that are functions of time) could vary more quickly than
 the standard LSST exposure time of 15s, it is assumed that all such
 quantities are averaged over that short exposure time, so that $t$
 refers to quantities that can vary from exposure to exposure. }
-the specific flux of an astronomical object at
-the top of the atmosphere, at a position described by ($alt$,$az$),
+(flux per unit frequency) of an astronomical object at
+the top of the atmosphere -- at a position described by ($alt$,$az$),
 the total flux from the object transmitted through the atmosphere to the telescope pupil is
 \begin{equation}
 \label{eqn:Fpupil}
@@ -567,7 +573,7 @@ Table~\ref{tab:delta_mags}. }
 rows show the baseline (`standard') magnitude of the star. All other rows show the 
 {\it change} in magnitude (in mmag) due to the variations listed at
 left. Any value larger than 5~mmag would be larger than the RMS
-scatter allowed by the SRD.} }
+scatter allowed by the SRD. {\it TODO color-code values larger than 5 mmag}} }
 \begin{tabular}{l l | c c c c c c}
 Bandpass & star &  $u$ (mag) & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
 Std (X=1.2) atm, std sys  &  red & 21.472 & 20.378 & 20.000 & 19.911 & 19.913 & 19.913 \\
@@ -636,7 +642,7 @@ the variations in the filter bandpass across the focal plane or
 deterioration of coatings on mirrors or lenses over time. We measure
 and correct for these variations in different ways.
 
-We will measure the rapidly time variable gray-scale relative
+We will measure the time variable gray-scale relative
 normalization changes in the hardware using standard broadband flat
 fields acquired at the start and end of each night through each
 filter, in a manner similar to traditional dome flats. This is
@@ -818,6 +824,7 @@ m_b^{AB} = m_b^{std}  + \Delta_{b-r} + \Delta_r
 which can be compared to absolute physical flux scales. 
 
 The sequence for photometric calibration is then:
+{\bf TODO turn this into a table}
 \begin{enumerate}
 \item{Acquire a broadband flat in each filter at the start and end
 of each observing night. Generate a full, wavelength-dependent
@@ -2152,6 +2159,7 @@ these targets has not yet been completed. Nevertheless, as a result of
 calibration efforts to support the SDSS-II SNe survey, the absolute
 calibration of the SDSS Stripe 82 region in the $r$ band is believed
 to be accurate at the 0.01 mag level \citep{Frieman2008}. 
+{\bf TODO Tim will update with Abi white dwarf standards details}
 
 Another route to calibrating to an external flux system is to use
 standards from Gaia. These will have the advantage of being numerous
@@ -2159,9 +2167,25 @@ and widely spread across the sky, with a useful overlapping magnitude range betw
 $r=16$ to $r=20$.  The magnitude measurements of stars calibrated with
 the LSST calibration procedure described in this document can be
 transformed to synthetic magnitudes in Gaia's bandpasses and compared
-to Gaia measurements. This comparison across the LSST footprint and as
+to Gaia measurements. 
+{\bf TODO Tim will update with more information on Gaia}.
+ This comparison across the LSST footprint and as
 a function of stellar brightness and color will provide a powerful
 independent test of the quality of LSST photometric calibration. 
+
+\section{Testing and Verification}
+\label{sec:verification}
+
+{\bf TODO - Tim and Peter -  New section on testing and verification, particularly verification of uniformity over entire sky, but should cover testing of all of above requirements - including external calibration.}
+
+
+\section{Software Implementation}
+\label{sec:software}
+
+{\bf TODO - new section on software implementation } 
+
+Include : how do we calculate and apply color-correction terms, how do we use flat fields and illumination corrections, how/when do we run self-calibration and atmosphere fitting, and what do we report in DM (how do we store phi?)
+
 
 \bibliographystyle{apj}
 \bibliography{calib_plan}
@@ -2214,7 +2238,7 @@ intended to briefly document some of those areas.
 \item{A cosmetic flat field. A photometric flat field, as discussed above, is
     necessary for photometric calibration. However, there may be some
     stages of image processing where a `cosmetic' flat field, which
-    creates a flat background sky is desireable (instead of the photometric flat
+    creates a flat background sky is desirable (instead of the photometric flat
     field, which creates a background sky which varies according to
     the geometric size of the pixels). The details of the production
     of the photometric flat field, the image processing, and whether a

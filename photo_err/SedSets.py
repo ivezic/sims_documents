@@ -126,15 +126,17 @@ class SedSets:
                     helist.append(filename)                        
                     temperatures.append(temperature)
                     loggs.append(logg)
-        temperatures = numpy.array(temperatures)
-        loggs = numpy.array(loggs)
-        wdlist = hlist + helist
-        wds = {}
-        for w in wdlist:
-            wds[w] = Sed()
+        self.temperatures = numpy.array(temperatures)
+        self.loggs = numpy.array(loggs)
+        self.hlist = hlist
+        self.helist = helist
+        self.wdlist = hlist + helist
+        self.wds = {}
+        for w in self.wdlist:
+            self.wds[w] = Sed()
             if w in hlist:
-                wds[w].readSED_flambda(os.path.join(Hdir, w))
+                self.wds[w].readSED_flambda(os.path.join(Hdir, w))
             if w in helist:
-                wds[w].readSED_flambda(os.path.join(Hedir, w))
+                self.wds[w].readSED_flambda(os.path.join(Hedir, w))
         return
 
