@@ -95,6 +95,36 @@ class SedSets:
         return
 
 
+    def read_eline_galaxy(self, dataDir='data/eline_galaxy', redshifts=numpy.arange(0, 1.0, 0.1)):
+        """Reads starburst galaxy and then redshifts to the desired range of z. Stores
+        seds as well as epochs and redshifts. """
+        # Read sn spectra and redshift
+        allfilelist = os.listdir(dataDir)
+        gallist = []
+        #get filenames
+        for filename in allfilelist:
+            if filename.endswith('.dat'):
+                gallist.append(filename)
+        gal_base = {}
+        for gal in gallist:
+            gal_base = Sed()
+            gal_base.readSED_flambda(os.path.join(dataDir, gal))
+        # Then redshift to build stored set of SEDs.
+        self.gals = {}
+        self.gallist = []
+        for z in redshifts:
+            gal_name = "%.1f" %(z)
+            wavelen, flambda = gal_base.redshiftSED(z, wavelen=gal_base.wavelen,
+                                                       flambda=gal_base.flambda)
+            self.gals[gal_name] = Sed(wavelen=wavelen, flambda=flambda)
+            self.gallist.append(gal_name)
+        print "# Generated %d galaxies at redshifts between %f and %f" %(len(self.gallist), \
+                                                                         redshifts.min(), \
+                                                                         redshifts.max())
+        self.redshifts = redshifts
+        return
+
+
     def read_whitedwarf(self, dataDir='data/white_dwarfs_r'):
         # read white dwarf bergeron models
         # get the H dwarfs
