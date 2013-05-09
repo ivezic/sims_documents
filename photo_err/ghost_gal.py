@@ -48,18 +48,23 @@ for f in filterlist:
 
 zs = sn.redshifts
 idx = numpy.argsort(zs)
-
-for f in filterlist:
-    pylab.figure()
+fig = pylab.figure()
+sp = 0
+for f in filterlist:    
+    pylab.subplot(231+sp)
+    sp+=1
     for r in [0, ]:
         pylab.plot(zs[idx], dmags[f][:,r][idx], marker='.', linestyle='-', label='r=%.0f' %(gd.radii[r]))
-    for r in [20, 30, 40, 50, 60]:
-        pylab.plot(zs[idx], dmags[f][:,r][idx], marker='.', linestyle='', label='r=%.0f' %(gd.radii[r]))
+    #for r in [20, 30, 40, 50, 60]:
+    #    pylab.plot(zs[idx], dmags[f][:,r][idx], marker='.', linestyle='', label='r=%.0f' %(gd.radii[r]))
     for r in [len(gd.radii)-1, ]:
         pylab.plot(zs[idx], dmags[f][:,r][idx], marker='.', linestyle='-', label='r=%.0f' %(gd.radii[r]))
     pylab.xlabel('z (redshift)')
     pylab.ylabel('Delta Mag (mmag)')
-    pylab.legend(loc=(0.93, 0.2),  numpoints=1, fancybox=True)
-    pylab.title('%s -- %s' %(ghostfile, f))
-    pylab.savefig('gal_%s_%s_dmag_radius.png' %(ghostfile, f), format='png')
+    if sp == 3:  pylab.legend( loc=3,numpoints=1, fancybox=True)
+    pylab.title('%s' %(f))
+    #pylab.savefig('gal_%s_%s_dmag_radius.png' %(ghostfile, f), format='png')
+
+fig.tight_layout()
+pylab.savefig('gal_ghosting_dmag.png',format='png')
 #pylab.show()

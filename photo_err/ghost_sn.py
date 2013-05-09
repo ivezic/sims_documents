@@ -17,7 +17,8 @@ for f in filterlist:
     pylab.savefig('%s_%s_dmag_ic.png' %(ghostfile, f), format='png')
 
 sn = SedSets()
-sn.read_sn()
+sn.read_sn(redshifts=numpy.arange(0,2.1,.1))
+nepoch =3
 
 directmags = {}
 ghostmags = {}
@@ -34,6 +35,8 @@ for f in filterlist:
 gi = directmags['g'][:,0] - directmags['i'][:,0]
 ug = directmags['u'][:,0] - directmags['g'][:,0]
 
+zs = numpy.tile(sn.redshifts,nepoch)
+
 for f in filterlist:
     print 'Working on filter %s' %(f)
     # Write the (same as previously horrible) file
@@ -46,19 +49,24 @@ for f in filterlist:
     #    print >>outfile, s, sn.epochs[i], sn.redshifts[i], ug[i], gi[i], \
     #        directmags[f][i], ghostmags[f][i], dmags[f][i]
 
-idx = numpy.argsort(gi)
-
+idx = numpy.argsort(zs)
+fig=pylab.figure()
+sp=0
 for f in filterlist:
-    pylab.figure()
+    pylab.subplot(231+sp)
+    sp += 1
     for r in [0, ]:
-        pylab.plot(gi[idx], dmags[f][:,r][idx], marker='.', linestyle='-', label='r=%.0f' %(gd.radii[r]))
-    for r in [20, 30, 40, 50, 60]:
-        pylab.plot(gi[idx], dmags[f][:,r][idx], marker='.', linestyle='', label='r=%.0f' %(gd.radii[r]))
+        pylab.plot(zs[idx], dmags[f][:,r][idx], marker='.', linestyle='-', label='r=%.0f' %(gd.radii[r]))
+    #for r in [20, 30, 40, 50, 60]:
+    #    pylab.plot(zs[idx], dmags[f][:,r][idx], marker='.', linestyle='', label='r=%.0f' %(gd.radii[r]))
     for r in [len(gd.radii)-1, ]:
-        pylab.plot(gi[idx], dmags[f][:,r][idx], marker='.', linestyle='-', label='r=%.0f' %(gd.radii[r]))
-    pylab.xlabel('g-i')
+        pylab.plot(zs[idx], dmags[f][:,r][idx], marker='.', linestyle='-', label='r=%.0f' %(gd.radii[r]))
+    pylab.xlabel('z (redshift)')
     pylab.ylabel('Delta Mag (mmag)')
-    pylab.legend(loc=(0.93, 0.2),  numpoints=1, fancybox=True)
-    pylab.title('%s -- %s' %(ghostfile, f))
-    pylab.savefig('sn_%s_%s_dmag_radius.png' %(ghostfile, f), format='png')
+    if sp ==4: pylab.legend(loc=2,  numpoints=1, fancybox=True)
+    pylab.title('%s' %(f))
+    #pylab.savefig('sn_%s_%s_dmag_radius.png' %(ghostfile, f), format='png')
+
+fig.tight_layout()
+pylab.savefig('sn_ghosting_dmag.png',format='png')
 #pylab.show()
