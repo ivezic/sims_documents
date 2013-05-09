@@ -47,8 +47,8 @@ for f in filterlist:
         print >>outfile, s, kurucz.temperature[i], kurucz.met[i], kurucz.logg[i], ug[i], gi[i], \
             directmags[f][i], ghostmags[f][i], dmags[f][i]
 
+# Plot dmags as a function of color, for specific radii.
 idx = numpy.argsort(gi)
-
 for f in filterlist:
     pylab.figure()
     for r in [0, ]:
@@ -61,10 +61,20 @@ for f in filterlist:
     pylab.ylabel('Delta Mag (mmag)')
     pylab.legend(loc=(0.93, 0.2), fontsize='smaller', numpoints=1, fancybox=True)
     pylab.title('%s -- %s' %(ghostfile, f))
-    pylab.savefig('%s_%s_dmag_radius.png' %(ghostfile, f), format='png')
-pylab.show()
+    pylab.savefig('%s_%s_dmag_color.png' %(ghostfile, f), format='png')
 
-# SN
-#sn = SedSet()
-#sn.read_sn()
+# Plot shift, for a particular g-i value, as a function of radius.             
+condition1 = (numpy.abs(gi-0.5)<0.02)
+condition2 = (numpy.abs(gi+0.5)<0.02)
+for f in filterlist:
+    pylab.figure()
+    pylab.plot(gd.radii, numpy.mean(dmags[f][condition1], 0), color='g', marker='o', label='g-i~0.5')
+    pylab.plot(gd.radii, numpy.mean(dmags[f][condition2], 0), color='r', marker='o', label='g-i~-0.5')
+    pylab.xlabel('Radius (mm)')
+    pylab.ylabel('Delta Mag (mmag)')
+    pylab.title('%s -- %s' %(ghostfile, f))
+    pylab.legend(loc=(0.93, 0.2), fontsize='smaller', numpoints=1, fancybox=True)
+    pylab.savefig('%s_%s_dmag_radius.png' %(ghostfile, f), format='png')
+
+pylab.show()
 
