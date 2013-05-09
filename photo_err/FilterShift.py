@@ -195,9 +195,9 @@ class FilterShift():
         dmags_up = numpy.concatenate((dmags_up, [0]))
         dmags_down = mags[1:] - mags[:-1]
         dmags_down = numpy.concatenate(([0], dmags_down))
-        # Return the absolute value of the largest offset at each radius. 
+        # Return the value of the largest offset (absolute value) at each radius, in mmags.
         dmags = numpy.where(numpy.abs(dmags_up)>numpy.abs(dmags_down), dmags_up, dmags_down)
-        dmags = numpy.abs(dmags) * 1000.0
+        dmags = dmags * 1000.0
         # yes, those steps above are a bit overkill/unnecessary ... but it does keep absolutely straight the radius/dmags relationship. 
         return mags, dmags
     
