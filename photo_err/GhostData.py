@@ -1,10 +1,13 @@
-"""GhostData : a class to read AndyR's ghost data files (and other throughput files that contribute to the total
+"""
+GhostData : a class to read AndyR's ghost data files (and other throughput files that contribute to the total
  throughput of the LSST system) and hold this data in
    self.direct[filter][radius]
    self.flatghost[filter][radius]
 where radius == the radii where AndyR calculated the direct (primary light path only),
 and flatghost (the direct + ghosting light == the light that would be observed in a uniformly illuminated flat
 field image, could also be called 'flatfield'), and filter = the various LSST filters.
+
+This can then be used to estimate the errors produced by our imperfect knowlege of the bandpass due to ghosting. 
 
 After checking with AndyR, I found his data includes the rest of the *camera* hardware system
 (detector + lenses) but not the atmosphere or mirrors.
@@ -32,6 +35,7 @@ from lsst.sims.catalogs.measures.photometry.Bandpass import Bandpass
 class GhostData():
     def __init__(self, ghostData=None, ghostDataDir=None, throughputsDir=None,
                  filterlist=('u', 'g', 'r', 'i', 'z', 'y4')):
+        """Instantiate object and do setup for magnitude calculations. """
         self.read_ghosting(ghostData, ghostDataDir, throughputsDir, filterlist)
         return
 
@@ -46,7 +50,7 @@ class GhostData():
         if ghostDataDir == None:
             ghostDataDir = 'data/ghostingAndyR'
         file = os.path.join(ghostDataDir, ghostData)
-        print 'Using data file from %s' %(file)
+        print '# Using data file from %s' %(file)
         hdus = pyfits.open(file)
         # Andy has always put these filters in extensions (1, 2, 3, 4, 5, 6) respectively,
         #  although in general this should be checked with a match against hdus.info()
@@ -209,7 +213,3 @@ class GhostData():
                           -2.5*numpy.log10(self.direct[f][rad].sb.sum()*self.wavelen_step[f]))
         ic_gray = (ic_gray - ic_gray.min()) * 1000.0
         return ic_gray
-
-
-    
-    
