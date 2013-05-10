@@ -90,7 +90,7 @@ class SimpleSb():
             pylab.figure()
             pylab.plot(self.basebp[f].wavelen, self.basebp[f].sb, label='Base')
             pylab.plot(self.newbp[f].wavelen, self.newbp[f].sb, label='New')
-            pylab.legend(fontsize='smaller', fancybox=True, numpoints=1)
+            pylab.legend(fancybox=True, numpoints=1)
             pylab.xlabel('Wavelength (nm)')
             pylab.ylabel('Throughput (0-1)')
             pylab.title('Filter %s' %(f))
