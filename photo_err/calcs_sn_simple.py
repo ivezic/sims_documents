@@ -34,7 +34,7 @@ if degrade_resolution:
 
 # Read in Kurucz model stars. 
 sn = SedSets()
-sn.read_sn(redshifts=numpy.arange(0,2.1,.01))
+sn.read_sn(redshifts=numpy.arange(0,1.21,.05))
 
 # Set up dictionaries to store magnitudes. 
 mags_base = {}
@@ -63,7 +63,11 @@ for f in filterlist:
     pylab.plot(zs[idx], dmags[f][idx], marker='.', linestyle='')
     pylab.xlabel('z (redshift)')
     pylab.ylabel('Delta Mag (mmag)')
-    figtitle = 'Filter %s' %(f)
+    pylab.axhline(y=10, color='r', linestyle='-')
+    pylab.axhline(y=-10, color='r', linestyle='-')
+    limits = pylab.axis()
+    pylab.ylim([numpy.min([limits[2],-13]),numpy.max([limits[3],13])])
+    figtitle = '%s' %(f)
     if shift:
         if isinstance(shift, dict):
             figtitle += ': shifted %.1f nm' %(shift[f])
@@ -80,6 +84,16 @@ for f in filterlist:
 
 fig.tight_layout()
 pylab.savefig('simple_sn_%1.0f.png'%resolution, format='png')
+
+
+pylab.figure()
+pylab.plot(sn.sns['15_0.0'].wavelen, sn.sns['15_0.0'].flambda)
+pylab.ylabel(r'f$_\lambda$')
+pylab.xlabel(r'wavelength (nm)')
+pylab.title('Supernova')
+pylab.xlim([100,1100])
+pylab.savefig('supernova_sed.png',format='png')
+
 
 exit()
     

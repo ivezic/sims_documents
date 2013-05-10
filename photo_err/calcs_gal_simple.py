@@ -9,7 +9,7 @@ filterlist = ('u', 'g', 'r', 'i', 'z', 'y')
 ss = SimpleSb(filterlist=filterlist)
 
 shift=True
-degrade_resolution = True
+degrade_resolution = False
 resolution=1.
 
 #[optional]
@@ -30,11 +30,17 @@ if degrade_resolution:
     # Some preliminary tests indicate that resolution =5 nm creates < 1 mmag error for MS stars
 
 # Let's plot the bandpasses, for fun. 
-#ss.plot_throughputs()
+ss.plot_throughputs_diff()
+file = open('r_phi.dat','w')
+print >>file, '#wavelength  phi'
+for i in numpy.arange(numpy.size(ss.basebp['r'].wavelen)): print >>file, ss.basebp['r'].wavelen[i], ss.basebp['r'].phi[i]
+file.close()
+
+pylab.savefig('gal_delta_through.png',format='png')
 
 # Read in Kurucz model stars. 
 gal = SedSets()
-gal.read_eline_galaxy(redshifts=numpy.arange(0,2.1,.01))
+gal.read_eline_galaxy(redshifts=numpy.arange(0,2.1,.05))
 
 # Set up dictionaries to store magnitudes. 
 mags_base = {}
@@ -62,6 +68,10 @@ for f in filterlist:
     pylab.plot(zs, dmags[f], marker='.', linestyle='')
     pylab.xlabel('z (redshift)')
     pylab.ylabel('Delta Mag (mmag)')
+    pylab.axhline(y=10, color='r', linestyle='-')
+    pylab.axhline(y=-10, color='r', linestyle='-')
+    limits = pylab.axis()
+    pylab.ylim([numpy.min([limits[2],-13]),numpy.max([limits[3],13])])
     figtitle = '%s' %(f)
     if shift:
         if isinstance(shift, dict):
@@ -79,6 +89,16 @@ for f in filterlist:
 
 fig.tight_layout()
 pylab.savefig('simple_gal_%1.0f.png'%resolution, format='png')
+
+
+pylab.figure()
+pylab.plot(gal.gals['0.0'].wavelen, gal.gals['0.0'].flambda)
+pylab.ylabel(r'f$_\lambda$')
+pylab.xlabel(r'wavelength (nm)')
+pylab.title('Starburst Galaxy')
+pylab.xlim([100,1100])
+pylab.ylim([0,30])
+pylab.savefig('galaxy_sed.png',format='png')
 
 exit()
     

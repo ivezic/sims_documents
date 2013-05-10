@@ -96,6 +96,19 @@ class SimpleSb():
             pylab.title('Filter %s' %(f))
         return
 
+    def plot_throughputs_diff(self):
+        """Sanity check and visualize bandpasses - original (base) and new (newbp). """
+        import pylab
+        pylab.figure()
+        for f in self.filterlist:
+            residuals = self.basebp[f].phi-self.newbp[f].phi
+            idx = numpy.arange(numpy.size(residuals))#numpy.where(numpy.abs(residuals) > .001)
+            pylab.plot(self.basebp[f].wavelen[idx], \
+                       residuals[idx], label=f)
+            pylab.xlabel('Wavelength (nm)')
+            pylab.ylabel(r'$\Delta$ $\Phi$ (nm$^{-1}$)')
+            pylab.legend(loc=4)
+        return
     
     def calc_mags(self, sed, f):
         """Calculate (natural) magnitudes in original and new bandpasses, to evaluate colorterm errors induced by changes in phi. 
