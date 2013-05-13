@@ -25,6 +25,8 @@ the throughputs package.
 
 Calculates the color-dependent magnitude changes for a given SED,
  as well as the gray-scale illumination correction.
+
+Dmags =  true - wrong.
 """
 
 import os 
@@ -125,6 +127,11 @@ class GhostData():
         self.flatghost_gray = flatghost_gray
         self.radii = radii
         self.filterlist = filterlist
+        self.setupPhiArray()
+        return
+
+    def setupPhiArray(self):
+        """Set up phi arrays for fast magnitude calculations at all radii. """
         # Set up phi arrays (for fast mag calculations).
         # Set up phi arrays
         self.direct_phiarray = {}
@@ -140,6 +147,19 @@ class GhostData():
                 self.direct_phiarray[f][i] = self.direct[f][r].phi
                 self.flatghost_phiarray[f][i] = self.flatghost[f][r].phi
         return
+
+    def apply_CCOB(self, percent_reduction=90):
+        """Apply a correction to the flatghost to remove percent_reduction of the ghost (bringing it closer to 'true' / direct). 
+        Percent_reduction is applied to remove (percent_reduction) of the difference between flatghost - direct. """
+        # This should perhaps be applied to difference of flatghost_only/direct_only, but going with entire term for now. 
+        # (or maybe difference of these? need clarification from Chuck)
+        for f in self.filterlist:
+            for r in self.radii:
+                diff = self.flatghost[f][r] - self.direct[f][r]
+                reduced_diff = diff * percent_reduction / 100.0
+                self.flatghost[f][r] = self.direct[f][r] + reduced_diff
+        self.setupPhiArray()
+        return                        
 
     def plot_ghosting(self, f, vendor='', xlim=[300, 1100]):
         """Plot the direct vs. direct+ghosting wavelength response."""
@@ -200,7 +220,7 @@ class GhostData():
         direct_mags = sed.manyMagCalc(self.direct_phiarray[f], self.wavelen_step[f])
         flatghost_mags = sed.manyMagCalc(self.flatghost_phiarray[f], self.wavelen_step[f])
         # And the color-dependent differences in natural magnitudes.
-        dmags = (flatghost_mags - direct_mags) * 1000.0
+        dmags = (direct_mags - flatghost_mags) * 1000.0
         return direct_mags, flatghost_mags, dmags
     
     def calc_grayscale(self, f):
@@ -209,7 +229,7 @@ class GhostData():
         Returns dmags (flatghost - direct, in mmags). """
         ic_gray = numpy.zeros(len(self.radii), 'float')
         for i, rad in enumerate(self.radii):
-            ic_gray[i] = (-2.5*numpy.log10(self.flatghost_gray[f][rad].sb.sum()*self.wavelen_step[f]) -
-                          -2.5*numpy.log10(self.direct[f][rad].sb.sum()*self.wavelen_step[f]))
+            ic_gray[i] = ((-2.5*numpy.log10(self.direct[f][rad].sb.sum()*self.wavelen_step[f])) - 
+                          (-2.5*numpy.log10(self.flatghost_gray[f][rad].sb.sum()*self.wavelen_step[f])))
         ic_gray = (ic_gray - ic_gray.min()) * 1000.0
         return ic_gray
