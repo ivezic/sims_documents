@@ -35,18 +35,21 @@ import pyfits
 from lsst.sims.catalogs.measures.photometry.Bandpass import Bandpass
 
 class GhostData():
-    def __init__(self, ghostData=None, ghostDataDir=None, throughputsDir=None,
-                 filterlist=('u', 'g', 'r', 'i', 'z', 'y4')):
-        """Instantiate object and do setup for magnitude calculations. """
-        self.read_ghosting(ghostData, ghostDataDir, throughputsDir, filterlist)
+    def __init__(self, ghostData=None, ghostDataDir=None, filterlist=('u', 'g', 'r', 'i', 'z', 'y4'),
+                 applyCCOB=0.0, throughputsDir=None):
+        """Instantiate object and set up for magnitude calculation (and add CCOB correction with percent_reduction(=applyCCOB) if applyCCOB>0).  """
+        self.read_ghosting(ghostData, ghostDataDir,  filterlist)
+        if applyCCOB > 0 :
+            self.apply_CCOB(percent_reduction=applyCCOB)
+        self.combine_throughputs(throughputsDir)
         return
 
     def read_ghosting(self, ghostData=None, ghostDataDir=None,
-                      throughputsDir=None, filterlist=('u', 'g', 'r', 'i', 'z', 'y4')):
-        """Read in the ghost file from AndyR's fits file, and read the throughputs files to combine with
-        his (filter-only) data."""
+                      filterlist=('u', 'g', 'r', 'i', 'z', 'y4')):
+        """Read in the ghost file from AndyR's fits file."""
         # Read in AndyR's data from the fits file he provides (for various vendors).
         # Open and read the (various vendor) ghost data files produced by AndyR.
+        self.filterlist = filterlist
         if ghostData == None:
             ghostData = 'camera_ghosting_ff_calibbias_jdsu_lsstcone_121128.fits'
         if ghostDataDir == None:
@@ -56,34 +59,45 @@ class GhostData():
         hdus = pyfits.open(file)
         # Andy has always put these filters in extensions (1, 2, 3, 4, 5, 6) respectively,
         #  although in general this should be checked with a match against hdus.info()
-        direct_only = {}
-        flatghost_only = {}
+        self.direct_only = {}
+        self.flatghost_only = {}
         # Read information from file, reorganize. 
-        for i, f in enumerate(filterlist):
-            direct_only[f] = {}
-            flatghost_only[f]= {}
+        for i, f in enumerate(self.filterlist):
+            self.direct_only[f] = {}
+            self.flatghost_only[f]= {}
             tbdata = hdus[i+1].data
             # Then order of this data is radius, wavelength, direct, flatghost [0, 1, 2, 3]
-            radii = numpy.unique(tbdata.field(0))
-            condition = (tbdata.field(0) == radii[0])
+            self.radii = numpy.unique(tbdata.field(0))
+            condition = (tbdata.field(0) == self.radii[0])
             wavelen = tbdata.field(1)[condition]
-            for r in radii:
+            for r in self.radii:
                 # Read direct throughput data from AndyR file
                 condition = (tbdata.field(0) == r)
                 tmp = tbdata.field(2)[condition]
-                direct_only[f][r] = Bandpass()
-                direct_only[f][r].setBandpass(wavelen=wavelen, sb=tmp)
+                self.direct_only[f][r] = Bandpass()
+                self.direct_only[f][r].setBandpass(wavelen=wavelen, sb=tmp)
                 # Resample so that we know it's on 'standard' wavelength grid we use for throughputs.
-                direct_only[f][r].resampleBandpass()
-                direct_only[f][r].sbTophi()
+                self.direct_only[f][r].resampleBandpass()
                 # Read ghost+direct throughput data from AndyR file
                 tmp = tbdata.field(3)[condition]
-                flatghost_only[f][r] = Bandpass()
-                flatghost_only[f][r].setBandpass(wavelen=wavelen, sb=tmp)
-                flatghost_only[f][r].resampleBandpass()
-                flatghost_only[f][r].sbTophi()
+                self.flatghost_only[f][r] = Bandpass()
+                self.flatghost_only[f][r].setBandpass(wavelen=wavelen, sb=tmp)
+                self.flatghost_only[f][r].resampleBandpass()
             del tbdata
         hdus.close()
+
+    def apply_CCOB(self, percent_reduction=90):
+        """Apply a correction to the flatghost to remove percent_reduction of the ghost (bringing it closer to 'true' / direct). 
+        Percent_reduction is applied to remove (percent_reduction) of the difference between flatghost_only (camera only) - direct_only. """
+        # Probably the CCOB reduction should be applied to the ghosting as seen in the camera only.
+        for f in self.filterlist:
+            for r in self.radii:
+                diff = self.flatghost_only[f][r].sb - self.direct_only[f][r].sb
+                reduced_diff = diff * percent_reduction / 100.0
+                self.flatghost_only[f][r].sb = self.flatghost_only[f][r].sb - reduced_diff
+        return                        
+
+    def combine_throughputs(self, throughputsDir=None):
         # Now build throughput curves we need for calculating gray scale and color-terms.
         # Add mirror throughputs to everything, add atmosphere throughputs to color-terms and
         #   direct throughputs used in gray IC calculation (i.e. direct has only one version, flatghost has 2)
@@ -98,35 +112,25 @@ class GhostData():
         components = ('m1.dat', 'm2.dat', 'm3.dat')
         base2 = Bandpass()
         base2.readThroughputList(componentList=components, rootDir=throughputsDir)
-        direct = {}
-        flatghost = {}
-        flatghost_gray = {}
-        for f in filterlist:
-            direct[f] = {}
-            flatghost[f] = {}
-            flatghost_gray[f] = {}
-            for r in radii:
+        self.direct = {}
+        self.flatghost = {}
+        self.flatghost_gray = {}
+        for f in self.filterlist:
+            self.direct[f] = {}
+            self.flatghost[f] = {}
+            self.flatghost_gray[f] = {}
+            for r in self.radii:
                 # Combine base1 with AndyR's ghosting data for color-terms.
-                wavelen, tmp = base1.multiplyThroughputs(direct_only[f][r].wavelen, direct_only[f][r].sb)
-                direct[f][r] = Bandpass()
-                direct[f][r].setBandpass(wavelen=wavelen, sb=tmp)
-                direct[f][r].sbTophi()
-                wavelen, tmp = base1.multiplyThroughputs(flatghost_only[f][r].wavelen, flatghost_only[f][r].sb)
-                flatghost[f][r] = Bandpass()
-                flatghost[f][r].setBandpass(wavelen=wavelen, sb=tmp)
-                flatghost[f][r].sbTophi()
+                wavelen, tmp = base1.multiplyThroughputs(self.direct_only[f][r].wavelen, self.direct_only[f][r].sb)
+                self.direct[f][r] = Bandpass()
+                self.direct[f][r].setBandpass(wavelen=wavelen, sb=tmp)
+                wavelen, tmp = base1.multiplyThroughputs(self.flatghost_only[f][r].wavelen, self.flatghost_only[f][r].sb)
+                self.flatghost[f][r] = Bandpass()
+                self.flatghost[f][r].setBandpass(wavelen=wavelen, sb=tmp)
                 # Combine base2 with AndyR's ghosting data for flatghost (direct+ghost) gray-scale IC calculation.
-                wavelen, tmp = base2.multiplyThroughputs(flatghost_only[f][r].wavelen, flatghost_only[f][r].sb)
-                flatghost_gray[f][r] = Bandpass()
-                flatghost_gray[f][r].setBandpass(wavelen=wavelen, sb=tmp)
-                flatghost_gray[f][r].sbTophi()
-        self.direct_only = direct_only
-        self.flatghost_only = flatghost_only
-        self.direct = direct
-        self.flatghost = flatghost
-        self.flatghost_gray = flatghost_gray
-        self.radii = radii
-        self.filterlist = filterlist
+                wavelen, tmp = base2.multiplyThroughputs(self.flatghost_only[f][r].wavelen, self.flatghost_only[f][r].sb)
+                self.flatghost_gray[f][r] = Bandpass()
+                self.flatghost_gray[f][r].setBandpass(wavelen=wavelen, sb=tmp)
         self.setupPhiArray()
         return
 
@@ -144,22 +148,11 @@ class GhostData():
                                                    dtype='float')
             self.wavelen_step[f] = self.direct[f][r0].wavelen[1] - self.direct[f][r0].wavelen[0]
             for i, r in enumerate(self.radii):
+                self.direct[f][r].sbTophi()
+                self.flatghost[f][r].sbTophi()
                 self.direct_phiarray[f][i] = self.direct[f][r].phi
                 self.flatghost_phiarray[f][i] = self.flatghost[f][r].phi
         return
-
-    def apply_CCOB(self, percent_reduction=90):
-        """Apply a correction to the flatghost to remove percent_reduction of the ghost (bringing it closer to 'true' / direct). 
-        Percent_reduction is applied to remove (percent_reduction) of the difference between flatghost - direct. """
-        # This should perhaps be applied to difference of flatghost_only/direct_only, but going with entire term for now. 
-        # (or maybe difference of these? need clarification from Chuck)
-        for f in self.filterlist:
-            for r in self.radii:
-                diff = self.flatghost[f][r] - self.direct[f][r]
-                reduced_diff = diff * percent_reduction / 100.0
-                self.flatghost[f][r] = self.direct[f][r] + reduced_diff
-        self.setupPhiArray()
-        return                        
 
     def plot_ghosting(self, f, vendor='', xlim=[300, 1100]):
         """Plot the direct vs. direct+ghosting wavelength response."""

@@ -3,9 +3,12 @@ import pylab
 from GhostData import GhostData
 from SedSets import SedSets
 
+useCCOB = 50.0
+writeFiles = False
+
 ghostfile = 'camera_ghosting_ff_calibbias_jdsu_lsstcone_121128'
 filterlist = ('u', 'g', 'r', 'i', 'z','y4')
-gd = GhostData(ghostData=ghostfile+'.fits')
+gd = GhostData(ghostData=ghostfile+'.fits', applyCCOB=useCCOB)
 graymags = {}
 for f in filterlist:
     graymags[f] = gd.calc_grayscale(f)
@@ -35,17 +38,18 @@ for f in filterlist:
 gi = directmags['g'][:,0] - directmags['i'][:,0]
 ug = directmags['u'][:,0] - directmags['g'][:,0]
 
-for f in filterlist:
-    print 'Working on filter %s' %(f)
-    # Write the (same as previously horrible) file
-    outfilename = 'jdsu_%s_stars' %(f)                                                              
-    outfile = open(outfilename, 'w')                                                                
-    print >> outfile, '#', ghostfile                                                                
-    print >>outfile, '# starname temperature metallicity logg u-g g-r [primary mags] [flatfield/ghosting mags] [dmag]'                                                                                      
-    print >>outfile, '# radii:', gd.radii
-    for i,s in enumerate(kurucz.starlist):
-        print >>outfile, s, kurucz.temperature[i], kurucz.met[i], kurucz.logg[i], ug[i], gi[i], \
-            directmags[f][i], ghostmags[f][i], dmags[f][i]
+if writeFiles:
+    for f in filterlist:
+        print 'Working on filter %s' %(f)
+        # Write the (same as previously horrible) file
+        outfilename = 'jdsu_%s_stars' %(f)                                                              
+        outfile = open(outfilename, 'w')                                                                
+        print >> outfile, '#', ghostfile                                                                
+        print >>outfile, '# starname temperature metallicity logg u-g g-r [primary mags] [flatfield/ghosting mags] [dmag]' 
+        print >>outfile, '# radii:', gd.radii
+        for i,s in enumerate(kurucz.starlist):
+            print >>outfile, s, kurucz.temperature[i], kurucz.met[i], kurucz.logg[i], ug[i], gi[i], \
+                directmags[f][i], ghostmags[f][i], dmags[f][i]
 
 # Plot dmags as a function of color, for specific radii.
 idx = numpy.argsort(gi)
