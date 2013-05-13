@@ -87,12 +87,26 @@ pylab.savefig('simple_sn_%1.0f.png'%resolution, format='png')
 
 
 pylab.figure()
-pylab.plot(sn.sns['15_0.0'].wavelen, sn.sns['15_0.0'].flambda)
-pylab.ylabel(r'f$_\lambda$')
+sn.sns['15_0.0'].flambdaTofnu()
+pylab.plot(sn.sns['15_0.0'].wavelen, sn.sns['15_0.0'].fnu)
+pylab.ylabel(r'f$_\nu$')
 pylab.xlabel(r'wavelength (nm)')
 pylab.title('Supernova')
 pylab.xlim([100,1100])
 pylab.savefig('supernova_sed.png',format='png')
+
+
+pylab.figure()
+sn.sns['15_0.9'].flambdaTofnu()
+pylab.plot(sn.sns['15_0.9'].wavelen, sn.sns['15_0.9'].fnu/numpy.max(sn.sns['15_0.9'].fnu)*0.007, label='SN')
+pylab.ylabel(r'f$_\nu$, $\Delta\Phi$ (nm$^{-1}$)')
+pylab.xlabel(r'wavelength (nm)')
+pylab.xlim([380,750])
+pylab.ylim([-0.001,0.003])
+pylab.plot(ss.basebp['g'].wavelen, ss.basebp['g'].phi-ss.newbp['g'].phi, label=r'$\Delta\Phi$')
+pylab.legend()
+pylab.savefig('sn_phi_z0.9.png',format='png')
+
 
 
 exit()

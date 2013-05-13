@@ -31,10 +31,10 @@ if degrade_resolution:
 
 # Let's plot the bandpasses, for fun. 
 ss.plot_throughputs_diff()
-file = open('r_phi.dat','w')
-print >>file, '#wavelength  phi'
-for i in numpy.arange(numpy.size(ss.basebp['r'].wavelen)): print >>file, ss.basebp['r'].wavelen[i], ss.basebp['r'].phi[i]
-file.close()
+#file = open('r_phi.dat','w')
+#print >>file, '#wavelength  phi'
+#for i in numpy.arange(numpy.size(ss.basebp['r'].wavelen)): print >>file, ss.basebp['r'].wavelen[i], ss.basebp['r'].phi[i]
+#file.close()
 
 pylab.savefig('gal_delta_through.png',format='png')
 
@@ -92,13 +92,27 @@ pylab.savefig('simple_gal_%1.0f.png'%resolution, format='png')
 
 
 pylab.figure()
-pylab.plot(gal.gals['0.0'].wavelen, gal.gals['0.0'].flambda)
-pylab.ylabel(r'f$_\lambda$')
+gal.gals['0.0'].flambdaTofnu()
+pylab.plot(gal.gals['0.0'].wavelen, gal.gals['0.0'].fnu)
+pylab.ylabel(r'f$_\nu$')
 pylab.xlabel(r'wavelength (nm)')
 pylab.title('Starburst Galaxy')
 pylab.xlim([100,1100])
-pylab.ylim([0,30])
+#pylab.ylim([0,30])
 pylab.savefig('galaxy_sed.png',format='png')
+
+
+#plot u-band
+pylab.figure()
+gal.gals['1.6'].flambdaTofnu()
+pylab.plot(gal.gals['1.6'].wavelen, gal.gals['1.6'].fnu/1e15, label='Galaxy')
+pylab.ylabel(r'f$_\nu$, $\Delta\Phi$ (nm$^{-1}$)')
+pylab.xlabel(r'wavelength (nm)')
+pylab.xlim([300,450])
+pylab.ylim([-.002,0.004])
+pylab.plot(ss.basebp['u'].wavelen, ss.basebp['u'].phi-ss.newbp['u'].phi, label=r'$\Delta\Phi$')
+pylab.legend()
+pylab.savefig('gal_phi_z1.6.png',format='png')
 
 exit()
     
