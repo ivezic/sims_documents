@@ -2143,6 +2143,7 @@ and then bootstrapping to the entire sky to check for systematic
 effects. 
 
 \subsection{Single bandpass to external flux system (absolute scale)}
+\label{subsec:fluxstars}
 
 After determining the band to band calibration, there is a one further
 value required to calibrate the entire system to an absolute flux
@@ -2176,7 +2177,57 @@ independent test of the quality of LSST photometric calibration.
 \section{Testing and Verification}
 \label{sec:verification}
 
-{\bf TODO - Tim and Peter -  New section on testing and verification, particularly verification of uniformity over entire sky, but should cover testing of all of above requirements - including external calibration.}
+{\bf TODO - Tim and Peter - New section on testing and verification,
+particularly verification of uniformity over entire sky, but should
+cover testing of all of above requirements - including external
+calibration.}
+
+\subsection{Repeatability}
+
+XXX-Testing our repeatability is rather trivial, as that does not require
+any external data.  We simply apply the best-fit patch zeropoints to
+each patch and measure how well we make repeat measurements of each
+star.
+
+\subsection{Spatial Uniformity}
+
+XXX-We can compare to previous surveys.  Pan-Starrs notes that they
+tend to see SDSS-shaped footprints in their residuals when comparing
+surveys.  This will probably only put an upper limit on the
+uniformity, as LSST will be deeper and/or have larger coverage than
+available comparison surveys.  Simulations can also help identify
+regions which we would expect could be poorly linked to the rest of
+the survey (this is expected to be a problem early in the survey
+before all regions of the sky have many well-linked observations).  We
+can mesure very accurately our RMS as a function of patch and
+magnitude, and thus generate mock catalog realizations to run through
+the self-calibration procedure.  These mock catalogs should give a
+good picture of the spatial uniformity.
+
+\subsection{Flux Calibration}
+
+As mentioned in \S\ref{subsec:fluxstars}, there should soon be a
+system of white dwarf flux standards with HST observations.  We can
+use subsets of these flux standards to make bootstrap estimates of our
+overall flux calibration.  This is also a potential test of the
+spatial uniformity of the calibration, although this will be limited
+if the flux standards are concentrated on the equator.
+
+\subsection{Color Calibration}
+
+There are now a number of techniques for comparing stellar colors
+accross the sky.  \citet{Ivezic04} use a principle color analysis,
+\citet{High09} use a stellar locus regression, and \citet{Schlafly10}
+look at the color of main-sequence turn-off stars.  For all of these
+techniques, the signal is usually dominated by dust extinction.
+However, at high galactic latitudes, the differences in stellar colors
+reveals errors in the calibration.
+
+In addition to main-sequence stars, our flux standards should be
+useful for checking the color calibration.  As with the flux
+calibration in a single band, we can exclude some of the flux
+standards from the analaysis and use the excluded stars to see how
+well we recover their colors.
 
 
 \section{Software Implementation}
@@ -2184,7 +2235,10 @@ independent test of the quality of LSST photometric calibration.
 
 {\bf TODO - new section on software implementation } 
 
-Include : how do we calculate and apply color-correction terms, how do we use flat fields and illumination corrections, how/when do we run self-calibration and atmosphere fitting, and what do we report in DM (how do we store phi?)
+Include : how do we calculate and apply color-correction terms, how do
+we use flat fields and illumination corrections, how/when do we run
+self-calibration and atmosphere fitting, and what do we report in DM
+(how do we store phi?)
 
 
 \bibliographystyle{apj}
