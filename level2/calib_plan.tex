@@ -5,6 +5,7 @@
 \usepackage{subfig}
 \usepackage{fixltx2e}
 \usepackage{hyperref}
+\usepackage{boxedminipage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% author-defined commands
@@ -26,7 +27,7 @@
 \title{Level 2 Photometric Calibration for the LSST Survey}
 
 \author{
-R. Lynne Jones\altaffilmark{1}, {\v Z}eljko Ivezi{\'c}\altaffilmark{1}, David Burke\altaffilmark{2}, Tim Axelrod\altaffilmark{3}, \\
+R. Lynne Jones\altaffilmark{1}, {\v Z}eljko Ivezi{\'c}\altaffilmark{1},  Tim Axelrod\altaffilmark{2}, David Burke\altaffilmark{3}, \\
 James G. Bartlett\altaffilmark{4}, 
 Gurvan Bazin\altaffilmark{4},
 Guillaume Blanc\altaffilmark{4}, 
@@ -40,8 +41,8 @@ The Photometric Calibration Team \\
 Docushare-8123, --/--/-- \\
 }
 \altaffiltext{1}{University of Washington}
-\altaffiltext{2}{SLAC National Accelerator Laboratory}
-\altaffiltext{3}{LSST Corporation}
+\altaffiltext{2}{University of Arizona}
+\altaffiltext{3}{SLAC National Accelerator Laboratory}
 \altaffiltext{4}{APC, Universite Paris Diderot}
 \altaffiltext{5}{NOAO}
 \altaffiltext{6}{Princeton University}
@@ -56,7 +57,7 @@ Docushare-8123, --/--/-- \\
 \begin{abstract}
 This document describes the photometric calibration procedure for LSST
 Data Release catalogs. This procedure will use specialized hardware, 
-an auxiliary telescope and narrow-band dome screen projector, to
+an auxiliary telescope, an atmospheric water vapor measurement system, and narrow-band dome screen illuminator, to
 measure the wavelength dependence of the atmospheric and hardware
 response functions, together with a self-calibration procedure that
 leverages multiple observations of the same sources over many epochs,
@@ -120,17 +121,17 @@ This document describes the calibration requirements and processes for
 LSST Data Release photometry. At each Data Release, there will be a
 complete recalibration of all data acquired to that point, on
 approximately an annual schedule.  These data products are referred to
-as Level 2 Data Products, in LSST Data Management terms.  There will
+as Level 2 Data Products.  There will
 also be a real-time data calibration process, based on the best
-available set of prior calibrated observations, to provide best-effort
-precision and accuracy for photometry for quality assurance,
+available set of prior calibrated observations, to provide real-time, but lower quality,
+                                                                                                 photometry for quality assurance,
 generation of alerts, and other quantities appropriate for nightly
 data generation (aka Level 1 Data Products).  The Level 1 photometric
 calibration is not discussed here.
 
 Section~\ref{sec:photoreq} reviews the survey requirements for
 photometric calibration, while Section~\ref{sec:calib_overview}
-describes the philosophy behind LSST's calibration procedure, first
+describes the foundation of LSST's calibration procedure, first
 motivating this procedure by describing the true path of a photon
 through the atmosphere and LSST system and then from the calibration
 point of view, trying to recreate the transmission of those photons to
@@ -138,13 +139,21 @@ the focal plane.  Section~\ref{sec:calib_details} describes details of
 each step of the calibration procedure, including how each calibration
 measurement is obtained and applied to the science data along with
 expected errors originating from each step.
+Section~\ref{sec:calib_external} describes how the LSST's internal
+photometric scale is tied to external references.
+Section~\ref{sec:verification} describes how we will verify that the
+calibration system functions as designed, and meets the science
+requirements, first during the construction phase, and later during
+survey operations.
 
 
 \section{Photometric Requirements}
 \label{sec:photoreq}
 
 The LSST Science Requirements Document (SRD) provides a set of
-requirements on the annual Data Release (Level 2) photometry based on
+requirements on the annual Data Release (Level 2) photometry.  These
+requirements are extended in the XXX (OSS) to cover aspects which are
+too detailed for the SRD.   based on
 measurements of bright, unresolved, isolated, non-variable objects
 from individual LSST visits. 
 {\bf TODO - address what these requirements actually apply to. MS stars vs other SEDs and reference App C. Also be explicit that calibration is based on objects with well-known SEDs - i.e. MS stars. }
@@ -266,6 +275,9 @@ describe them here, with full descriptions in the sections indicated:
     obtain spectra of a chosen set of standard stars across the sky to
     constrain atmospheric absorption models. More details are provided
   in Section~\ref{sec:atmo_phi}.}
+\item{Water vapor monitoring system, consisting of a GPS system and a 
+    microwave radiometer attached to the LSST telescope, and monitoring 
+    the same field of view.}  
 \item{The self-calibration solver is not actually hardware, but rather
     software which will be used to calibrate the gray atmospheric
     absorption due to clouds. This software uses the many observations
@@ -324,7 +336,16 @@ is physically happening to photons in their path toward the focal
 plane (the `truth'), and then outline how LSST will translate the
 measured ADU counts back to photons above the atmosphere (the
 calibration `model').
-
+%\vspace[*]{0.5in}
+\begin{boxedminipage}{\textwidth}
+We find it helpful to define three different magnitudes, and their associated fluxes:
+\begin{itemize}
+\item{$m_b^{inst}$, the instrumental magnitude.  $m_b^{inst} = -2.5 log10(C_b^{obs})$, where $C_b^{obs}$ are the instrumental counts (ADU) that are attributed to the object}
+\item{$m_b^{nat}$, the natural magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the actual normalized system bandpass, $\phi_b^{obs}(\lambda)$, at the top of the atmosphere.  See equations \ref{eqn:Fb} and \ref{eqn:natmag}. $m_b^{nat} = m_b^{inst} + Z_b^{obs}$}
+\item{$m_b^{std}$}, the standard magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the standard normalized system bandpass, $\phi_b^{std}(\lambda)$, at the top of the atmosphere.  See equation \ref{eqn:stdFlux}.} 
+\end{itemize}
+These quantities are related through equations \ref{eqn:mag2counts} and \ref{eqn:mag2counts}.
+\end{boxedminipage}
 \subsection{Truth: From photons to counts}
 
 Let us first consider how the photons from an astronomical object are
@@ -465,6 +486,7 @@ and atmospheric transmission curve, minimizing the difference between
 $\phi_b^{obs}(\lambda,t)$ and the standardized reported bandpass.
 Now, 
 \begin{equation}
+\label{eqn:stdFlux}
 F_b^{std}(t) = \int_0^{\infty} {F_\nu(\lambda,t) \,
   \phi_b^{std}(\lambda) \, d\lambda}, 
 \end{equation}
@@ -505,7 +527,7 @@ produced by the system by adding the correct zeropoint offsets. As
 $\Delta m_b^{obs}$ removes all wavelength dependent variations in $m_b^{std}$,
 \begin{equation}
 \label{eqn:mag2counts}
-m_b^{std} = -2.5\,log_{10}(C_b^{obs}) \, + \Delta m_b^{obs} + Z_b^{obs}
+m_b^{std} = -2.5\,log_{10}(C_b^{obs}) \, - \Delta m_b^{obs} + Z_b^{obs}
 \end{equation}
 the zeropoint correction here, $Z_b^{obs}$, contains only gray-scale
 {\it normalization} effects, such as variations due to the flat field
