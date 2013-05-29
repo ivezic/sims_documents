@@ -307,27 +307,28 @@ the auxiliary telescope, to correct for variations in the atmospheric
 absorption curve from visit to visit.
 
 \begin{figure}[htbp]
-\includegraphics[width=6.5in]{calib_overview}
-\caption{ {\small {\bf A flowchart of the Data Release photometric
-      calibration process.} Everything to the left of the dashed line
-    could be thought of as a calibration product, to be applied to
-    data from each visit on the right of the dashed line. Each of the
-    darker gray boxes indicates data or calibration products required
-    to reach the final goal: calibrated photometric measurements. The
-    light green circles point out significant LSST-specific calibration
-    systems. The separation of the measurement and correction for 
-    wavelength dependent (shape) and wavelength independent
-    (normalization) variations in the throughput can be seen in the
-    three sections of the `calibration products' on the left hand
-    side. The upper portion, consisting mainly of flat-field effects,
-    corrects primarily for small ($<<$ CCD) spatial scale gray-scale variations (although
-    the illumination correction can also have larger spatial scale
-    structure), the middle portion in the dark triangle corrects only
-    for bandpass shape variations, while the bottom portion,
-    consisting of the zeropoint corrections calculated from the
-    self-calibration procedure, will only correct for larger spatial
-    scale variations. }
-\label{fig:overview_flowchart} }
+\includegraphics[width=6.5in]{CalibDataProdSchematic1}
+\caption{ {\small {\bf The overall flow of the Data Release photometric
+      calibration process.} The process consists of three main steps.  In the first, Flat SED Calibration, science image pixels are processed to instrumental magnitudes as if all calibration object SEDs were flat ($F_{\nu} = const$).  The second step, SED Correction, corrects the flat SED object counts to account for the real system bandpass and calibration object SEDs, generating corrected magnitudes.  The final step, Self Calibration, solves a least squares system in the SED corrected magnitudes to yield the standard magnitudes for the calibration objects and a spatially dependent zeropoint correction for each exposure.   Additionally, corrections to the illumination correction are calculated, for use in "Determine Illumination Correction" (Figure \ref{fig:overview_flowchart2}).  Note that SED Correction and Self Calibration are performed only for calibration objects.  General science objects are calibrated later, using the data products from the calibration process (Figure \ref{fig:overview_flowchart4}) }
+\label{fig:overview_flowchart1} }
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=6.5in]{CalibDataProdSchematic2}
+\caption{ {\small {\bf Flat Spectrum Flat Determination.} Determination of the flat spectrum flat (FSF) is of central importance.  The initial step in the calibration process treats all objects as if their SED were flat.  This is consistent only if the flatfield is that for a flat SED as well.  Since the illumination source for the actual broadband flat does not have a flat SED, correction is required.  Additionally, the flat as measured is contaminated by light which arrives from paths other than the direct path, such as ghosting.  These effects must be taken out by the illumination correction. }
+\label{fig:overview_flowchart2} }
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=6.5in]{CalibDataProdSchematic3}
+\caption{ {\small {\bf System Bandpass Determination.} Blah, blah. }
+\label{fig:overview_flowchart3} }
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=6.5in]{CalibDataProdSchematic4}
+\caption{ {\small {\bf Science Object Calibration.} Blah, blah. }
+\label{fig:overview_flowchart4} }
 \end{figure}
 
 The rest of this section will provide a more in-depth overview of the
@@ -338,11 +339,12 @@ measured ADU counts back to photons above the atmosphere (the
 calibration `model').
 %\vspace[*]{0.5in}
 \begin{boxedminipage}{\textwidth}
-We find it helpful to define three different magnitudes, and their associated fluxes:
+We find it helpful to define four different magnitudes, and their associated fluxes:
 \begin{itemize}
 \item{$m_b^{inst}$, the instrumental magnitude.  $m_b^{inst} = -2.5 log10(C_b^{obs})$, where $C_b^{obs}$ are the instrumental counts (ADU) that are attributed to the object}
 \item{$m_b^{nat}$, the natural magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the actual normalized system bandpass, $\phi_b^{obs}(\lambda)$, at the top of the atmosphere.  See equations \ref{eqn:Fb} and \ref{eqn:natmag}. $m_b^{nat} = m_b^{inst} + Z_b^{obs}$}
 \item{$m_b^{std}$}, the standard magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the standard normalized system bandpass, $\phi_b^{std}(\lambda)$, at the top of the atmosphere.  See equation \ref{eqn:stdFlux}.} 
+\item{$m_b^{corr}$, the SED corrected instrumental magnitude.  This is the standard magnitude, but with an unknown gray zeropoint correction, which will be removed by self calibration.  These magnitudes are the input to self calibration. $m_b^{corr} = m_b^{inst} + \Delta m_b^{obs}$}
 \end{itemize}
 These quantities are related through equations \ref{eqn:mag2counts} and \ref{eqn:mag2counts}.
 \end{boxedminipage}
