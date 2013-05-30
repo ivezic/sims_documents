@@ -240,8 +240,8 @@ verifying the final two requirements, \ref{color_req} and
 
 In traditional photometric calibration, a set of standard stars are
 observed at a range of airmasses to calculate zeropoint offsets and
-(typically) a single color-dependent extinction term per night. This is
-sufficient for photometry at the few percent level on photometric
+(typically) a single color-dependent extinction curve per night. This is
+sufficient for photometry at the few percent level on stable photometric
 nights. However, historical weather data from Cerro Pach\'{o}n tells us
 only 53\% of the available observing time can be considered
 photometric even at the 1--2\% level. To take advantage of the full
@@ -251,7 +251,7 @@ requirements -- 0.5\% level photometric repeatability and 1\%
 photometric uniformity -- requires a new approach.
 {\bf TODO include comment that we're not taking 'time out' to do photometric standards with wide range of colors, and thus not guaranteed leverage from survey itself}
 
-This new approach lies in splitting the measurement of the {\it
+This new approach, variants of which have been used at PanSTARRS and XXX, lies in splitting the measurement of the {\it
 normalization} of the throughput in each observation (the gray-scale
 zeropoint) from the {\it shape} of the throughput curve (the color
 dependent terms), and further, using separate procedures to measure
@@ -260,17 +260,19 @@ the atmospheric throughput. This calibration system requires various
 pieces of hardware to conduct these optimized measurements. We briefly
 describe them here, with full descriptions in the sections indicated:
 \begin{itemize}
-\item{A dome screen projector designed to provide very uniform
-    ($\sim1\%$ variation) illumination across the field of view, while
-    not creating stray light. This projector system will have the unique
+\item{A dome screen projector designed to provide uniform
+    ($\sim10\%$ variation) illumination across the field of view, while
+    minimizing stray light. This projector system will have the
     capability to not only illuminate the screen with broadband white
     light, but also narrow-band light to measure the system response
     at individual wavelengths. The narrow-band light will be generated
     by a tunable laser, capable of producing light from $300-1100$~nm
-    and tunable in 1~nm increments. See
+    and tunable in 1~nm increments. The brightness of the screen is measured 
+    with NIST-calibrated photodiodes, so that the relative intensity at different 
+    wavelengths is precisely determined.  See
     Sections~\ref{sec:hardware_norm} and \ref{sec:hardware_phi} for
     more information.}
-\item{A 1.2-m auxiliary telescope with an $R=400$ spectrograph,
+\item{A 1.2-m auxiliary telescope with an $R \approx 400$ spectrograph,
     located adjacent to the LSST itself. This auxiliary telescope will
     obtain spectra of a chosen set of standard stars across the sky to
     constrain atmospheric absorption models. More details are provided
@@ -278,33 +280,19 @@ describe them here, with full descriptions in the sections indicated:
 \item{Water vapor monitoring system, consisting of a GPS system and a 
     microwave radiometer attached to the LSST telescope, and monitoring 
     the same field of view.}  
-\item{The self-calibration solver is not actually hardware, but rather
-    software which will be used to calibrate the gray atmospheric
-    absorption due to clouds. This software uses the many observations
-    of each star under a wide variety of conditions to calculate the
-    zeropoint of each image. Section~\ref{sec:atmo_norm} describes
-    this in full.}
 \end{itemize}
 
-A flowchart showing an overview of the steps from science observation
+An overview of the entire calibration process, from science observation
 to calibrated photometric measurements, together with the required
 calibration data products is shown in
-Figure~\ref{fig:overview_flowchart}.  The {\it normalization} of the
-throughput will be corrected by using a flat field (for small spatial
-scale variations, $<<$CCD scale) and the self-calibration procedure
-(for larger spatial scale variations, generally $\approx$CCD, as this
-is fundamentally limited by the spacing between calibration stars in
-each visit). The flat field can only correct for variations in the
-throughput of the hardware; the self-calibration procedure will
-primarily correct for variations in throughput due to variable
-atmospheric conditions (such as cloud extinction) in each image,
-although it can be extended to apply additional corrections for large
-spatial scale errors (illumination corrections) in the flat field. The
-{\it shape} of the throughput curve will be measured using both the
-narrow-band dome screen projector, to correct for variations in the
-shape of the hardware bandpass response across the field of view, and
-the auxiliary telescope, to correct for variations in the atmospheric
-absorption curve from visit to visit.
+Figures \ref{fig:overview_flowchart1}, \ref{fig:overview_flowchart2}, 
+\ref{fig:overview_flowchart3}, and \ref{fig:overview_flowchart4}.  
+Note that three classes of objects participate in the calibration process in different ways:
+\begin{itemize}
+\item Standard stars.  These are stars whose absolute flux as a function of wavelength above the atmosphere is precisely known.  This class contains only a few members, perhaps as few as ten.  Their role is to enable the self calibration process to set absolute zeropoints for each band, and to allow testing of the SRD uniformity requirements.  See Section~\ref{sec:calib_external}.
+\item Calibration stars.  These are stars that densely cover the sky, with typical spacings between stars of 1 arcminute. [NOTE: check this number].  Unlike standard stars, their absolute fluxes are not precisely known, and their standard magnitudes are determined by the self calibration process.   They have been selected to be on the stellar main sequence, to be nonvariable, and to be relatively isolated so that their photometry is not degraded by crowding effects.
+\item Science objects.  Calibration of science objects utilizes the results of processing the standards and the calibration stars, and the measurement of the system bandpass.   If an SED is supplied for an object, an accurate standard magnitude can then be calculated.
+\end{itemize}
 
 \begin{figure}[htbp]
 \includegraphics[width=6.5in]{CalibDataProdSchematic1}
@@ -315,46 +303,48 @@ absorption curve from visit to visit.
 
 \begin{figure}[htbp]
 \includegraphics[width=6.5in]{CalibDataProdSchematic2}
-\caption{ {\small {\bf Flat Spectrum Flat Determination.} Determination of the flat spectrum flat (FSF) is of central importance.  The initial step in the calibration process treats all objects as if their SED were flat.  This is consistent only if the flatfield is that for a flat SED as well.  Since the illumination source for the actual broadband flat does not have a flat SED, correction is required.  Additionally, the flat as measured is contaminated by light which arrives from paths other than the direct path, such as ghosting.  These effects must be taken out by the illumination correction. }
+\caption{ {\small {\bf Flat SED Flat Determination.} Determination of the flat SED flat (FSF) is of central importance.  The initial step in the calibration process treats all objects as if their SED were flat.  This is consistent only if the flatfield is that for a flat SED, as transmitted through a reference atmosphere.  Since the illumination source for the actual broadband flat does not have the required SED, we cannot use it directly.  Instead, we synthesize the required flat from the monochromatic flats.  These flats as measured are contaminated by light which arrives from paths other than the direct path, such as ghosting.  These effects are taken out by the illumination correction.  Finally, the monochromatic flats are taken relatively infrequently, and will not reflect changes on shorter timescales, such as the appearance of new dust particles.  We account for this by multiplying the synthesized FSF by the ratio of two broadband flats, one at the current epoch and one at the reference epoch, when the monochromatic flats were gathered.}
 \label{fig:overview_flowchart2} }
 \end{figure}
 
 \begin{figure}[htbp]
 \includegraphics[width=6.5in]{CalibDataProdSchematic3}
-\caption{ {\small {\bf System Bandpass Determination.} Blah, blah. }
+\caption{ {\small {\bf System Bandpass Determination.} The system bandpass, $\phi$, is determined for every exposure, and is a major output of the calibration process.  It is the normalized product of the atmospheric bandpass and that of the telescope/camera system.  The atmospheric bandpass is determined by fitting an atmospheric model to a set of measured atmospheric data.  The bandpass of the telescope/camera system is measured by the corrected monochromatic flats, modified by current data from the camera system, principally focalplane temperature and the filter position. }
 \label{fig:overview_flowchart3} }
 \end{figure}
 
 \begin{figure}[htbp]
 \includegraphics[width=6.5in]{CalibDataProdSchematic4}
-\caption{ {\small {\bf Science Object Calibration.} Blah, blah. }
+\caption{ {\small {\bf Science Object Calibration.}  Photometric calibration for science objects takes place in two stages.  In the first, the natural magnitudes are calculated, using the zeropoint model for each exposure.  These are stored in the Level 2 databases.  The second, optional, stage, relies on knowledge of the object SEDs, which is an external input to the system, supplied by the user.   The object SED, in conjunction with the system bandpass, $\phi$, allows standard magnitudes to be calculated.  These are considered a Level 3 data product }
 \label{fig:overview_flowchart4} }
 \end{figure}
 
 The rest of this section will provide a more in-depth overview of the
-calibration measurements required. We will start with a review of what
+calibration process. We will start with a review of what
 is physically happening to photons in their path toward the focal
 plane (the `truth'), and then outline how LSST will translate the
-measured ADU counts back to photons above the atmosphere (the
+measured ADU counts back to fluxes above the atmosphere (the
 calibration `model').
 %\vspace[*]{0.5in}
-\begin{boxedminipage}{\textwidth}
+
+
+\begin{boxedminipage}{7in}
 We find it helpful to define four different magnitudes, and their associated fluxes:
 \begin{itemize}
 \item{$m_b^{inst}$, the instrumental magnitude.  $m_b^{inst} = -2.5 log10(C_b^{obs})$, where $C_b^{obs}$ are the instrumental counts (ADU) that are attributed to the object}
 \item{$m_b^{nat}$, the natural magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the actual normalized system bandpass, $\phi_b^{obs}(\lambda)$, at the top of the atmosphere.  See equations \ref{eqn:Fb} and \ref{eqn:natmag}. $m_b^{nat} = m_b^{inst} + Z_b^{obs}$}
-\item{$m_b^{std}$}, the standard magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the standard normalized system bandpass, $\phi_b^{std}(\lambda)$, at the top of the atmosphere.  See equation \ref{eqn:stdFlux}.} 
+\item{$m_b^{std}$}, the standard magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the standard normalized system bandpass, $\phi_b^{std}(\lambda)$, at the top of the atmosphere.  See equation \ref{eqn:stdFlux}. 
 \item{$m_b^{corr}$, the SED corrected instrumental magnitude.  This is the standard magnitude, but with an unknown gray zeropoint correction, which will be removed by self calibration.  These magnitudes are the input to self calibration. $m_b^{corr} = m_b^{inst} + \Delta m_b^{obs}$}
 \end{itemize}
 These quantities are related through equations \ref{eqn:mag2counts} and \ref{eqn:mag2counts}.
 \end{boxedminipage}
-\subsection{Truth: From photons to counts}
+
+\subsection{From Photons to Counts}
 
 Let us first consider how the photons from an astronomical object are
 converted into ADUs in the detector, paying attention to the various
 temporal or spatial scales for variability might arise in the LSST
-system to affect the final ADU counts (and ignoring errors in
-measurement, as this is the `truth' of the flux transmission). This section is intended
+system to affect the final ADU counts. This section is intended
 to motivate the separate measurement of the normalization and shape of
 the bandpass and introduce some important concepts, such as the
 normalized system response.
@@ -534,7 +524,14 @@ m_b^{std} = -2.5\,log_{10}(C_b^{obs}) \, - \Delta m_b^{obs} + Z_b^{obs}
 the zeropoint correction here, $Z_b^{obs}$, contains only gray-scale
 {\it normalization} effects, such as variations due to the flat field
 or cloud extinction. 
-
+\subsubsection{Perturbations to the System Bandpass}
+The normalized system bandpass will vary from exposure to exposure due to a myriad of effects.  A non-exhaustive list includes:
+\begin{itemize}
+\item{Atmospheric transmission variations.  The major wavelength-dependent sources of atmospheric absorption, Rayleigh scattering from molecules, ozone, water vapor, and aerosols, all vary in time and space, with widely varying temporal and spatial scales.  Even in the absence of intrinsic variation in the atmosphere, of course, the bandpass varies due to changing airmass.  This latter effect is compensated for in traditional photometric calibration, but the others are generally ignored.
+\item{Long term variations in the throughput of the optical path due to contamination}
+\item{Changing detector quantum efficiency, particularly in the y-band, due to varying focal plane temperature}
+\item{Shifts in filter position with respect to the system optical axis, due to positioning jitter and gravity sag}
+\end{itemize}
 Examples of the $\Delta m_b^{obs}$ due to variations in the shape of
 the hardware and atmospheric response curves are shown in
 Figure~\ref{fig:delta_mags} and Table~\ref{tab:delta_mags}. Two main
@@ -641,7 +638,7 @@ the $g-i$ information). }
 \end{figure}
 
 
-\subsection{Model: How to calibrate counts}
+\subsection{From Counts to Photons}
 \label{sec:counts2photons}
 
 The previous section laid out the origins of ADU count variability
