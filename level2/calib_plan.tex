@@ -251,7 +251,7 @@ requirements -- 0.5\% level photometric repeatability and 1\%
 photometric uniformity -- requires a new approach.
 {\bf TODO include comment that we're not taking 'time out' to do photometric standards with wide range of colors, and thus not guaranteed leverage from survey itself}
 
-This new approach, variants of which have been used at PanSTARRS and XXX, lies in splitting the measurement of the {\it
+This new approach, variants of which have been used at PanSTARRS and DES, lies in splitting the measurement of the {\it
 normalization} of the throughput in each observation (the gray-scale
 zeropoint) from the {\it shape} of the throughput curve (the color
 dependent terms), and further, using separate procedures to measure
@@ -290,7 +290,7 @@ Figures \ref{fig:overview_flowchart1}, \ref{fig:overview_flowchart2},
 Note that three classes of objects participate in the calibration process in different ways:
 \begin{itemize}
 \item Standard stars.  These are stars whose absolute flux as a function of wavelength above the atmosphere is precisely known.  This class contains only a few members, perhaps as few as ten.  Their role is to enable the self calibration process to set absolute zeropoints for each band, and to allow testing of the SRD uniformity requirements.  See Section~\ref{sec:calib_external}.
-\item Calibration stars.  These are stars that densely cover the sky, with typical spacings between stars of 1 arcminute. [NOTE: check this number].  Unlike standard stars, their absolute fluxes are not precisely known, and their standard magnitudes are determined by the self calibration process.   They have been selected to be on the stellar main sequence, to be nonvariable, and to be relatively isolated so that their photometry is not degraded by crowding effects.
+\item Calibration stars.  These are stars that densely cover the sky, with typical spacings between stars of 1 arcminute. [NOTE: check this number].  Unlike standard stars, neither their SEDs nor their absolute fluxes are precisely known, and their standard magnitudes are determined by the self calibration process.   They have been selected to be on the stellar main sequence, to be nonvariable, and to be relatively isolated so that their photometry is not degraded by crowding effects.
 \item Science objects.  Calibration of science objects utilizes the results of processing the standards and the calibration stars, and the measurement of the system bandpass.   If an SED is supplied for an object, an accurate standard magnitude can then be calculated.
 \end{itemize}
 
@@ -322,9 +322,8 @@ Note that three classes of objects participate in the calibration process in dif
 The rest of this section will provide a more in-depth overview of the
 calibration process. We will start with a review of what
 is physically happening to photons in their path toward the focal
-plane (the `truth'), and then outline how LSST will translate the
-measured ADU counts back to fluxes above the atmosphere (the
-calibration `model').
+plane, and then outline how LSST will translate the
+measured ADU counts back to fluxes above the atmosphere.
 %\vspace[*]{0.5in}
 
 
@@ -525,13 +524,16 @@ the zeropoint correction here, $Z_b^{obs}$, contains only gray-scale
 {\it normalization} effects, such as variations due to the flat field
 or cloud extinction. 
 \subsubsection{Perturbations to the System Bandpass}
-The normalized system bandpass will vary from exposure to exposure due to a myriad of effects.  A non-exhaustive list includes:
+The normalized system bandpass will vary from exposure to exposure due to a myriad of effects.  The major ones are:
 \begin{itemize}
 \item{Atmospheric transmission variations.  The major wavelength-dependent sources of atmospheric absorption, Rayleigh scattering from molecules, ozone, water vapor, and aerosols, all vary in time and space, with widely varying temporal and spatial scales.  Even in the absence of intrinsic variation in the atmosphere, of course, the bandpass varies due to changing airmass.  This latter effect is compensated for in traditional photometric calibration, but the others are generally ignored.}
 \item{Long term variations in the throughput of the optical path due to contamination}
 \item{Changing detector quantum efficiency, particularly in the y-band, due to varying focal plane temperature}
 \item{Shifts in filter position with respect to the system optical axis, due to positioning jitter and gravity sag}
 \end{itemize}
+
+We discuss these categories in turn:
+\subsubsection*{Atmospheric Variations at Cerro Pachon}
 Examples of the $\Delta m_b^{obs}$ due to variations in the shape of
 the hardware and atmospheric response curves are shown in
 Figure~\ref{fig:delta_mags} and Table~\ref{tab:delta_mags}. Two main
@@ -637,6 +639,11 @@ the $g-i$ information). }
 \label{fig:delta_mags2} }
 \end{figure}
 
+\subsubsection{Throughput Variations Due to Contamination}
+
+\subsubsection{Variations in Detector Quantum Efficiency}
+
+\subsubsection{Throughput Variations Due to Filter Position Shifts}
 
 \subsection{From Counts to Photons}
 \label{sec:counts2photons}
@@ -645,8 +652,8 @@ The previous section laid out the origins of ADU count variability
 from one observation to another. Now we will consider how we can, in
 practice, acquire the information necessary to convert a particular
 observed ADU count to a measurement of $F_\nu(\lambda,t)$ above the
-atmosphere for a particular object.  In other words, how we can
-recreate the `truth' by measuring and then compensating for the variations in
+atmosphere for a particular object.  This requires measuring and then 
+compensating for the variations in
 $S^{atm}(\lambda,alt,az,t)$ and $S_b^{sys}(\lambda,x,y,t)$.
 Let us first consider measurement of the variations in the hardware
 throughput curve, $S_b^{sys}(\lambda,x,y,t)$. 
@@ -696,11 +703,11 @@ repeated on a time interval adequate for measurement of
 the more slowly variable components of $S_b^{sys}(\lambda,t)$, approximately
 monthly (but to be determined during commissioning). This measurement
 is discussed in detail in section~\ref{sec:hardware_phi}.  Since the system response can change 
-on shorter timescales, principally due to a changing population of dust particles, we correct the FSF
+on shorter timescales, principally due to a changing population of dust particles on optical surfaces, we correct the FSF
 by multiplying by the ratio of two broad-band flats, one at the current epoch and one at the 
 reference epoch when the narrow-band flats were acquired.
 
-It is important to consider that before these flat fields (both the
+As mentioned above, before these flat fields (both the
 broadband and the narrow-band flats) can be used to measure
 $S_b^{sys}$, they must be modified to correctly produce {\it
 photometrically} uniform measurements of stars of a defined reference
@@ -724,12 +731,11 @@ stage (discussed below in section~\ref{sec:hardware_norm}). For the
 narrow-band flat fields, forward modeling will be useful in generating
 the illumination correction. This may include FRED (\ref{NEED FRED REF} modeling,
 constrained with measurements from the `camera calibration optical
-bench' (CCOB - see a brief description in ~Section~\ref{sec:glossary})
-and/or with measurements where the dome screen was illuminated in
-narrow-band mode at a single location only.  Further corrections will
+bench' (CCOB - see a brief description in ~Section~\ref{sec:glossary}).
+Further corrections will
 be again generated by the self-calibration stage.  The illumination correction is
-expected to be stable with time and will be remeasured only when the
-optical path of the telescope is altered.
+expected to be stable with time and will be remeasured only if components in the
+optical path of the telescope are altered.
 
 Next, considering $S^{atm}(\lambda,alt,az,t)$, we will again separate
 the measurement of the shape of the atmospheric response and the
@@ -738,7 +744,7 @@ available data is still incomplete, but suggests that the
 wavelength-dependent variations in $\phi^{atm}(\lambda,t)$ change
 smoothly over spatial scales larger than the field of view and over
 several minutes.  By using an auxiliary telescope equipped with a
-spectroscope to observe bright stars with known SEDs, we can measure
+spectrograph to observe bright stars with known SEDs, we can measure
 atmospheric absorption at a variety of positions in the sky every
 5--10 minutes throughout the night. These observations are used as
 constraints for MODTRAN atmospheric models, generating representations
@@ -751,17 +757,17 @@ section~\ref{sec:atmo_phi}.
 
 In order to correct for the more rapid gray-scale variations in the
 relative normalization of $S^{atm}(alt,az,t)$ due to cloud extinction,
-we must use the observations of stars in the images themselves, as
-SDSS observations suggest that cloud extinction can vary by 0.01 magnitudes on the scale of a CCD
-\citep{Ivezic2007} on timescales as fast as a few minutes. This
+we must use the observations of calibration stars in the images themselves, as
+ observations (\citep{Burke13}, \citep{Ivezic2007}) suggest that cloud extinction can vary by 0.01 magnitudes on the scale of a CCD
+on timescales as fast as a few minutes. This
 `self-calibration' procedure could be thought of as creating a massive
 calibration `standard' star catalog, where the calibration stars are
 all of the non-variable, main-sequence stars in the science images;
 the main difference is that the true magnitudes of the calibration
 stars have to be bootstrapped from the many different observations of
-the survey. For every main sequence star identified as non-variable,
-isolated, and in the desired (bright) magnitude range, corrections for
-the broadband flat field and $\phi_b^{sys+atm}(\lambda,t)$ must be
+the survey. For every calibration star (main sequence star identified as non-variable,
+isolated, and in the desired magnitude range), corrections for
+ $\phi_b^{sys+atm}(\lambda,t)$ must be
 applied to produce a standardized magnitude, $m_b^{std}$, then in the
 self-calibration procedure we minimize the difference between the
 standardized magnitude and a model magnitude,
@@ -796,8 +802,7 @@ possible to determine longer term term effects (such as the
 illumination correction) down to scales approximately equivalent to
 the PSF. This is similar in
 nature to the ubercal method applied to SDSS in
-\citet{Padmanabhan2008}, and is discussed in more detail in
-section~\ref{sec:atmo_norm}.
+\citet{Padmanabhan2008}, and more recently DLS \citep{Wittman} and PanSTARRS-1 \citep{xx}.
 
 Repeating Equation~\ref{eqn:mag2counts} above, adjusting ${obs}$ indexes to ${meas}$ to 
 reflect the difference between the true and measured quantities,
@@ -1037,21 +1042,6 @@ fields \citep{Gressler2010}. The broadband light source can be tuned
 to have any chosen spectral profile; this will be chosen during
 commissioning. For simplicity in discussing the next few sections, let
 us assume that this is a flat $F_\nu(\lambda)$ profile.
-
-Although the dome screen is engineered to illuminate the LSST \'{e}tendue
-very uniformly on scales approximately the size of a CCD (the
-engineering requirement of less than 0.25\% variability translates to
-an RMS variation of 0.7~mmag on these scales), the variability across
-the full focal plane will exceed LSST SRD requirements. However, even
-if the dome screen illumination were perfectly uniform and no stray or
-scattered light entered the telescope, the observed flat field still
-could not be applied directly to science images with the expectation
-of achieving photometric uniformity in measurements of stellar
-sources, due to the presence of ghost images in the observed flat field
-and the effect of plate scale variation from the center to the edge of
-the field of view.  The correction which must be applied to the
-observed flat to produce the desired photometrically correct flat is
-called the `illumination correction'.
 
 \subsection{Auxiliary Telescope}
 
@@ -2213,10 +2203,8 @@ demonstrating the `repeatability' requirement in the SRD.
 \section{Testing and Verification}
 \label{sec:verification}
 
-{\bf TODO - Tim and Peter - New section on testing and verification,
-particularly verification of uniformity over entire sky, but should
-cover testing of all of above requirements - including external
-calibration.}
+The calibration process presented above is complex, and meeting the SRD requirements
+is dependent on understanding and controlling a large number of small perturbations.  We seek to verify that our approach will produce the required results, and are doing so with different techniques that apply to the stages of LSST's construction and operation.   During the current final design phase, we are employing simulation tools, backed up when possible by measurements on the sky from existing telescopes.   \citep{Burke2013} and \citep{Burke2010b} are examples of this approach.  During the construction phase, we will be able to feed measured data from actual telescope components into the simulations.   During operations, our focus is on designing metrics that will let us assess the calibration quality on an ongoing basis.
 
 \subsection{Repeatability}
 
