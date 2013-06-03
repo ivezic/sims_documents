@@ -526,14 +526,61 @@ or cloud extinction.
 \subsubsection{Perturbations to the System Bandpass}
 The normalized system bandpass will vary from exposure to exposure due to a myriad of effects.  The major ones are:
 \begin{itemize}
-\item{Atmospheric transmission variations.  The major wavelength-dependent sources of atmospheric absorption, Rayleigh scattering from molecules, ozone, water vapor, and aerosols, all vary in time and space, with widely varying temporal and spatial scales.  Even in the absence of intrinsic variation in the atmosphere, of course, the bandpass varies due to changing airmass.  This latter effect is compensated for in traditional photometric calibration, but the others are generally ignored.}
+\item{Atmospheric transmission variations.  The major wavelength-dependent sources of atmospheric absorption, Rayleigh scattering from molecules, ozone, water vapor, and aerosols, all vary in time and space, with widely varying temporal and spatial scales.  Even in the absence of intrinsic variation in the atmosphere, of course, the bandpass varies due to changing airmass.  This latter effect is compensated for in traditional photometric calibration, but the others are generally ignored}
 \item{Long term variations in the throughput of the optical path due to contamination}
 \item{Changing detector quantum efficiency, particularly in the y-band, due to varying focal plane temperature}
 \item{Shifts in filter position with respect to the system optical axis, due to positioning jitter and gravity sag}
 \end{itemize}
 
-We discuss these categories in turn:
-\subsubsection*{Atmospheric Variations at Cerro Pachon}
+It bears repeating that every perturbation in general affects both the zeropoint, through the gray component of the perturbation, and the shape of the system bandpass, through the wavelength-dependent component.  The gray component is removed by the self calibration process, while the wavelength-dependent component must be separately characterized and removed (see Figure \ref{fig:overview_flowchart1}).  We are concerned here only about the latter effect, and discuss it for each of the above categories.
+
+\subsubsection{Effects of Atmospheric Variations}
+
+The main components of wavelength-dependent atmospheric extinction are Rayleigh scattering from molecules; water vapor; ozone; and aerosols.   Rayleigh scattering extinction is directly proportional to barometric pressure at the surface.  As is well known from looking at surface pressure charts, away from weather fronts the pressure varies significantly on timescales of hours or more and spatial scales of hundreds of km.  Variations can be much more rapid in the vicinity of fronts.   In any case, this component can be compensated for very accurately just by measuring the barometric pressure, and we do not further consider it here.  The other components are not so easily measured, and in the case of water vapor and aerosols, can display complex patterns of variability.   As a case in point, consider Figure \ref{fig:AerosolVar}.  Although the site is quite different from Cerro Pachon, there are nonetheless significant variation of aerosol extinction at altitudes above 3000m on time scales well under an hour.  Water vapor shows even more pronounced variations.  Figures \ref{fig:CTIO_PWV}, \ref{fig:GeminiPWV}, and \ref{fig:PWV_satellite} give three different perspectives on historical water vapor variability at Cerro Pachon, or nearby.   
+
+\begin{figure}[htbp]
+\includegraphics[width=6in]{AtmoFigs/AerosolVar}
+\caption{ {Lidar measurements of aerosol extinction at 355nm over a single night
+near Greenbelt, MD \citep{Veselovskii2013}.  Cerro Pachon is, of
+course, a different environment, and is at an altitude 2700m, removing
+much of the variability.  Even above that altitude, however,
+significant variation on rapid time scales remains.}
+\label{fig:AerosolVar} }
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=6in]{AtmoFigs/CTIO_PWV}
+\caption{ {Three years of PWV measured at CTIO (\citep{Hansen1975}), based on the depth of the 1.87 $\mu m$ line to the
+Solar continuum at 1.65 $\mu m$}.
+\label{fig:CTIO_PWV} }
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=6in]{AtmoFigs/GeminiPWV}
+\caption{ {PWV measured on a single day at Gemini S \citep{Radomski2010}.  Two
+techniques were used, GPS and Phoenix, an IR spectrograph, and the
+data are in good agreement.  Note the decline of approximately 4 mm
+over a period of two hours.  This is a case where use of a single
+average atmosphere for a whole night would give poor results,
+especially in the y-band.}
+\label{fig:CTIO_PWV} }
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=6in]{AtmoFigs/PWV_satellite_2}
+\caption{ {PWV measurement from the MODIS satellite at one time in the region
+around Cerro Pachon.   The color scale ranges from 4.3 mm (blue) to 7.6 mm (dark red). Note the strong E-W gradient in PWV.}
+\label{fig:PWV_satellite} }
+\end{figure}
+
+
+\subsubsection{Throughput Variations Due to Contamination}
+
+\subsubsection{Variations in Detector Quantum Efficiency}
+
+\subsubsection{Throughput Variations Due to Filter Position Shifts}
+
+\subsubsection{Putting it All Together}
 Examples of the $\Delta m_b^{obs}$ due to variations in the shape of
 the hardware and atmospheric response curves are shown in
 Figure~\ref{fig:delta_mags} and Table~\ref{tab:delta_mags}. Two main
@@ -638,12 +685,6 @@ $g-i$ color, but this is then primarily a function of metallicity
 the $g-i$ information). }
 \label{fig:delta_mags2} }
 \end{figure}
-
-\subsubsection{Throughput Variations Due to Contamination}
-
-\subsubsection{Variations in Detector Quantum Efficiency}
-
-\subsubsection{Throughput Variations Due to Filter Position Shifts}
 
 \subsection{From Counts to Photons}
 \label{sec:counts2photons}
@@ -2652,6 +2693,9 @@ fields to observe at each time; these proposal include the `universal
 cadence' (satisfying most of LSST's science requirements) and `deep
 drilling' (a limited set of fields, observed frequently and deeply
 over the lifetime of the survey). }
+
+\item{{\bf PWV.} Precipitable Water Vapor.  The total column depth of water vapor in the atmosphere, measured 
+at zenith.  The units are mm of liquid water equivalent. }
 
 \end{itemize}
 

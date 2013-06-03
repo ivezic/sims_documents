@@ -1,0 +1,2 @@
+PWV measurement from the MODIS satellite at one time in the region
+arounc Cerro Pachon.   Note the strong E-W gradient in PWV.
