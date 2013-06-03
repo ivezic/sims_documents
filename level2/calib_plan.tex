@@ -136,12 +136,13 @@ describes the foundation of LSST's calibration procedure, first
 motivating this procedure by describing the true path of a photon
 through the atmosphere and LSST system and then from the calibration
 point of view, trying to recreate the transmission of those photons to
-the focal plane.  Section~\ref{sec:calib_details} describes details of
-each step of the calibration procedure, including how each calibration
-measurement is obtained and applied to the science data along with
-expected errors originating from each step.
+the focal plane.  
 Section~\ref{sec:calib_external} describes how the LSST's internal
 photometric scale is tied to external references.
+Section~\ref{sec:calib_details} describes the hardware required
+to realize the calibration process.
+Section~\ref{sec:error_budget} presents the error budget for each step of the 
+calibration procedure.
 Section~\ref{sec:verification} describes how we will verify that the
 calibration system functions as designed, and meets the science
 requirements, first during the construction phase, and later during
@@ -596,7 +597,7 @@ stars at varying temperatures and metallicities.}
 \includegraphics[width=6in]{AtmoFigs/AerosolVar}
 \caption{ {Lidar measurements of aerosol extinction at 355nm over a single night
 near Greenbelt, MD \citep{Veselovskii2013}.  Cerro Pachon is, of
-course, a different environment, and is at an altitude 2700m, removing
+course, a different environment, and is at an altitude of 2700m, removing
 much of the variability.  Even above that altitude, however,
 significant variation on rapid time scales remains.}
 \label{fig:AerosolVar} }
@@ -645,10 +646,11 @@ sequence Kurucz models spanning a range of $g-i$ colors; the resulting
 changes in natural magnitudes are plotted.  These examples demonstrate
 that the scatter in natural magnitudes induced by expected atmospheric
 and hardware transmission curve shape changes alone (without any
-gray-scale changes) can be larger than the SRD repeatability
-requirements would permit. Adding variations in the gray-scale
-normalization due to the hardware response and cloud extinction will
-increase the scatter in the observed magnitudes even further.
+gray-scale changes) can be much larger than the SRD repeatability
+requirements would permit. Roughly speaking, these effects reach a level of about 
+50 mmag.  This suggests that our measurement-based model of wavelength-dependent
+effects must be accurate at the 90-95\% level.  This issue is discussed in detail in Section
+\ref{sec:error_budget}
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{delta_mags}
@@ -2286,6 +2288,7 @@ demonstrating the `repeatability' requirement in the SRD.
 %signal-to-noise ratio of the stars in the image. 
 
 \section{Calibration Error Budget}
+\label{sec:error_budget}
 
 \section{Testing and Verification}
 \label{sec:verification}
@@ -2296,14 +2299,16 @@ is dependent on understanding and controlling a large number of small perturbati
 \subsection{Self Calibration Simulation}
 \subsection{Auxiliary Telescope Simulation}
 
-\subsection{Repeatability}
+\subsection{Calibration Performance Metrics}
+
+\subsubsection{Repeatability}
 
 XXX-Testing our repeatability is rather trivial, as that does not require
 any external data.  We simply apply the best-fit patch zeropoints to
 each patch and measure how well we make repeat measurements of each
 star.
 
-\subsection{Spatial Uniformity}
+\subsubsection{Spatial Uniformity}
 
 XXX-We can compare to previous surveys.  Pan-Starrs notes that they
 tend to see SDSS-shaped footprints in their residuals when comparing
@@ -2318,7 +2323,7 @@ magnitude, and thus generate mock catalog realizations to run through
 the self-calibration procedure.  These mock catalogs should give a
 good picture of the spatial uniformity.
 
-\subsection{Flux Calibration}
+\subsubsection{Flux Calibration}
 
 As mentioned in \S\ref{subsec:fluxstars}, there should soon be a
 system of white dwarf flux standards with HST observations.  We can
@@ -2327,7 +2332,7 @@ overall flux calibration.  This is also a potential test of the
 spatial uniformity of the calibration, although this will be limited
 if the flux standards are concentrated on the equator.
 
-\subsection{Color Calibration}
+\subsubsection{Color Calibration}
 
 There are now a number of techniques for comparing stellar colors
 accross the sky.  \citet{Ivezic04} use a principle color analysis,
