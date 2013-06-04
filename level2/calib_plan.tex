@@ -240,16 +240,21 @@ verifying the final two requirements, \ref{color_req} and
 
 In traditional photometric calibration, a set of standard stars are
 observed at a range of airmasses to calculate zeropoint offsets and
-(typically) a single color-dependent extinction curve per night. This is
-sufficient for photometry at the few percent level on stable photometric
-nights. However, historical weather data from Cerro Pach\'{o}n tells us
+(typically) a single color-dependent extinction curve per night. With care,
+this approach can deliver 1\% photometry in stable photometric conditions.
+Such programs typically follow only a few objects, and devote roughly equal
+time to standards and program objects.   This approach fails for a survey like
+LSST, for at least two reasons.  First, from a calibration point of view, 
+the very wide field and multiple detector array mean that multiple instruments must be
+calibrated rather than just one.
+Second, historical weather data from Cerro Pach\'{o}n tells us
 only 53\% of the available observing time can be considered
 photometric even at the 1--2\% level. To take advantage of the full
 85\% of the available observing time which is usable (total cloud
 extinction less than 1.5 magnitudes), and to reach the SRD specified
 requirements -- 0.5\% level photometric repeatability and 1\%
 photometric uniformity -- requires a new approach.
-{\bf TODO include comment that we're not taking 'time out' to do photometric standards with wide range of colors, and thus not guaranteed leverage from survey itself}
+
 
 This new approach, variants of which have been used at PanSTARRS and DES, lies in splitting the measurement of the {\it
 normalization} of the throughput in each observation (the gray-scale
@@ -274,12 +279,13 @@ describe them here, with full descriptions in the sections indicated:
     more information.}
 \item{A 1.2-m auxiliary telescope with an $R \approx 400$ spectrograph,
     located adjacent to the LSST itself. This auxiliary telescope will
-    obtain spectra of a chosen set of standard stars across the sky to
-    constrain atmospheric absorption models. More details are provided
+    obtain spectra of a chosen set of atmospheric probe stars across the sky to
+    determine an atmospheric absorption model. More details are provided
   in Section~\ref{sec:atmo_phi}.}
 \item{Water vapor monitoring system, consisting of a GPS system and a 
-    microwave radiometer attached to the LSST telescope, and monitoring 
-    the same field of view.}  
+    microwave radiometer attached copointed with the LSST telescope, and monitoring 
+    the same field of view.  This supplements the auxiliary telescope spectra, which are
+    unable to track the sometimes rapid variations of water vapor in time and space.}  
 \end{itemize}
 
 An overview of the entire calibration process, from science observation
@@ -287,10 +293,11 @@ to calibrated photometric measurements, together with the required
 calibration data products is shown in
 Figures \ref{fig:overview_flowchart1}, \ref{fig:overview_flowchart2}, 
 \ref{fig:overview_flowchart3}, and \ref{fig:overview_flowchart4}.  
-Note that three classes of objects participate in the calibration process in different ways:
+Note that four classes of objects participate in the calibration process in different ways:
 \begin{itemize}
 \item Standard stars.  These are stars whose absolute flux as a function of wavelength above the atmosphere is precisely known.  This class contains only a few members, perhaps as few as ten.  Their role is to enable the self calibration process to set absolute zeropoints for each band, and to allow testing of the SRD uniformity requirements.  See Section~\ref{sec:calib_external}.
 \item Calibration stars.  These are stars that densely cover the sky, with typical spacings between stars of 1 arcminute. [NOTE: check this number].  Unlike standard stars, neither their SEDs nor their absolute fluxes are precisely known, and their standard magnitudes are determined by the self calibration process.   They have been selected to be on the stellar main sequence, to be nonvariable, and to be relatively isolated so that their photometry is not degraded by crowding effects.
+\item Atmospheric probe stars.   These are bright stars of known type, distributed roughly uniformly over the LSST sky, which yield high SNR spectra from the auxiliary telescope.  This is particularly critical for calibrating the y-band.
 \item Science objects.  Calibration of science objects utilizes the results of processing the standards and the calibration stars, and the measurement of the system bandpass.   If an SED is supplied for an object, an accurate standard magnitude can then be calculated.
 \end{itemize}
 
@@ -331,8 +338,10 @@ measured ADU counts back to fluxes above the atmosphere.
 We find it helpful to define four different magnitudes, and their associated fluxes:
 \begin{itemize}
 \item{$m_b^{inst}$, the instrumental magnitude.  $m_b^{inst} = -2.5 log10(C_b^{obs})$, where $C_b^{obs}$ are the instrumental counts (ADU) that are attributed to the object}
-\item{$m_b^{nat}$, the natural magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the actual normalized system bandpass, $\phi_b^{obs}(\lambda)$, at the top of the atmosphere.  See equations \ref{eqn:Fb} and \ref{eqn:natmag}. $m_b^{nat} = m_b^{inst} + Z_b^{obs}$}
-\item{$m_b^{std}$}, the standard magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the standard normalized system bandpass, $\phi_b^{std}(\lambda)$, at the top of the atmosphere.  See equation \ref{eqn:stdFlux}. 
+\item{$m_b^{nat}$, the natural magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the actual normalized system bandpass, $\phi_b^{obs}(\lambda)$, at the top of the atmosphere.  This bandpass varies
+from exposure to exposure.  See equations \ref{eqn:Fb} and \ref{eqn:natmag}. $m_b^{nat} = m_b^{inst} + Z_b^{obs}$}
+\item{$m_b^{std}$}, the standard magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the standard normalized system bandpass, $\phi_b^{std}(\lambda)$, at the top of the atmosphere.  This bandpass is 
+selected as part of the survey design, and does not vary.  See equation \ref{eqn:stdFlux}. 
 \item{$m_b^{corr}$, the SED corrected instrumental magnitude.  This is the standard magnitude, but with an unknown gray zeropoint correction, which will be removed by self calibration.  These magnitudes are the input to self calibration. $m_b^{corr} = m_b^{inst} + \Delta m_b^{obs}$}
 \end{itemize}
 These quantities are related through equations \ref{eqn:mag2counts} and \ref{eqn:mag2counts}.
@@ -340,13 +349,10 @@ These quantities are related through equations \ref{eqn:mag2counts} and \ref{eqn
 
 \subsection{From Photons to Counts}
 
-Let us first consider how the photons from an astronomical object are
+We first consider how the photons from an astronomical object are
 converted into ADUs in the detector, paying attention to the various
 temporal or spatial scales for variability might arise in the LSST
-system to affect the final ADU counts. This section is intended
-to motivate the separate measurement of the normalization and shape of
-the bandpass and introduce some important concepts, such as the
-normalized system response.
+system to affect the final ADU counts. 
 
 Given $F_\nu(\lambda, t)$ --
 the specific flux\footnote{Hereafter, the units for specific
@@ -536,7 +542,9 @@ It bears repeating that every perturbation in general affects both the zeropoint
 
 \subsubsection{Effects of Atmospheric Variations}
 
-The main components of wavelength-dependent atmospheric extinction are Rayleigh scattering from molecules; water vapor; ozone; and aerosols.   Rayleigh scattering extinction is directly proportional to barometric pressure at the surface.  As is well known from looking at surface pressure charts, away from weather fronts the pressure varies significantly on timescales of hours or more and spatial scales of hundreds of km.  Variations can be much more rapid in the vicinity of fronts.   In any case, this component can be compensated for very accurately just by measuring the barometric pressure, and we do not further consider it here.  The other components are not so easily measured, and in the case of water vapor and aerosols, can display complex patterns of variability.   As a case in point, consider Figure \ref{fig:AerosolVar}.  Although the site is quite different from Cerro Pachon, there are nonetheless significant variation of aerosol extinction at altitudes above 3000m on time scales well under an hour.  Water vapor shows even more pronounced variations.  Figures \ref{fig:CTIO_PWV}, \ref{fig:GeminiPWV}, and \ref{fig:PWV_satellite} give three different perspectives on historical water vapor variability at Cerro Pachon, or nearby.   
+The main components of wavelength-dependent atmospheric extinction are Rayleigh scattering from molecules; water vapor; ozone; and aerosols.   Rayleigh scattering extinction is directly proportional to barometric pressure at the surface.  As is well known from looking at surface pressure charts, away from weather fronts the pressure varies significantly on timescales of hours or more and spatial scales of hundreds of km.  Variations can be much more rapid in the vicinity of fronts.   In any case, this component can be compensated for very accurately just by measuring the barometric pressure, and we do not further consider it here.  The other components are not so easily measured, and in the case of water vapor and aerosols, can display complex patterns of variability.   As a case in point, consider Figure \ref{fig:AerosolVar}, which shows a time-altitude profile of aerosol variations at a site in the US.  Although the site is quite different from Cerro Pachon (CP), there are nonetheless significant variation of aerosol extinction at altitudes above 3000m on time scales well under an hour, and we should expect similar variations at CP.  
+
+Water vapor shows even more pronounced variations.  Figures \ref{fig:CTIO_PWV}, \ref{fig:GeminiPWV}, and \ref{fig:PWV_satellite} give three different perspectives on historical water vapor variability in the vicinity of CP.  There are broad patterns in space (the E-W gradient), and in time (the regular seasonal variations).  There are large variabilities on top of these, amounting to several mm of PWV, which can occur in hours or less.   The biggest effect of water vapor is in the y-band, since it contains a strong water band (Figure \ref{fig:xx}).   Figure \ref{fig:wv_3} shows the magnitude of the effect for a star with g-i=-0.5.  The 4mm variation in PWV shown in Figure \ref{fig:GeminiPWV} would lead to a 3mmag error in calibration of y photometry, if not compensated for.  Moreover, the variation is strongly dependent on star color (Figure \ref{fig:wv_2}), so the increased scatter in photometry for an ensemble of stars will be significantly greater.
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{AtmoFigs/AerosolVar}
@@ -563,7 +571,7 @@ data are in good agreement.  Note the decline of approximately 4 mm
 over a period of two hours.  This is a case where use of a single
 average atmosphere for a whole night would give poor results,
 especially in the y-band.}
-\label{fig:CTIO_PWV} }
+\label{fig:GeminiPWV} }
 \end{figure}
 
 \begin{figure}[htbp]
@@ -573,6 +581,19 @@ around Cerro Pachon.   The color scale ranges from 4.3 mm (blue) to 7.6 mm (dark
 \label{fig:PWV_satellite} }
 \end{figure}
 
+\begin{figure}[htbp]
+\includegraphics[width=6in]{AtmoFigs/wv_3}
+\caption{ {Change in natural magnitude in the LSST y3 and y4 (baseline) filters
+as a function of PWV for a star with g-i=0.5 mag. The units on the
+y-axis are mmag.}
+\label{fig:wv_3} }
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=6in]{AtmoFigs/wv_2}
+\caption{ {Variations in y4 photometry with changing water vapor for a range of star colors}
+\label{fig:wv_2} }
+\end{figure}
 
 \subsubsection{Throughput Variations Due to Contamination}
 
