@@ -542,19 +542,15 @@ It bears repeating that every perturbation in general affects both the zeropoint
 
 \subsubsection{Effects of Atmospheric Variations}
 
-The main components of wavelength-dependent atmospheric extinction are Rayleigh scattering from molecules; water vapor; ozone; and aerosols.   Rayleigh scattering extinction is directly proportional to barometric pressure at the surface.  As is well known from looking at surface pressure charts, away from weather fronts the pressure varies significantly on timescales of hours or more and spatial scales of hundreds of km.  Variations can be much more rapid in the vicinity of fronts.   In any case, this component can be compensated for very accurately just by measuring the barometric pressure, and we do not further consider it here.  The other components are not so easily measured, and in the case of water vapor and aerosols, can display complex patterns of variability.   As a case in point, consider Figure \ref{fig:AerosolVar}, which shows a time-altitude profile of aerosol variations at a site in the US.  Although the site is quite different from Cerro Pachon (CP), there are nonetheless significant variation of aerosol extinction at altitudes above 3000m on time scales well under an hour, and we should expect similar variations at CP.  
+The main components of wavelength-dependent atmospheric extinction are Rayleigh scattering from molecules; water vapor; ozone; and aerosols.   Rayleigh scattering extinction is directly proportional to barometric pressure at the surface.  As is well known from looking at surface pressure charts, away from weather fronts the pressure varies significantly on timescales of hours or more and spatial scales of hundreds of km.  Variations can be much more rapid in the vicinity of fronts.   In any case, this component can be compensated for very accurately just by measuring the barometric pressure, and we do not further consider it here.  The other components are not so easily measured, and in the case of water vapor and aerosols, can display complex patterns of variability.  
 
-Water vapor shows even more pronounced variations.  Figures \ref{fig:CTIO_PWV}, \ref{fig:GeminiPWV}, and \ref{fig:PWV_satellite} give three different perspectives on historical water vapor variability in the vicinity of CP.  There are broad patterns in space (the E-W gradient), and in time (the regular seasonal variations).  There are large variabilities on top of these, amounting to several mm of PWV, which can occur in hours or less.   The biggest effect of water vapor is in the y-band, since it contains a strong water band (Figure \ref{fig:xx}).   Figure \ref{fig:wv_3} shows the magnitude of the effect for a star with g-i=-0.5.  The 4mm variation in PWV shown in Figure \ref{fig:GeminiPWV} would lead to a 3mmag error in calibration of y photometry, if not compensated for.  Moreover, the variation is strongly dependent on star color (Figure \ref{fig:wv_2}), so the increased scatter in photometry for an ensemble of stars will be significantly greater.
+Figures \ref{fig:CTIO_PWV}, \ref{fig:GeminiPWV}, and \ref{fig:PWV_satellite} give three different perspectives on historical water vapor variability in the vicinity of CP.  There are broad patterns in space (the E-W gradient), and in time (the regular seasonal variations).  There are large variabilities on top of these, amounting to several mm of PWV, which can occur in hours or less.   The biggest effect of water vapor is in the y-band, since it contains a strong water band (Figure \ref{fig:xx}).   Figure \ref{fig:KuruczPWV} shows the change in natural magnitude when the PWV is varied from 1mm to 6mm for a set of Kurucz stars.  The 4mm variation in PWV shown in Figure \ref{fig:GeminiPWV} would lead to a roughly +/-3mmag color-dependent scatter in calibration of y photometry, if not compensated for. 
 
-\begin{figure}[htbp]
-\includegraphics[width=6in]{AtmoFigs/AerosolVar}
-\caption{ {Lidar measurements of aerosol extinction at 355nm over a single night
-near Greenbelt, MD \citep{Veselovskii2013}.  Cerro Pachon is, of
-course, a different environment, and is at an altitude 2700m, removing
-much of the variability.  Even above that altitude, however,
-significant variation on rapid time scales remains.}
-\label{fig:AerosolVar} }
-\end{figure}
+While we do not have aerosol variability data for Cerro Pachon (CP), data from CASLEO, a site at 2550m in Argentina (\citep{CASLEO}) serves as a reasonable proxy.  Figure \ref{fig:CASLEO} shows the time history of aerosol optical depth at 675nm over a period of roughly a year.  The spiky nature of the data is notable, suggesting rapid variations on timescales of perhaps a few hours.  Figure \ref{fig:AerosolVar}, which shows a time-altitude profile of aerosol variations at a site in the US, backs up this impression.  Although the site is at much lower altitude than CP, there are nonetheless significant variation of aerosol extinction at altitudes above 3000m on time scales well under an hour, and we should expect similar variations at CP.  Determining the effects of aerosol variations on the system bandpass is more complex than for other atmospheric components, because the spectral shape of the aerosol extinction varies as well as its magnitude.  Figure \ref{fig:KuruczAerosol} shows the change in natural magnitude when the aerosol optical depth is varied from 0.04 mag to 0.16 mag, roughly the range of the CASLEO data, while keeping a constant spectral index of $\alpha = -1.7$.  Unlike water vapor, which affected the reddest bands most strongly, aerosols affect the bluest bands the most.  The effects in the u-band range from -5 mmag to +35 mmag, strongly dependent on star color.
+
+Ozone is dominantly a stratospheric component of the atmosphere, and is routinely monitored by satellite.   There is little evidence for variations on short time or space scales, with most variation on a seasonal scale.   Figure \ref{fig:O3atCP} shows the overall variability of ozone at CP over a roughly 8 year period.  Figure \ref{fig:KuruczO3} shows the changes in the natural magnitudes for a variation in ozone by 50 Dobson units.   The effect is very small, except in the u-band, where it has a noticeable effect on red stars.
+
+
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{AtmoFigs/CTIO_PWV}
@@ -582,17 +578,45 @@ around Cerro Pachon.   The color scale ranges from 4.3 mm (blue) to 7.6 mm (dark
 \end{figure}
 
 \begin{figure}[htbp]
-\includegraphics[width=6in]{AtmoFigs/wv_3}
-\caption{ {Change in natural magnitude in the LSST y3 and y4 (baseline) filters
-as a function of PWV for a star with g-i=0.5 mag. The units on the
-y-axis are mmag.}
-\label{fig:wv_3} }
+\includegraphics[width=6in]{AtmoFigs/KuruczPwv1_vs_6.png}
+\caption{ {The effects of varying $\phi$ due to change in PWV from 1mm to 6mm -
+about the range observed at Cerro Pachon.  The SEDs are for Kurucz
+stars at varying temperatures and metallicities.}
+\label{fig:KuruczPWV} }
 \end{figure}
 
 \begin{figure}[htbp]
-\includegraphics[width=6in]{AtmoFigs/wv_2}
-\caption{ {Variations in y4 photometry with changing water vapor for a range of star colors}
-\label{fig:wv_2} }
+\includegraphics[width=6in]{AtmoFigs/aer_casleo.png}
+\caption{ {Varying aersol optical depth at CASLEO, El Leoncito, Argentina.  The site elevation at 2550m is similar to CP.}
+\label{fig:CASLEO} }
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=6in]{AtmoFigs/AerosolVar}
+\caption{ {Lidar measurements of aerosol extinction at 355nm over a single night
+near Greenbelt, MD \citep{Veselovskii2013}.  Cerro Pachon is, of
+course, a different environment, and is at an altitude 2700m, removing
+much of the variability.  Even above that altitude, however,
+significant variation on rapid time scales remains.}
+\label{fig:AerosolVar} }
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=6in]{AtmoFigs/KuruczAerosol_04vs16.png}
+\caption{ {Effect on natural magnitude of Kurucz stars from varying the aerosol optical depth from 0.04mag to 0.16mag} 
+\label{fig:KuruczAerosol} }
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=6in]{AtmoFigs/hist_ozone9Y.png}
+\caption{ {Variability of ozone column depth at Cerro Pachon from the TOMS satellite instrument} 
+\label{fig:O3atCP} }
+\end{figure}
+
+\begin{figure}[htbp]
+\includegraphics[width=6in]{AtmoFigs/KuruczO3_50dobs.png}
+\caption{ {Effect on natural magnitude of Kurucz stars from varying the ozone column by 50 Dobson units} 
+\label{fig:KuruczO3} }
 \end{figure}
 
 \subsubsection{Throughput Variations Due to Contamination}
@@ -2267,6 +2291,9 @@ demonstrating the `repeatability' requirement in the SRD.
 
 The calibration process presented above is complex, and meeting the SRD requirements
 is dependent on understanding and controlling a large number of small perturbations.  We seek to verify that our approach will produce the required results, and are doing so with different techniques that apply to the stages of LSST's construction and operation.   During the current final design phase, we are employing simulation tools, backed up when possible by measurements on the sky from existing telescopes.   \citep{Burke2013} and \citep{Burke2010b} are examples of this approach.  During the construction phase, we will be able to feed measured data from actual telescope components into the simulations.   During operations, our focus is on designing metrics that will let us assess the calibration quality on an ongoing basis.
+
+\subsection{Self Calibration Simulation}
+\subsection{Auxiliary Telescope Simulation}
 
 \subsection{Repeatability}
 
