@@ -9,7 +9,7 @@ import AtmoComp as ac
 WMIN = 300
 WMAX = 1200
 WSTEP = 0.1
-filterlist = ('u', 'g', 'r', 'i', 'z', 'y4')
+filterlist = ['u', 'g', 'r', 'i', 'z', 'y4']
 colors = ['b', 'g', 'y', 'r', 'm', 'k']
 
 def color_counter_next(i):
@@ -683,7 +683,7 @@ def plot_dmags(gi, dmags, sedcolorkey, sedtype, plotfilterlist = filterlist,
             i = i + 1
     # set up generic items
     for i in range(0, len(plotfilterlist)):
-        f = plotfilterlist[i-1]
+        f = plotfilterlist[i]
         ax = pylab.subplot(yplots,xplots,i+1)
         pylab.xlabel("g-i")
         pylab.ylabel(r"$\Delta$ %s (mmag)" %(f))
