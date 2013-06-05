@@ -16,7 +16,8 @@ during the monochromatic flat measurements [these errors are unavoidable].
 The color-dependent magnitude errors are calculated assuming that we have errors due to (b), rather than (a) ..
 although you could easily calculate what the overall color-terms due to the radial change in bandpass is, as well.
 
-### Waiting for sysEng to confirm max_jitter requirements and proper max scale values. 
+SysEng confirmed max_jitter requirement as 1.65mm and the max filter shift is 2.5% ... although how the form of this 
+variation looks relative to the DES filters has not received comment.
 
 """
 
@@ -56,10 +57,10 @@ RADIUS_MIN = 0.0   #mm
 RADIUS_MAX = 350.0 #mm
 
 class FilterShift():
-    def __init__(self, throughputsDir=None, filterlist=('u', 'g', 'r', 'i', 'z', 'y4')):
+    def __init__(self, throughputsDir=None, filterlist=('u', 'g', 'r', 'i', 'z', 'y4'), max_jitter=1.0):
         """Instantiate object and do a reasonable default setup ready for calculating magnitudes."""
         self.read_base_throughputs(throughputsDir, filterlist)
-        self.setBandpasses(max_jitter=2.0)
+        self.setBandpasses(max_jitter=max_jitter)
         self.setPhiArray()
         return
 
@@ -135,7 +136,7 @@ class FilterShift():
         # Wavelen now represents the shifted bandpass (using the original throughput values, but 'stretched'). 
         return wavelen, self.base_filters[f].sb
     
-    def setBandpasses(self, max_jitter=2.0, radius_min=RADIUS_MIN, radius_max=RADIUS_MAX):
+    def setBandpasses(self, max_jitter=1.0, radius_min=RADIUS_MIN, radius_max=RADIUS_MAX):
         """Set up Bandpass objects covering the radius range with steps of max_jitter, for each filter."""
         # We must compare mags for shifted (at radius 'r') bandpass and mags at the same radius but for a filter with a 
         #  'jitter' in its position. The max jitter (assume = max error) is equivalent to looking at a radius +/- the max jitter amount.

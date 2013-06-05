@@ -3,9 +3,12 @@ import pylab
 from FilterShift import FilterShift
 from SedSets import SedSets
 
+writeFiles = False
+max_jitter = 1.65
+
 # Set up throughputs package (to get default directory for baseline throughput curves for FilterShift). 
 filterlist = ('u', 'g', 'r', 'i', 'z','y4')
-fs = FilterShift(filterlist=filterlist)
+fs = FilterShift(filterlist=filterlist, max_jitter=max_jitter)
 
 # Read in Kurucz models.
 kurucz = SedSets()
@@ -31,18 +34,19 @@ for f in filterlist:
 gi = basemags['g'] - basemags['i']
 ug = basemags['u'] - basemags['g']
 
-# Write out data. 
-for f in filterlist:
-    print 'Working on filter %s' %(f)
-    # Write the (same as previously horrible) file
-    outfilename = 'filterShift_%s_stars' %(f)                                                              
-    outfile = open(outfilename, 'w')                                                                
-    print >> outfile, '# Filter Shifts'                                                                
-    print >>outfile, '# starname temperature metallicity logg u-g g-r [mags] [dmags]'
-    print >>outfile, '# radii:', fs.radii
-    for i,s in enumerate(kurucz.starlist):
-        print >>outfile, s, kurucz.temperature[i], kurucz.met[i], kurucz.logg[i], ug[i], gi[i], \
-            mags[f][i], dmags[f][i]
+if writeFiles:
+    # Write out data. 
+    for f in filterlist:
+        print 'Working on filter %s' %(f)
+        # Write the (same as previously horrible) file
+        outfilename = 'filterShift_%s_stars' %(f)                                                              
+        outfile = open(outfilename, 'w')                                                                
+        print >> outfile, '# Filter Shifts'                                                                
+        print >>outfile, '# starname temperature metallicity logg u-g g-r [mags] [dmags]'
+        print >>outfile, '# radii:', fs.radii
+        for i,s in enumerate(kurucz.starlist):
+            print >>outfile, s, kurucz.temperature[i], kurucz.met[i], kurucz.logg[i], ug[i], gi[i], \
+                mags[f][i], dmags[f][i]
 
 # Make some plots. 
 idx = numpy.argsort(gi)
@@ -52,7 +56,8 @@ for f in filterlist:
     pylab.figure()
     for r in [0, ]:
         pylab.plot(gi[idx], dmags[f][:,r][idx], marker='.', linestyle='-', label='r=%.0f' %(fs.radii[r]))
-    for r in [20, 30, 40, 50, 60]:
+    mid = len(fs.radii)/2    
+    for r in [mid-20, mid, mid+20]:
         pylab.plot(gi[idx], dmags[f][:,r][idx], marker='.', linestyle='', label='r=%.0f' %(fs.radii[r]))
     for r in [len(fs.radii)-1, ]:
         pylab.plot(gi[idx], dmags[f][:,r][idx], marker='.', linestyle='-', label='r=%.0f' %(fs.radii[r]))
