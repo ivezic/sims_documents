@@ -30,7 +30,8 @@
 R. Lynne Jones\altaffilmark{1}, {\v Z}eljko Ivezi{\'c}\altaffilmark{1},  Tim Axelrod\altaffilmark{2}, David Burke\altaffilmark{3}, \\
 James G. Bartlett\altaffilmark{4}, 
 Gurvan Bazin\altaffilmark{4},
-Guillaume Blanc\altaffilmark{4}, 
+Guillaume Blanc\altaffilmark{4},
+Alexandre Boucaud\altaffilmark{4}, 
 Michel Cr{\'e}z{\'e}\altaffilmark{4}, \\ 
 C{\'e}cile Roucelle\altaffilmark{4}, 
 Abhijit Saha\altaffilmark{5}, 
@@ -550,7 +551,7 @@ While we do not have aerosol variability data for Cerro Pachon (CP), data from C
 
 Ozone is dominantly a stratospheric component of the atmosphere, and is routinely monitored by satellite.   There is little evidence for variations on short time or space scales, with most variation on a seasonal scale.   Figure \ref{fig:O3atCP} shows the overall variability of ozone at CP over a roughly 8 year period.  Figure \ref{fig:KuruczO3} shows the changes in the natural magnitudes for a variation in ozone by 50 Dobson units.   The effect is very small, except in the u-band, where it has a noticeable effect on red stars.
 
-
+To summarize the effects of wavelength-dependent atmospheric variations, they are sufficiently large, and occur sufficiently rapidly, that they must be corrected by an atmospheric model with fidelity substantially greater than the traditional photometrist's extinction model.   The combination of the auxiliary telescope and the water vapor monitoring system will supply the data required for construction of these atmospheric models.  It is also worth emphasizing that correcting for these effects requires not only an accurate bandpass model, but also SEDs for the objects being calibrated.   Calibration stars will be picked from well defined stellar populations to minimize SED uncertainty.   SED determination for arbitrary science objects, such as supernovae and galaxies, will be more challenging, and may limit the accuracy of their photometric calibration.
 
 \begin{figure}[htbp]
 \includegraphics[width=6in]{AtmoFigs/CTIO_PWV}
@@ -2378,143 +2379,143 @@ sensitivity functions.
 \end{figure}
 
 
-\section{Areas for further investigation}
-\label{sec:investigation}
-
-LSST is pushing to improve traditional photometric accuracy by a
-factor of 2, through the use of independent measurements of the
-hardware and atmospheric transmission curve normalization and
-shape. As full-survey photometric calibration has never been attempted
-before at this level, there are understandably many areas which
-require further development and investigation.  This section is
-intended to briefly document some of those areas.
-
-\begin{itemize}
-
-\item{The broad-band flat field source spectrum. For simplicity, we have assumed above
-    that the broad-band flat field is created using a white-light
-    source SED. However, any source SED could be used to create the
-    broad-band flat field, and an SED other than flat might be
-    desireable. An SED which corresponds to the extincted
-    spectrum of our fundamental standard might provide smaller systematic
-    photometric errors when comparing individual stellar measurements
-    to an absolute flux scale. On the other hand, an SED which matches
-    an average calibration star could produce smaller systematic
-    photometric errors in generating internally calibrated
-    measurements. This choice of the source SED should be studied
-    further. }
-
-\item{A cosmetic flat field. A photometric flat field, as discussed above, is
-    necessary for photometric calibration. However, there may be some
-    stages of image processing where a `cosmetic' flat field, which
-    creates a flat background sky is desirable (instead of the photometric flat
-    field, which creates a background sky which varies according to
-    the geometric size of the pixels). The details of the production
-    of the photometric flat field, the image processing, and whether a
-    cosmetic flat field is necessary must be discussed among the
-    various software teams working on LSST.}
-
-\item{The illumination correction. As discussed in the document above, the
-    photometric uniformity which must be achieved from the broad-band
-    flats is a significant source of error in the final photometric
-    calibration. Some of this photometric uniformity is currently
-    achieved through extremely strong constraints on the dome screen
-    illumination pattern, while some will be achieved through a
-    combination of forward modeling of the optical path (a ZEMAX
-    model) and rastering dense fields of bright stars across the focal
-    plane. We strongly suspect that the self-calibration procedure can
-    compensate for a much greater non-uniformity in the photometric
-    flat than is currently budgeted; that is, the self-calibration
-    procedure can help build a more accurate illumination correction
-    to apply to the observed flat field. The exact limits of the
-    self-calibration procedure in building an illumination correction in the face of realistic errors from
-    the bandpass shape correction and atmospheric extinction must be
-    explored in more detail. }
-
-\item{Hardware response curve - $\phi_b^{sys}(\lambda,t)$. There is a
-    narrow-band dome screen projector system installed at Pan-STARRS which
-    will be extremely useful to study for comparison to the planned LSST
-    dome screen. The Pan-STARRS system has demonstrated that ghosting is a
-    significant problem in the narrow-band flat field, and must be
-    compensated for in a narrow-band illumination correction (one per
-    narrow-band flat, as this ghosting is wavelength dependent).  Some
-    methods for measuring the ghosts in the Pan-STARRS system as a function of
-    wavelength have already been implemented (Chris Stubbs, private
-    communication), and these tests will feed back to the plans for the
-    LSST dome screen projectors. LSST must continue to improve our ZEMAX
-    modeling of these updated projector screens with expected LSST optical
-    components to study ghosting, as well as how the error induced by
-    these wavelength-dependent ghosts propagates through the rest of
-    calibration. In addition, we will investigate how the self-calibration
-    procedure could contribute towards compensating for these narrow band,
-    wavelength-dependent illumination corrections. A major problem in
-    attempting to generate narrow-band illumination corrections from
-    the self-calibration procedure is that these illumination
-    corrections would then only be appropriate for main-sequence SEDs
-    (as these are the stars used in self-calibration); we must
-    investigate how these could be applied to non-main-sequence SEDs.  }
-
-\item{Atmospheric absorption - $\phi_b^{atm}(\lambda,t)$. Further
-    observing runs where spectroscopic (and preferably, also
-    broad-band photometry) observations of known sources under a wider
-    variety of weather conditions and at a variety of pointings over
-    the sky will be obtained to verify that the range of atmospheric
-    conditions described in Section~\ref{sec:atmo_phi} are appropriate
-    and that the model used to describe the water vapor variation
-    across the sky is adequate. This is particularly important when
-    considering $y$ band photometric calibration and will feed back
-    into the observation plan for the auxiliary telescope. Using data acquired
-    in these observing runs, we will also test the
-    wavelength resolution necessary for the auxiliary telescope.}
-
-\item{Cloud extinction.The expected cloud structure function at Cerro
-     Pach\'{o}n is not well understood; the extent of its `clumpiness' as a
-    function of total cloud extinction is a significant unknown in the
-    self-calibration procedure. LSST plans to install 
-    small wide-field camera systems to measure cloud extinction across the sky and on small
-    scales on Cerro Pachon to address this issue. }
-
-\item{Self-calibration. The self-calibration software must be
-    developed further to run efficiently on full LSST data sets. Work
-    is already underway to test alternative solver methods (conjugate
-    gradient, least-squares) and add multi-threading to the
-    solver, to both speed up the self-calibration procedure and to
-    to handle more observations of more stars, requiring more
-    memory. The extent to which additional terms can be added to the
-    model magnitude with each of these algorithms will also be
-    investigated. In addition, further tests to probe the boundaries
-    of `where self-calibration breaks down' will be conducted for each
-    parameter and updated as the algorithms are improved. The
-    self-calibration algorithm will also be included into LSST Data
-    Challenges and applied to real-world data, as well as data from
-    the LSST end-to-end simulations.}
-
-\item{Effects on non-main sequence stars. Each of the calibration
-    steps above have been considered in terms of main sequence
-    stars (as these become the `calibration' stars for
-    self-calibration).  The wavelength-independent stages are
-    identical for main-sequence or non-main-sequence stars. However,
-    the wavelength-dependent corrections have differing effects on
-    non-main sequence or extreme SEDs. For example, the results of a
-    30\% \water variation may have a much larger effect on the final
-    calibrated magnitudes for MLT dwarfs (which have many absorption
-    and emission lines in and near the $y$ band) than the same 30\%
-    variation did on the main sequence
-    stars. Section~\ref{sec:photo_better} describes these effects
-    further. Further modeling is required to understand the full
-    photometric calibration potential for all types of objects that
-    LSST will observe, with consideration of the potential photometric
-    calibration accuracy for objects for which the SED may not be well
-    known (such as SN with an unknown redshift). }
-  
-\item{External calibration standards, for both band-to-band and
-    absolute calibration. These calibration standards need to be
-    identified and observing programs to determine full
-    spectro-photometric characteristics for the required sample must
-    be conducted. The required size of this sample is approximately
-    known, but should be studied further. }
-
-\end{itemize}
+%\section{Areas for further investigation}
+%\label{sec:investigation}
+%
+%LSST is pushing to improve traditional photometric accuracy by a
+%factor of 2, through the use of independent measurements of the
+%hardware and atmospheric transmission curve normalization and
+%shape. As full-survey photometric calibration has never been attempted
+%before at this level, there are understandably many areas which
+%require further development and investigation.  This section is
+%intended to briefly document some of those areas.
+%
+%\begin{itemize}
+%
+%\item{The broad-band flat field source spectrum. For simplicity, we have assumed above
+%    that the broad-band flat field is created using a white-light
+%    source SED. However, any source SED could be used to create the
+%    broad-band flat field, and an SED other than flat might be
+%    desireable. An SED which corresponds to the extincted
+%    spectrum of our fundamental standard might provide smaller systematic
+%    photometric errors when comparing individual stellar measurements
+%    to an absolute flux scale. On the other hand, an SED which matches
+%    an average calibration star could produce smaller systematic
+%    photometric errors in generating internally calibrated
+%    measurements. This choice of the source SED should be studied
+%    further. }
+%
+%\item{A cosmetic flat field. A photometric flat field, as discussed above, is
+%    necessary for photometric calibration. However, there may be some
+%    stages of image processing where a `cosmetic' flat field, which
+%    creates a flat background sky is desirable (instead of the photometric flat
+%    field, which creates a background sky which varies according to
+%    the geometric size of the pixels). The details of the production
+%    of the photometric flat field, the image processing, and whether a
+%    cosmetic flat field is necessary must be discussed among the
+%    various software teams working on LSST.}
+%
+%\item{The illumination correction. As discussed in the document above, the
+%    photometric uniformity which must be achieved from the broad-band
+%    flats is a significant source of error in the final photometric
+%    calibration. Some of this photometric uniformity is currently
+%    achieved through extremely strong constraints on the dome screen
+%    illumination pattern, while some will be achieved through a
+%    combination of forward modeling of the optical path (a ZEMAX
+%    model) and rastering dense fields of bright stars across the focal
+%    plane. We strongly suspect that the self-calibration procedure can
+%    compensate for a much greater non-uniformity in the photometric
+%    flat than is currently budgeted; that is, the self-calibration
+%    procedure can help build a more accurate illumination correction
+%    to apply to the observed flat field. The exact limits of the
+%    self-calibration procedure in building an illumination correction in the face of realistic errors from
+%    the bandpass shape correction and atmospheric extinction must be
+%    explored in more detail. }
+%
+%\item{Hardware response curve - $\phi_b^{sys}(\lambda,t)$. There is a
+%    narrow-band dome screen projector system installed at Pan-STARRS which
+%    will be extremely useful to study for comparison to the planned LSST
+%    dome screen. The Pan-STARRS system has demonstrated that ghosting is a
+%    significant problem in the narrow-band flat field, and must be
+%    compensated for in a narrow-band illumination correction (one per
+%    narrow-band flat, as this ghosting is wavelength dependent).  Some
+%    methods for measuring the ghosts in the Pan-STARRS system as a function of
+%    wavelength have already been implemented (Chris Stubbs, private
+%    communication), and these tests will feed back to the plans for the
+%    LSST dome screen projectors. LSST must continue to improve our ZEMAX
+%    modeling of these updated projector screens with expected LSST optical
+%    components to study ghosting, as well as how the error induced by
+%    these wavelength-dependent ghosts propagates through the rest of
+%    calibration. In addition, we will investigate how the self-calibration
+%    procedure could contribute towards compensating for these narrow band,
+%    wavelength-dependent illumination corrections. A major problem in
+%    attempting to generate narrow-band illumination corrections from
+%    the self-calibration procedure is that these illumination
+%    corrections would then only be appropriate for main-sequence SEDs
+%    (as these are the stars used in self-calibration); we must
+%    investigate how these could be applied to non-main-sequence SEDs.  }
+%
+%\item{Atmospheric absorption - $\phi_b^{atm}(\lambda,t)$. Further
+%    observing runs where spectroscopic (and preferably, also
+%    broad-band photometry) observations of known sources under a wider
+%    variety of weather conditions and at a variety of pointings over
+%    the sky will be obtained to verify that the range of atmospheric
+%    conditions described in Section~\ref{sec:atmo_phi} are appropriate
+%    and that the model used to describe the water vapor variation
+%    across the sky is adequate. This is particularly important when
+%    considering $y$ band photometric calibration and will feed back
+%    into the observation plan for the auxiliary telescope. Using data acquired
+%    in these observing runs, we will also test the
+%    wavelength resolution necessary for the auxiliary telescope.}
+%
+%\item{Cloud extinction.The expected cloud structure function at Cerro
+%     Pach\'{o}n is not well understood; the extent of its `clumpiness' as a
+%    function of total cloud extinction is a significant unknown in the
+%    self-calibration procedure. LSST plans to install 
+%    small wide-field camera systems to measure cloud extinction across the sky and on small
+%    scales on Cerro Pachon to address this issue. }
+%
+%\item{Self-calibration. The self-calibration software must be
+%    developed further to run efficiently on full LSST data sets. Work
+%    is already underway to test alternative solver methods (conjugate
+%    gradient, least-squares) and add multi-threading to the
+%    solver, to both speed up the self-calibration procedure and to
+%    to handle more observations of more stars, requiring more
+%    memory. The extent to which additional terms can be added to the
+%    model magnitude with each of these algorithms will also be
+%    investigated. In addition, further tests to probe the boundaries
+%    of `where self-calibration breaks down' will be conducted for each
+%    parameter and updated as the algorithms are improved. The
+%    self-calibration algorithm will also be included into LSST Data
+%    Challenges and applied to real-world data, as well as data from
+%    the LSST end-to-end simulations.}
+%
+%\item{Effects on non-main sequence stars. Each of the calibration
+%    steps above have been considered in terms of main sequence
+%    stars (as these become the `calibration' stars for
+%    self-calibration).  The wavelength-independent stages are
+%    identical for main-sequence or non-main-sequence stars. However,
+%    the wavelength-dependent corrections have differing effects on
+%    non-main sequence or extreme SEDs. For example, the results of a
+%    30\% \water variation may have a much larger effect on the final
+%    calibrated magnitudes for MLT dwarfs (which have many absorption
+%    and emission lines in and near the $y$ band) than the same 30\%
+%    variation did on the main sequence
+%    stars. Section~\ref{sec:photo_better} describes these effects
+%    further. Further modeling is required to understand the full
+%    photometric calibration potential for all types of objects that
+%    LSST will observe, with consideration of the potential photometric
+%    calibration accuracy for objects for which the SED may not be well
+%    known (such as SN with an unknown redshift). }
+%  
+%\item{External calibration standards, for both band-to-band and
+%    absolute calibration. These calibration standards need to be
+%    identified and observing programs to determine full
+%    spectro-photometric characteristics for the required sample must
+%    be conducted. The required size of this sample is approximately
+%    known, but should be studied further. }
+%
+%\end{itemize}
 
 
 \section{Photometric measurements for non-main sequence stars}
@@ -2580,6 +2581,12 @@ scientists may calculate highly precise $m_b^{std}$ magnitudes for
 their objects of interest. This means recording or providing the means
 to recalculate $\phi_b^{sys+atm}(\lambda,t)$ for every object detected
 with LSST. 
+
+\begin{figure}[htbp]
+\includegraphics[width=6in]{AtmoFigs/SNAerosol_04vs16.png}
+\caption{ {Effect on natural mags of SN1a of variation of aerosol optical depth from 0.04 to 0.16 mag} 
+\label{fig:SNAerosol} }
+\end{figure}
 
 \begin{figure}
 \centering
