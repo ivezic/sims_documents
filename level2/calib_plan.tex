@@ -304,28 +304,48 @@ Note that four classes of objects participate in the calibration process in diff
 \end{itemize}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6.5in]{CalibDataProdSchematic1}
 \caption{ {\small {\bf The overall flow of the Data Release photometric
       calibration process.} The process consists of three main steps.  In the first, Flat SED Calibration, science image pixels are processed to instrumental magnitudes as if all calibration object SEDs were flat ($F_{\nu} = const$).  The second step, SED Correction, corrects the flat SED object counts to account for the real system bandpass and calibration object SEDs, generating corrected magnitudes.  The final step, Self Calibration, solves a least squares system in the SED corrected magnitudes to yield the standard magnitudes for the calibration objects and a spatially dependent zeropoint correction for each exposure.   Additionally, corrections to the illumination correction are calculated, for use in "Determine Illumination Correction" (Figure \ref{fig:overview_flowchart2}).  Note that SED Correction and Self Calibration are performed only for calibration objects.  General science objects are calibrated later, using the data products from the calibration process (Figure \ref{fig:overview_flowchart4}) }
 \label{fig:overview_flowchart1} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6.5in]{CalibDataProdSchematic2}
 \caption{ {\small {\bf Flat SED Flat Determination.} Determination of the flat SED flat (FSF) is of central importance.  The initial step in the calibration process treats all objects as if their SED were flat.  This is consistent only if the flatfield is that for a flat SED, as transmitted through a reference atmosphere.  Since the illumination source for the actual broadband flat does not have the required SED, we cannot use it directly.  Instead, we synthesize the required flat from the monochromatic flats.  These flats as measured are contaminated by light which arrives from paths other than the direct path, such as ghosting.  These effects are taken out by the illumination correction.  Finally, the monochromatic flats are taken relatively infrequently, and will not reflect changes on shorter timescales, such as the appearance of new dust particles.  We account for this by multiplying the synthesized FSF by the ratio of two broadband flats, one at the current epoch and one at the reference epoch, when the monochromatic flats were gathered.}
 \label{fig:overview_flowchart2} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6.5in]{CalibDataProdSchematic3}
 \caption{ {\small {\bf System Bandpass Determination.} The system bandpass, $\phi$, is determined for every exposure, and is a major output of the calibration process.  It is the normalized product of the atmospheric bandpass and that of the telescope/camera system.  The atmospheric bandpass is determined by fitting an atmospheric model to a set of measured atmospheric data.  The bandpass of the telescope/camera system is measured by the corrected monochromatic flats, modified by current data from the camera system, principally focalplane temperature and the filter position. }
 \label{fig:overview_flowchart3} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6.5in]{CalibDataProdSchematic4}
 \caption{ {\small {\bf Science Object Calibration.}  Photometric calibration for science objects takes place in two stages.  In the first, the natural magnitudes are calculated, using the zeropoint model for each exposure.  These are stored in the Level 2 databases.  The second, optional, stage, relies on knowledge of the object SEDs, which is an external input to the system, supplied by the user.   The object SED, in conjunction with the system bandpass, $\phi$, allows standard magnitudes to be calculated.  These are considered a Level 3 data product }
 \label{fig:overview_flowchart4} }
+\end{minipage}
+}
 \end{figure}
 
 The rest of this section will provide a more in-depth overview of the
@@ -555,13 +575,21 @@ Ozone is dominantly a stratospheric component of the atmosphere, and is routinel
 To summarize the effects of wavelength-dependent atmospheric variations, they are sufficiently large, and occur sufficiently rapidly, that they must be corrected by an atmospheric model with fidelity substantially greater than the traditional photometrist's extinction model.   The combination of the auxiliary telescope and the water vapor monitoring system will supply the data required for construction of these atmospheric models.  It is also worth emphasizing that correcting for these effects requires not only an accurate bandpass model, but also SEDs for the objects being calibrated.   Calibration stars will be picked from well defined stellar populations to minimize SED uncertainty.   SED determination for arbitrary science objects, such as supernovae and galaxies, will be more challenging, and may limit the accuracy of their photometric calibration.
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{AtmoFigs/CTIO_PWV}
 \caption{ {Three years of PWV measured at CTIO (\citep{Hansen1975}), based on the depth of the 1.87 $\mu m$ line to the
 Solar continuum at 1.65 $\mu m$}.
 \label{fig:CTIO_PWV} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{AtmoFigs/GeminiPWV}
 \caption{ {PWV measured on a single day at Gemini S \citep{Radomski2010}.  Two
 techniques were used, GPS and Phoenix, an IR spectrograph, and the
@@ -570,30 +598,50 @@ over a period of two hours.  This is a case where use of a single
 average atmosphere for a whole night would give poor results,
 especially in the y-band.}
 \label{fig:GeminiPWV} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{AtmoFigs/PWV_satellite_2}
 \caption{ {PWV measurement from the MODIS satellite at one time in the region
 around Cerro Pachon.   The color scale ranges from 4.3 mm (blue) to 7.6 mm (dark red). Note the strong E-W gradient in PWV.}
 \label{fig:PWV_satellite} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{AtmoFigs/KuruczPwv1_vs_6.png}
 \caption{ {The effects of varying $\phi$ due to change in PWV from 1mm to 6mm -
 about the range observed at Cerro Pachon.  The SEDs are for Kurucz
 stars at varying temperatures and metallicities.}
 \label{fig:KuruczPWV} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{AtmoFigs/aer_casleo.png}
 \caption{ {Varying aersol optical depth at CASLEO, El Leoncito, Argentina.  The site elevation at 2550m is similar to CP.}
 \label{fig:CASLEO} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{AtmoFigs/AerosolVar}
 \caption{ {Lidar measurements of aerosol extinction at 355nm over a single night
 near Greenbelt, MD \citep{Veselovskii2013}.  Cerro Pachon is, of
@@ -601,24 +649,41 @@ course, a different environment, and is at an altitude of 2700m, removing
 much of the variability.  Even above that altitude, however,
 significant variation on rapid time scales remains.}
 \label{fig:AerosolVar} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{AtmoFigs/KuruczAerosol_04vs16.png}
 \caption{ {Effect on natural magnitude of Kurucz stars from varying the aerosol optical depth from 0.04mag to 0.16mag} 
 \label{fig:KuruczAerosol} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{AtmoFigs/hist_ozone9Y.png}
 \caption{ {Variability of ozone column depth at Cerro Pachon from the TOMS satellite instrument} 
 \label{fig:O3atCP} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{AtmoFigs/KuruczO3_50dobs.png}
 \caption{ {Effect on natural magnitude of Kurucz stars from varying the ozone column by 50 Dobson units} 
 \label{fig:KuruczO3} }
+\end{minipage}
+}
 \end{figure}
 
 \subsubsection{Throughput Variations Due to Contamination}
@@ -653,6 +718,9 @@ effects must be accurate at the 90-95\% level.  This issue is discussed in detai
 \ref{sec:error_budget}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{delta_mags}
 \caption{ {\small {\bf $\Delta m_b^{obs}$ due to variations in
 hardware and atmospheric bandpass shape.} Two main sequence Kurucz model
@@ -682,6 +750,8 @@ by the filled circles) for both the red and blue stars. The exact
 differences in magnitudes resulting from this calculation are listed in
 Table~\ref{tab:delta_mags}. }
 \label{fig:delta_mags} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{center}
@@ -713,6 +783,9 @@ X=1.8, +1\% sys shift & blue & 16 & 24 & 24 & 22 & 15 & 22 \\ \hline
 \end{center}
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{delta_mags2}
 \caption{ {\small {\bf $\Delta m_b^{obs}$ due to
 a change in bandpass shape corresponding to a filter shift of $1\%$
@@ -732,6 +805,8 @@ $g-i$ color, but this is then primarily a function of metallicity
 (which is possible to determine given the $u-g$ color in addition to
 the $g-i$ information). }
 \label{fig:delta_mags2} }
+\end{minipage}
+}
 \end{figure}
 
 \subsection{From Counts to Photons}
@@ -892,6 +967,8 @@ illumination correction) down to scales approximately equivalent to
 the PSF. This is similar in
 nature to the ubercal method applied to SDSS in
 \citet{Padmanabhan2008}, and more recently DLS \citep{Wittman} and PanSTARRS-1 \citep{xx}.
+
+{\bf TODO: Need to discuss healpix implementation, etc}
 
 Repeating Equation~\ref{eqn:mag2counts} above, adjusting ${obs}$ indexes to ${meas}$ to 
 reflect the difference between the true and measured quantities,
@@ -1536,6 +1613,8 @@ us assume that this is a flat $F_\nu(\lambda)$ profile.
 
 \begin{figure}
 \centering
+\fbox{
+\begin{minipage}{6.5in}
 \subfloat[\citet{Stubbs2010a} \label{diodeStubbs}]{\includegraphics[width=3.5in]{NIST_diode}} \\
 \subfloat[\citet{Eppeldauer09} \label{diodeEppel}]{\includegraphics[width=5in]{NIST_diode2}}
 \caption{{\small
@@ -1551,6 +1630,8 @@ accuracy can be achieved to beyond 1200~nm, the limit of detector
 response for LSST, as shown here in the response curves resulting from
 multiple scans of a single source using the same photodiode.} }
 \label{fig:NIST_diode}
+\end{minipage}
+}
 \end{figure}
 
 %Further details of the LSST narrow-band flat field apparatus can be
@@ -1635,6 +1716,8 @@ multiple scans of a single source using the same photodiode.} }
 
 \begin{figure}
 \centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{filter_shifts}
 \caption{{\small 
 {\bf Baseline filter curves and a potential (1\% of the central
@@ -1644,10 +1727,14 @@ alone, bottom panel: filter plus standard mirror, lens, detector and atmosphere
 response curves) while the dashed lines indicate the same bandpass
 shifted redward by 1\% of the central wavelength.}}
 \label{fig:filtershift}
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}
 \centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{delta_mags_filtershift}
 \caption{{\small 
 {\bf $\Delta m_b^{obs}$
@@ -1667,10 +1754,14 @@ $\delta u$ of closer to 80~mmag for certain temperatures of main sequence
 stars. By measuring the bandpass shape as a function of radius and the
 colors of the main sequence stars, we can remove these effects.} }
 \label{fig:dmag_filtershift}
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}
 \centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{delta_mags_filtershift_small}
 \caption{{\small 
 {\bf $\Delta m_b^{obs}$ due to a hardware
@@ -1685,6 +1776,8 @@ Figure~\ref{fig:dmag_filtershift}, consistent with measuring and
 compensating for the
 bandpass shift to within a 0.05\% error. }}
 \label{fig:dmag_filtershift_small} 
+\end{minipage}
+}
 \end{figure}
  
 
@@ -1803,6 +1896,8 @@ bandpass shift to within a 0.05\% error. }}
 
 \begin{figure}[htpb]
 \centering
+\fbox{
+\begin{minipage}{6.5in}
 \subfloat[\label{lowairmass}]{\includegraphics[width=4in]{absorption_compsA}}\\
 \vspace{-10pt}
 \subfloat[\label{hiairmass}]{\includegraphics[width=4in]{absorption_compsB}} 
@@ -1824,6 +1919,8 @@ with time and the square root of the airmass, the molecular and
 aerosol scattering will depend on airmass, and the aerosol scattering
 profile will also vary with time.}}
 \label{fig:absorption_comps}
+\end{minipage}
+}
 \end{figure}
 
 %\subsubsubsection{Fitting the atmospheric absorption}
@@ -1831,6 +1928,8 @@ profile will also vary with time.}}
 
 \begin{figure}[htb]
 \centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{atmo_airmass12}
 \caption{{\small
 {\bf Example of an atmosphere generated from a typical mix of
@@ -1843,6 +1942,8 @@ curve in red. This demonstrates that (even without using the full
 MODTRAN software, just the transmission templates) that we can closely
 recreate any atmosphere desired with any composition.} }
 \label{fig:absorption_comps2}
+\end{minipage}
+}
 \end{figure}
 
 %Using MODTRAN we can generate atmospheric transmission profiles at a
@@ -1954,6 +2055,9 @@ recreate any atmosphere desired with any composition.} }
 
 \begin{figure}
 \centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \subfloat[]{\label{a}\includegraphics[width=3.2in]{delta_mags_t0full}}
 \subfloat[]{\label{b}\includegraphics[width=3.2in]{delta_mags_alphafull}} \\
 \subfloat[]{\label{c}\includegraphics[width=3.2in]{delta_mags_O3full}}
@@ -1972,10 +2076,15 @@ which is strongest in $y$, with some effect in $z$ and no effect in
 $ugri$.
 }}
 \label{fig:dmag_atm_comps}
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}
 \centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \subfloat[]{\includegraphics[width=5in]{atmo_max}} \\
 \subfloat[]{\includegraphics[width=5in]{atmo_min}}
 \caption{{\small  {\bf `Extreme' atmospheres generated from MODTRAN profiles and extremes 
@@ -1983,10 +2092,15 @@ of atmospheric coefficients.} Using the extremes of $C_{\water}$, $C_{\ozone}$,
 and $\tau_0$ and $\alpha$ from \citet{Burke2010b}, two test atmospheres
 with $X=1.2$ were created using Equation~\ref{eqn:atmo_fit}. }}
 \label{fig:atm_changes}
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}
 \centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{delta_mags_max}
 \caption{{\small
 {\bf$\Delta m_b^{obs}$ due to `extreme' variations of 
@@ -2001,10 +2115,15 @@ models with temperatures between 5000~K and 35000~K and metallicities between
 the two extremes of the atmospheric transmission in each filter are shown above. 
 }}
 \label{fig:dmag_atm_max}
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}
 \centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{delta_mags_10}
 \caption{{\small
 {\bf $\Delta m_b^{obs}$ due to 10\% variations of 
@@ -2014,6 +2133,8 @@ $\tau_0$ and $\alpha$ were only varied by 10\% of the total range of
 values measured in \citet{Burke2010b}, and $C_{\water}$ was varied by 30\%
 of the total range. }}
 \label{fig:dmag_atm_10}
+\end{minipage}
+}
 \end{figure}
 
 %Changes in airmass have a larger effect on observed natural magnitudes
@@ -2026,12 +2147,17 @@ of the total range. }}
 
 \begin{figure}
 \centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{delta_mags_airmass_big}
 \caption{{\small
 {\bf $\Delta m_b^{obs}$ due to changes in airmass from $X=1.0$ 
 to $X=2.1$, for a typical atmospheric transmission response curve.}
 }}
 \label{fig:dmag_airmass}
+\end{minipage}
+}
 \end{figure}
 
 
@@ -2212,6 +2338,9 @@ to $X=2.1$, for a typical atmospheric transmission response curve.}
 
 \begin{figure}
 \centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \subfloat[\label{stardense}]{\includegraphics[width=3.2in]{Stardensity}}
 \subfloat[\label{sdmag}]{\includegraphics[width=3.2in]{Sdmag}} \\
 \subfloat[\label{starstrue}]{\includegraphics[width=3.2in]{StatsTruemBest}}
@@ -2231,6 +2360,8 @@ true magnitudes for each star (after self-calibration iteration),
 demonstrating the `repeatability' requirement in the SRD. 
 }}
 \label{fig:selfcal_fiducial}
+\end{minipage}
+}
 \end{figure}
 
 
@@ -2289,6 +2420,64 @@ demonstrating the `repeatability' requirement in the SRD.
 
 \section{Calibration Error Budget}
 \label{sec:error_budget}
+Many sources of errors feed into the calibration process, and it is a challenging task to identify and quantify all of them.  We first
+discuss repeatability errors, and then uniformity errors.   The band-to-band, and absolute calibration errors flow directly from the characteristics of the standard stars, and have already been discussed in Section \ref{sec:calib_external}.
+\subsection{Repeatability Errors}
+The repeatability error in $m_b^{std}$ for individual calibration stars must meet the requirement in the SRD (Requirement 1 in Section \ref{sec:photoreq}).  The contributions to this error are best discussed in the context of Figure \ref{fig:overview_flowchart1}.  If we recall that
+\begin{eqn}
+m_b^{std} = m_b^{inst} - \Delta m_b^{obs} + Z_b^{obs}
+\end{eqn}
+it is natural to divide the error sources into three categories:
+
+\begin{itemize}
+\item{errors in $m_b^{inst}$, determined by Flat SED Calibration}
+\item{errors in $\Delta m_b^{obs}$, determined by SED Correction}
+\item{errors in $Z_b^{obs}$, determined by Self Calibration}
+\end{itemize}
+
+We will assume that the errors in these terms are uncorrelated, and add in quadrature to produce the overall error.
+
+\subsubsection{Errors in $m_b^{inst}$}
+As sketched in Figure \ref{fig:overview_flowchart1}, $m_b^{inst}$ is produced by the LSST Data Management System (DM), through processing raw science exposures. Leading error contributions come from the flat spectrum flat (FSF), sky background subtraction, and the photometry algorithm used to extract source counts from the flattened and sky-subtracted image. We do not attempt to quantify those individual contributions here, in good part because the relevant software is still early in its development process within DM. Rather, we note that photometric errors, considered as a function of stellar magnitude, always display a systematics floor at the bright end. The contribution of this error to repeatability can not be reduced by any part of the calibration process, and adds directly to the repeatability error estimate. The estimate from DM is that this error floor will be 3mmag. 
+\subsubsection{Errors in $\Delta m_b^{obs}$}
+As shown in Section \ref{sec:counts2photons}, $\Delta m_b^{obs}$ is a function both of the system bandpass, $\phi_b^{obs}$, and the SED of the object, $F_{\nu}(\lambda, t)$.   It is affected by the following errors:
+\begin{itemize}
+\item{Errors in the atmospheric bandpass, $S^{atm}$
+	\begin{itemize}
+	\item{Errors induced by noise in spectra from auxiliary telescope. %Need input from Jean-Marc here} 
+	\item{Unmodelled spatial and/or temporal variation of atmospheric components, particularly aerosols and water vapor.
+	%We can somehow estimate a gradient, then apply it across the difference between probe stars}
+	\end{itemize}
+	}
+\item{Errors in determination of monochromatic illumination correction, which propagate directly into errors in $S_b^{sys}$
+%Just assert that we can model out 90% of the effect}
+\item{Wavelength-dependent errors in measurement of the domescreen intensity by the photodiode monitor.  This will result in errors in combining the monochromatic domeflats to determine $S_b^{sys}$.
+%Have the NIST calibration data}
+\item{Errors in determining the SEDs of calibration stars from their multicolor photometry.
+%Need intrinsic width of color-color relationship.  Then, need to translate that width into a change in Delta}
+\end{itemize}
+
+\subsubsection{Errors in $Z_b^{obs}$}
+Every exposure has a spatial zeropoint model determined by Self Calibration as the solution to a large linear least squares problem, as discussed in Section \ref{sec:counts2photons}.  The errors in the zeropoints are linearly related to the zeropoints themselves (is this really true?), and we roughly model this relationship as an attenuation factor.  The attenuation factor is dependent on the spatial scale of the perturbations...  We have determined the attenuation factor from simulations of the Self Calibration process (Section \ref{sec:verification}).   Additionally, Gauss-Markov analysis (show results?)
+
+Perturbations to the zeropoints arise from
+\begin{itemize}
+\item{Clouds, and the varying gray averages of extinction from aerosols, water vapor, and ozone}
+\item{Camera gain variation}
+\item{Shutter travel time variation}
+\item{Detector QE variation due to varying focal plane temperature}
+\item{Errors in magnitudes of standards}
+\end{itemize}
+
+% PUT IN A TABLE HERE
+
+\subsection{Uniformity Errors}
+The uniformity errors must meet the uniformity requirement in the SRD (Requirement 2 in Section \ref{sec:photoreq}).  These are driven by systematic errors in $Z_b^{obs}$ and $\Delta m_b^{obs}$.  There are several sources:
+\begin{itemize}
+\item{errors in standards}
+\item{systematic variation of calibration star properties across the sky}
+\item{unmodeled systematic variations in the atmosphere}
+\end{itemize}
 
 \section{Testing and Verification}
 \label{sec:verification}
@@ -2361,6 +2550,12 @@ self-calibration and atmosphere fitting, and what do we report in DM
 \subsection{Level 2 Data Products}
 %reference M. Juric Level 2 doc here
 
+\section{Risks and Mitigations}
+\begin{itemize}
+\item Systematics error floor for photometry is higher than expected
+\item Forward models for illumination correction are less accurate than expected
+\item Stability of $S_b^{sys}$ is less than expected
+\end{itemize}
 
 \bibliographystyle{apj}
 \bibliography{calib_plan}
@@ -2378,9 +2573,14 @@ sensitivity functions.
 
 \begin{figure}[h!]
 \centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=5in]{filters}
 \caption{{\small {\bf The baseline LSST filter set.}}
 \label{fig:filterset}}
+\end{minipage}
+}
 \end{figure}
 
 
@@ -2588,13 +2788,21 @@ to recalculate $\phi_b^{sys+atm}(\lambda,t)$ for every object detected
 with LSST. 
 
 \begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{AtmoFigs/SNAerosol_04vs16.png}
 \caption{ {Effect on natural mags of SN1a of variation of aerosol optical depth from 0.04 to 0.16 mag} 
 \label{fig:SNAerosol} }
+\end{minipage}
+}
 \end{figure}
 
 \begin{figure}
 \centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
 \includegraphics[width=6in]{dmag_all_max+shift}
 \caption{{\small
 {\bf $\Delta m_b^{obs}$ due to changes in a hardware bandpass shift
@@ -2612,6 +2820,8 @@ blue squares, $0.36<z<0.72$ are green squares, and $0.72<z<1$ SNIa are
 red squares. 
 }}
 \label{fig:dmag_allseds}
+\end{minipage}
+}
 \end{figure}
 
 
