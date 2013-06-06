@@ -3,8 +3,10 @@ import pylab
 from GhostData import GhostData
 from SedSets import SedSets
 
-useCCOB = 50.0
 writeFiles = False
+# how much the CCOB reduces the ghosting effects. (Chuck says ~90%, but no confirmation).
+useCCOB = 90.0  
+
 
 ghostfile = 'camera_ghosting_ff_calibbias_jdsu_lsstcone_121128'
 filterlist = ('u', 'g', 'r', 'i', 'z','y4')
