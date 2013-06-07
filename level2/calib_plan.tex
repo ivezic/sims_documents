@@ -849,7 +849,7 @@ To measure the wavelength-dependent hardware response
 curve as a function of position in the focal plane, we will use a
 dome-screen system that is capable of producing narrow-band light 
 over a range of wavelengths, producing a data cube of `narrow-band flat
-fields'.  A similar approach has already been employed at PS-1 (\citep{StubbsTonry2012})
+fields'.  A similar approach has already been employed at PS-1 (\citep{StubbsTonry2012}; \citep{Tonry2012})
 After applying the monochromatic illumination correction 
 (see Section \ref{sec:ic}) and applying the normalization at each wavelength from
 the photodiode monitors (see Section XX),  this data cube
@@ -928,13 +928,13 @@ is the ratio direct / total.}
 \centering
 \fbox{
 \begin{minipage}{6.5in}
-\begin{tabular}{ccc}
-\subfloat[]{\includegraphics[width=2in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_u_ghosting.png}}
-	& \subfloat[]{\includegraphics[width=2in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_g_ghosting.png}} 
-	& \subfloat[]{\includegraphics[width=2in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_r_ghosting.png}} \\
-\subfloat[]{\includegraphics[width=2in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_i_ghosting.png}}
-	& \subfloat[]{\includegraphics[width=2in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_z_ghosting.png}}
-	& \subfloat[]{\includegraphics[width=2in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_y4_ghosting.png}} \\
+\begin{tabular}{cc}
+\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_u_ghosting.png}}
+	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_g_ghosting.png}} \\ 
+\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_r_ghosting.png}}
+	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_i_ghosting.png}} \\
+\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_z_ghosting.png}}
+	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_y4_ghosting.png}} \\
 \end{tabular}	
 \caption{ {The effects of the illumination correction, as calculated by \citep{AndyR2013}, on the natural magnitudes of Kurucz stars
 of varying temperatures.  All 6 LSST passbands are shown.} 
@@ -2489,9 +2489,13 @@ As shown in Section \ref{sec:counts2photons}, $\Delta m_b^{obs}$ is a function b
 \begin{itemize}
 \item{Errors in the atmospheric bandpass, $S^{atm}$
 	\begin{itemize}
-	\item{Errors induced by noise in spectra from auxiliary telescope. %Need input from Jean-Marc here} 
+	\item{Errors induced by measurement noise in atmospheric probe instruments (auxiliary telescope; water vapor monitoring system)}
+	
+	Measurement errors from the water vapor monitoring system are expected to be +/-1mm.  Making use of the plots in 
+	Figure \ref{fig:xx}, which is for a variation of 5mm, this translates to errors of 0.2 mmag in u-band, negligible in g,r, and i-bands, 1 mmag in z, and 2mmag in y.
+	 
 	\item{Unmodelled spatial and/or temporal variation of atmospheric components, particularly aerosols and water vapor.
-	%We can somehow estimate a gradient, then apply it across the difference between probe stars}
+	%We can somehow estimate a gradient, then apply it across the difference between probe stars.  Or just use 5\%?}
 	\end{itemize}
 	}
 \item{Errors in determination of monochromatic illumination correction, which propagate directly into errors in $S_b^{sys}$.  
@@ -2522,13 +2526,13 @@ Perturbations to the zeropoints arise from
 \begin{center}
 \begin{table}[htb]
 \caption{{\bf Repeatability error budget.  All values are in mmag} }
-\begin{tabular}{l | l | c c c }
-Affected term & Effect &  $u$  & $griz$ & $y$ \\ \hline
-{\bf $m_b^{obs}$} & {\bf Total} & 3.0 & 3.0 & 3.0 \\ \hline
+\begin{tabular}{l | l | c c c c c c }
+Affected term & Effect &  $u$  & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
+{\bf $m_b^{obs}$} & {\bf Total} & 3.0 & 3.0 & 3.0 & 3.0 & 3.0 & 3.0 \\ \hline
 {\bf $\Delta m_b^{obs}$} & & & & \\
-& Spectrum errors & & & \\
+& Auxiliary telescope spectrum errors & 0.2 & 0 & 0 & 0 & 1.0 & 2.0  \\
 & Undetected atmospheric variability & & & \\
-& Monochromatic illumination correction errors & 3.0 & 0.6 & 0.6\\
+& Monochromatic illumination correction errors & 3.0 & 0.5 & 0.8 & 0.5 & 0.07 & 0.6\\
 & Photodiode monitoring system errors & & & \\
 & Calibration star SED errors & & & \\ 
 & {\bf Total} & & & \\ \hline
@@ -2540,9 +2544,9 @@ $Z_b^{obs}$ & & & & \\
 & Errors in standards & & & \\
 & {\bf Total} & & & \\ \hline
 {\bf Total} & & 4.2 & 3.1 & 3.1 \\ \hline
-{\bf Requirement} & & 7.5 & 5.0 & 7.5 \\ 
+{\bf Requirement} & & 7.5 & 5.0 & 5.0 & 5.0 & 7.5 & 7.5 \\ 
 \end{tabular}
-\label{tab:delta_mags}
+\label{tab:rpt_error_budget}
 \end{table}
 \end{center}
 
