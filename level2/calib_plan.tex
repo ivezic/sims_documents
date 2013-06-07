@@ -369,7 +369,7 @@ selected as part of the survey design, and does not vary.  See equation \ref{eqn
 These quantities are related through equations \ref{eqn:mag2counts} and \ref{eqn:mag2counts}.
 \end{boxedminipage}
 
-\subsection{From Photons to Counts}
+\section{From Flux to Counts}
 
 We first consider how the photons from an astronomical object are
 converted into ADUs in the detector, paying attention to the various
@@ -463,7 +463,7 @@ motivate us to separate the measurement of the normalization of
 $S_b^{sys}$ and $S^{atm}$ from the measurement of the
 wavelength-dependent shape of the bandpass.
 
-\subsubsection{Normalized bandpass response, $\phi_b(\lambda)$}
+\subsection{Normalized bandpass response, $\phi_b(\lambda)$}
 \label{sec:phi}
 
 This then leads us to introduce a `normalized bandpass response
@@ -551,7 +551,7 @@ m_b^{std} = -2.5\,log_{10}(C_b^{obs}) \, - \Delta m_b^{obs} + Z_b^{obs}
 the zeropoint correction here, $Z_b^{obs}$, contains only gray-scale
 {\it normalization} effects, such as variations due to the flat field
 or cloud extinction. 
-\subsubsection{Perturbations to the System Bandpass}
+\subsection{Perturbations to the System Bandpass}
 The normalized system bandpass will vary from exposure to exposure due to a myriad of effects.  The major ones are:
 \begin{itemize}
 \item{Atmospheric transmission variations.  The major wavelength-dependent sources of atmospheric absorption, Rayleigh scattering from molecules, ozone, water vapor, and aerosols, all vary in time and space, with widely varying temporal and spatial scales.  Even in the absence of intrinsic variation in the atmosphere, of course, the bandpass varies due to changing airmass.  This latter effect is compensated for in traditional photometric calibration, but the others are generally ignored}
@@ -562,7 +562,7 @@ The normalized system bandpass will vary from exposure to exposure due to a myri
 
 It bears repeating that every perturbation in general affects both the zeropoint, through the gray component of the perturbation, and the shape of the system bandpass, through the wavelength-dependent component.  The gray component is removed by the self calibration process, while the wavelength-dependent component must be separately characterized and removed (see Figure \ref{fig:overview_flowchart1}).  We are concerned here only about the latter effect, and discuss it for each of the above categories.
 
-\subsubsection{Effects of Atmospheric Variations}
+\subsection{Effects of Atmospheric Variations}
 
 The main components of wavelength-dependent atmospheric extinction are Rayleigh scattering from molecules; water vapor; ozone; and aerosols.   Rayleigh scattering extinction is directly proportional to barometric pressure at the surface.  As is well known from looking at surface pressure charts, away from weather fronts the pressure varies significantly on timescales of hours or more and spatial scales of hundreds of km.  Variations can be much more rapid in the vicinity of fronts.   In any case, this component can be compensated for very accurately just by measuring the barometric pressure, and we do not further consider it here.  The other components are not so easily measured, and in the case of water vapor and aerosols, can display complex patterns of variability.  
 
@@ -686,13 +686,13 @@ significant variation on rapid time scales remains.}
 }
 \end{figure}
 
-\subsubsection{Throughput Variations Due to Contamination}
+\subsection{Throughput Variations Due to Contamination}
 
-\subsubsection{Variations in Detector Quantum Efficiency}
+\subsection{Variations in Detector Quantum Efficiency}
 
-\subsubsection{Throughput Variations Due to Filter Position Shifts}
+\subsection{Throughput Variations Due to Filter Position Shifts}
 
-\subsubsection{Putting it All Together}
+\subsection{Putting it All Together}
 Examples of the $\Delta m_b^{obs}$ due to variations in the shape of
 the hardware and atmospheric response curves are shown in
 Figure~\ref{fig:delta_mags} and Table~\ref{tab:delta_mags}. Two main
@@ -809,7 +809,7 @@ the $g-i$ information). }
 }
 \end{figure}
 
-\subsection{From Counts to Photons}
+\section{From Counts to Flux}
 \label{sec:counts2photons}
 
 The previous section laid out the origins of ADU count variability
@@ -844,11 +844,13 @@ throughput curve, $S_b^{sys}(\lambda,x,y,t)$.
 %an aperture proportional to the Point Spread Function (PSF), and thus
 %primarily contribute to calibration on scales larger than the PSF.
 
+\subsection{Measuring the Hardware Response}
 To measure the wavelength-dependent hardware response
 curve as a function of position in the focal plane, we will use a
 dome-screen system that is capable of producing narrow-band light 
 over a range of wavelengths, producing a data cube of `narrow-band flat
-fields'.  After applying the monochromatic illumination correction 
+fields'.  A similar approach has already been employed at PS-1 (\citep{StubbsTonry2012})
+After applying the monochromatic illumination correction 
 (see Section \ref{sec:ic}) and applying the normalization at each wavelength from
 the photodiode monitors (see Section XX),  this data cube
 records (up to an overall normalization constant) $S_b^{sys}(\lambda,t)$ at each $x$,$y$ location in the focal plane. 
@@ -871,6 +873,8 @@ on shorter timescales, principally due to a changing population of dust particle
 by multiplying by the ratio of two broad-band flats, one at the current epoch and one at the 
 reference epoch when the narrow-band flats were acquired.
 
+\subsubsection{Determining the Illumination Correction}
+\label{sec:ic}
 As mentioned above, before these flat fields (both the
 broadband and the narrow-band flats) can be used to measure
 $S_b^{sys}$, they must be modified to correctly produce {\it
@@ -901,6 +905,46 @@ be again generated by the self-calibration stage.  The illumination correction i
 expected to be stable with time and will be remeasured only if components in the
 optical path of the telescope are altered.
 
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\begin{tabular}{cc}
+\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/monochromatic_360nm_direct.png}}
+	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/monochromatic_360nm_total.png}} \\
+\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/monochromatic_360nm_ghost.png}}
+	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/monochromatic_360nm_screen.png}} \\
+\end{tabular}	
+\caption{ {FRED calculation of flat from monochromatically illuminated screen.  The u filter is in place, 
+and the illuminating wavelength is 360nm, near the red limit of the filter.  (a) direct illumination
+(b) total illumination (c) ghost illumination (d) screen illumination.  The illumination correction
+is the ratio direct / total.} 
+\label{fig:FRED360nm} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\begin{tabular}{ccc}
+\subfloat[]{\includegraphics[width=2in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_u_ghosting.png}}
+	& \subfloat[]{\includegraphics[width=2in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_g_ghosting.png}} 
+	& \subfloat[]{\includegraphics[width=2in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_r_ghosting.png}} \\
+\subfloat[]{\includegraphics[width=2in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_i_ghosting.png}}
+	& \subfloat[]{\includegraphics[width=2in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_z_ghosting.png}}
+	& \subfloat[]{\includegraphics[width=2in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_y4_ghosting.png}} \\
+\end{tabular}	
+\caption{ {The effects of the illumination correction, as calculated by \citep{AndyR2013}, on the natural magnitudes of Kurucz stars
+of varying temperatures.  All 6 LSST passbands are shown.} 
+\label{fig:IllumCorrKurucz} }
+\end{minipage}
+}
+\end{figure}
+
+Because the illumination correction is wavelength dependent (highly so near the edges of the filter bandpasses), its effect on photometry is dependent on the SED of the object in question.  Figure \ref{fig:FRED_Kurucz} shows this effect as a function of both 
+\subsection{Measuring the Atmospheric Transmission}
 Next, considering $S^{atm}(\lambda,alt,az,t)$, we will again separate
 the measurement of the shape of the atmospheric response and the
 measurement of normalization of the transmission.  The currently
@@ -918,7 +962,7 @@ interpolated in time and space to generate a wavelength-dependent
 atmospheric absorption profile, $\phi_b^{atm}(\lambda,alt,az,t)$, for
 each observation. This process is discussed in detail in
 section~\ref{sec:atmo_phi}.  
-
+\subsection{Self Calibration}
 In order to correct for the more rapid gray-scale variations in the
 relative normalization of $S^{atm}(alt,az,t)$ due to cloud extinction,
 we must use the observations of calibration stars in the images themselves, as
@@ -1024,6 +1068,7 @@ m_b^{AB} = m_b^{std}  + \Delta_{b-r} + \Delta_r
 \end{equation}
 which can be compared to absolute physical flux scales. 
 
+\subsection{Calibration Operations}
 The sequence for photometric calibration is then:
 {\bf TODO turn this into a table}
 \begin{enumerate}
@@ -2424,9 +2469,9 @@ Many sources of errors feed into the calibration process, and it is a challengin
 discuss repeatability errors, and then uniformity errors.   The band-to-band, and absolute calibration errors flow directly from the characteristics of the standard stars, and have already been discussed in Section \ref{sec:calib_external}.
 \subsection{Repeatability Errors}
 The repeatability error in $m_b^{std}$ for individual calibration stars must meet the requirement in the SRD (Requirement 1 in Section \ref{sec:photoreq}).  The contributions to this error are best discussed in the context of Figure \ref{fig:overview_flowchart1}.  If we recall that
-\begin{eqn}
+\begin{equation}
 m_b^{std} = m_b^{inst} - \Delta m_b^{obs} + Z_b^{obs}
-\end{eqn}
+\end{equation}
 it is natural to divide the error sources into three categories:
 
 \begin{itemize}
@@ -2449,8 +2494,12 @@ As shown in Section \ref{sec:counts2photons}, $\Delta m_b^{obs}$ is a function b
 	%We can somehow estimate a gradient, then apply it across the difference between probe stars}
 	\end{itemize}
 	}
-\item{Errors in determination of monochromatic illumination correction, which propagate directly into errors in $S_b^{sys}$
-%Just assert that we can model out 90% of the effect}
+\item{Errors in determination of monochromatic illumination correction, which propagate directly into errors in $S_b^{sys}$.  
+
+If the monochromatic illumination correction was ignored, the resulting errors in $\Delta m_b^{obs}$ are as shown in Figure \ref{fig:KuruczIllumCorr}.  The maximum effect is roughly 15mmag in u-band and 3mmag or less in the other bands.  As discussed in Section \ref{sec:ic}, we will determine the illumination correction from a combination of modelling and specialized measurements.
+While the accuracy of the result is difficult to assess in advance, we conservatively assume that the error will be less than 20\%. 
+This results in an error contribution of 3mmag in u-band, and 0.6mmag in the others.
+}
 \item{Wavelength-dependent errors in measurement of the domescreen intensity by the photodiode monitor.  This will result in errors in combining the monochromatic domeflats to determine $S_b^{sys}$.
 %Have the NIST calibration data}
 \item{Errors in determining the SEDs of calibration stars from their multicolor photometry.
@@ -2470,6 +2519,33 @@ Perturbations to the zeropoints arise from
 \end{itemize}
 
 % PUT IN A TABLE HERE
+\begin{center}
+\begin{table}[htb]
+\caption{{\bf Repeatability error budget.  All values are in mmag} }
+\begin{tabular}{l | l | c c c }
+Affected term & Effect &  $u$  & $griz$ & $y$ \\ \hline
+{\bf $m_b^{obs}$} & {\bf Total} & 3.0 & 3.0 & 3.0 \\ \hline
+{\bf $\Delta m_b^{obs}$} & & & & \\
+& Spectrum errors & & & \\
+& Undetected atmospheric variability & & & \\
+& Monochromatic illumination correction errors & 3.0 & 0.6 & 0.6\\
+& Photodiode monitoring system errors & & & \\
+& Calibration star SED errors & & & \\ 
+& {\bf Total} & & & \\ \hline
+$Z_b^{obs}$ & & & & \\
+& Clouds & & &  \\
+& Camera gain variation & & & \\
+& Shutter variation & & & \\
+& Temperature induced QE variations & & & \\
+& Errors in standards & & & \\
+& {\bf Total} & & & \\ \hline
+{\bf Total} & & 4.2 & 3.1 & 3.1 \\ \hline
+{\bf Requirement} & & 7.5 & 5.0 & 7.5 \\ 
+\end{tabular}
+\label{tab:delta_mags}
+\end{table}
+\end{center}
+
 
 \subsection{Uniformity Errors}
 The uniformity errors must meet the uniformity requirement in the SRD (Requirement 2 in Section \ref{sec:photoreq}).  These are driven by systematic errors in $Z_b^{obs}$ and $\Delta m_b^{obs}$.  There are several sources:
