@@ -2486,6 +2486,15 @@ The calibration process presented above is complex, and meeting the SRD requirem
 is dependent on understanding and controlling a large number of small perturbations.  We seek to verify that our approach will produce the required results, and are doing so with different techniques that apply to the stages of LSST's construction and operation.   During the current final design phase, we are employing simulation tools, backed up when possible by measurements on the sky from existing telescopes.   \citep{Burke2013} and \citep{Burke2010b} are examples of this approach.  During the construction phase, we will be able to feed measured data from actual telescope components into the simulations.   During operations, our focus is on designing metrics that will let us assess the calibration quality on an ongoing basis.
 
 \subsection{Self Calibration Simulation}
+
+One of the final steps in the LSST calibration process is running self-calibration, solving for a large number of stellar magnitudes and observation zeropoints.  The accuracy and precision of the self-calibration procedure has complicated dependencies on various sources of noise as well as the overall observing strategy which determines how well different regions of sky can be tied together.  We have undertaken a serries of simulations to test the validity of the LSST self-calibration process.
+
+To simulate self-calibration, we require a catalog of reallistic LSST observations of bright stars.  We generate this catalog by combining Galfast and Opsim.  The Galfast code generates a realistic model of the Milky Way stellar populations, matching the observed distributions from SDSS.  The LSST Operations simulator (Opsim) can then be used to generate observations of the stars in the Galfast model.  For each Opsim pointing, we generate a list of observed stars along with an observed magnitude that includes atmospheric and hardware effects.  These 
+
+An example self-calibration simulation is shown in Figure~\ref{fig:selfcal_fiducial}.  This simulates the first two years of LSST observations in $r$-band, with 1.3 million stars distributed fairly uniformily across the sky.  The observed stellar magnitudes include offsets for cloud extinction, shot-noise based on the Opsim 5$\sigma$-limiting depth, errors due to ghosting, and errors based on variations in the filter throughput and placement.  
+
+Self-calibration simulations will continue to be important during commishioning and regular survey operations.  By running simulations that match the conditions of the actual LSST observations, we will be able to identify regions of the sky which are poorly linked to the rest of the survey.  We will also be able to identify which spatial scales have the largest errors, which can have important ramifications for cosmological observations (e.g., galaxy clustering) \citep{Huterer13}. 
+
 \subsection{Auxiliary Telescope Simulation}
 
 \subsection{Calibration Performance Metrics}
