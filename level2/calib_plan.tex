@@ -133,10 +133,12 @@ calibration is not discussed here.
 Section~\ref{sec:photoreq} reviews the survey requirements for
 photometric calibration, while Section~\ref{sec:calib_overview}
 describes the foundation of LSST's calibration procedure, first
-motivating this procedure by describing the true path of a photon
+motivating this procedure by describing the transmission of flux
 through the atmosphere and LSST system and then from the calibration
-point of view, trying to recreate the transmission of those photons to
-the focal plane.  
+point of view, trying to recreate the flux from the ADUs measured
+by the detector.
+Sections~\ref{sec:photons2counts} and \ref{sec:counts2photons}
+describe those aspects in some detail.
 Section~\ref{sec:calib_external} describes how the LSST's internal
 photometric scale is tied to external references.
 Section~\ref{sec:calib_details} describes the hardware required
@@ -147,6 +149,11 @@ Section~\ref{sec:verification} describes how we will verify that the
 calibration system functions as designed, and meets the science
 requirements, first during the construction phase, and later during
 survey operations.
+Section~\ref{sec:software} describes the implementation of the calibration process
+in software that will be part of LSST Data Management.
+Finally, Section~\ref{sec:risks} discusses the risks that remain in
+the implementation of the calibration process, and the steps we are 
+taking to mitigate them.
 
 
 \section{Photometric Requirements}
@@ -247,7 +254,7 @@ this approach can deliver 1\% photometry in stable photometric conditions.
 Such programs typically follow only a few objects, and devote roughly equal
 time to standards and program objects.   This approach fails for a survey like
 LSST, for at least two reasons.  First, from a calibration point of view, 
-the very wide field and multiple detector array mean that multiple instruments must be
+the very wide field and multiple detector array mean that effectively a large number of instruments must be
 calibrated rather than just one.
 Second, historical weather data from Cerro Pach\'{o}n tells us
 only 53\% of the available observing time can be considered
@@ -258,14 +265,17 @@ requirements -- 0.5\% level photometric repeatability and 1\%
 photometric uniformity -- requires a new approach.
 
 
-This new approach, variants of which have been used at PanSTARRS and DES, lies in splitting the measurement of the {\it
+This new approach, variants of which are already in use at PanSTARRS and DES,
+{\it directly} measures the system throughput as a function of wavelength, 
+focal plane position, and time.  Further, the {\it
 normalization} of the throughput in each observation (the gray-scale
-zeropoint) from the {\it shape} of the throughput curve (the color
-dependent terms), and further, using separate procedures to measure
-the individual contributions of the telescope hardware response and
-the atmospheric throughput. This calibration system requires various
+zeropoint) and the {\it shape} of the throughput curve (the color
+dependent terms), are explicitly separated and measured with separate procedures
+for both the telescope system response and the atmospheric transmission.  
+This calibration system requires various
 pieces of hardware to conduct these optimized measurements. We briefly
-describe them here, with full descriptions in the sections indicated:
+describe them here, with full descriptions in Section~\ref{sec:calib_details}:
+
 \begin{itemize}
 \item{A dome screen projector designed to provide uniform
     ($\sim10\%$ variation) illumination across the field of view, while
@@ -275,15 +285,12 @@ describe them here, with full descriptions in the sections indicated:
     at individual wavelengths. The narrow-band light will be generated
     by a tunable laser, capable of producing light from $300-1100$~nm
     and tunable in 1~nm increments. The brightness of the screen is measured 
-    with NIST-calibrated photodiodes, so that the relative intensity at different 
-    wavelengths is precisely determined.  See
-    Sections~\ref{sec:hardware_norm} and \ref{sec:hardware_phi} for
-    more information.}
+    with a NIST-calibrated photodiode, so that the relative intensity at different 
+    wavelengths is precisely determined.  
 \item{A 1.2-m auxiliary telescope with an $R \approx 400$ spectrograph,
     located adjacent to the LSST itself. This auxiliary telescope will
     obtain spectra of a chosen set of atmospheric probe stars across the sky to
-    determine an atmospheric absorption model. More details are provided
-  in Section~\ref{sec:atmo_phi}.}
+    determine an atmospheric absorption model. 
 \item{Water vapor monitoring system, consisting of a GPS system and a 
     microwave radiometer attached copointed with the LSST telescope, and monitoring 
     the same field of view.  This supplements the auxiliary telescope spectra, which are
@@ -298,8 +305,8 @@ Figures \ref{fig:overview_flowchart1}, \ref{fig:overview_flowchart2},
 Note that four classes of objects participate in the calibration process in different ways:
 \begin{itemize}
 \item Standard stars.  These are stars whose absolute flux as a function of wavelength above the atmosphere is precisely known.  This class contains only a few members, perhaps as few as ten.  Their role is to enable the self calibration process to set absolute zeropoints for each band, and to allow testing of the SRD uniformity requirements.  See Section~\ref{sec:calib_external}.
-\item Calibration stars.  These are stars that densely cover the sky, with typical spacings between stars of 1 arcminute. [NOTE: check this number].  Unlike standard stars, neither their SEDs nor their absolute fluxes are precisely known, and their standard magnitudes are determined by the self calibration process.   They have been selected to be on the stellar main sequence, to be nonvariable, and to be relatively isolated so that their photometry is not degraded by crowding effects.
-\item Atmospheric probe stars.   These are bright stars of known type, distributed roughly uniformly over the LSST sky, which yield high SNR spectra from the auxiliary telescope.  This is particularly critical for calibrating the y-band.
+\item Calibration stars.  These are stars that densely cover the sky, with typical spacings between stars of order 1 arcminute.  Unlike standard stars, neither their SEDs nor their absolute fluxes are precisely known, and their standard magnitudes are determined by the self calibration process.   They have been selected to be on the stellar main sequence, to be nonvariable, and to be relatively isolated so that their photometry is not degraded by crowding effects.
+\item Atmospheric probe stars.   These are bright stars of known type, distributed roughly uniformly over the LSST sky, which yield high SNR spectra from the auxiliary telescope.  
 \item Science objects.  Calibration of science objects utilizes the results of processing the standards and the calibration stars, and the measurement of the system bandpass.   If an SED is supplied for an object, an accurate standard magnitude can then be calculated.
 \end{itemize}
 
@@ -348,15 +355,15 @@ Note that four classes of objects participate in the calibration process in diff
 }
 \end{figure}
 
-The rest of this section will provide a more in-depth overview of the
+The following section will provide a more in-depth overview of the
 calibration process. We will start with a review of what
 is physically happening to photons in their path toward the focal
 plane, and then outline how LSST will translate the
 measured ADU counts back to fluxes above the atmosphere.
-%\vspace[*]{0.5in}
 
 
-\begin{boxedminipage}{7in}
+
+\begin{boxedminipage}{6.5in}
 We find it helpful to define four different magnitudes, and their associated fluxes:
 \begin{itemize}
 \item{$m_b^{inst}$, the instrumental magnitude.  $m_b^{inst} = -2.5 log10(C_b^{obs})$, where $C_b^{obs}$ are the instrumental counts (ADU) that are attributed to the object}
@@ -371,8 +378,8 @@ These quantities are related through equations \ref{eqn:mag2counts} and \ref{eqn
 
 \section{From Flux to Counts}
 
-We first consider how the photons from an astronomical object are
-converted into ADUs in the detector, paying attention to the various
+We first consider how the photons from an astronomical object make their
+way to the detector and are converted into counts (ADUs), paying attention to the various
 temporal or spatial scales for variability might arise in the LSST
 system to affect the final ADU counts. 
 
@@ -531,7 +538,11 @@ m_b^{nat} & = &-2.5\, log_{10} \left( {F_b^{obs} \over F_{AB}} \right) \\
     \phi_b^{obs}(\lambda,t) \, d\lambda} \over \int_0^\infty {F_\nu(\lambda,t) \,
     \phi_b^{std}(\lambda,t) \, d\lambda}} \right) \, \left( {\int_0^\infty {F_\nu(\lambda,t) \,
     \phi_b^{std}(\lambda,t) \, d\lambda} \over F_{AB}} \right) \right) \\
-m_b^{nat} & = & \Delta m_b^{obs} + m_b^{std} 
+m_b^{nat} & = & \Delta m_b^{obs} + m_b^{std} \\
+\label{eqn:Delta_m}
+\Delta m_b^{obs} & = & -2.5 \, log_{10} \,  \left( { \int_0^\infty {F_\nu(\lambda,t) \,
+    \phi_b^{obs}(\lambda,t) \, d\lambda} \over \int_0^\infty {F_\nu(\lambda,t) \,
+    \phi_b^{std}(\lambda,t) \, d\lambda}} \right)
 \end{eqnarray}
 where $\Delta m_b^{obs}$ varies with the {\it shape} of the source
 spectrum, $f_\nu(\lambda,t)$ and the {\it shape} of the bandpass
@@ -544,17 +555,24 @@ standardized bandpass, $\phi_b^{std}(\lambda)$.
 The natural and standard magnitudes can be tied back to the counts
 produced by the system by adding the correct zeropoint offsets. As
 $\Delta m_b^{obs}$ removes all wavelength dependent variations in $m_b^{std}$,
-\begin{equation}
+\begin{eqnarray}
 \label{eqn:mag2counts}
-m_b^{std} = -2.5\,log_{10}(C_b^{obs}) \, - \Delta m_b^{obs} + Z_b^{obs}
+m_b^{std} & = & m_b^{inst} \, - \Delta m_b^{obs} + Z_b^{obs} \\
+ & \equiv & m_b^{corr} + Z_b^{obs}
+\end{eqnarray}
+where
+\begin{equation}
+m_b^{inst} = -2.5\,log_{10}(C_b^{obs})
 \end{equation}
-the zeropoint correction here, $Z_b^{obs}$, contains only gray-scale
+
+The zeropoint correction here, $Z_b^{obs}$, contains only gray-scale
 {\it normalization} effects, such as variations due to the flat field
-or cloud extinction. 
+or cloud extinction.  The SED corrected magnitude, $m_b^{corr}$, is the input to the Self Calibration block in 
+Figure \ref{fig:overview_flowchart1}.
 \subsection{Perturbations to the System Bandpass}
 The normalized system bandpass will vary from exposure to exposure due to a myriad of effects.  The major ones are:
 \begin{itemize}
-\item{Atmospheric transmission variations.  The major wavelength-dependent sources of atmospheric absorption, Rayleigh scattering from molecules, ozone, water vapor, and aerosols, all vary in time and space, with widely varying temporal and spatial scales.  Even in the absence of intrinsic variation in the atmosphere, of course, the bandpass varies due to changing airmass.  This latter effect is compensated for in traditional photometric calibration, but the others are generally ignored}
+\item{Atmospheric transmission variations.  The major wavelength-dependent sources of atmospheric absorption, Rayleigh scattering from molecules, molecular oxygen lines, ozone, water vapor, and aerosols, all vary in time and space, with widely varying temporal and spatial scales.  Even in the absence of intrinsic variation in the atmosphere, of course, the bandpass varies due to changing airmass.  This latter effect is compensated for in traditional photometric calibration, but the others are generally ignored}
 \item{Long term variations in the throughput of the optical path due to contamination}
 \item{Changing detector quantum efficiency, particularly in the y-band, due to varying focal plane temperature}
 \item{Shifts in filter position with respect to the system optical axis, due to positioning jitter and gravity sag}
@@ -564,7 +582,7 @@ It bears repeating that every perturbation in general affects both the zeropoint
 
 \subsection{Effects of Atmospheric Variations}
 
-The main components of wavelength-dependent atmospheric extinction are Rayleigh scattering from molecules; water vapor; ozone; and aerosols.   Rayleigh scattering extinction is directly proportional to barometric pressure at the surface.  As is well known from looking at surface pressure charts, away from weather fronts the pressure varies significantly on timescales of hours or more and spatial scales of hundreds of km.  Variations can be much more rapid in the vicinity of fronts.   In any case, this component can be compensated for very accurately just by measuring the barometric pressure, and we do not further consider it here.  The other components are not so easily measured, and in the case of water vapor and aerosols, can display complex patterns of variability.  
+The main components of wavelength-dependent atmospheric extinction are Rayleigh scattering from molecules; oxygen molecular lines; water vapor; ozone; and aerosols.   Rayleigh scattering and molecular oxygen extinctions are directly proportional to barometric pressure at the surface.  As is well known from looking at surface pressure charts, away from weather fronts the pressure varies significantly on timescales of hours or more and spatial scales of hundreds of km.  Variations can be much more rapid in the vicinity of fronts.   In any case, this component can be compensated for very accurately just by measuring the barometric pressure, and we do not further consider it here.  The other components are not so easily measured, and in the case of water vapor and aerosols, can display complex patterns of variability.  
 
 Figures \ref{fig:CTIO_PWV}, \ref{fig:GeminiPWV}, and \ref{fig:PWV_satellite} give three different perspectives on historical water vapor variability in the vicinity of CP.  There are broad patterns in space (the E-W gradient), and in time (the regular seasonal variations).  There are large variabilities on top of these, amounting to several mm of PWV, which can occur in hours or less.   The biggest effect of water vapor is in the y-band, since it contains a strong water band (Figure \ref{fig:xx}).   Figure \ref{fig:KuruczPWV} shows the change in natural magnitude when the PWV is varied from 1mm to 6mm for a set of Kurucz stars.  The 4mm variation in PWV shown in Figure \ref{fig:GeminiPWV} would lead to a roughly +/-3mmag color-dependent scatter in calibration of y photometry, if not compensated for. 
 
@@ -867,43 +885,55 @@ narrow-band flats is too time-consuming to complete on a daily
 basis. Instead, the full narrow-band flat field scan will only be
 repeated on a time interval adequate for measurement of
 the more slowly variable components of $S_b^{sys}(\lambda,t)$, approximately
-monthly (but to be determined during commissioning). This measurement
-is discussed in detail in section~\ref{sec:hardware_phi}.  Since the system response can change 
+monthly (but to be determined during commissioning).   Since the system response can change 
 on shorter timescales, principally due to a changing population of dust particles on optical surfaces, we correct the FSF
-by multiplying by the ratio of two broad-band flats, one at the current epoch and one at the 
+nightly by multiplying by the ratio of two broad-band flats, one at the current epoch and one at the 
 reference epoch when the narrow-band flats were acquired.
 
 \subsubsection{Determining the Illumination Correction}
 \label{sec:ic}
-As mentioned above, before these flat fields (both the
-broadband and the narrow-band flats) can be used to measure
+As mentioned above, before dome flats (either
+broadband or narrow-band) can be used to measure
 $S_b^{sys}$, they must be modified to correctly produce {\it
-photometrically} uniform measurements of stars of a defined reference
-SED across the field of view. This correction is called the
+photometrically} uniform measurements of a collimated source 
+across the field of view. This correction is called the
 `illumination correction'.  The illumination correction must correct
 the observed flat fields for effects resulting from non-uniform
 illumination of the dome screen, for ghosting caused by internal
 reflections in the camera, and for the presence of stray or scattered
-light arriving in the focal plane on path that are not part of the
-optical design (such as light bouncing from the dome floor or glinting
-off a filter holder). See figures~\ref{fig:flatfield} and
-\ref{fig:iceffect} for a visual example of the illumination correction
-and its importance to image processing. The illumination correction
-will be wavelength dependent; for the narrow-band flat fields, an
-illumination correction for each wavelength must be generated.  The
-illumination correction (including ghost corrections) will be
-generated by combining measurements of bright, dense star fields
-rastered across the field of view during specialized observing
-sequences and further corrections generated by the self-calibration
-stage (discussed below in section~\ref{sec:hardware_norm}). For the
-narrow-band flat fields, forward modeling will be useful in generating
-the illumination correction. This may include FRED (\ref{NEED FRED REF} modeling,
-constrained with measurements from the `camera calibration optical
-bench' (CCOB - see a brief description in ~Section~\ref{sec:glossary}).
-Further corrections will
-be again generated by the self-calibration stage.  The illumination correction is
-expected to be stable with time and will be remeasured only if components in the
+light arriving in the focal plane on paths other than the direct
+image path (such as light bouncing from the dome floor or glinting
+off a filter holder). Figure \ref{fig:FRED360nm} gives a perspective
+on the difference between the direct, total, and ghost flatfield 
+illumination from a realistic model of the LSST telescope, camera,
+and domescreen illumination system.
+
+The illumination correction is difficult to measure directly.  To
+do so would require a collimated light source with diameter small compared 
+with the telescope pupil that is able to scan in pupil position, angle,
+and wavelength.  Aside from the engineering challenges in producing such
+a light source in the dome, the resulting 5-dimensional data cube would require
+an inordinate amount of time to collect, and we have deemed this approach 
+impractical.  Instead, we plan to combine data from several paths to generate
+an illumination correction which is consistent with all of them:
+
+\begin{itemize}
+\item Detailed monte carlo optics models, such as FRED
+\item Laboratory measurements of the as-built camera with the CCOB (see Appendix X)
+\item {Raster scans of star fields in photometric conditions.  The stars will be chosen
+to be dense, without compromising photometry, and to span a wide range of colors.}
+\item {Second order corrections from running self calibration.  Self calibration is particularly capable
+at determining corrections which are position dependent but wavelength independent, such as 
+arise from nonuniform illumination of the dome screen (see Figure \ref{fig:SelfCalIllumCorr}).}
+\end{itemize}
+
+This process will consume significant amounts of time in the lab, time on the sky, and time in analysis.  
+Fortunately, the illumination correction is expected to be stable with time and will be remeasured only when components in the
 optical path of the telescope are altered.
+
+Because the illumination correction is wavelength dependent (highly so near the edges of the filter bandpasses), its effect on photometry is dependent on the SED of the object in question.  Figure \ref{fig:IllumCorrKurucz} shows this effect as a function of both 
+radius in the focal plane and star color, for a set of Kurucz main sequence stars.   The effects are clearly too large to ignore, or they would overwhelm the error budget.   This is discussed further in Section \ref{sec:error_budget}.  It seems likely that the quality 
+of the illumination corrections is currently limiting the photometric accuracy of large surveys, and we expect the LSST treatment of the illumination correction to yield significant improvement.
 
 \begin{figure}[htbp]
 \centering
@@ -943,7 +973,19 @@ of varying temperatures.  All 6 LSST passbands are shown.}
 }
 \end{figure}
 
-Because the illumination correction is wavelength dependent (highly so near the edges of the filter bandpasses), its effect on photometry is dependent on the SED of the object in question.  Figure \ref{fig:FRED_Kurucz} shows this effect as a function of both 
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{IllumCorrFigs/fidic29apr_input_vs_recovered_ic.png}
+\caption{ \small {Recovery of input broadband illumination correction by self calibration.  The input illumination 
+correction was wavelength independent, but strongly dependent on radial position, as shown.   The recovered illumination
+correction is essentially identical to that input.}
+\label{fig:SelfCalIllumCorr} }
+\end{minipage}
+}
+\end{figure}
+
 \subsection{Measuring the Atmospheric Transmission}
 Next, considering $S^{atm}(\lambda,alt,az,t)$, we will again separate
 the measurement of the shape of the atmospheric response and the
@@ -2718,7 +2760,7 @@ self-calibration and atmosphere fitting, and what do we report in DM
 %reference M. Juric Level 2 doc here
 
 \section{Risks and Mitigations}
-
+\label{sec:risks}
 The calibration process that we have designed is very similar to those of PS-1 and DES, as previously mentioned.  It is therefore
 cause for some concern that the PS-1 results reported in \citep{Tonry2012} are significantly poorer than we expect from our
 error analysis in Section \ref{sec:error_budget}.  The need for the "tweak factor", and the lack of an explanation of its source, is of particular concern.
