@@ -2652,40 +2652,54 @@ The calibration process presented above is complex, and meeting the SRD requirem
 is dependent on understanding and controlling a large number of small perturbations.  We seek to verify that our approach will produce the required results, and are doing so with different techniques that apply to the stages of LSST's construction and operation.   During the current final design phase, we are employing simulation tools, backed up when possible by measurements on the sky from existing telescopes.   \citep{Burke2013} and \citep{Burke2010b} are examples of this approach.  During the construction phase, we will be able to feed measured data from actual telescope components into the simulations.   During operations, our focus is on designing metrics that will let us assess the calibration quality on an ongoing basis.
 
 \subsection{Self Calibration Simulation}
+
 One of the final steps in the LSST calibration process is running self-calibration, solving for a large number of stellar magnitudes and observation zeropoints.  The accuracy and precision of the self-calibration procedure has complicated dependencies on various sources of noise as well as the overall observing strategy which determines how well different regions of sky can be tied together.  We have undertaken a serries of simulations to test the validity of the LSST self-calibration process.
 
-To simulate self-calibration, we require a catalog of reallistic LSST observations of bright stars.  We generate this catalog by combining Galfast and Opsim.  The Galfast code generates a realistic model of the Milky Way stellar populations, matching the observed distributions from SDSS.  The LSST Operations simulator (Opsim) can then be used to generate observations of the stars in the Galfast model.  For each Opsim pointing, we generate a list of observed stars along with an observed magnitude that includes atmospheric and hardware effects.  These 
+To simulate self-calibration, we require a catalog of reallistic LSST observations of bright stars.  We generate this catalog by combining Galfast and Opsim.  The Galfast code generates a realistic model of the Milky Way stellar populations, matching the observed distributions from SDSS.  The LSST Operations simulator (Opsim) can then be used to generate observations of the stars in the Galfast model.  For each Opsim pointing, we generate a list of observed stars along with an observed magnitude that includes atmospheric and hardware effects.  
 
 An example self-calibration simulation is shown in Figure~\ref{fig:selfcal_fiducial}.  This simulates the first two years of LSST observations in $r$-band, with 1.3 million stars distributed fairly uniformily across the sky.  The observed stellar magnitudes include offsets for cloud extinction, shot-noise based on the Opsim 5$\sigma$-limiting depth, errors due to ghosting, and errors based on variations in the filter throughput and placement.  
 
-Self-calibration simulations will continue to be important during commishioning and regular survey operations.  By running simulations that match the conditions of the actual LSST observations, we will be able to identify regions of the sky which are poorly linked to the rest of the survey.  We will also be able to identify which spatial scales have the largest errors, which can have important ramifications for cosmological observations (e.g., galaxy clustering) \citep{Huterer13}. 
+Self-calibration simulations will continue to be important during commissioning and regular survey operations.  By running simulations that match the conditions of the actual LSST observations, we will be able to identify regions of the sky which are poorly linked to the rest of the survey.  We will also be able to identify which spatial scales have the largest errors, which can have important ramifications for cosmological observations (e.g., galaxy clustering) \citep{Huterer13}. 
 
 
 \subsection{Auxiliary Telescope Simulation}
+XXX-Have we simulated the aux telescope?
 
 \subsection{Calibration Performance Metrics}
 
+
+
 \subsubsection{Repeatability}
 
-XXX-Testing our repeatability is rather trivial, as that does not require
-any external data.  We simply apply the best-fit patch zeropoints to
-each patch and measure how well we make repeat measurements of each
-star.
+
+Testing our repeatability is rather trivial, as it does not require
+moving the observations to a flux-calibrated magnitude system.  We
+simply apply the best-fit patch zeropoints from self-calibration and
+measure how well we make repeat measurements of each star.  
+
+While measuring the repeatability performance is easy, our simulations
+of the self-calibration procedure have shown this is one of the more
+difficult requirements to achieve.  
 
 \subsubsection{Spatial Uniformity}
 
-XXX-We can compare to previous surveys.  Pan-Starrs notes that they
-tend to see SDSS-shaped footprints in their residuals when comparing
-surveys.  This will probably only put an upper limit on the
-uniformity, as LSST will be deeper and/or have larger coverage than
-available comparison surveys.  Simulations can also help identify
-regions which we would expect could be poorly linked to the rest of
-the survey (this is expected to be a problem early in the survey
-before all regions of the sky have many well-linked observations).  We
-can mesure very accurately our RMS as a function of patch and
-magnitude, and thus generate mock catalog realizations to run through
-the self-calibration procedure.  These mock catalogs should give a
-good picture of the spatial uniformity.
+Comparing LSST results to previous surveys is one straight-forward way
+to test the calibration uniformity.  SDSS, Pan-Starrs, DES, and Sky
+Mapper will all have large overlaps with the LSST survey area.
+Pan-Starrs notes that they tend to see SDSS-shaped footprints in their
+residuals when comparing surveys \citep{Schlafly10}, suggesting their
+calibration uniformity is at least better than SDSS.
+
+ This will probably only put an upper limit on the uniformity, as
+LSST will be deeper and/or have larger coverage than available
+comparison surveys.  Simulations can also help identify regions which
+we would expect could be poorly linked to the rest of the survey (this
+is expected to be a problem early in the survey before all regions of
+the sky have many well-linked observations).  We can mesure very
+accurately our RMS as a function of patch and magnitude, and thus
+generate mock catalog realizations to run through the self-calibration
+procedure.  These mock catalogs should give a good picture of the
+spatial uniformity.
 
 \subsubsection{Flux Calibration}
 
@@ -2702,15 +2716,15 @@ There are now a number of techniques for comparing stellar colors
 accross the sky.  \citet{Ivezic04} use a principle color analysis,
 \citet{High09} use a stellar locus regression, and \citet{Schlafly10}
 look at the color of main-sequence turn-off stars.  For all of these
-techniques, the signal is usually dominated by dust extinction.
+techniques, the signal is often dominated by dust extinction.
 However, at high galactic latitudes, the differences in stellar colors
-reveals errors in the calibration.
+reveals errors in the calibration.  
 
 In addition to main-sequence stars, our flux standards should be
 useful for checking the color calibration.  As with the flux
 calibration in a single band, we can exclude some of the flux
-standards from the analaysis and use the excluded stars to see how
-well we recover their colors.
+standards from the analaysis and make bootstrap calculations of how
+well we recover the correct stellar colors.
 
 
 \section{Software Implementation}
