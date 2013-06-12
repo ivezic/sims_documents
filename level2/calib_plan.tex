@@ -1309,37 +1309,6 @@ Perturbations to the zeropoints arise from:
 \item{Detector QE variation due to varying focal plane temperature}
 \end{itemize}
 
-\begin{center}
-\begin{table}[htb]
-\caption{{\bf Repeatability error budget.  All values are in mmag} }
-\begin{tabular}{l | l | c c c c c c }
-Affected term & Effect &  $u$  & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
-{\bf $m_b^{obs}$} & {\bf Total} & 3.0 & 3.0 & 3.0 & 3.0 & 3.0 & 3.0 \\ \hline
-{\bf $\Delta m_b^{obs}$} & & & & \\
-& Atmospheric water vapor errors & 0.2 & 0 & 0 & 0 & 1.0 & 2.0  \\
-& Atmospheric aerosol and ozone errors & 1.6 & 2.1 & 0.1 & 0 & 0 & 0  \\
-& Undetected atmospheric variability & 1.4 & 0.7 & 0 & 0 & 0 & 0 \\
-& Monochromatic illumination correction errors & 3.0 & 0.5 & 0.8 & 0.5 & 0.1 & 0.6\\
-& Photodiode monitoring system errors & 0.8 & 0.5 & 0 & 0 & 0 & 0.1 \\
-& Calibration star SED errors & 5.6 & 0.8 & 0.5 & 0.4 & 0.4 & 0.2 \\
-& Focal plane temperature errors & 0 & 0 & 0 & 0 & 0 & 0.2 \\ 
-& {\bf Total} & 6.7 & 2.5 & 0.9 & 0.6 & 1.1 & 2.1 \\ \hline
-$Z_b^{obs}$ & & & & \\
-& Clouds & & &  \\
-& Camera gain variation & & & \\
-& Shutter variation & & & \\
-& Temperature induced QE variations & & & \\
-& Errors in standards & & & \\
-& {\bf Total} & & & \\ \hline
-{\bf Total} & & 7.4 & 3.9 & 3.1 & 3.1 & 3.2 & 3.7 \\ \hline
-{\bf Design Requirement} & & 7.5 & 5.0 & 5.0 & 5.0 & 7.5 & 7.5 \\ 
-{\bf Min. Requirement} & & 12 & 8.0 & 8.0 & 8.0 & 12 & 12 \\
-\end{tabular}
-\label{tab:rpt_error_budget}
-\end{table}
-\end{center}
-
-
 \subsection{Uniformity Errors}
 The uniformity errors must meet the uniformity requirement in the SRD (Requirement 2 in Section \ref{sec:photoreq}).  These are driven by systematic errors in $Z_b^{obs}$ and $\Delta m_b^{obs}$.  There are several sources:
 \begin{itemize}
@@ -1347,8 +1316,6 @@ The uniformity errors must meet the uniformity requirement in the SRD (Requireme
 \item{systematic variation of calibration star properties across the sky}
 \item{unmodeled systematic variations in the atmosphere}
 \end{itemize}
-
-
 
 
 
@@ -1414,14 +1381,9 @@ well we recover their colors.
 \section{Software Implementation}
 \label{sec:software}
 
-{\bf TODO - new section on software implementation } 
-
-Include : how do we calculate and apply color-correction terms, how do
-we use flat fields and illumination corrections, how/when do we run
-self-calibration and atmosphere fitting, and what do we report in DM
-(how do we store phi?)
 \subsection{Level 2 Data Products}
 %reference M. Juric Level 2 doc here
+
 LSST will characterize the system throughput to a degree necessary to achieve the SRD calibration requirements. The system throughput information will be captured by the {\em normalized system response function}, $\phi_b$:
 %
 \begin{equation}
@@ -1431,7 +1393,7 @@ LSST will characterize the system throughput to a degree necessary to achieve th
 which relates the object's specific flux (spectral energy distribution; SED), $F_\nu(\lambda)$, and the calibrated, in-band, flux at the top of the atmosphere, $F_b$:
 %
 \begin{equation}
-    F_b = \int F_\nu(\lambda) \phi_b(\lambda) d\lambda
+    F_b = \int F_\nu(\lambda) \phi_b(\lambda|\mathbf{p}) d\lambda
 \end{equation}
 In the equations above, $\mathbf{p}$ captures the dependence on time, telescope pointing ($alt$, $az$), and the position ($x$, $y$) at which the source has been images in the focal plane, and $S_b(\lambda|\mathbf{p})$ is the {\em total system throughput}. For details, see Eqs~4~and~5 in the LSST SRD.
 \\
@@ -1441,18 +1403,19 @@ LSST aims to deliver calibrated fluxes, $F_b$, in standard bandpass, for all obj
 These assumed SEDs and precomputed fluxes will not be appropriate for all cases. Examples include objects exhibiting SED variability, and objects with exotic SEDs. 
 To enable {\em recalibration} of the measured fluxes using user-supplied SEDs, we will retain and make available the normalized system response function, $\phi_b$, for every visit. This will allow the computation of the multiplicative corrections to the provided flux:
 %
-\begin{equation}
+\begin{equation} \label{eq:fluxCorr}
     c = { \int f_\nu^{user}(\lambda) \phi_b(\lambda|\mathbf{p}) d\lambda \over \int f_\nu^{flat}(\lambda) \phi_b(\lambda|\mathbf{p}) d\lambda }
 \end{equation}
 %
 and computation of the recalibrated flux as:
 %
 \begin{equation}
-    F_b^{user} = c F_b^{flat}
+     F_b^{user} = c F_b^{flat}
 \end{equation}
 %
+Note that $f_\nu^{flat}(\lambda) \equiv 1$ and since $\phi_b$ is normalized to one, the denominator of Eq.~\ref{eq:fluxCorr} is identically equal to one as well. Therefore, only the numerator needs to be computed to get $c$.
 
-\section{Storing and Obtaining $\phi_b(\lambda|\mathbf{p})$}
+\subsection{Storing and Obtaining $\phi_b(\lambda|\mathbf{p})$}
 
 The total system throughput, $S_b(\lambda | \mathbf{p})$, from which $\phi_b(\lambda | \mathbf{p})$ is derived, can be factored into two components, $S_b^{sys}$ and $S_b^{atm}$:
 %
@@ -1462,13 +1425,13 @@ The total system throughput, $S_b(\lambda | \mathbf{p})$, from which $\phi_b(\la
 %
 , capturing its dependence on the telescope+camera system and the atmosphere, respectively. The two will be measured and/or derived as described in Document XXX.
 
-$S_b^{sys}$ will be stored as a series of $(\lambda, x, y)$ data cubes. For each measurement, we expect on order of $\sim 1000$ bins in both $x$ and $y$, and about $\sim 200$ bins in $\lambda$. As discussed in Document XXX, $S_b^{sys}$ is expected to vary slowly with time, necessitating not more than $\sim$monthly re-characterization (and therefore, about one new data cube per month). These data cubes will be made available to the user, both in bulk form (e.g., FITS files), and as tables (or functions) in the LSST database.
+$S_b^{sys}$ will be stored as a series of $(\lambda, x, y)$ data cubes. For each measurement, we expect on order of $\sim 100$ bins in both $x$ and $y$, and about $\sim 200$ bins in $\lambda$. As discussed in Section \ref{sec:counts2photons}, $S_b^{sys}$ is expected to vary slowly with time, necessitating not more than $\sim$monthly re-characterization (and therefore, about one new data cube per month). These data cubes will be made available to the user, both in bulk form (e.g., FITS files), and as tables (or functions) in the LSST database.
 
 $S_b^{atm}$ will be computed from models of the atmosphere derived using the spectra obtained with the auxiliary telescope. The parameters of this model will be stored in the database and made available to the user, together with the software needed to compute $S_b^{atm}$. For ease of use, we will also provide database tables or functions returning $(\lambda, S_b^{atm}, \sigma_{S_b^{atm}})$ evaluated with $\Delta\lambda = 1 {\rm nm}$ resolution, for each visit\footnote{Or potentially for each CCD in a visit, in case of strong gradients in $S_b^{atm}$}.
 
 The radiometer/GPS data on precipitable water vapor will be stored in the database together with other exposure metadata. The user will be able to query this information for each exposure.
 
-\section{Database-level Recalibration}
+\subsection{Database-level Recalibration}
 
 We will provide an easy-to-use database interface to perform recalibration given user-defined SEDs. While the exact syntax is yet to be finalized, the following example should be illustrative of how the user could obtain recalibrated time series using the highest-level of provided APIs:
 %
