@@ -1736,29 +1736,204 @@ to $X=2.1$, for a typical atmospheric transmission response curve.}
 \end{figure}
 
 
+
+%\subsubsection{Errors in the shape of the hardware and atmospheric response}
+%\label{sec:apply_deltak}
+%
+%Correcting observed counts for the difference between the measured
+%shape of the hardware and atmospheric response curves and the standard
+%normalized bandpass, $\phi_b^{std}(\lambda)$, requires knowledge of the
+%SED of each star. However, with this knowledge (which comes from the
+%colors of each star), it is possible to
+%create lookup tables of $\Delta m_b^{meas}(x,y,alt,az,SED,t)$ (as in
+%Equation~\ref{eqn:magsFromCounts}) for various locations in the focal
+%plane in each exposure. A rough example is given in
+%Table~\ref{tab:delta_mags}.
+%
+%Assuming that the errors in the combined shape of the hardware and
+%atmospheric response curves add in quadrature, with the limits
+%described above (2~mmag error in $grizy$, 5~mmag error in $u$ due to
+%the hardware response curve; 1~mmag in $ugriz$, 2~mmag error in $y$
+%due to the atmospheric response curve), the final error in observed
+%magnitude due to both of these effects would be $<3$~mmag in $grizy$
+%and 5~mmag in $u$. There is an additional potential source of error in
+%these $\Delta m_b^{meas}$ corrections -- understanding of the true SED
+%of the source.  However, $\Delta m_b^{meas}$ varies only slowly with
+%changes in $g-i$ color and metallicity for these main sequence stars,
+%so if the color is known better than 0.02 mags and the metallicity is
+%determined to better than 2 dex, the error introduced by applying an
+%incorrect $\Delta m_b^{meas}$ is less than 1mmag.
+%
+%\subsection{Normalization of the Atmospheric Transmission}
+%\label{sec:atmo_norm}
+%
+%After applying each of the previous corrections, the raw counts have
+%been corrected to a `standard' bandpass for each filter,
+%$\phi_b^{std}(\lambda)$, using both the narrow-band flats and the
+%atmospheric model derived from the auxiliary telescope
+%observations. Gray-scale zeropoint variations (particularly on small
+%scales, $<$ several times the PSF) across the focal plane due to the
+%telescope hardware system have also been removed by the synthetic
+%flat. However, there still remain variations in the normalization of
+%the system response that result from gray extinction due to
+%clouds. The primary driver for the self-calibration procedure is to
+%correct for these gray zeropoint offsets that result from
+%atmospheric variations; a secondary use for the self-calibration is
+%to reduce any other systematic errors. 
+%
+%The self-calibration procedure selects bright, isolated main sequence
+%and white dwarf stars (or any star with well-known colors and a
+%well-known SED, to reduce errors in the applied
+%$\delta k$ values) from the sample of all observed stars after they are
+%corrected to the standard bandpass (`standardized'). Only non-variable stars will be
+%selected for self-calibration, based on approximately calibrated data
+%(say, a few percent) which will suffice in this context. It then uses
+%the many repeat observations $j$ of each star $i$ in a particular
+%filter to minimize Equation~\ref{eqn:chi2},
+%\begin{equation}
+%%\label{eqn:selfcalmin}
+%\chi^2 = \Sigma_{ij} \left(  { m_{b,ij}^{std} - m_{b,ij}^{model} \over
+%    \sigma_{b,ij}^{std} } \right)^2, \nonumber
+%\end{equation}
+%where the $m_{model}$ includes any remaining photometric corrections
+%that must be applied. In the most basic calibration plan, the model
+%magnitude would only include a single gray extinction zeropoint offset
+%per patch due to clouds, applied as in Equation~\ref{eqn:modelmag},
+%\begin{equation}
+%%\label{eqn:zp}
+%m^{model}_{b,ij} = m^{best}_{b,i} - \delta z_{b,j}, \nonumber
+%\end{equation}
+%where the size of each patch is approximately one CCD and $\delta
+%z_{b,j}$ is constant over the patch. A more complicated model
+%magnitude could be used if found desireable. This could include a
+%$\delta z_{b,j}(x,y)$ using higher order functional form in $x,y$ than
+%a simple constant.  Simulations of the Milky Way created using the
+%GALFAST model from Mario Juric (available at
+%\url{http://mwscience.net/trac/wiki/galfast}, based on measurements of
+%stellar distributions from SDSS) indicate that there will be
+%approximately 50--100 suitable calibration stars per patch over the
+%entire sky -- easily enough to support a higher order zeropoint
+%determination.  This model magnitude could also include additional
+%corrections for the hardware normalization (essentially, terms to
+%refine the illumination correction defined in Section~\ref{sec:ic}),
+%or terms which depend on the color of the stars (essentially, terms to
+%refine the hardware bandpass calibration), assuming those terms were
+%constant for long stretches (approximately a year's worth) of time.
+%
+%Minimizing Equation~\ref{eqn:chi2} requires solving for
+%approximately, $10^8$ $m_{b,i}^{best}$ and $10^8$ $\delta z_j$, in the
+%basic calibration model. Adding additional terms to refine the
+%calibration of the hardware normalization or bandpass shape increases
+%the number of parameters that must be fit for only slightly, as these
+%terms are assumed constant over large stretches (years's worth) of observations. Of
+%course, not all stars will be observed on all calibration patches, so
+%there will be only about 10$^{10}$ non-zero values of
+%$(m_b^{std})_{ij}$ (per band). Investigations using a conjugate
+%gradient method to compute $m_{b}^{best}$ and $\delta z_j$ for
+%approximately $10^6$ stars and $10^6$ patches were very successful; the
+%same method could be relatively easily parallelized for the full data
+%set.  We have also had preliminary success with simulations using a least squares
+%method to invert the matrix from Equation~\ref{eqn:chi2} and solve for $m_{b,i}^{best}$ and $\delta z_j$. 
+%
+%With the known values of $(\delta z)_j$, all measurements for all
+%stars from a patch can be re-calibrated, then analyzed for systematics
+%in $[(m_b^{std})_{ij} - (m_b^{best})_{i}]$ and $[(m_b^{obs})_{ij} -
+%(m_b^{best})_{i}]$ residuals (e.g., as a function of observation time,
+%position on the focal plane, airmass, seeing, stellar color,
+%brightness, seeing, etc.). The self-calibration step can be repeated
+%if necessary, with corrections for any discovered systematics
+%incorporated in the next-iteration values for
+%$(m_b^{std})_{ij}$. Alternatively, fits for parameterizations of these
+%systematics can be added directly into the model magnitudes used for
+%the self-calibration solution, as described above.
+%
+%Investigations of this final step in the internal calibration procedure are
+%detailed in the LSST self-calibration document produced by Yoachim, et al. These investigations use a
+%simulated stellar catalog generated with Mario Juric's GALFAST
+%code. This stellar catalog covers the entire sky with the exception of
+%the plane of the Milky Way, with more than $10^6$ stars over the
+%magnitude range between $16<r<21$.  Individual `observations' of each
+%star are generated by combining this `truth' stellar catalog with a
+%simulated pointing history from the LSST Operations Simulation team
+%(OpSim v3.61, available at
+%\url{http://opsimcvs.tuc.noao.edu/data_access/download_data.html}). For
+%each observation, the true magnitude is offset by terms which
+%correspond to signal-to-noise considerations appropriate for the
+%observation conditions and cloud extinction (represented by a
+%potentially large zeropoint offset combined with a smaller gradient
+%across each patch). Additional offset terms corresponding to flat
+%field and illumination correction errors and/or color terms related to
+%uncorrected hardware filter curve variations and atmospheric
+%extinction effects have been included in tests of the self-calibration;
+%further offset terms, such as clumpier cloud extinction, are under
+%investigation as well.
+%
+%When these offsets correspond to values within the range of the
+%expected uncorrected errors discussed in each section above
+%(sections~\ref{sec:hardware_norm}, \ref{sec:hardware_phi},
+%\ref{sec:atmo_phi}), the self-calibration procedure is able to fit for
+%$m_{b,i}^{best}$ and $\delta z_j$ values which meet the SRD
+%requirements (10 mmag uniformity and 5 mmag repeatability for the
+%stars in the simulation).  This fit converges to meet the SRD
+%requirements after slightly less than 2 years of observations, or
+%about 24 visits per star; with more observations, photometric
+%uniformity continues to improve.
+%
+%A set of example plots corresponding to a baseline self-calibration
+%test are shown in Figure~\ref{fig:selfcal_fiducial}.  In this
+%simulation, observations over two years with Declination between -80
+%and 0 degrees were used; regions slightly further north or south are
+%part of OpSim, but they because they are not part of the main footprint of
+%the survey often receive fewer visits and thus skew the results of
+%these investigations. Observations for each star were generated with
+%the following offsets: random gray offsets for cloud extinction
+%(between 0-1.0 magnitudes of extinction, uniform across the field of
+%view plus a gradient of up to 5mmag across each patch); a color term
+%corresponding to an uncorrected radial gradient in the filter bandpass
+%(constant over time), along with a random jitter in the filter
+%placement; a color term corresponding to an uncorrected atmospheric
+%extinction effect (varying for each visit); and a constant gray offset
+%corresponding to errors in the photometric flat field (varying slowly
+%across the field of view). Each of these offsets were applied with
+%values consistent with those expected from the sections above.
+%
+% After running the self-calibration procedure to generate simple
+%$\delta z_j$ values for each patch, the map of residuals between the
+%calibrated magnitudes ($m_{b,i}^{cal} = m_{b,i}^{meas} - \delta z_j$)
+%and the best-fit magnitudes ($m_{b,i}^{best}$) was examined to search
+%for remaining systematics. These systematics (which would include the
+%radial color term and photometric flat field error) were incorporated
+%into an updated $m_{b,i}^{cal}$ value, and the self-calibration
+%procedure rerun on the new values. This process was iterated once more
+%to produce the plots shown in Figure~\ref{fig:selfcal_fiducial}. As
+%can be seen, the distribution of best-fit vs. true magnitudes of the
+%stars has an RMS of 4.1~mmag (well below the SRD requirement on
+%uniformity of 10~mmag), while the RMS of the calibrated vs. true
+%magnitudes has a median value of 5.0~mmag (consistent with the SRD
+%requirement on repeatabilty of 5~mmag).
+
+%/data/tmp/July_rev/r_1e6
 \begin{figure}
 \centering
 \centering
 \fbox{
 \begin{minipage}{6.5in}
-\subfloat[\label{stardense}]{\includegraphics[width=3.2in]{Stardensity}}
+\subfloat[\label{nobs}]{\includegraphics[width=3.2in]{Snobs}}
 \subfloat[\label{sdmag}]{\includegraphics[width=3.2in]{Sdmag}} \\
-\subfloat[\label{starstrue}]{\includegraphics[width=3.2in]{StatsTruemBest}}
-\subfloat[\label{starsrms}]{\includegraphics[width=3.2in]{StatsRMSStars}} 
-\caption{{\small
-{\bf Results from a self-calibration investigation.} Panel \ref{stardense} shows
-the stellar density across the sky relevant for the simulation - note
-the Milky Way plane has been cut out of the simulation, and we have
-only used pointings with declination between -80 and 0 degrees.
-Conditions for this simulation are described in the text.  Panel \ref{sdmag}
-shows the true minus best-fit stellar magnitudes residuals across the
-sky after iterating the self-calibration solver. Panel \ref{starstrue} shows
-similar information, but as a histogram of all stars, demonstrating
-the `uniformity'  requirement in the SRD. Panel \ref{starsrms} shows
-a histogram of the RMS of the difference between the calibrated and
-true magnitudes for each star (after self-calibration iteration),
-demonstrating the `repeatability' requirement in the SRD. 
-}}
+\subfloat[\label{starstrue}]{\includegraphics[width=3.2in]{Sdamg_hist}}
+\subfloat[\label{starsrms}]{\includegraphics[width=3.2in]{Srepeat_IQR_bright_hist}} 
+\caption{{\small {\bf Results from a self-calibration simulation.}
+Panel \ref{nobs} shows the number of visits across the sky for the
+first two years of the survey in $r$-band.  The color range has been
+truncated since the deep-drilling fields can have over 1000 visits.
+Conditions for this simulation are described in the text.  Panel
+\ref{sdmag} shows the true minus best-fit stellar magnitudes residuals
+across the sky after iterating the self-calibration solver. Panel
+\ref{starstrue} shows similar information, but as a histogram of all
+stars, demonstrating the `uniformity' requirement in the SRD. Panel
+\ref{starsrms} shows a histogram of the RMS of the difference between
+the calibrated and true magnitudes for bright stars, demonstrating the
+`repeatability' requirement in the SRD.  }}
 \label{fig:selfcal_fiducial}
 \end{minipage}
 }
@@ -1970,60 +2145,127 @@ on Kurucz SEDs.}
 \section{Testing and Verification}
 \label{sec:verification}
 
-The calibration process presented above is complex, and meeting the SRD requirements
-is dependent on understanding and controlling a large number of small perturbations.  We seek to verify that our approach will produce the required results, and are doing so with different techniques that apply to the stages of LSST's construction and operation.   During the current final design phase, we are employing simulation tools, backed up when possible by measurements on the sky from existing telescopes.   \citep{Burke2013} and \citep{Burke2010b} are examples of this approach.  During the construction phase, we will be able to feed measured data from actual telescope components into the simulations.   During operations, our focus is on designing metrics that will let us assess the calibration quality on an ongoing basis.
+The calibration process presented above is complex, and meeting the
+SRD requirements is dependent on understanding and controlling a large
+number of small perturbations.  We seek to verify that our approach
+will produce the required results, and are doing so with different
+techniques that apply to the stages of LSST's construction and
+operation.  During the current final design phase, we are employing
+simulation tools, backed up when possible by measurements on the sky
+from existing telescopes.  \citep{Burke2013} and \citep{Burke2010b}
+are examples of this approach.  During the construction phase, we will
+be able to feed measured data from actual telescope components into
+the simulations.  During operations, our focus is on designing metrics
+that will let us assess the calibration quality on an ongoing basis.
 
 \subsection{Self Calibration Simulation}
+
+One of the final steps in the LSST calibration process is running
+self-calibration, solving for a large number of stellar magnitudes and
+observation zeropoints.  The accuracy and precision of the
+self-calibration procedure has complicated dependencies on various
+sources of noise as well as the overall observing strategy which
+determines how well different regions of sky can be tied together.  We
+have undertaken a series of simulations to test the LSST
+self-calibration process.
+
+To simulate self-calibration, we require a catalog of realistic LSST
+observations of bright stars.  We generate this catalog by combining
+GALFAST and Opsim.  The GALFAST code generates a realistic model of
+the Milky Way stellar populations, matching the observed color and
+metallicity distributions from SDSS.  The LSST Operations simulator
+(Opsim) can then be used to generate observations of the stars in the
+GALFAST model.  For each Opsim pointing, we generate a list of
+observed stars along with an observed magnitude that includes
+atmospheric and hardware effects.
+
+An example self-calibration simulation is shown in
+Figure~\ref{fig:selfcal_fiducial}.  This simulates the first two years
+of LSST observations in $r$-band, with 1.3 million stars with
+$r\sim17$ distributed fairly uniformly across the sky.  The observed
+stellar magnitudes include offsets for cloud extinction, shot-noise
+based on the Opsim 5$\sigma$-limiting depth, errors due to ghosting,
+and errors based on variations in the filter throughput and placement.
+The results of the simulation show that while we are very close to
+meeting the SRD uniformity and repeatability requirements, there is
+large scale structure in the stellar magnitude residuals across the
+sky.
+
+Self-calibration simulations will continue to be important during
+commissioning and regular survey operations.  By running simulations
+that match the conditions of the actual LSST observations, we will be
+able to identify regions of the sky which are poorly linked to the
+rest of the survey.  We will also be able to identify which spatial
+scales have the largest errors, which can have important ramifications
+for cosmological observations (e.g., galaxy clustering)
+\citep{Huterer13}.
+
+
 \subsection{Auxiliary Telescope Simulation}
+XXX-Have we simulated the aux telescope?
 
 \subsection{Calibration Performance Metrics}
 
+
+
 \subsubsection{Repeatability}
 
-XXX-Testing our repeatability is rather trivial, as that does not require
-any external data.  We simply apply the best-fit patch zeropoints to
-each patch and measure how well we make repeat measurements of each
-star.
+
+Testing our repeatability is rather trivial, as it does not require
+moving the observations to a flux-calibrated magnitude system.  We
+simply apply the best-fit patch zeropoints from self-calibration and
+measure how well we make repeat measurements of each star.  
+
+While measuring the repeatability performance is easy, our simulations
+of the self-calibration procedure have shown this is one of the more
+difficult SRD requirements to achieve.  
 
 \subsubsection{Spatial Uniformity}
 
-XXX-We can compare to previous surveys.  Pan-Starrs notes that they
-tend to see SDSS-shaped footprints in their residuals when comparing
-surveys.  This will probably only put an upper limit on the
-uniformity, as LSST will be deeper and/or have larger coverage than
-available comparison surveys.  Simulations can also help identify
-regions which we would expect could be poorly linked to the rest of
-the survey (this is expected to be a problem early in the survey
-before all regions of the sky have many well-linked observations).  We
-can mesure very accurately our RMS as a function of patch and
-magnitude, and thus generate mock catalog realizations to run through
-the self-calibration procedure.  These mock catalogs should give a
-good picture of the spatial uniformity.
+Comparing LSST results to previous surveys is one direct way
+to test the calibration uniformity.  SDSS, Pan-Starrs, DES, and Sky
+Mapper will all have large overlaps with the LSST survey area.
+Pan-Starrs notes that they tend to see SDSS-shaped footprints in their
+residuals when comparing surveys \citep{Schlafly10}, suggesting their
+calibration uniformity is at least better than SDSS.
+
+This will probably only put an upper limit on the uniformity achieved, as
+LSST will be deeper and/or have larger coverage than available
+comparison surveys.  Simulations can also help identify regions which
+we would expect could be poorly linked to the rest of the survey (this
+is expected to be a problem early in the survey before all regions of
+the sky have many well-linked observations).  We can measure very
+accurately our RMS as a function of patch and magnitude, and thus
+generate mock catalog realizations to run through the self-calibration
+procedure.  These mock catalogs should give a good picture of the
+spatial uniformity.
 
 \subsubsection{Flux Calibration}
 
 As mentioned in \S\ref{subsec:fluxstars}, there should soon be a
 system of white dwarf flux standards with HST observations.  We can
 use subsets of these flux standards to make bootstrap estimates of our
-overall flux calibration.  This is also a potential test of the
-spatial uniformity of the calibration, although this will be limited
-if the flux standards are concentrated on the equator.
+overall flux calibration.  High precision flux standards also present
+a possible test of the calibration spatial uniformity, although they
+may be limited of limited use if the standards are concentrated on the
+equator.
 
 \subsubsection{Color Calibration}
 
 There are now a number of techniques for comparing stellar colors
-accross the sky.  \citet{Ivezic04} use a principle color analysis,
+across the sky.  \citet{Ivezic04} use a principle color analysis,
 \citet{High09} use a stellar locus regression, and \citet{Schlafly10}
 look at the color of main-sequence turn-off stars.  For all of these
-techniques, the signal is usually dominated by dust extinction.
+techniques, the signal is often dominated by dust extinction.
 However, at high galactic latitudes, the differences in stellar colors
-reveals errors in the calibration.
+reveals errors in the calibration.  
 
 In addition to main-sequence stars, our flux standards should be
 useful for checking the color calibration.  As with the flux
 calibration in a single band, we can exclude some of the flux
-standards from the analaysis and use the excluded stars to see how
-well we recover their colors.
+standards from the analysis and make bootstrap calculations of how
+well we recover the correct stellar colors.
+
 
 
 \section{Software Implementation}
