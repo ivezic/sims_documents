@@ -286,11 +286,11 @@ describe them here, with full descriptions in Section~\ref{sec:calib_hardware}:
     by a tunable laser, capable of producing light from $300-1100$~nm
     and tunable in 1~nm increments. The brightness of the screen is measured 
     with a NIST-calibrated photodiode, so that the relative intensity at different 
-    wavelengths is precisely determined.  
+    wavelengths is precisely determined. } 
 \item{A 1.2-m auxiliary telescope with an $R \approx 400$ spectrograph,
     located adjacent to the LSST itself. This auxiliary telescope will
     obtain spectra of a chosen set of atmospheric probe stars across the sky to
-    determine an atmospheric absorption model. 
+    determine an atmospheric absorption model.} 
 \item{Water vapor monitoring system, consisting of a GPS system and a 
     microwave radiometer attached copointed with the LSST telescope, and monitoring 
     the same field of view.  This supplements the auxiliary telescope spectra, which are
@@ -1846,6 +1846,12 @@ Still TBR.  This will likely determine the required frequency of taking monochro
 
 \item{Effects of uncertainties in focal plane temperature on wavelength-dependent detector QE}
 
+The detector QE at wavelengths near the red cutoff is affected by temperature, with higher temperatures resulting in higher QE.
+The focal plane temperature is monitored by the camera, allowing the temperature at any point on the focal plane to be predicted to
+0.5 deg K with respect to the reference condition when the monochromatic dome flats were obtained.  Figure \ref{fig:TempVarEffects}
+shows, as expected that the effect of that prediction error on the natural magnitudes is negligible for all but the y-band, where 
+it is 0.2 mmag.   There is, of course, a larger effect on the zeropoints, discussed below.
+
 \end{itemize}
 
 \subsubsection{Errors in $Z_b^{obs}$}
@@ -1883,7 +1889,8 @@ Affected term & Effect &  $u$  & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
 & Undetected atmospheric variability & 1.4 & 0.7 & 0 & 0 & 0 & 0 \\
 & Monochromatic illumination correction errors & 3.0 & 0.5 & 0.8 & 0.5 & 0.1 & 0.6\\
 & Photodiode monitoring system errors & 0.8 & 0.5 & 0 & 0 & 0 & 0.1 \\
-& Calibration star SED errors & 5.6 & 0.8 & 0.5 & 0.4 & 0.4 & 0.2 \\ 
+& Calibration star SED errors & 5.6 & 0.8 & 0.5 & 0.4 & 0.4 & 0.2 \\
+& Focal plane temperature errors & 0 & 0 & 0 & 0 & 0 & 0.2 \\ 
 & {\bf Total} & 6.7 & 2.5 & 0.9 & 0.6 & 1.1 & 2.1 \\ \hline
 $Z_b^{obs}$ & & & & \\
 & Clouds & & &  \\
@@ -1928,7 +1935,7 @@ The uniformity errors must meet the uniformity requirement in the SRD (Requireme
 \caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation.  The color scale
 shows the log10 of the number of samples at that point.  The periodic behavior of the zeropoint density is an
 artifact of OpSim's treatment of cloud cover.} }
-\label{fig:ZPErrVsZP} }
+\label{fig:TempVarEffects} }
 \end{minipage}
 }
 \end{figure}
@@ -1945,6 +1952,17 @@ the randomly chosen input error curve for the photodiode.  Panel \ref{b} shows t
 on Kurucz SEDs.}
 }}
 \label{fig:PDerrs}
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{fpTempEffects.png}
+\caption{ {\small {\bf Effect of 0.5 deg K variation in focal plane temperature on natural mags} }
+\label{fig:tempVarEffects} }
 \end{minipage}
 }
 \end{figure}
