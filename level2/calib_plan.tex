@@ -1422,6 +1422,73 @@ self-calibration and atmosphere fitting, and what do we report in DM
 (how do we store phi?)
 \subsection{Level 2 Data Products}
 %reference M. Juric Level 2 doc here
+LSST will characterize the system throughput to a degree necessary to achieve the SRD calibration requirements. The system throughput information will be captured by the {\em normalized system response function}, $\phi_b$:
+%
+\begin{equation}
+    \phi_b(\lambda|\mathbf{p}) = {\lambda^{-1} S_b(\lambda|\mathbf{p}) \over \int \lambda^{-1} S_b(\lambda|\mathbf{p}) d\lambda}
+\end{equation}
+%
+which relates the object's specific flux (spectral energy distribution; SED), $F_\nu(\lambda)$, and the calibrated, in-band, flux at the top of the atmosphere, $F_b$:
+%
+\begin{equation}
+    F_b = \int F_\nu(\lambda) \phi_b(\lambda) d\lambda
+\end{equation}
+In the equations above, $\mathbf{p}$ captures the dependence on time, telescope pointing ($alt$, $az$), and the position ($x$, $y$) at which the source has been images in the focal plane, and $S_b(\lambda|\mathbf{p})$ is the {\em total system throughput}. For details, see Eqs~4~and~5 in the LSST SRD.
+\\
+
+LSST aims to deliver calibrated fluxes, $F_b$, in standard bandpass, for all objects and sources in its catalog. We plan to provide the calibrated fluxes for each source/object computed assuming i) flat $F_\nu(\lambda) = const\,$ SED ($F_b^{flat}$), and ii) an SEDs chosen from a library of SEDs, that is consistent with object properties (measured color being the most apparent one, but shape, Galactic longitude and latitude, and others may be considered as well). We expect most users will prefer and use the latter.
+
+These assumed SEDs and precomputed fluxes will not be appropriate for all cases. Examples include objects exhibiting SED variability, and objects with exotic SEDs. 
+To enable {\em recalibration} of the measured fluxes using user-supplied SEDs, we will retain and make available the normalized system response function, $\phi_b$, for every visit. This will allow the computation of the multiplicative corrections to the provided flux:
+%
+\begin{equation}
+    c = { \int f_\nu^{user}(\lambda) \phi_b(\lambda|\mathbf{p}) d\lambda \over \int f_\nu^{flat}(\lambda) \phi_b(\lambda|\mathbf{p}) d\lambda }
+\end{equation}
+%
+and computation of the recalibrated flux as:
+%
+\begin{equation}
+    F_b^{user} = c F_b^{flat}
+\end{equation}
+%
+
+\section{Storing and Obtaining $\phi_b(\lambda|\mathbf{p})$}
+
+The total system throughput, $S_b(\lambda | \mathbf{p})$, from which $\phi_b(\lambda | \mathbf{p})$ is derived, can be factored into two components, $S_b^{sys}$ and $S_b^{atm}$:
+%
+\begin{equation}
+    S_b(\lambda, t, alt, az, x, y) = S_b^{sys}(\lambda, x, y, t) \times S_b^{atm}(\lambda, alt, az, t)
+\end{equation}
+%
+, capturing its dependence on the telescope+camera system and the atmosphere, respectively. The two will be measured and/or derived as described in Document XXX.
+
+$S_b^{sys}$ will be stored as a series of $(\lambda, x, y)$ data cubes. For each measurement, we expect on order of $\sim 1000$ bins in both $x$ and $y$, and about $\sim 200$ bins in $\lambda$. As discussed in Document XXX, $S_b^{sys}$ is expected to vary slowly with time, necessitating not more than $\sim$monthly re-characterization (and therefore, about one new data cube per month). These data cubes will be made available to the user, both in bulk form (e.g., FITS files), and as tables (or functions) in the LSST database.
+
+$S_b^{atm}$ will be computed from models of the atmosphere derived using the spectra obtained with the auxiliary telescope. The parameters of this model will be stored in the database and made available to the user, together with the software needed to compute $S_b^{atm}$. For ease of use, we will also provide database tables or functions returning $(\lambda, S_b^{atm}, \sigma_{S_b^{atm}})$ evaluated with $\Delta\lambda = 1 {\rm nm}$ resolution, for each visit\footnote{Or potentially for each CCD in a visit, in case of strong gradients in $S_b^{atm}$}.
+
+The radiometer/GPS data on precipitable water vapor will be stored in the database together with other exposure metadata. The user will be able to query this information for each exposure.
+
+\section{Database-level Recalibration}
+
+We will provide an easy-to-use database interface to perform recalibration given user-defined SEDs. While the exact syntax is yet to be finalized, the following example should be illustrative of how the user could obtain recalibrated time series using the highest-level of provided APIs:
+%
+\begin{verbatim}
+  SELECT
+     midPointTai,
+     filter,
+     recalibPsFlux(sourceId, mySeds.sedId, "mySeds")    as flux,
+     recalibPsFluxErr(sourceId, mySeds.sedId, "mySeds") as fluxErr,
+  FROM
+     Sources, mySeds
+  WHERE
+     Sources.objectId = mySeds.sedId
+  INTO
+     myRecalibratedMagnitudes
+\end{verbatim}
+%
+The query above assumes that, for each object of interest, the user has uploaded their SED into a table named {\tt mySeds} and keyed it by {\tt objectId}. Given the name of the table and the ID of the SED entry, functions {\tt recalibPsFlux} and {\tt recalibPsFluxErr} will use the {\tt sourceId} to locate the appropriate $S_b^{sys}$ and $S_b^{atm}$ pertaining to that specific measurement, compute $\phi_b$ and the correction $c$, and return the recalibrated point source flux and its error, respectively.
+
+A suite of lower level functions will be provided as well, providing a more granular control of the recalibration process.
 
 \section{Risks and Mitigations}
 \label{sec:risks}
