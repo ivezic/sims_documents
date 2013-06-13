@@ -6,6 +6,7 @@
 \usepackage{fixltx2e}
 \usepackage{hyperref}
 \usepackage{boxedminipage}
+\usepackage{pdflscape}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% author-defined commands
@@ -311,51 +312,6 @@ Note that four classes of objects participate in the calibration process in diff
 \item Science objects.  Calibration of science objects utilizes the results of processing the standards and the calibration stars, and the measurement of the system bandpass.   If an SED is supplied for an object, an accurate standard magnitude can then be calculated.
 \end{itemize}
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6.5in]{CalibDataProdSchematic1}
-\caption{ {\small {\bf The overall flow of the Data Release photometric
-      calibration process.} The process consists of three main steps.  In the first, Flat SED Calibration, science image pixels are processed to instrumental magnitudes as if all calibration object SEDs were flat ($F_{\nu} = const$).  The second step, SED Correction, corrects the flat SED object counts to account for the real system bandpass and calibration object SEDs, generating corrected magnitudes.  The final step, Self Calibration, solves a least squares system in the SED corrected magnitudes to yield the standard magnitudes for the calibration objects and a spatially dependent zeropoint correction for each exposure.   Additionally, corrections to the illumination correction are calculated, for use in "Determine Illumination Correction" (Figure \ref{fig:overview_flowchart2}).  Note that SED Correction and Self Calibration are performed only for calibration objects.  General science objects are calibrated later, using the data products from the calibration process (Figure \ref{fig:overview_flowchart4}) }
-\label{fig:overview_flowchart1} }
-\end{minipage}
-}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6.5in]{CalibDataProdSchematic2}
-\caption{ {\small {\bf Flat SED Flat Determination.} Determination of the flat SED flat (FSF) is of central importance.  The initial step in the calibration process treats all objects as if their SED were flat.  This is consistent only if the flatfield is that for a flat SED, as transmitted through a reference atmosphere.  Since the illumination source for the actual broadband flat does not have the required SED, we cannot use it directly.  Instead, we synthesize the required flat from the monochromatic flats.  These flats as measured are contaminated by light which arrives from paths other than the direct path, such as ghosting.  These effects are taken out by the illumination correction.  Finally, the monochromatic flats are taken relatively infrequently, and will not reflect changes on shorter timescales, such as the appearance of new dust particles.  We account for this by multiplying the synthesized FSF by the ratio of two broadband flats, one at the current epoch and one at the reference epoch, when the monochromatic flats were gathered.}
-\label{fig:overview_flowchart2} }
-\end{minipage}
-}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6.5in]{CalibDataProdSchematic3}
-\caption{ {\small {\bf System Bandpass Determination.} The system bandpass, $\phi$, is determined for every exposure, and is a major output of the calibration process.  It is the normalized product of the atmospheric bandpass and that of the telescope/camera system.  The atmospheric bandpass is determined by fitting an atmospheric model to a set of measured atmospheric data.  The bandpass of the telescope/camera system is measured by the corrected monochromatic flats, modified by current data from the camera system, principally focalplane temperature and the filter position. }
-\label{fig:overview_flowchart3} }
-\end{minipage}
-}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6.5in]{CalibDataProdSchematic4}
-\caption{ {\small {\bf Science Object Calibration.}  Photometric calibration for science objects takes place in two stages.  In the first, the natural magnitudes are calculated, using the zeropoint model for each exposure.  These are stored in the Level 2 databases.  The second, optional, stage, relies on knowledge of the object SEDs, which is an external input to the system, supplied by the user.   The object SED, in conjunction with the system bandpass, $\phi$, allows standard magnitudes to be calculated.  These are considered a Level 3 data product }
-\label{fig:overview_flowchart4} }
-\end{minipage}
-}
-\end{figure}
-
 The following section will provide a more in-depth overview of the
 calibration process. We will start with a review of what
 is physically happening to photons in their path toward the focal
@@ -603,128 +559,11 @@ Ozone is dominantly a stratospheric component of the atmosphere, and is routinel
 
 To summarize the effects of wavelength-dependent atmospheric variations, they are sufficiently large, and occur sufficiently rapidly, that they must be corrected by an atmospheric model with fidelity substantially greater than the traditional photometrist's extinction model.   The combination of the auxiliary telescope and the water vapor monitoring system will supply the data required for construction of these atmospheric models.  It is also worth emphasizing that correcting for these effects requires not only an accurate bandpass model, but also SEDs for the objects being calibrated.   Calibration stars will be picked from well defined stellar populations to minimize SED uncertainty.   SED determination for arbitrary science objects, such as supernovae and galaxies, will be more challenging, and may limit the accuracy of their photometric calibration.
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/AirmassAcrossFOV.png}
-\caption{ {Effect on natural magnitudes of Kurucz stars from airmass variation across the field when the airmass at
-field center is 2.1}.
-\label{fig:dmag_fov} }
-\end{minipage}
-}
-\end{figure}
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/CTIO_PWV}
-\caption{ {Three years of PWV measured at CTIO (\citep{Hansen1975}), based on the depth of the 1.87 $\mu m$ line to the
-Solar continuum at 1.65 $\mu m$}.
-\label{fig:CTIO_PWV} }
-\end{minipage}
-}
-\end{figure}
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/GeminiPWV}
-\caption{ {PWV measured on a single day at Gemini S \citep{Radomski2010}.  Two
-techniques were used, GPS and Phoenix, an IR spectrograph, and the
-data are in good agreement.  Note the decline of approximately 4 mm
-over a period of two hours.  This is a case where use of a single
-average atmosphere for a whole night would give poor results,
-especially in the y-band.}
-\label{fig:GeminiPWV} }
-\end{minipage}
-}
-\end{figure}
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/PWV_satellite_2}
-\caption{ {PWV measurement from the MODIS satellite at one time in the region
-around Cerro Pachon.   The color scale ranges from 4.3 mm (blue) to 7.6 mm (dark red). Note the strong E-W gradient in PWV.}
-\label{fig:PWV_satellite} }
-\end{minipage}
-}
-\end{figure}
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/KuruczPwv1_vs_6.png}
-\caption{ {The effects of varying $\phi$ due to change in PWV from 1mm to 6mm -
-about the range observed at Cerro Pachon.  The SEDs are for Kurucz
-stars at varying temperatures and metallicities.}
-\label{fig:KuruczPWV} }
-\end{minipage}
-}
-\end{figure}
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/aer_casleo.png}
-\caption{ {Varying aersol optical depth at CASLEO, El Leoncito, Argentina.  The site elevation at 2550m is similar to CP.}
-\label{fig:CASLEO} }
-\end{minipage}
-}
-\end{figure}
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/AerosolVar}
-\caption{ {Lidar measurements of aerosol extinction at 355nm over a single night
-near Greenbelt, MD \citep{Veselovskii2013}.  Cerro Pachon is, of
-course, a different environment, and is at an altitude of 2700m, removing
-much of the variability.  Even above that altitude, however,
-significant variation on rapid time scales remains.}
-\label{fig:AerosolVar} }
-\end{minipage}
-}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/KuruczAerosol_04vs16.png}
-\caption{ {Effect on natural magnitude of Kurucz stars from varying the aerosol optical depth from 0.04mag to 0.16mag} 
-\label{fig:KuruczAerosol} }
-\end{minipage}
-}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/hist_ozone9Y.png}
-\caption{ {Variability of ozone column depth at Cerro Pachon from the TOMS satellite instrument} 
-\label{fig:O3atCP} }
-\end{minipage}
-}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/KuruczO3_50dobs.png}
-\caption{ {Effect on natural magnitude of Kurucz stars from varying the ozone column by 50 Dobson units} 
-\label{fig:KuruczO3} }
-\end{minipage}
-}
-\end{figure}
 
 \subsection{Throughput Variations Due to Contamination}
 
@@ -757,42 +596,7 @@ requirements would permit. Roughly speaking, these effects reach a level of abou
 effects must be accurate at the 90-95\% level.  This issue is discussed in detail in Section
 \ref{sec:error_budget}
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{delta_mags}
-\caption{ {\small {\bf $\Delta m_b^{obs}$ due to variations in
-hardware and atmospheric bandpass shape.} Two main sequence Kurucz model
-stars, one blue (35000 K, approximately O type) and one red (6000 K
-approximately G type), were used to generate
-natural magnitudes (see 
-Eqn~\ref{eqn:natmag}) using three different atmospheric transmission
-profiles and two different hardware transmission profiles. The stellar
-flux profiles are shown in the top center panel, while the atmospheric
-transmission functions ($S^{atm}(\lambda)$) are shown across the
-second row and the two hardware transmission profiles
-($S_b^{sys}(\lambda)$) are duplicated across the third row. The
-atmospheric transmission profiles correspond to an airmass X=1.0, 1.2
-and 1.8 (from left to right), with variable atmospheric absorption
-components. The X=1.0 atmosphere is very similar but not
-identical to the current LSST default X=1.2 atmosphere throughput
-curve, which is used as `standard' here. The hardware transmission
-profiles consist of a `standard' profile (matching the LSST current
-expected values) and version where the filter throughputs have been
-shifted by 1\% of the effective wavelength of each filter (consistent
-with the shift expected near the spatial edge of each filter). The final row
-demonstrates the changes in observed magnitudes produced by the X=1.0,
-`standard' and X=1.8 atmospheres (left to right, respectively),
-combined with both the `standard' hardware transmission (represented by
-the star points) and the +1\% shifted hardware transmission (represented
-by the filled circles) for both the red and blue stars. The exact
-differences in magnitudes resulting from this calculation are listed in
-Table~\ref{tab:delta_mags}. }
-\label{fig:delta_mags} }
-\end{minipage}
-}
-\end{figure}
+
 
 \begin{center}
 \begin{table}[htb]
@@ -821,33 +625,6 @@ X=1.8, +1\% sys shift & blue & 16 & 24 & 24 & 22 & 15 & 22 \\ \hline
 \label{tab:delta_mags}
 \end{table}
 \end{center}
-
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{delta_mags2}
-\caption{ {\small {\bf $\Delta m_b^{obs}$ due to
-a change in bandpass shape corresponding to a filter shift of $1\%$
-and an $X=1.8$ atmosphere.} 850 Kurucz models with temperatures
-between 5000K and 35000K and metallicity indexes between -5.0 and 1.0
-(solar) were combined with a standard system response (standard
-atmosphere and standard hardware bandpasses), then with a total system
-response where the atmosphere was replaced by an X=1.8 atmosphere and
-the filter component of the hardware transmission was shifted by 1\%
-(as in Fig~\ref{fig:delta_mags}). The points in each plot are color-coded by
-metallicity, in steps of 1 dex between -5.0 (blue) to 1.0 (magenta).  It can be seen that the
-relationship between $\Delta m_b^{obs}$ and $g-i$ can be parameterized,
-although generally not with a simple linear relationship. In some
-cases (such as seen in the $\Delta u$ and $\Delta g$ panels),
-calculating $\Delta m_b^{obs}$ to SRD levels may require more than a simple
-$g-i$ color, but this is then primarily a function of metallicity
-(which is possible to determine given the $u-g$ color in addition to
-the $g-i$ information). }
-\label{fig:delta_mags2} }
-\end{minipage}
-}
-\end{figure}
 
 \section{From Counts to Flux}
 \label{sec:counts2photons}
@@ -960,57 +737,6 @@ Because the illumination correction is wavelength dependent (highly so near the 
 radius in the focal plane and star color, for a set of Kurucz main sequence stars.   The effects are clearly too large to ignore, or they would overwhelm the error budget.   This is discussed further in Section \ref{sec:error_budget}.  It seems likely that the quality 
 of the illumination corrections is currently limiting the photometric accuracy of large surveys, and we expect the LSST treatment of the illumination correction to yield significant improvement.
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\begin{tabular}{cc}
-\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/monochromatic_360nm_direct.png}}
-	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/monochromatic_360nm_total.png}} \\
-\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/monochromatic_360nm_ghost.png}}
-	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/monochromatic_360nm_screen.png}} \\
-\end{tabular}	
-\caption{ {FRED calculation of flat from monochromatically illuminated screen.  The u filter is in place, 
-and the illuminating wavelength is 360nm, near the red limit of the filter.  (a) direct illumination
-(b) total illumination (c) ghost illumination (d) screen illumination.  The illumination correction
-is the ratio direct / total.} 
-\label{fig:FRED360nm} }
-\end{minipage}
-}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\begin{tabular}{cc}
-\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_u_ghosting.png}}
-	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_g_ghosting.png}} \\ 
-\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_r_ghosting.png}}
-	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_i_ghosting.png}} \\
-\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_z_ghosting.png}}
-	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_y4_ghosting.png}} \\
-\end{tabular}	
-\caption{ {The effects of the illumination correction, as calculated by \citep{AndyR2013}, on the natural magnitudes of Kurucz stars
-of varying temperatures.  All 6 LSST passbands are shown.} 
-\label{fig:IllumCorrKurucz} }
-\end{minipage}
-}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{IllumCorrFigs/fidic29apr_input_vs_recovered_ic.png}
-\caption{ \small {Recovery of input broadband illumination correction by self calibration.  The input illumination 
-correction was wavelength independent, but strongly dependent on radial position, as shown.   The recovered illumination
-correction is essentially identical to that input.}
-\label{fig:SelfCalIllumCorr} }
-\end{minipage}
-}
-\end{figure}
-
 \subsection{Measuring the Atmospheric Transmission}
 Next, considering $S^{atm}(\lambda,alt,az,t)$, we will again separate
 the measurement of the shape of the atmospheric response and the
@@ -1045,51 +771,81 @@ of a given star nearly constant for all exposures.  The full calibration process
 including both atmospheric fitting and gray extinction determination through self calibration, yielded repeatability 
 of approximately 8 mmag - good enough to meet the SRD minimimum requirement for repeatability.
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/burk0711/f5.png}
-\caption{ {Pattern of observing atmospheric probe stars from \citep{Burke2010b}.  The Solid lines trace
-the temporal order of the observations} 
-\label{fig:BurkeObsPattern} }
-\end{minipage}
-}
-\end{figure}
+Using MODTRAN we can generate atmospheric transmission profiles at a
+variety of airmasses for
+each of these major sources of atmospheric extinction -- molecular
+(Rayleigh) scattering, aerosol (Mie) scattering, and molecular
+absorption from each of \ozone, \water, and combined \oxy/trace species, as is
+shown in Figure~\ref{fig:absorption_comps} for a standard atmospheric
+composition (the 1976 US Standard). These
+profiles capture the wavelength dependence of each component
+individually, over a grid of airmasses, and can be used as
+templates to generate new atmospheric transmission curves for any
+desired atmospheric composition as follows:
+\begin{eqnarray}
+S^{fit}(alt,az,t, \lambda) & = & \,e^{-\tau_{aerosol}(alt,az,t,\lambda)\,X} \nonumber \\
+ & & \times \, (1 - C_{mol}\, (BP(t) / BP_o) \, A_{Rayleigh}(X, \lambda)) \nonumber \\
+ & & \times \, (1 - \sqrt{ C_{mol}\, (BP(t) / BP_o)} \, A_{\oxy}(X, \lambda)) \nonumber \\
+ & & \times \, (1 - C_{\ozone}(t) \, A_{\ozone}(X, \lambda)) \nonumber \\
+ & & \times \, (1 - C_{\water}(alt,az,t)\,A_{\water}(X, \lambda)).
+\label{eqn:atmo_fit}
+\end{eqnarray}
+The $A_{Rayleigh/\oxy/\ozone/\water}$ functions are
+absorption templates (i.e. 1 minus the transmission profiles from the
+MODTRAN models), the $C_{mol,\ozone,\water}$ are
+coefficients describing the composition of the atmosphere together
+with $\tau_{aerosol}$, and $BP(t)$ is measured. An example of an
+atmosphere generated in this fashion is shown in
+Figure~\ref{fig:absorption_comps2}, demonstrating that this method can
+be used to generate an atmosphere at any airmass for any composition
+desired, without needing to generate a full MODTRAN model. 
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/burk0711/f3b.png}
-\caption{ {Typical observed spectrum (black) and fit (red) from \citep{Burke2010b}} 
-\label{fig:BurkeSpectrumFit} }
-\end{minipage}
-}
-\end{figure}
+With this capability, we can fit the auxiliary telescope spectroscopic data taken
+throughout the night for the values of
+$C_{mol,\ozone,\water}$, increasing our SNR for these
+coefficients by modeling their expected behavior over time and across
+the sky as detailed in \ref{sec:atmo_behavior} above. The Rayleigh
+scattering and molecular absorption due to \oxy\,and other trace
+species are fit with a single coefficient, $C_{mol}$, which simply
+scales the MODTRAN templates to the appropriate level for Cerro
+Pachon, and then only change with the barometric pressure ($BP$). The
+\ozone\,absorption is fit with a single $C_{\ozone}$ value for each
+night, as it is not expected to vary more than 5-10\% within a night. 
+The aerosol absorption, as it is expected to have a small
+spatial variation across the sky, is modeled as 
+\begin{equation}
+\label{eqn:tau_aerosol}
+\tau_{aerosol}(alt,az,t,\lambda) = (\tau_0 + \tau_1\,{\rm EW} +
+\tau_2\,{\rm NS}) \left({\lambda \over \lambda_0}\right)^{\alpha},
+\end{equation}
+where EW and NS are defined as EW = cos($alt$)sin($az$), NS =
+cos($alt$)cos($az$), projections of the telescope pointing in the
+EW/NS directions. Single values of $\tau_0$, $\tau_1$, $\tau_2$ and $\alpha$ are
+fit for each night of observing, with $\tau_1$ and
+$\tau_2$ likely to be very small \citep{Burke2010b}. The \water\,
+absorption is likewise expected to show spatial variation, but also
+time variability, and is modeled as
+\begin{equation}
+\label{eqn:coeff_h2o}
+C_{\water}(alt,az,t) = C_{\water}(t) + {dC_{\water} \over d{\rm EW}}\,{\rm EW} +
+{dC_{\water} \over d{\rm NS}}\,{\rm NS}
+\end{equation}
+using a constant spatial EW and NS gradient per night and a $C_{\water}(t)$ that 
+is fit to each auxiliary telescope measurement (and interpolated
+between these times). 
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/burk0711/f10.png}
-\caption{ {Non-gray atmospheric extinction from \citep{Burke2010b}.  Red is r-band, cyan is i-band,
-magenta is z-band, black is y-band.} 
-\label{fig:BurkeExtinction} }
-\end{minipage}
-}
-\end{figure}
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/burk0711/f7.png}
-\caption{ {Fitted water vapor coefficient from \citep{Burke2010b}, expressed as a ratio to the standard value (filled circles).
-Crosses are relative humidity from CTIO (changed scale). } 
-\label{fig:BurkeWaterVapor} }
-\end{minipage}
-}
-\end{figure}  
+The coefficients $C_{mol/\ozone/\water}$ and $\tau^{aerosol}$ will be
+determined using spectra of bright stars obtained from the 1.2-m LSST
+auxiliary telescope. The auxiliary telescope will be equipped with a
+modest resolution (R$\sim400$) spectrograph, sufficient to capture the
+signatures of the atmospheric extinction components, and covering the
+entire wavelength range of LSST ($300<\lambda<1100$~nm) in each
+exposure. The stars observed with the auxiliary telescope must be
+bright ($r<12$) and ideally either white dwarfs or F stars -- stars with relatively
+simple and well-understood SEDs to minimize confusion with the
+atmospheric extinction. By observing the same grid of stars on
+multiple nights, even if the SEDs are not well determined initially,
+they can be bootstrapped from the many epochs of data. 
 \subsection{Self Calibration}
 In order to correct for the more rapid gray-scale variations in the
 relative normalization of $S^{atm}(alt,az,t)$ due principally to cloud extinction,
@@ -1393,81 +1149,7 @@ capabilities.
 
 reference figure of observing pattern from Burke 2010
 
-Using MODTRAN we can generate atmospheric transmission profiles at a
-variety of airmasses for
-each of these major sources of atmospheric extinction -- molecular
-(Rayleigh) scattering, aerosol (Mie) scattering, and molecular
-absorption from each of \ozone, \water, and combined \oxy/trace species, as is
-shown in Figure~\ref{fig:absorption_comps} for a standard atmospheric
-composition (the 1976 US Standard). These
-profiles capture the wavelength dependence of each component
-individually, over a grid of airmasses, and can be used as
-templates to generate new atmospheric transmission curves for any
-desired atmospheric composition as follows:
-\begin{eqnarray}
-S^{fit}(alt,az,t, \lambda) & = & \,e^{-\tau_{aerosol}(alt,az,t,\lambda)\,X} \nonumber \\
- & & \times \, (1 - C_{mol}\, (BP(t) / BP_o) \, A_{Rayleigh}(X, \lambda)) \nonumber \\
- & & \times \, (1 - \sqrt{ C_{mol}\, (BP(t) / BP_o)} \, A_{\oxy}(X, \lambda)) \nonumber \\
- & & \times \, (1 - C_{\ozone}(t) \, A_{\ozone}(X, \lambda)) \nonumber \\
- & & \times \, (1 - C_{\water}(alt,az,t)\,A_{\water}(X, \lambda)).
-\label{eqn:atmo_fit}
-\end{eqnarray}
-The $A_{Rayleigh/\oxy/\ozone/\water}$ functions are
-absorption templates (i.e. 1 minus the transmission profiles from the
-MODTRAN models), the $C_{mol,\ozone,\water}$ are
-coefficients describing the composition of the atmosphere together
-with $\tau_{aerosol}$, and $BP(t)$ is measured. An example of an
-atmosphere generated in this fashion is shown in
-Figure~\ref{fig:absorption_comps2}, demonstrating that this method can
-be used to generate an atmosphere at any airmass for any composition
-desired, without needing to generate a full MODTRAN model. 
 
-With this capability, we can fit the auxiliary telescope spectroscopic data taken
-throughout the night for the values of
-$C_{mol,\ozone,\water}$, increasing our SNR for these
-coefficients by modeling their expected behavior over time and across
-the sky as detailed in \ref{sec:atmo_behavior} above. The Rayleigh
-scattering and molecular absorption due to \oxy\,and other trace
-species are fit with a single coefficient, $C_{mol}$, which simply
-scales the MODTRAN templates to the appropriate level for Cerro
-Pachon, and then only change with the barometric pressure ($BP$). The
-\ozone\,absorption is fit with a single $C_{\ozone}$ value for each
-night, as it is not expected to vary more than 5-10\% within a night. 
-The aerosol absorption, as it is expected to have a small
-spatial variation across the sky, is modeled as 
-\begin{equation}
-\label{eqn:tau_aerosol}
-\tau_{aerosol}(alt,az,t,\lambda) = (\tau_0 + \tau_1\,{\rm EW} +
-\tau_2\,{\rm NS}) \left({\lambda \over \lambda_0}\right)^{\alpha},
-\end{equation}
-where EW and NS are defined as EW = cos($alt$)sin($az$), NS =
-cos($alt$)cos($az$), projections of the telescope pointing in the
-EW/NS directions. Single values of $\tau_0$, $\tau_1$, $\tau_2$ and $\alpha$ are
-fit for each night of observing, with $\tau_1$ and
-$\tau_2$ likely to be very small \citep{Burke2010b}. The \water\,
-absorption is likewise expected to show spatial variation, but also
-time variability, and is modeled as
-\begin{equation}
-\label{eqn:coeff_h2o}
-C_{\water}(alt,az,t) = C_{\water}(t) + {dC_{\water} \over d{\rm EW}}\,{\rm EW} +
-{dC_{\water} \over d{\rm NS}}\,{\rm NS}
-\end{equation}
-using a constant spatial EW and NS gradient per night and a $C_{\water}(t)$ that 
-is fit to each auxiliary telescope measurement (and interpolated
-between these times). 
-
-The coefficients $C_{mol/\ozone/\water}$ and $\tau^{aerosol}$ will be
-determined using spectra of bright stars obtained from the 1.2-m LSST
-auxiliary telescope. The auxiliary telescope will be equipped with a
-modest resolution (R$\sim400$) spectrograph, sufficient to capture the
-signatures of the atmospheric extinction components, and covering the
-entire wavelength range of LSST ($300<\lambda<1100$~nm) in each
-exposure. The stars observed with the auxiliary telescope must be
-bright ($r<12$) and ideally either white dwarfs or F stars -- stars with relatively
-simple and well-understood SEDs to minimize confusion with the
-atmospheric extinction. By observing the same grid of stars on
-multiple nights, even if the SEDs are not well determined initially,
-they can be bootstrapped from the many epochs of data. 
 
 Generally, the auxiliary telescope will {\it not} observe stars along the
 same line of sight as LSST, as the values for
@@ -1478,27 +1160,27 @@ repeat observations of the same star throughout each night, and then
 fitting the spectroscopic data from the entire night. This improves the 
 signal to noise for the atmospheric absorption profiles generated for each science observation.
 
-\subsubsubsection{The expected effect of $\phi_b^{atm}(\lambda)$ variations}
-
-\citet{Burke2010b} describes a series of observing runs at CTIO carried out over several
-months, where spectroscopic observations of stars were fit using this method. Using the extremes of the range of $C_{mol}$,
-$C_{\ozone}$, $C_{\water}$, $\tau_i$ and $\alpha$ parameters from these runs,
-Figure~\ref{fig:dmag_atm_comps} shows the resulting changes in
-observed magnitudes due to the changes in bandpass shape when applied
-to our set of main sequence star Kurucz models. Varying
-$C_{\water}$ only affects the $z$ and $y$ bands, while changing $C_{\ozone}$,
-$\tau_0$, and $\alpha$ affect the $u$ and $g$ and, to a lesser extent, $r$
-bands. Using these `worst-case' parameters, at $X=1.2$ we find
-differences in the observed natural magnitudes on the order of $\Delta u$=14~mmag, $\Delta g$=7~mmag, $\Delta r$=4.5~mmag,
-$\Delta i$=1.5~mmag, $\Delta z$=2~mmag, and $\Delta y$=7~mmag. The 
-atmosphere transmission curves used to generate this data, and a plot
-of the resulting $\Delta m_b^{obs}$ are in Figures~\ref{fig:atm_changes}
-and \ref{fig:dmag_atm_max}.  These represent the induced changes in
-observed counts due to changes in the bandpass shape; however, by
-achieving 10\% accuracy on $\tau^{aerosol}$, $C_{\ozone}$, and
-$C_{mol}$, and 30\% accuracy for $C_{\water}$, we can correct for
-these effects to within 1~mmag in all bands except $y$, where it
-remains 2~mmag. The limits on remaining uncorrected effects are shown in Figure~\ref{fig:dmag_atm_10}. 
+%\subsubsubsection{The expected effect of $\phi_b^{atm}(\lambda)$ variations}
+%
+%\citet{Burke2010b} describes a series of observing runs at CTIO carried out over several
+%months, where spectroscopic observations of stars were fit using this method. Using the extremes of the range of $C_{mol}$,
+%$C_{\ozone}$, $C_{\water}$, $\tau_i$ and $\alpha$ parameters from these runs,
+%Figure~\ref{fig:dmag_atm_comps} shows the resulting changes in
+%observed magnitudes due to the changes in bandpass shape when applied
+%to our set of main sequence star Kurucz models. Varying
+%$C_{\water}$ only affects the $z$ and $y$ bands, while changing $C_{\ozone}$,
+%$\tau_0$, and $\alpha$ affect the $u$ and $g$ and, to a lesser extent, $r$
+%bands. Using these `worst-case' parameters, at $X=1.2$ we find
+%differences in the observed natural magnitudes on the order of $\Delta u$=14~mmag, $\Delta g$=7~mmag, $\Delta r$=4.5~mmag,
+%$\Delta i$=1.5~mmag, $\Delta z$=2~mmag, and $\Delta y$=7~mmag. The 
+%atmosphere transmission curves used to generate this data, and a plot
+%of the resulting $\Delta m_b^{obs}$ are in Figures~\ref{fig:atm_changes}
+%and \ref{fig:dmag_atm_max}.  These represent the induced changes in
+%observed counts due to changes in the bandpass shape; however, by
+%achieving 10\% accuracy on $\tau^{aerosol}$, $C_{\ozone}$, and
+%$C_{mol}$, and 30\% accuracy for $C_{\water}$, we can correct for
+%these effects to within 1~mmag in all bands except $y$, where it
+%remains 2~mmag. The limits on remaining uncorrected effects are shown in Figure~\ref{fig:dmag_atm_10}. 
 
 \subsection{Water Vapor Monitoring System}
 
@@ -1506,278 +1188,13 @@ remains 2~mmag. The limits on remaining uncorrected effects are shown in Figure~
 
 
 
-\begin{figure}
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\subfloat[\citet{Stubbs2010a} \label{diodeStubbs}]{\includegraphics[width=3.5in]{NIST_diode}} \\
-\subfloat[\citet{Eppeldauer09} \label{diodeEppel}]{\includegraphics[width=5in]{NIST_diode2}}
-\caption{{\small
-{\bf Quantum efficiency curve and fractional uncertainty for
-NIST-calibrated photodiode, from \citet{Stubbs2010a} and
-\citet{Eppeldauer09}.}  Panel \ref{diodeStubbs}: Between 400 and 900~nm, calibration
-methods already in use in test systems indicate photodiode accuracy is
-better than 0.1\%, as in the bottom part of this panel.  The sudden
-decrease in calibration accuracy below 900~nm is due to calibration
-methods used by NIST in 2005. Panel \ref{diodeEppel}: More recent photodiode
-calibration efforts by \citet{Eppeldauer09} show better than 0.1\%
-accuracy can be achieved to beyond 1200~nm, the limit of detector
-response for LSST, as shown here in the response curves resulting from
-multiple scans of a single source using the same photodiode.} }
-\label{fig:NIST_diode}
-\end{minipage}
-}
-\end{figure}
-
-
-\begin{figure}
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{filter_shifts}
-\caption{{\small 
-{\bf Baseline filter curves and a potential (1\% of the central
-  wavelength) shift due to nonuniformity in the filter bandpass.}
-The solid lines indicate standard filter bandpasses (top panel: filter
-alone, bottom panel: filter plus standard mirror, lens, detector and atmosphere
-response curves) while the dashed lines indicate the same bandpass
-shifted redward by 1\% of the central wavelength.}}
-\label{fig:filtershift}
-\end{minipage}
-}
-\end{figure}
-
-\begin{figure}
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{delta_mags_filtershift}
-\caption{{\small 
-{\bf $\Delta m_b^{obs}$
-due to a hardware response curve shift of 1\% of the central
-wavelength of each bandpass.}  850 main sequence star Kurucz models with temperatures
-between 5000K and 35000K and metallicity indexes between -5.0 and 1.0
-(solar) were combined with a standard atmosphere and standard
-hardware bandpass, and then with a total system response where the
-atmosphere remained constant but the hardware response was shifted by
-1\% of the central wavelength of each bandpass (as in
-Fig~\ref{fig:filtershift}). The points in each plot are color-coded by metallicity, in
-steps of 1 dex between -5.0 (blue) to 1.0 (magenta). The resulting
-changes in observed 
-natural magnitudes are on the order of
-20~mmag typically, except in $u$ band where the shift can create a
-$\delta u$ of closer to 80~mmag for certain temperatures of main sequence
-stars. By measuring the bandpass shape as a function of radius and the
-colors of the main sequence stars, we can remove these effects.} }
-\label{fig:dmag_filtershift}
-\end{minipage}
-}
-\end{figure}
-
-%\begin{figure}
-%\centering
-%\fbox{
-%\begin{minipage}{6.5in}
-%\includegraphics[width=6in]{delta_mags_filtershift_small}
-%\caption{{\small 
-%{\bf $\Delta m_b^{obs}$ due to a hardware
-%response curve shift of 0.05\% of the central wavelength of each
-%bandpass.} Similar to Fig~\ref{fig:dmag_filtershift} except that the
-%hardware response was shifted by only 0.05\% of the central
-%wavelength, an amount representing an unmeasured shift in the hardware
-%response and thus contributing directly to the final error in the
-%calibration of the natural magnitudes. Note that the $y$ scale in
-%these plots is reduced by a factor of 20 from
-%Figure~\ref{fig:dmag_filtershift}, consistent with measuring and
-%compensating for the
-%bandpass shift to within a 0.05\% error. }}
-%\label{fig:dmag_filtershift_small} 
-%\end{minipage}
-%}
-%\end{figure}
- 
 
 
 
-\begin{figure}[htpb]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\subfloat[\label{lowairmass}]{\includegraphics[width=4in]{absorption_compsA}}\\
-\vspace{-10pt}
-\subfloat[\label{hiairmass}]{\includegraphics[width=4in]{absorption_compsB}} 
-\caption{{\small
-{\bf Components of atmospheric absorption.} The wavelength dependence
-of  various atmospheric absorption components at zenith
-(Panel \ref{lowairmass}) and at airmass=2.0 (Panel \ref{hiairmass}) are shown here.  The \water\,(blue) and
-\ozone\,(red) molecular absorption contributions are shown separately,
-while the \oxy\,absorption is combined with other trace elements
-(magenta). A typical example of aerosol scattering (Mie scattering) is
-included (yellow), as is molecular scattering (Rayleigh scattering)
-(green). All components except aerosol scattering were generated using
-MODTRAN4 with the US Standard option (aerosol scattering is not part
-of the US Standard atmosphere). The resulting total absorption curve
-is the product of each of these effects and is shown with the dotted
-black line. This is an illustrative atmosphere; under actual observing
-conditions the molecular absorption components will vary in strength
-with time and the square root of the airmass, the molecular and
-aerosol scattering will depend on airmass, and the aerosol scattering
-profile will also vary with time.}}
-\label{fig:absorption_comps}
-\end{minipage}
-}
-\end{figure}
 
 
-\begin{figure}[htb]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{atmo_airmass12}
-\caption{{\small
-{\bf Example of an atmosphere generated from a typical mix of
-atmospheric components.} The bottom panel shows the MODTRAN absorption
-templates at this airmass used in generating the final atmosphere
-(the $A_{rayleigh/\oxy/\ozone/\water}$ and $A_{aerosol} = 1-e^{\tau_{aerosol}}$ from
-Equation~\ref{eqn:atmo_fit}). The top panel shows the final combined atmospheric
-transmission curve in black, as well as a `standardized' atmospheric transmission
-curve in red. This demonstrates that (even without using the full
-MODTRAN software, just the transmission templates) that we can closely
-recreate any atmosphere desired with any composition.} }
-\label{fig:absorption_comps2}
-\end{minipage}
-}
-\end{figure}
 
 
-\begin{figure}
-\centering
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\subfloat[]{\label{a}\includegraphics[width=3.2in]{delta_mags_t0full}}
-\subfloat[]{\label{b}\includegraphics[width=3.2in]{delta_mags_alphafull}} \\
-\subfloat[]{\label{c}\includegraphics[width=3.2in]{delta_mags_O3full}}
-\subfloat[]{\label{d}\includegraphics[width=3.2in]{delta_mags_H2Ofull}} 
-\caption{{\small
-{\bf $\Delta m_b^{obs}$ due to variations of each
-individual absorption component.} Each atmospheric transmission curve
-(at X=1.2) was combined with the set of main sequence Kurucz curves to
-determine the resulting changes in observed magnitudes, as in
-Figure~\ref{fig:dmag_filtershift}. Panels \ref{a} and \ref{b} show the
-effects of varying aerosol absorption in $\tau_0$ and $\alpha$
-respectively, Panel \ref{c} shows the effect of varying \ozone\,absorption. These
-effects are concentrated in $u$ and $g$ bands, with a negligible effect
-in $izy$. Panel \ref{d} shows the effect of varying the \water\,absorption,
-which is strongest in $y$, with some effect in $z$ and no effect in
-$ugri$.
-}}
-\label{fig:dmag_atm_comps}
-\end{minipage}
-}
-\end{figure}
-
-\begin{figure}
-\centering
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\subfloat[]{\includegraphics[width=5in]{atmo_max}} \\
-\subfloat[]{\includegraphics[width=5in]{atmo_min}}
-\caption{{\small  {\bf `Extreme' atmospheres generated from MODTRAN profiles and extremes 
-of atmospheric coefficients.} Using the extremes of $C_{\water}$, $C_{\ozone}$,
-and $\tau_0$ and $\alpha$ from \citet{Burke2010b}, two test atmospheres
-with $X=1.2$ were created using Equation~\ref{eqn:atmo_fit}. }}
-\label{fig:atm_changes}
-\end{minipage}
-}
-\end{figure}
-
-\begin{figure}
-\centering
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{delta_mags_max}
-\caption{{\small
-{\bf$\Delta m_b^{obs}$ due to `extreme' variations of 
-atmospheric transmission.} Two atmospheric transmission curves were 
-created using Equation~\ref{eqn:atmo_fit} and the widest variations of
-atmospheric extinction coefficients from \citet{Burke2010b}. The wavelength
-profile of these atmospheres is shown in Figure~\ref{fig:atm_changes}. 
-These atmospheric transmission curves were combined with the baseline LSST 
-hardware transmission curves, and used to generate magnitudes for 850 Kurucz
-models with temperatures between 5000~K and 35000~K and metallicities between
--5.0 and 1.0 (solar). The resulting differences in natural magnitudes between 
-the two extremes of the atmospheric transmission in each filter are shown above. 
-}}
-\label{fig:dmag_atm_max}
-\end{minipage}
-}
-\end{figure}
-
-\begin{figure}
-\centering
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{delta_mags_10}
-\caption{{\small
-{\bf $\Delta m_b^{obs}$ due to 10\% variations of 
-atmospheric transmission in \ozone\,and aerosol, with 30\% variation of \water.} 
-This is similar to Figure~\ref{fig:dmag_atm_max}, except $C_{\ozone}$,
-$\tau_0$ and $\alpha$ were only varied by 10\% of the total range of
-values measured in \citet{Burke2010b}, and $C_{\water}$ was varied by 30\%
-of the total range. }}
-\label{fig:dmag_atm_10}
-\end{minipage}
-}
-\end{figure}
-
-
-\begin{figure}
-\centering
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{delta_mags_airmass_big}
-\caption{{\small
-{\bf $\Delta m_b^{obs}$ due to changes in airmass from $X=1.0$ 
-to $X=2.1$, for a typical atmospheric transmission response curve.}
-}}
-\label{fig:dmag_airmass}
-\end{minipage}
-}
-\end{figure}
-
-
-\begin{figure}
-\centering
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\subfloat[\label{stardense}]{\includegraphics[width=3.2in]{Stardensity}}
-\subfloat[\label{sdmag}]{\includegraphics[width=3.2in]{Sdmag}} \\
-\subfloat[\label{starstrue}]{\includegraphics[width=3.2in]{StatsTruemBest}}
-\subfloat[\label{starsrms}]{\includegraphics[width=3.2in]{StatsRMSStars}} 
-\caption{{\small
-{\bf Results from a self-calibration investigation.} Panel \ref{stardense} shows
-the stellar density across the sky relevant for the simulation - note
-the Milky Way plane has been cut out of the simulation, and we have
-only used pointings with declination between -80 and 0 degrees.
-Conditions for this simulation are described in the text.  Panel \ref{sdmag}
-shows the true minus best-fit stellar magnitudes residuals across the
-sky after iterating the self-calibration solver. Panel \ref{starstrue} shows
-similar information, but as a histogram of all stars, demonstrating
-the `uniformity'  requirement in the SRD. Panel \ref{starsrms} shows
-a histogram of the RMS of the difference between the calibrated and
-true magnitudes for each star (after self-calibration iteration),
-demonstrating the `repeatability' requirement in the SRD. 
-}}
-\label{fig:selfcal_fiducial}
-\end{minipage}
-}
-\end{figure}
 
 
 
@@ -1811,7 +1228,7 @@ As shown in Section \ref{sec:counts2photons}, $\Delta m_b^{obs}$ is a function b
 	\item{Errors induced by measurement noise in atmospheric probe instruments (auxiliary telescope; water vapor monitoring system)}
 	
 	Measurement errors from the water vapor monitoring system are expected to be +/-1mm.  Making use of the plots in 
-	Figure \ref{fig:xx}, which is for a variation of 5mm, this translates to errors of 0.2 mmag in u-band, 
+	Figure \ref{fig:KuruczPWV}, which is for a variation of 5mm, this translates to errors of 0.2 mmag in u-band, 
 	negligible in g,r, and i-bands, 1 mmag in z, and 2mmag in y.
 	
 	We do not yet have reliable error levels for aerosols and ozone.  Based on the data from \citep{Burke2010b},
@@ -1931,45 +1348,9 @@ The uniformity errors must meet the uniformity requirement in the SRD (Requireme
 \item{unmodeled systematic variations in the atmosphere}
 \end{itemize}
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6.5in]{ZPErrVsZP}
-\caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation.  The color scale
-shows the log10 of the number of samples at that point.  The periodic behavior of the zeropoint density is an
-artifact of OpSim's treatment of cloud cover.} }
-\label{fig:ZPErrVsZP} }
-\end{minipage}
-}
-\end{figure}
 
-\begin{figure}
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\subfloat[]{\label{a}\includegraphics[width=3.2in]{PDerrorsInp}} 
-\subfloat[]{\label{b}\includegraphics[width=3.2in]{PDerrors1}}
-\caption{{\small
-{\bf $\Delta m_b^{obs}$ due to systematic errors in photodiode response.  Panel \ref{a} shows
-the randomly chosen input error curve for the photodiode.  Panel \ref{b} shows the effect
-on Kurucz SEDs.}
-}}
-\label{fig:PDerrs}
-\end{minipage}
-}
-\end{figure}
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6.5in]{fpTempEffects.png}
-\caption{ {\small {\bf Effect of 0.5 deg K variation in focal plane temperature on natural mags} }
-\label{fig:TempVarEffects} }
-\end{minipage}
-}
-\end{figure}
+
 
 \section{Testing and Verification}
 \label{sec:verification}
@@ -2068,17 +1449,7 @@ bandpasses, including a `standard' atmosphere, and baseline estimates
 for the mirrors, lenses, filter and detector transmission and
 sensitivity functions. 
 
-\begin{figure}[h!]
-\centering
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=5in]{filters}
-\caption{{\small {\bf The baseline LSST filter set.}}
-\label{fig:filterset}}
-\end{minipage}
-}
-\end{figure}
+
 
 
 %\section{Areas for further investigation}
@@ -2284,42 +1655,9 @@ their objects of interest. This means recording or providing the means
 to recalculate $\phi_b^{sys+atm}(\lambda,t)$ for every object detected
 with LSST. 
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{AtmoFigs/SNAerosol_04vs16.png}
-\caption{ {Effect on natural mags of SN1a of variation of aerosol optical depth from 0.04 to 0.16 mag} 
-\label{fig:SNAerosol} }
-\end{minipage}
-}
-\end{figure}
 
-\begin{figure}
-\centering
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6in]{dmag_all_max+shift}
-\caption{{\small
-{\bf $\Delta m_b^{obs}$ due to changes in a hardware bandpass shift
-  and a maximum change in atmospheric absorption components.}  This
-plot is similar in nature to a combination of
-Figure~\ref{fig:dmag_filtershift} and \ref{fig:dmag_atm_max}, but has
-been extended to include a wider variety of object SEDs. Main sequence
-stars are shown as the sequence of purple dots, and Mdwarfs are
-shown as the sequence of blue 'x's. The large round circles represent
-a quasar SED at various redshifts, color-coded with redshift as
-follows: $0<z<1$ is blue, $1<z<2$ is green, and $2<z<3$ is red. The
-large filled squares show the change in natural magnitudes for SNIa
-templates at times of 0, 20, and 40 days from peak; $0<z<0.36$ are
-blue squares, $0.36<z<0.72$ are green squares, and $0.72<z<1$ SNIa are
-red squares. 
-}}
-\label{fig:dmag_allseds}
-\end{minipage}
-}
-\end{figure}
+
+
 
 
 %\section{Comparison of standard calibration and SDSS ubercal (as
@@ -2466,5 +1804,759 @@ at zenith.  The units are mm of liquid water equivalent. }
 
 \end{itemize}
 
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{CalibDataProdSchematic1}
+\caption{ {\small {\bf The overall flow of the Data Release photometric
+      calibration process.} The process consists of three main steps.  In the first, Flat SED Calibration, science image pixels are processed to instrumental magnitudes as if all calibration object SEDs were flat ($F_{\nu} = const$).  The second step, SED Correction, corrects the flat SED object counts to account for the real system bandpass and calibration object SEDs, generating corrected magnitudes.  The final step, Self Calibration, solves a least squares system in the SED corrected magnitudes to yield the standard magnitudes for the calibration objects and a spatially dependent zeropoint correction for each exposure.   Additionally, corrections to the illumination correction are calculated, for use in "Determine Illumination Correction" (Figure \ref{fig:overview_flowchart2}).  Note that SED Correction and Self Calibration are performed only for calibration objects.  General science objects are calibrated later, using the data products from the calibration process (Figure \ref{fig:overview_flowchart4}) }
+\label{fig:overview_flowchart1} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{CalibDataProdSchematic2}
+\caption{ {\small {\bf Flat SED Flat Determination.} Determination of the flat SED flat (FSF) is of central importance.  The initial step in the calibration process treats all objects as if their SED were flat.  This is consistent only if the flatfield is that for a flat SED, as transmitted through a reference atmosphere.  Since the illumination source for the actual broadband flat does not have the required SED, we cannot use it directly.  Instead, we synthesize the required flat from the monochromatic flats.  These flats as measured are contaminated by light which arrives from paths other than the direct path, such as ghosting.  These effects are taken out by the illumination correction.  Finally, the monochromatic flats are taken relatively infrequently, and will not reflect changes on shorter timescales, such as the appearance of new dust particles.  We account for this by multiplying the synthesized FSF by the ratio of two broadband flats, one at the current epoch and one at the reference epoch, when the monochromatic flats were gathered.}
+\label{fig:overview_flowchart2} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{CalibDataProdSchematic3}
+\caption{ {\small {\bf System Bandpass Determination.} The system bandpass, $\phi$, is determined for every exposure, and is a major output of the calibration process.  It is the normalized product of the atmospheric bandpass and that of the telescope/camera system.  The atmospheric bandpass is determined by fitting an atmospheric model to a set of measured atmospheric data.  The bandpass of the telescope/camera system is measured by the corrected monochromatic flats, modified by current data from the camera system, principally focalplane temperature and the filter position. }
+\label{fig:overview_flowchart3} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{CalibDataProdSchematic4}
+\caption{ {\small {\bf Science Object Calibration.}  Photometric calibration for science objects takes place in two stages.  In the first, the natural magnitudes are calculated, using the zeropoint model for each exposure.  These are stored in the Level 2 databases.  The second, optional, stage, relies on knowledge of the object SEDs, which is an external input to the system, supplied by the user.   The object SED, in conjunction with the system bandpass, $\phi$, allows standard magnitudes to be calculated.  These are considered a Level 3 data product }
+\label{fig:overview_flowchart4} }
+\end{minipage}
+}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/AirmassAcrossFOV.png}
+\caption{ {Effect on natural magnitudes of Kurucz stars from airmass variation across the field when the airmass at
+field center is 2.1}.
+\label{fig:dmag_fov} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/CTIO_PWV}
+\caption{ {Three years of PWV measured at CTIO (\citep{Hansen1975}), based on the depth of the 1.87 $\mu m$ line to the
+Solar continuum at 1.65 $\mu m$}.
+\label{fig:CTIO_PWV} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/GeminiPWV}
+\caption{ {PWV measured on a single day at Gemini S \citep{Radomski2010}.  Two
+techniques were used, GPS and Phoenix, an IR spectrograph, and the
+data are in good agreement.  Note the decline of approximately 4 mm
+over a period of two hours.  This is a case where use of a single
+average atmosphere for a whole night would give poor results,
+especially in the y-band.}
+\label{fig:GeminiPWV} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/PWV_satellite_2}
+\caption{ {PWV measurement from the MODIS satellite at one time in the region
+around Cerro Pachon.   The color scale ranges from 4.3 mm (blue) to 7.6 mm (dark red). Note the strong E-W gradient in PWV.}
+\label{fig:PWV_satellite} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/KuruczPwv1_vs_6.png}
+\caption{ {The effects of varying $\phi$ due to change in PWV from 1mm to 6mm -
+about the range observed at Cerro Pachon.  The SEDs are for Kurucz
+stars at varying temperatures and metallicities.}
+\label{fig:KuruczPWV} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/aer_casleo.png}
+\caption{ {Varying aersol optical depth at CASLEO, El Leoncito, Argentina.  The site elevation at 2550m is similar to CP.}
+\label{fig:CASLEO} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/AerosolVar}
+\caption{ {Lidar measurements of aerosol extinction at 355nm over a single night
+near Greenbelt, MD \citep{Veselovskii2013}.  Cerro Pachon is, of
+course, a different environment, and is at an altitude of 2700m, removing
+much of the variability.  Even above that altitude, however,
+significant variation on rapid time scales remains.}
+\label{fig:AerosolVar} }
+\end{minipage}
+}
+\end{figure}
+
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/KuruczAerosol_04vs16.png}
+\caption{ {Effect on natural magnitude of Kurucz stars from varying the aerosol optical depth from 0.04mag to 0.16mag} 
+\label{fig:KuruczAerosol} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/hist_ozone9Y.png}
+\caption{ {Variability of ozone column depth at Cerro Pachon from the TOMS satellite instrument} 
+\label{fig:O3atCP} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/KuruczO3_50dobs.png}
+\caption{ {Effect on natural magnitude of Kurucz stars from varying the ozone column by 50 Dobson units} 
+\label{fig:KuruczO3} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{delta_mags}
+\caption{ {\small {\bf $\Delta m_b^{obs}$ due to variations in
+hardware and atmospheric bandpass shape.} Two main sequence Kurucz model
+stars, one blue (35000 K, approximately O type) and one red (6000 K
+approximately G type), were used to generate
+natural magnitudes (see 
+Eqn~\ref{eqn:natmag}) using three different atmospheric transmission
+profiles and two different hardware transmission profiles. The stellar
+flux profiles are shown in the top center panel, while the atmospheric
+transmission functions ($S^{atm}(\lambda)$) are shown across the
+second row and the two hardware transmission profiles
+($S_b^{sys}(\lambda)$) are duplicated across the third row. The
+atmospheric transmission profiles correspond to an airmass X=1.0, 1.2
+and 1.8 (from left to right), with variable atmospheric absorption
+components. The X=1.0 atmosphere is very similar but not
+identical to the current LSST default X=1.2 atmosphere throughput
+curve, which is used as `standard' here. The hardware transmission
+profiles consist of a `standard' profile (matching the LSST current
+expected values) and version where the filter throughputs have been
+shifted by 1\% of the effective wavelength of each filter (consistent
+with the shift expected near the spatial edge of each filter). The final row
+demonstrates the changes in observed magnitudes produced by the X=1.0,
+`standard' and X=1.8 atmospheres (left to right, respectively),
+combined with both the `standard' hardware transmission (represented by
+the star points) and the +1\% shifted hardware transmission (represented
+by the filled circles) for both the red and blue stars. The exact
+differences in magnitudes resulting from this calculation are listed in
+Table~\ref{tab:delta_mags}. }
+\label{fig:delta_mags} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{center}
+\begin{table}[htb]
+\caption{{\bf $\Delta m_b^{obs}$ due to variations in system and atmospheric
+ bandpass shape (see also Fig~\ref{fig:delta_mags}). The first two
+rows show the baseline (`standard') magnitude of the star. All other rows show the 
+{\it change} in magnitude (in mmag) due to the variations listed at
+left. Any value larger than 5~mmag would be larger than the RMS
+scatter allowed by the SRD. {\it TODO color-code values larger than 5 mmag}} }
+\begin{tabular}{l l | c c c c c c}
+Bandpass & star &  $u$ (mag) & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
+Std (X=1.2) atm, std sys  &  red & 21.472 & 20.378 & 20.000 & 19.911 & 19.913 & 19.913 \\
+Std (X=1.2) atm, std sys  &  blue & 19.102 & 19.503 & 20.000 & 20.378 & 20.672 & 20.886 \\ \hline \hline
+ & & $\Delta u$ (mmag) & $\Delta g$  & $\Delta r$  & $\Delta i$ & $\Delta z$  & $\Delta y$ \\ \hline
+Std (X=1.2), +1\% sys shift & red  & -31 & -22 & -8 & -2 & 1 & 1 \\
+Std (X=1.2), +1\% sys shift & blue  & 9 & 17 & 20 & 20 & 16 & 16 \\ \hline
+X=1.0, std sys & red  & 7 & 2 & 0 & 0 & -0 & -1 \\
+X=1.0, std sys & blue  & -3 & -1 & -1 & -0 & 1 & -4 \\ \hline
+X=1.0, +1\% sys shift & red & -24 & -20 & -8 & -1 & 1 & 0 \\
+X=1.0, +1\% sys shift & blue & 7 & 16 & 19 & 20 & 18 & 12 \\ \hline
+X=1.8, std sys  & red & -21 & -10 & -2 & -0 & 0 & 1 \\
+X=1.8, std sys  & blue & 8 & 8 & 4 & 2 & -1 & 6 \\ \hline
+X=1.8, +1\% sys shift & red & -50 & -30 & -10 & -2 & 1 & 2 \\
+X=1.8, +1\% sys shift & blue & 16 & 24 & 24 & 22 & 15 & 22 \\ \hline
+\end{tabular}
+\label{tab:delta_mags}
+\end{table}
+\end{center}
+
+\clearpage
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{delta_mags2}
+\caption{ {\small {\bf $\Delta m_b^{obs}$ due to
+a change in bandpass shape corresponding to a filter shift of $1\%$
+and an $X=1.8$ atmosphere.} 850 Kurucz models with temperatures
+between 5000K and 35000K and metallicity indexes between -5.0 and 1.0
+(solar) were combined with a standard system response (standard
+atmosphere and standard hardware bandpasses), then with a total system
+response where the atmosphere was replaced by an X=1.8 atmosphere and
+the filter component of the hardware transmission was shifted by 1\%
+(as in Fig~\ref{fig:delta_mags}). The points in each plot are color-coded by
+metallicity, in steps of 1 dex between -5.0 (blue) to 1.0 (magenta).  It can be seen that the
+relationship between $\Delta m_b^{obs}$ and $g-i$ can be parameterized,
+although generally not with a simple linear relationship. In some
+cases (such as seen in the $\Delta u$ and $\Delta g$ panels),
+calculating $\Delta m_b^{obs}$ to SRD levels may require more than a simple
+$g-i$ color, but this is then primarily a function of metallicity
+(which is possible to determine given the $u-g$ color in addition to
+the $g-i$ information). }
+\label{fig:delta_mags2} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\begin{tabular}{cc}
+\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/monochromatic_360nm_direct.png}}
+	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/monochromatic_360nm_total.png}} \\
+\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/monochromatic_360nm_ghost.png}}
+	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/monochromatic_360nm_screen.png}} \\
+\end{tabular}	
+\caption{ {FRED calculation of flat from monochromatically illuminated screen.  The u filter is in place, 
+and the illuminating wavelength is 360nm, near the red limit of the filter.  (a) direct illumination
+(b) total illumination (c) ghost illumination (d) screen illumination.  The illumination correction
+is the ratio direct / total.} 
+\label{fig:FRED360nm} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\begin{tabular}{cc}
+\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_u_ghosting.png}}
+	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_g_ghosting.png}} \\ 
+\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_r_ghosting.png}}
+	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_i_ghosting.png}} \\
+\subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_z_ghosting.png}}
+	& \subfloat[]{\includegraphics[width=3in]{IllumCorrFigs/camera_ghosting_ff_calibbias_jdsu_lsstcone_121217_y4_ghosting.png}} \\
+\end{tabular}	
+\caption{ {The effects of the illumination correction, as calculated by \citep{AndyR2013}, on the natural magnitudes of Kurucz stars
+of varying temperatures.  All 6 LSST passbands are shown.} 
+\label{fig:IllumCorrKurucz} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{IllumCorrFigs/fidic29apr_input_vs_recovered_ic.png}
+\caption{ \small {Recovery of input broadband illumination correction by self calibration.  The input illumination 
+correction was wavelength independent, but strongly dependent on radial position, as shown.   The recovered illumination
+correction is essentially identical to that input.}
+\label{fig:SelfCalIllumCorr} }
+\end{minipage}
+}
+\end{figure}
+
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/burk0711/f5.png}
+\caption{ {Pattern of observing atmospheric probe stars from \citep{Burke2010b}.  The Solid lines trace
+the temporal order of the observations} 
+\label{fig:BurkeObsPattern} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/burk0711/f3b.png}
+\caption{ {Typical observed spectrum (black) and fit (red) from \citep{Burke2010b}} 
+\label{fig:BurkeSpectrumFit} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/burk0711/f10.png}
+\caption{ {Non-gray atmospheric extinction from \citep{Burke2010b}.  Red is r-band, cyan is i-band,
+magenta is z-band, black is y-band.} 
+\label{fig:BurkeExtinction} }
+\end{minipage}
+}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/burk0711/f7.png}
+\caption{ {Fitted water vapor coefficient from \citep{Burke2010b}, expressed as a ratio to the standard value (filled circles).
+Crosses are relative humidity from CTIO (changed scale). } 
+\label{fig:BurkeWaterVapor} }
+\end{minipage}
+}
+\end{figure}  
+
+\clearpage
+
+\begin{figure}
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\subfloat[\citet{Stubbs2010a} \label{diodeStubbs}]{\includegraphics[width=3.5in]{NIST_diode}} \\
+\subfloat[\citet{Eppeldauer09} \label{diodeEppel}]{\includegraphics[width=5in]{NIST_diode2}}
+\caption{{\small
+{\bf Quantum efficiency curve and fractional uncertainty for
+NIST-calibrated photodiode, from \citet{Stubbs2010a} and
+\citet{Eppeldauer09}.}  Panel \ref{diodeStubbs}: Between 400 and 900~nm, calibration
+methods already in use in test systems indicate photodiode accuracy is
+better than 0.1\%, as in the bottom part of this panel.  The sudden
+decrease in calibration accuracy below 900~nm is due to calibration
+methods used by NIST in 2005. Panel \ref{diodeEppel}: More recent photodiode
+calibration efforts by \citet{Eppeldauer09} show better than 0.1\%
+accuracy can be achieved to beyond 1200~nm, the limit of detector
+response for LSST, as shown here in the response curves resulting from
+multiple scans of a single source using the same photodiode.} }
+\label{fig:NIST_diode}
+\end{minipage}
+}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{filter_shifts}
+\caption{{\small 
+{\bf Baseline filter curves and a potential (1\% of the central
+  wavelength) shift due to nonuniformity in the filter bandpass.}
+The solid lines indicate standard filter bandpasses (top panel: filter
+alone, bottom panel: filter plus standard mirror, lens, detector and atmosphere
+response curves) while the dashed lines indicate the same bandpass
+shifted redward by 1\% of the central wavelength.}}
+\label{fig:filtershift}
+\end{minipage}
+}
+\end{figure}
+
+\clearpage
+
+\begin{figure}
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{delta_mags_filtershift}
+\caption{{\small 
+{\bf $\Delta m_b^{obs}$
+due to a hardware response curve shift of 1\% of the central
+wavelength of each bandpass.}  850 main sequence star Kurucz models with temperatures
+between 5000K and 35000K and metallicity indexes between -5.0 and 1.0
+(solar) were combined with a standard atmosphere and standard
+hardware bandpass, and then with a total system response where the
+atmosphere remained constant but the hardware response was shifted by
+1\% of the central wavelength of each bandpass (as in
+Fig~\ref{fig:filtershift}). The points in each plot are color-coded by metallicity, in
+steps of 1 dex between -5.0 (blue) to 1.0 (magenta). The resulting
+changes in observed 
+natural magnitudes are on the order of
+20~mmag typically, except in $u$ band where the shift can create a
+$\delta u$ of closer to 80~mmag for certain temperatures of main sequence
+stars. By measuring the bandpass shape as a function of radius and the
+colors of the main sequence stars, we can remove these effects.} }
+\label{fig:dmag_filtershift}
+\end{minipage}
+}
+\end{figure}
+
+%\begin{figure}
+%\centering
+%\fbox{
+%\begin{minipage}{6.5in}
+%\includegraphics[width=6in]{delta_mags_filtershift_small}
+%\caption{{\small 
+%{\bf $\Delta m_b^{obs}$ due to a hardware
+%response curve shift of 0.05\% of the central wavelength of each
+%bandpass.} Similar to Fig~\ref{fig:dmag_filtershift} except that the
+%hardware response was shifted by only 0.05\% of the central
+%wavelength, an amount representing an unmeasured shift in the hardware
+%response and thus contributing directly to the final error in the
+%calibration of the natural magnitudes. Note that the $y$ scale in
+%these plots is reduced by a factor of 20 from
+%Figure~\ref{fig:dmag_filtershift}, consistent with measuring and
+%compensating for the
+%bandpass shift to within a 0.05\% error. }}
+%\label{fig:dmag_filtershift_small} 
+%\end{minipage}
+%}
+%\end{figure}
+ 
+
+
+
+\begin{figure}[htpb]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\subfloat[\label{lowairmass}]{\includegraphics[width=4in]{absorption_compsA}}\\
+\vspace{-10pt}
+\subfloat[\label{hiairmass}]{\includegraphics[width=4in]{absorption_compsB}} 
+\caption{{\small
+{\bf Components of atmospheric absorption.} The wavelength dependence
+of  various atmospheric absorption components at zenith
+(Panel \ref{lowairmass}) and at airmass=2.0 (Panel \ref{hiairmass}) are shown here.  The \water\,(blue) and
+\ozone\,(red) molecular absorption contributions are shown separately,
+while the \oxy\,absorption is combined with other trace elements
+(magenta). A typical example of aerosol scattering (Mie scattering) is
+included (yellow), as is molecular scattering (Rayleigh scattering)
+(green). All components except aerosol scattering were generated using
+MODTRAN4 with the US Standard option (aerosol scattering is not part
+of the US Standard atmosphere). The resulting total absorption curve
+is the product of each of these effects and is shown with the dotted
+black line. This is an illustrative atmosphere; under actual observing
+conditions the molecular absorption components will vary in strength
+with time and the square root of the airmass, the molecular and
+aerosol scattering will depend on airmass, and the aerosol scattering
+profile will also vary with time.}}
+\label{fig:absorption_comps}
+\end{minipage}
+}
+\end{figure}
+
+
+\begin{figure}[htb]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{atmo_airmass12}
+\caption{{\small
+{\bf Example of an atmosphere generated from a typical mix of
+atmospheric components.} The bottom panel shows the MODTRAN absorption
+templates at this airmass used in generating the final atmosphere
+(the $A_{rayleigh/\oxy/\ozone/\water}$ and $A_{aerosol} = 1-e^{\tau_{aerosol}}$ from
+Equation~\ref{eqn:atmo_fit}). The top panel shows the final combined atmospheric
+transmission curve in black, as well as a `standardized' atmospheric transmission
+curve in red. This demonstrates that (even without using the full
+MODTRAN software, just the transmission templates) that we can closely
+recreate any atmosphere desired with any composition.} }
+\label{fig:absorption_comps2}
+\end{minipage}
+}
+\end{figure}
+
+\clearpage
+
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\subfloat[]{\label{a}\includegraphics[width=3.2in]{delta_mags_t0full}}
+\subfloat[]{\label{b}\includegraphics[width=3.2in]{delta_mags_alphafull}} \\
+\subfloat[]{\label{c}\includegraphics[width=3.2in]{delta_mags_O3full}}
+\subfloat[]{\label{d}\includegraphics[width=3.2in]{delta_mags_H2Ofull}} 
+\caption{{\small
+{\bf $\Delta m_b^{obs}$ due to variations of each
+individual absorption component.} Each atmospheric transmission curve
+(at X=1.2) was combined with the set of main sequence Kurucz curves to
+determine the resulting changes in observed magnitudes, as in
+Figure~\ref{fig:dmag_filtershift}. Panels \ref{a} and \ref{b} show the
+effects of varying aerosol absorption in $\tau_0$ and $\alpha$
+respectively, Panel \ref{c} shows the effect of varying \ozone\,absorption. These
+effects are concentrated in $u$ and $g$ bands, with a negligible effect
+in $izy$. Panel \ref{d} shows the effect of varying the \water\,absorption,
+which is strongest in $y$, with some effect in $z$ and no effect in
+$ugri$.
+}}
+\label{fig:dmag_atm_comps}
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\subfloat[]{\includegraphics[width=5in]{atmo_max}} \\
+\subfloat[]{\includegraphics[width=5in]{atmo_min}}
+\caption{{\small  {\bf `Extreme' atmospheres generated from MODTRAN profiles and extremes 
+of atmospheric coefficients.} Using the extremes of $C_{\water}$, $C_{\ozone}$,
+and $\tau_0$ and $\alpha$ from \citet{Burke2010b}, two test atmospheres
+with $X=1.2$ were created using Equation~\ref{eqn:atmo_fit}. }}
+\label{fig:atm_changes}
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{delta_mags_max}
+\caption{{\small
+{\bf$\Delta m_b^{obs}$ due to `extreme' variations of 
+atmospheric transmission.} Two atmospheric transmission curves were 
+created using Equation~\ref{eqn:atmo_fit} and the widest variations of
+atmospheric extinction coefficients from \citet{Burke2010b}. The wavelength
+profile of these atmospheres is shown in Figure~\ref{fig:atm_changes}. 
+These atmospheric transmission curves were combined with the baseline LSST 
+hardware transmission curves, and used to generate magnitudes for 850 Kurucz
+models with temperatures between 5000~K and 35000~K and metallicities between
+-5.0 and 1.0 (solar). The resulting differences in natural magnitudes between 
+the two extremes of the atmospheric transmission in each filter are shown above. 
+}}
+\label{fig:dmag_atm_max}
+\end{minipage}
+}
+\end{figure}
+
+%\begin{figure}
+%\centering
+%\centering
+%\fbox{
+%\begin{minipage}{6.5in}
+%\includegraphics[width=6in]{delta_mags_10}
+%\caption{{\small
+%{\bf $\Delta m_b^{obs}$ due to 10\% variations of 
+%atmospheric transmission in \ozone\,and aerosol, with 30\% variation of \water.} 
+%This is similar to Figure~\ref{fig:dmag_atm_max}, except $C_{\ozone}$,
+%$\tau_0$ and $\alpha$ were only varied by 10\% of the total range of
+%values measured in \citet{Burke2010b}, and $C_{\water}$ was varied by 30\%
+%of the total range. }}
+%\label{fig:dmag_atm_10}
+%\end{minipage}
+%}
+%\end{figure}
+
+
+
+\clearpage
+
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\subfloat[\label{stardense}]{\includegraphics[width=3.2in]{Stardensity}}
+\subfloat[\label{sdmag}]{\includegraphics[width=3.2in]{Sdmag}} \\
+\subfloat[\label{starstrue}]{\includegraphics[width=3.2in]{StatsTruemBest}}
+\subfloat[\label{starsrms}]{\includegraphics[width=3.2in]{StatsRMSStars}} 
+\caption{{\small
+{\bf Results from a self-calibration investigation.} Panel \ref{stardense} shows
+the stellar density across the sky relevant for the simulation - note
+the Milky Way plane has been cut out of the simulation, and we have
+only used pointings with declination between -80 and 0 degrees.
+Conditions for this simulation are described in the text.  Panel \ref{sdmag}
+shows the true minus best-fit stellar magnitudes residuals across the
+sky after iterating the self-calibration solver. Panel \ref{starstrue} shows
+similar information, but as a histogram of all stars, demonstrating
+the `uniformity'  requirement in the SRD. Panel \ref{starsrms} shows
+a histogram of the RMS of the difference between the calibrated and
+true magnitudes for each star (after self-calibration iteration),
+demonstrating the `repeatability' requirement in the SRD. 
+}}
+\label{fig:selfcal_fiducial}
+\end{minipage}
+}
+\end{figure}
+
+
+\begin{landscape}
+\begin{center}
+\begin{table}[htb]
+\caption{{\bf Repeatability error budget.  All values are in mmag} }
+\begin{tabular}{l | l | c c c c c c }
+Affected term & Effect &  $u$  & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
+{\bf $m_b^{obs}$} & {\bf Total} & 3.0 & 3.0 & 3.0 & 3.0 & 3.0 & 3.0 \\ \hline
+{\bf $\Delta m_b^{obs}$} & & & & \\
+& Atmospheric water vapor errors & 0.2 & 0 & 0 & 0 & 1.0 & 2.0  \\
+& Atmospheric aerosol and ozone errors & 1.6 & 2.1 & 0.1 & 0 & 0 & 0  \\
+& Undetected atmospheric variability & 1.4 & 0.7 & 0 & 0 & 0 & 0 \\
+& Monochromatic illumination correction errors & 3.0 & 0.5 & 0.8 & 0.5 & 0.1 & 0.6\\
+& Photodiode monitoring system errors & 0.8 & 0.5 & 0 & 0 & 0 & 0.1 \\
+& Calibration star SED errors & 5.6 & 0.8 & 0.5 & 0.4 & 0.4 & 0.2 \\
+& Focal plane temperature errors & 0 & 0 & 0 & 0 & 0 & 0.2 \\ 
+& {\bf Total} & 6.7 & 2.5 & 0.9 & 0.6 & 1.1 & 2.1 \\ \hline
+$Z_b^{obs}$ & & & & \\
+& Clouds & & &  \\
+& Camera gain variation & & & \\
+& Shutter variation & & & \\
+& Temperature induced QE variations & & & \\
+& Errors in standards & & & \\
+& {\bf Total} & & & \\ \hline
+{\bf Total} & & 7.4 & 3.9 & 3.1 & 3.1 & 3.2 & 3.7 \\ \hline
+{\bf Design Requirement} & & 7.5 & 5.0 & 5.0 & 5.0 & 7.5 & 7.5 \\ 
+{\bf Min. Requirement} & & 12 & 8.0 & 8.0 & 8.0 & 12 & 12 \\
+\end{tabular}
+\label{tab:rpt_error_budget}
+\end{table}
+\end{center}
+\end{landscape}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{ZPErrVsZP}
+\caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation.  The color scale
+shows the log10 of the number of samples at that point.  The periodic behavior of the zeropoint density is an
+artifact of OpSim's treatment of cloud cover.} }
+\label{fig:ZPErrVsZP} }
+\end{minipage}
+}
+\end{figure}
+
+\clearpage
+
+\begin{figure}
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\subfloat[]{\label{a}\includegraphics[width=3.2in]{PDerrorsInp}} 
+\subfloat[]{\label{b}\includegraphics[width=3.2in]{PDerrors1}}
+\caption{{\small
+{\bf $\Delta m_b^{obs}$ due to systematic errors in photodiode response.  Panel \ref{a} shows
+the randomly chosen input error curve for the photodiode.  Panel \ref{b} shows the effect
+on Kurucz SEDs.}
+}}
+\label{fig:PDerrs}
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{fpTempEffects.png}
+\caption{ {\small {\bf Effect of 0.5 deg K variation in focal plane temperature on natural mags} }
+\label{fig:TempVarEffects} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=5in]{filters}
+\caption{{\small {\bf The baseline LSST filter set.}}
+\label{fig:filterset}}
+\end{minipage}
+}
+\end{figure}
+
+
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/SNAerosol_04vs16.png}
+\caption{ {Effect on natural mags of SN1a of variation of aerosol optical depth from 0.04 to 0.16 mag} 
+\label{fig:SNAerosol} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{dmag_all_max+shift}
+\caption{{\small
+{\bf $\Delta m_b^{obs}$ due to changes in a hardware bandpass shift
+  and a maximum change in atmospheric absorption components.}  This
+plot is similar in nature to a combination of
+Figure~\ref{fig:dmag_filtershift} and \ref{fig:dmag_atm_max}, but has
+been extended to include a wider variety of object SEDs. Main sequence
+stars are shown as the sequence of purple dots, and Mdwarfs are
+shown as the sequence of blue 'x's. The large round circles represent
+a quasar SED at various redshifts, color-coded with redshift as
+follows: $0<z<1$ is blue, $1<z<2$ is green, and $2<z<3$ is red. The
+large filled squares show the change in natural magnitudes for SNIa
+templates at times of 0, 20, and 40 days from peak; $0<z<0.36$ are
+blue squares, $0.36<z<0.72$ are green squares, and $0.72<z<1$ SNIa are
+red squares. 
+}}
+\label{fig:dmag_allseds}
+\end{minipage}
+}
+\end{figure}
 
 \end{document}
