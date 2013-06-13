@@ -1,0 +1,1055 @@
+%%\documentclass[preprint2]{aastex}
+%%\documentclass[12pt,preprint]{aastex}
+\documentclass[manuscript]{aastex}
+\usepackage{graphicx}
+
+%%% PREAMBLE MATTER
+
+\shorttitle{Precision Determination of Extinction}  
+\shortauthors{Burke et al.}
+
+%%% MAIN PART OF DOCUMENT 
+
+\begin{document}
+\title{Precision Determination of Atmospheric Extinction at Optical and Near IR Wavelengths}
+
+\author{David L. Burke$^1$, T. Axelrod$^2$, St\'ephane Blondin$^{3,4}$, Chuck Claver$^5$, \v{Z}eljko Ivezi\'{c}$^6$, \\
+        Lynne Jones$^6$, Abhijit Saha$^5$, Allyn Smith$^7$, R. Chris Smith$^8$, Christopher W. Stubbs$^9$}
+\affil{$^1$SLAC National Accelerator Laboratory, Menlo Park, CA, 94025 USA}
+\affil{$^2$Steward Observatory, University of Arizona, Tucson, AZ, 85718 USA}
+\affil{$^3$ESO, Karl-Schwarzschild-Str. 2 85748 Garching, Germany}
+\affil{$^4$CPPM, CNRS-IN2P3, 13288 Marseille cedex 09, France}
+\affil{$^5$National Optical Astronomy Observatory, Tucson, AZ, 85718 USA}
+\affil{$^6$Department of Astronomy, University of Washington, Seattle, WA, 98195, USA}
+\affil{$^7$Department of Physics and Astronomy, Austin Peay State University, Clarksville, TN, 37044 USA}
+\affil{$^8$Cerro Tololo Inter-American Observatory, Casilla 603, La Serena, Chile}
+\affil{$^9$Harvard Smithsonian Center for Astrophysics, Harvard University, Cambridge, MA, 02138 USA}
+\email{daveb@slac.stanford.edu}
+
+\begin{abstract}
+The science goals for future ground-based all-sky surveys, such as the Dark Energy Survey, PanSTARRS, and the Large Synoptic Survey Telescope,
+require calibration of broadband photometry that is stable in time and uniform over the sky to precisions of a per cent or better, 
+and absolute calibration of color measurements that are similarly accurate.
+This performance will need to be achieved with measurements made from multiple images taken over the course of many years,
+and these surveys will observe in less than ideal conditions.
+This paper describes a technique to implement a new strategy to directly measure
+variations of atmospheric transmittance at optical wavelengths and application of these measurements to calibration of ground-based observations.
+This strategy makes use of measurements of the spectra of a small catalog of bright ``probe'' stars
+as they progress across the sky and back-light the atmosphere.
+The signatures of optical absorption by different atmospheric constituents are recognized in these spectra 
+by their characteristic dependences on wavelength and airmass. 
+State-of-the-art models of atmospheric radiation transport and modern codes are used
+to accurately compute atmospheric extinction over a wide range of observing conditions.
+We present results of an observing campaign
+that demonstrate that correction for extinction due to molecular constituents and aerosols can be
+done with precisions of a few millimagnitudes with this technique.
+\end{abstract}
+
+\keywords {atmospheric effects - methods:observational - surveys - techniques:photometric}
+
+
+\newpage
+\section{ Introduction  }
+\label{Sec:intro}
+ 
+A modern astronomical telescope instrumented with a digital camera will count a fraction of the photons produced by a
+celestial source that reach the electronic detector during an exposure.
+For ground-based broad-band observations the sum of the digital counts (ADU) associated with a source
+is proportional to the integral of the optical flux $F_\nu(\lambda)$ from the
+source that reaches {\it the top of the atmosphere} weighted by the observational bandpass, $T_b(x,y,alt,az,t,\lambda)$,
+\begin{equation}
+\label{eqn:cnts}
+             ADU_b^{meas} = A \Delta T \int_0^\infty {F_\nu(\lambda) T_b(x,y,alt,az,t,\lambda) \lambda^{-1} d\lambda},
+\end{equation}
+where $A$ is the area of the telescope pupil and $\Delta T$ is the duration of the exposure.
+The units of flux $F_{\nu}(\lambda)$ are ergs cm$^{-2}$ s$^{-1}$ Hz$^{-1}$,
+and the factor $\lambda^{-1}d\lambda$ counts the number of photons per unit energy at a given wavelength.
+(Strictly, this should be $(h\lambda)^{-1}d\lambda = - (h\nu)^{-1}d\nu$, but the units can be chosen to absorb
+the factor of Planck's constant $h$ into the definition of the instrumental system response.)
+The coordinates $(x,y)$ are those of the source image in the focal plane of the camera,
+$(alt,az)$ are the altitude and azimuth of the telescope pointing,
+and $t$ is the time (and date) of the observation. 
+
+Assuming the atmospheric and instrumental properties are uncorrelated, the optical passband can be separated into two functions,  
+\begin{equation}
+\label{eqn:optb}
+         T_b(x,y,alt,az,t,\lambda) = T_b^{inst}(x,y,t,\lambda) \times T^{atm}(alt,az,t,\lambda),
+\end{equation}
+where $T^{atm}$ is the optical transmittance (dimensionless) from the top of the atmosphere to the input pupil of the telescope,
+and $T_b^{inst}$ is the instrumental system response (ADU/photon) from photons through the input pupil of the telescope to ADU counts in the camera.
+The instrumental ``throughput'' includes the reflectance of the mirrors, transmission of the refractive optics and optical filters, efficiency 
+of the camera sensors, and the gain of the electronics used to read out the detectors. 
+
+The instrumental throughput $T_b^{inst}$ is usually measured with some combination of artificial illumination
+with diffuse light from a reflector screen mounted in the dome of the telescope housing,
+and sky flats assembled from either exposures of the twilight sky and/or combined stacks of images taken through the night.
+But dome flats and sky flats are, at best, sources of uniform surface brightness that fill the focal plane,
+while celestial sources produce localized groups of counts that are aggregated by the image reduction software.
+The two include differing patterns of stray and scattered light that must be reconciled to create a true instrumental normalization
+(i.e. ``flat field'') for the science exposures.  
+This ``illumination'' correction is usually determined by taking a series of exposures rastered over a small area of sky,
+and processing the images to extract counts from individual sources (usually stars) as they are detected on differing parts of the focal plane
+\cite{manfroid96} \cite{marshall05} \cite{regnault09}.
+
+Astronomers traditionally, e.g. \cite{sterken06}, measure a broad-band atmospheric extinction
+coefficient $K_b$ by interleaving observations of science targets
+with observations of standard stars over a range of airmass $(z)$ throughout the observing night. 
+In the simplest analysis, the observed magnitudes are fit to a first-order linear behavior in airmass,
+\begin{equation}
+\label{eqn:kcoef}
+    m_b = m_b^0 + K_b z.
+\end{equation}
+In principle fits can be made to data taken at different times in the night,
+but frequently only a single nightly coefficient is determined due to limited observing time.
+%%It requires some confidence to extrapolate measurements made at $z\ge1$ to the top of the atmosphere ($z \equiv 0$).
+But the combination of these measurements with those made of the instrumental response provides a determination of the observational bandpass that can be
+interpolated to the coordinates $(x,y,alt,az,t)$ of the science observations.
+
+If care is taken to manage effects of thermal changes and systematic effects due to the mechanics of the telescope,
+then it is possible to obtain a relatively stable instrumental response throughout a night of observing.
+Careful analysis can reduce errors in the flat fielding across small fields of view to percent accuracies \cite{landolt92} \cite{stetson05}.
+But the atmospheric transmittance can vary considerably more rapidly and by significantly greater amounts. 
+Precise photometry is traditionally done only during times when atmospheric conditions are stable and clear of clouds.
+A night is generally regarded as ``photometric'' if multiple observations of the same target yield sufficiently 
+small variations in measured magnitudes. 
+%%It is found that some nights are 1\% nights, and some nights are 2\% nights, but only very rarely is it better, and most often it is worse.
+
+\subsection{Calibration of All Sky Surveys}
+
+The science goals for future ground-based all-sky surveys, such as the Dark Energy Survey (DES) \cite{flaugher07}                         ,
+PanSTARRS \cite{kaiser02}, and the Large Synoptic Survey Telescope (LSST) \cite{ivezic09}
+pose stringent requirements on the stability and uniformity of photometric measurements.
+These surveys seek relative calibration of photometry that is stable in time and uniform over the sky to precisions of a per cent or better, 
+and absolute calibration of color measurements that are similarly accurate.
+This performance will need to be achieved with measurements made from multiple images taken over the course of many years.
+And to maximize efficiency, these surveys will observe in less than ideal conditions.
+The ability to directly measure and correct measurements for the variations of atmospheric transmittance will greatly
+improve the quality and scientific value of the archives produced by these future surveys.
+
+The quality of the photometry of the present-day multi-epoch Sloan Digital Sky Survey (SDSS) has
+approached the precision needed for future surveys \cite{stoughton02} \cite{ivezic04}.
+The continuous and rapid observing cadence of this dedicated survey provided a measure of control over the stability of instrumental throughput,
+and allowed identification and analysis of varying observing conditions.
+Observing the sky in multiple epochs allowed the stability and uniformity of the internal calibration to be boot-strapped from the repeated measurements
+of the magnitudes of the large number of stars contained in the survey fields.  
+Selected SDSS data taken in good photometric conditions and analyzed with the so-called ``\"Ubercal'' procedure, have indeed,
+reached 1\% relative photometry \cite{ivezic07} \cite{padman08}.
+But while the SDSS experience provides a limited proof-of-principle, calibration of future survey data will need
+to be done over still a wider range of observing conditions.
+
+\subsection{Deterministic Calibration of Imaging Surveys}
+
+It has been proposed \cite{sandt06} that the process of photometric calibration be
+separated into measurement of the atmospheric transmittance and independent measurement of the instrumental throughput. 
+The concept is to directly measure the atmospheric transmittance $T^{atm}(alt,az,t,\lambda)$ with instrumentation dedicated to the task.
+This paper reports a study of a technique to implement part of this strategy in
+calibration of ground-based observations at optical and near-infrared (NIR) wavelengths.
+
+The technique reported here takes advantage of state-of-the-art models of atmospheric optical radiation transport and
+readily-available codes to accurately compute atmospheric extinction over a wide range of observing conditions.
+The strategy is to repeatedly measure the spectra of a small catalog of bright ``probe'' stars
+as they progress across the sky and back-light the atmosphere during the night.
+This approach is made feasible by advances over the past several decades in understanding the makeup of the atmosphere
+and computer modeling of radiation transport.
+The signatures of various atmospheric constituents in these spectra include not only the wavelength dependence of optical absorption,
+but also characteristic dependences on airmass. 
+It is not necessary to know the spectra of the probe stars {\it a priori} as they are determined from the data themselves after many observations
+over a wide range of airmass on differing nights.
+To cover the full optical and NIR range, the catalog includes stars with a range of colors (G, F, A, and white dwarf). 
+The efficiency of the spectrograph can also be determined from the observed spectra,
+and having a variety of spectra in the probe set helps break degeneracy between stellar parameters and the instrumental response.
+
+This technique is suitable for application with present and future imaging surveys.
+It will provide excellent photometric calibration of data, 
+and will extend the environmental conditions in which good photometric measurements can be made.
+
+
+\section{Atmospheric Transmittance of Light}
+
+Processes that attenuate light as it propagates through the atmosphere include absorption and scattering (Rayleigh)
+by molecular constituents (O$_{2}$, O$_{3}$, water vapor, and trace elements),
+scattering (Mie) by airborne macroscopic particulate aerosols with physical dimensions comparable to the wavelength of visible light,
+and shadowing by ice crystals and water droplets in clouds.
+Molecular scattering cross sections vary smoothly with the wavelength of the incident light,
+and the total molecular column thickness is proportional to barometric pressure and the airmass of the observation.
+Molecular absorption, on the other hand, is largely due to narrow saturated Lorentzian-shaped lines spaced closely together in wavelength.
+The curve-of-growth of a saturated line is nonlinear, 
+and observations made with finite resolution (certainly the case for broad-band photometry) average the effects of many lines. 
+This leads to intricate absorption spectra and to optical depths that do not scale linearly with airmass.
+
+Shown in Figure \ref{fig:templates} are a set of transmission functions for molecular components of the atmosphere
+calculated with the MODTRAN4(v3r1) computer code \cite{MODTRAN}
+that is available from the U.S. Air Force Research Laboratory\footnote{www.kirtland.af.mil}.
+The code computes transmission in wavelength increments of less than one Angstrom, but provides output binned with a user-defined resolution; 
+the calculations shown in the figure are done for spectra measured with an instrument with resolution R $\equiv \lambda/\Delta\lambda \approx $ 400
+at $\lambda = 6500$\AA.
+Figure \ref{fig:Evsz} shows how contributions to extinction from differing molecular components vary over a range of airmass values. 
+The slope of the extinction line gives the power-law behavior of the optical depth,
+and the differing dynamics of the interactions between light and the atmospheric components can be seen in the figure.  
+
+Aerosols such as dust, sea salt, and man-made pollutants come in a variety of shapes and sizes that produce a range of dependences on the optical wavelength;
+smaller particulates produce stronger variations with wavelength. 
+Ice crystals and water droplets in clouds have dimensions that are large compared to the wavelength of visible light, and produce shadows that 
+appear as ``gray'' (i.e. wavelength independent) extinction.
+
+\subsection{The Fitting Model}
+
+The transmission functions shown in Figure \ref{fig:templates} are for a particular composition of elements in the atmosphere,
+but we do not use this composition in our analysis that is discussed below.
+We use the code only to calculate spectral templates of transmission for each constituent of the atmosphere over the relevant range of airmass,
+and fit observations with a model for the atmospheric composition that best matches the computed templates.
+The goal is to use an efficient characterization of the important features of the atmosphere, and to fit a minimal set of parameters.
+Significant data has been gathered on the spatial and temporal structure of the constituents of the atmosphere \cite{stubbs07},
+and these guide the construction of our model.
+
+Molecular oxygen, nitrogen, and trace elements are fully mixed gases,
+and the total vertical column height of these constituents is determined by barometric pressure. 
+Each contributes to Rayleigh scattering (``$mols$''), and we combine their absorption lines into the single function
+``$mola$''; both are shown in Figure~\ref{fig:templates}.
+We fit a single parameter for the entire data set that just calibrates the barometric pressure reading at the site on Cerro Tololo
+to the molecular templates computed with MODTRAN4.
+Absorption by these gaseous components scales approximately as the square root of the total number of molecules along the
+line of transport (Figure \ref{fig:Evsz}).
+
+Absorption by ozone $O_3$ is shown separately in the figure. 
+This element is the subject of extensive satellite monitoring campaigns
+aimed at better understanding weather and climate change.\footnote{www.toms.gsfc.nasa.gov.} 
+Ozone above Cerro Pachon resides predominantly in the upper troposphere and lower stratosphere, and driven by jet stream winds,
+can vary 5-10\% day-to-day around average values that exhibit season variations of 25\% or so.
+We use a single parameter $C_{O3}$ for each observing night to account for this variation in our fits.
+Again this is just the ratio of the vertical column height of ozone at the time and place of the observation 
+to that used in the MODTRAN4 calculation of the templates.
+
+Aerosols are micron-sized particulates such as sea salt, smoke, and dust whose scattering cross sections scale less strongly with wavelength than does
+molecular Rayleigh scattering (i.e. typically as $\lambda^{-1}$ versus $\lambda^{-4}$). 
+These constituents are largely created at points on the earth's surface, and are borne around the global by winds in the lower troposphere. 
+The density of aerosols at locales such as Cerro Pachon tends to be small and typically varies only slowly through a given night.
+But events such as storms or volcanic activity can produce significant changes in the vertical column height over periods of days to weeks.
+We model this contribution with a form that allows for spatial variations that are fit for each observing night,
+but the spatial variations observed in the data reported here are found to be rather small.
+
+The content of precipitable water vapor is considerably more variable with fluctuations of 5-10\% per hour possible.
+This constituent is not well-mixed, and ground-level relative humidity is not an accurate measure of the total column height.
+We find that the MODTRAN4 calculation of the spectral shape of absorption by water vapor to be sufficiently accurate,
+as is the prediction for dependence on airmass.  
+But we find we must use a relatively rapidly time-varying coefficient $C_{H2O}$ to track changes sufficiently well for future surveys.
+It also proves necessary to allow for spatial variation across the sky.
+This spatial variation changes only slowly in time, however,
+so we compute corrections for target observations by interpolating between calibration measurements. 
+%%We note that the observed data are consistent with bulk motions of large volumes of the atmosphere 
+%%across the earth's surface rather than evolution of the concentration of water vapor in fixed volumes.
+
+Water droplets and ice crystals in clouds have dimensions that are large compared to the wavelength of visible light, and so scattering of
+light in the visible and NIR bands is independent of wavelength (gray in color).
+Cloud cover is highly variable in both time and spatial direction.
+Successful fits to calibration spectra require a wavelength-independent ``gray'' normalization $T_{gray}$ for each observation.
+Analysis and correction for this component of atmospheric extinction requires special care that is discussed below.
+
+The fitting model for atmospheric transmittance of light used in this analysis is summarized with the formula:
+\begin{eqnarray}
+\label{eqn:fitform}
+T^{fit}(alt,az,t;\lambda) & = & T_{gray} e^{\left(-z(alt) \cdot \tau_{aerosol}(alt,az,t;\lambda)\right)}       \times {} \nonumber\\ 
+    & & {}\times   (1.0 - C_{mol} (BP(t)/BP_0)     A_{mols}(z(alt);\lambda))                                   \times {} \nonumber\\
+    & & {}\times   (1.0 - \sqrt{C_{mol}BP(t)/BP_0} A_{mola}(z(alt);\lambda))                                   \times {} \nonumber\\
+    & & {}\times   (1.0 - C_{O3}                   A_{O3}  (z(alt);\lambda))                                   \times {} \nonumber\\
+    & & {}\times   (1.0 - C_{H2O}(alt,az,t)        A_{H2O} (z(alt);\lambda)).
+\end{eqnarray}
+\noindent The attenuation coefficients $A_{i}$ are computed as one (1.0) minus the transmission templates computed with MODTRAN4
+that are shown in Figure~\ref{fig:templates}, and include all dependence on wavelength and airmass in the model.
+For practical reasons, these templates are precomputed in increments of 0.1 for the range of airmass encountered in the observing runs;
+values are then linearly interpolated to the airmass $z(alt)$ of individual observations. 
+The barometric pressure $BP(t)$ is taken from the weather monitoring station at the site on Cerro Tololo,
+and is normalized to a reference value $BP_0 = 782$mb typical of the site.
+The coefficients $C_{i}$ are derived from fits to observed spectra as introduced above and discussed below.
+
+The model expressed in Equation~\ref{eqn:fitform} includes only the specific instance of a vertical profile
+of atmospheric constituents contained in the MODTRAN model,
+and so does not include variations in multiple scattering or scintillation caused by atmospheric turbulence.
+This will be adequate to describe atmospheric extinction of images taken with exposure durations that average over sufficiently long times.
+This is not an issue for the analysis reported here, and in typical seeing conditions at observatories such as CTIO,
+should also be adequate for most existing or planned imaging surveys.     
+
+As mentioned above, the column thickness of water vapor varies in both space and time, and we approximate
+\begin{equation}
+\label{eqn:h2o}
+%%   C_{H2O}(alt,az,t) = C_{H2O}(t) + \frac{dC_{H2O}}{d HA} \Delta HA + \frac{dC_{H2O}}{d \delta} \Delta\delta,
+   C_{H2O}(alt,az,t) = C_{H2O}(t) + \frac{dC_{H2O}}{d EW} \Delta EW + \frac{dC_{H2O}}{d NS} \Delta NS,
+\end{equation}
+%%where $(\Delta HA, \Delta\delta)$ is the offset in hour angle ($HA$) and declination ($\delta$) of the telescope pointing from zenith.
+where $EW = cos(alt)sin(az)$ and $NS = cos(alt)cos(az)$ are projections of the telescope pointing respectively in the east-west
+and north-south directions.
+The value at zenith $C_{H2O}(t)$ is interpolated in time from values measured with calibration observations.
+We find that a single constant spatial gradient for each observing night fits the data well. 
+
+The aerosol vertical optical depth includes a fitted spectral index $\alpha$, and allows for spatial variations.
+Specifically,
+\begin{equation}
+\label{eqn:aertau}
+%%   \tau_{aerosol}(alt,az,t; \lambda) = (\tau_{0} + \tau_{1} \textrm{tan}(HA) + \tau_{2} \textrm{tan}(\delta-\delta_{CTIO})) \left(\frac{\lambda}{\lambda_0}\right)^\alpha,
+   \tau_{aerosol}(alt,az,t; \lambda) = (\tau_{0} + \tau_{1} EW + \tau_{2} NS) \left(\frac{\lambda}{\lambda_0}\right)^\alpha,
+\end{equation}
+where $\lambda_0$ = 6750\AA~is chosen for convenience in the middle of the wavelength range of the observations,
+and EW and NS are defined as in Equation~\ref{eqn:h2o}.
+%%and $\delta_{CTIO}$ is the latitude of the observatory.
+The parameters $\alpha$ and $\tau_{i}$ are derived for each night of observing.
+Though it would be possible to include several aerosol constituents,
+we find satisfactory results with only a single component for the observing reported here.
+
+
+\section{Observing Campaign}
+
+We have carried out an observing campaign to provide data for development and test of the strategy reported in this paper.
+Observing was scheduled for five 3-night periods during the 2007 and 2008 seasons at the Cerro Tololo InterAmerican Observatory (CTIO)
+in northern Chile. 
+No useful data were taken during one of these periods (June 2007) due to weather conditions on the mountain. 
+A summary of the data used in the analysis reported here is given in Table \ref{table:observing}.
+
+\subsection{Observing Strategy}
+
+The strategy we adopt is to utilize an observing cadence and pattern that will fully characterize the mix of atmospheric 
+components along any line of sight on the sky at any time during a night of observing.
+The goal is to sample the line of sight (defined by hour angle $HA$ and declination $\delta$) as uniformly as possible,
+while also sampling individual stars as they rise and fall and are seen through a range of airmass.
+The procedure is essentially a sophisticated version of the standard observing technique
+of determining a nightly extinction coefficient for a given bandpass from measurements of the broad-band flux at differing airmass (Equation~\ref{eqn:kcoef}).
+The advance here is to determine each of the absorption coefficients defined in Equation~\ref{eqn:fitform} by observing how
+spectra of stars change as the airmass and observing direction change throughout the night.
+The extrapolation to the top of the atmosphere is then computed entirely from the MODTRAN4 templates. 
+
+The target stars used in this study and their magnitudes and types are given in Table~\ref{table:targets}.
+These were chosen to provide good coverage of the sky throughout the nights of observing,
+and to have spectra with complementary coverage in wavelength.
+The blue spectra of hot DA white dwarf targets contrast with the cooler spectra of F-stars,
+and so provide useful constraints on fits to features of atmospheric transmission.
+Yet both are relatively smooth and free of strong features (Balmer lines are easily modeled in the fitted spectra).
+Several are Southern spectro-photometric standards \cite{hamuy94}.
+These were included to facilitate the initial reduction of the spectra by IRAF, but as discussed below, 
+the analysis of atmospheric extinction does not require prior knowledge of the magnitudes or spectra of the targets.
+
+The observing sequence and cadence used in these studies were chosen largely in real time by the observer in the control room.
+An approximate plan was drawn up prior to the start of observing each night, but the choice of which target was observed at a given time
+was not pre-programmed.
+The maximum airmass at which stars were observed was limited to 2.0 by the range of the telescope, but 
+attention was paid to take spectra of stars as they were near this limit either on the rise or fall. 
+Sets of two or three spectra were taken of a star at each pointing of the telescope, so the total time spent at one point on the sky
+before slewing to another point was typically 10 minutes.
+Data were taken as long as stars could be seen on the telescope guide camera.
+A plot in $(HA,\delta)$ of the pointing for one night of observing is shown in Figure~\ref{fig:calhadec}.
+
+
+\subsection{Data Collection and Reduction}
+
+All results reported here are based on observing done with the SMARTS 1.5m Cassegrain telescope at CTIO on Cerro Tololo.
+Data were taken with the Ritchey-Chr\'etien spectrograph (RC-SPEC) using two different grating tilts and corresponding blocking filters.
+A ``red'' instrumental setup employed a low-dispersion grating (RC-SPEC\#11) at 12.5 degree tilt blazed at 8000\AA.
+All observing was done in first order with an OG530 blocking filter to eliminate second-order light at wavelengths below 10500\AA.
+This resulted in a dispersion of 5.4\AA/pixel on the CCD and FWHM resolution of 16.4 \AA.
+The resolution of the spectrograph in this configuration is R $\approx$ 400 at 6500\AA, as used in the MODTRAN4 calculations of the fitting templates.
+A ``blue'' setup used the same grating at 11.8 degree tilt and a GG385 blocking filter to obtain a free spectral range of 4000\AA~to 7500\AA.
+In this configuration the scale dispersion is 6.5\AA/pixel. 
+
+The magnitudes of stars chosen for this study (see below) are in the range $9 < V < 12$,
+and exposure times from 120 secs to 240 secs were used to acquire spectra.  
+This resulted in single-channel counts of a few hundred at the extremes of the free spectral range for the faintest stars
+to $\ge$ 20,000 ADU in the middle of the range for the brightest stars.
+The efficiency of the sensor in the spectrograph falls rapidly redward of 9000\AA, and as discussed below, statistical errors in
+measurements made at these longer wavelengths grow appreciably.  
+
+The slit on RCSPEC does not rotate to track the parallactic angle of refraction,
+so all spectra used here were taken with either a 10 arcsec or 15 arcsec full aperture.
+Target stars were first visually centered with the slit closed to 1 arcsec, then the slit was opened to acquire spectra.
+Atmospheric seeing during these observations was typically 1 arcsec and less than 2 arcsec in the worst cases.
+Calculations \cite{filippenko} indicate that, with these conditions and for the range of telescope pointing,
+these aperture widths suffice to avoid bias in the observed spectra due to atmospheric dispersion.
+The probe stars were all chosen to be well-isolated from other bright sources to avoid confusion in these wide slit apertures.
+No difference was seen between results derived from spectra taken with the two settings of the slit.
+
+Bias frames and dome flats were taken daily and used in reductions of the 2-d CCD images of the slit.
+Quartz lamp flats and neon lamp calibration exposures were taken with each new pointing of the telescope.
+Spectro-photometric standards were included in the target sets.
+Reductions of 2-d images to 1-d spectra were performed with IRAF software\footnote{IRAF software is distributed by the
+National Optical Astronomy Observatory, which is operated by the Association of Universities for Research in Astronomy (AURA)
+under cooperative agreement with the National Science Foundation.},
+and included overscan and bias removal, sky subtraction, and wavelength calibration. 
+A first correction of the spectra for instrumental signature and flux calibration was done using the available standard targets,
+but no extinction corrections were applied.
+This step is done largely for convenience since these calibrations are finally determined in the atmospheric fitting process described below;
+but doing so at this point improves the efficiency of the final fitting.
+The CCD detector on the spectrograph exhibits significant fringing at the longer wavelengths.
+This effect is partially removed by the flat-field correction applied during the reductions,
+and further reduced in the summation of spectra to produce synthetic broad-band magnitudes. 
+Reductions were done separately for each distinct observing period during the campaign, but the same pipeline was used for all data.
+Several examples of reduced 1-d spectra are shown in Figures~\ref{fig:spectra} and \ref{fig:morespectra}.
+
+To provide control and checks in the analysis, the data were separated into a set of observations used to calibrate the atmospheric extinction,
+and a disjoint set used for blind tests of the results of the calibration.
+There were four stars that were visible during more than one of the runs (Table~\ref{table:targets}). 
+Observations of these stars were used to calibrate the spectrograph instrument response and to fit slowly varying terms in the atmospheric extinction.
+The calibration data set was broadened to include observations of several of the remaining stars in order to fit the more rapidly varying 
+water vapor. 
+These were initially chosen to provide measurements at approximately hourly intervals during each night.
+This interval was found to be too sparse to determine sufficiently well the temporal variation of the water vapor during the nights we observed,
+so the number of calibration observations was increased to reduce the interval between points to $\le$20 minutes.
+This is an important conclusion of our study.
+
+\subsection{Fitting Procedure}
+
+Analysis of the data consisted of a single iterative fit to the entire set of observations.
+The fit included parameters that define the spectra of each of the target stars,
+parameters that refine the instrument calibration (one per observing night), and the coefficients of the atmospheric model defined above.
+Two types of fits were used to optimize sensitivity to the different parameters.
+A Kolmogorov-Smirnov (KS) goodness-of-fit parameter was computed as the maximum of the absolute value of the difference between the cumulative
+observed spectrum and the cumulative model spectrum each normalized to unity over the range of wavelengths included in the fit.
+The KS parameter was computed for each observed spectrum and the model for that observation,
+and a single global KS statistic then computed as the mean of the individual goodness-of-fit parameters computed over the entire data set.
+We do not interpret the KS parameter in a probabilistic sense; it is only used as a tool for finding a good description of the observations.
+
+The global statistic was used to fit the effective temperature and surface gravity of each target star, the instrument efficiency for each night,
+and atmospheric constituents with extinctions that vary slowly with wavelength -
+the one scale parameter for molecular scattering and absorption $C_{mol}$, the thickness of ozone $C_{O3}$ for each night,
+and the nightly parameters that describe the aerosol extinction.
+This technique eliminates the need to model errors to determine these parameters,
+and is independent of ``gray'' cloud conditions that effect only the normalization of the observed spectra.
+The water vapor content in the atmosphere and the normalization of the spectra $T_{gray}$ were fit for each observation with a chi-square
+computed with statistical errors estimated from raw counts in the unreduced 2-d images.
+These techniques were used iteratively.
+  
+The procedure initially set the coefficients of the atmospheric model to default values,
+and started with the instrument correction left as determined during the initial IRAF reductions of the 2-d spectra.
+A first set of parameters was fitted for the spectra of the four stars that were visible during more than one observing run.
+Models \cite{kurucz93} were taken for the main sequence stars, and blackbody spectra with Lorentzian Balmer lines used for white dwarfs.
+The effective temperature $T_{eff}$, surface gravity $log(g)$, and luminosity were fitted to the calibration observations, 
+as were the widths and depth of Balmer lines.
+The main-sequence models are given in \cite{kurucz93} as tables of discrete values of $T_{eff}$ and $log(g)$; the model spectra
+were linearly interpolated in each wavelength bin to yield the best fits.   Metallicities were set to solar values.
+
+A smoothing function was used to refine the instrument response for each night.
+As discussed above, particular observations of standard stars were used to initially normalize all other spectra taken on a given night.
+This procedure avoids regions affected by Telluric lines, but will imprint a particular instance of the
+continuous part of atmospheric extinction on the initial normalization.
+The fitted smoothing function removes this bias since it is constrained to describe spectra taken of each probe star over a range of airmass.
+The consistency of the fit was confirmed after the full iterative procedure was completed. 
+
+The slowly varying (nightly) atmospheric coefficients were fit using spectra of the four stars that
+were observed during more than one run of the campaign.
+The parameters of the remaining stars in the target list were then determined, 
+and finally the water vapor and gray cloud extinctions were fitted with the chi-square statistic.
+
+A second overall iteration was done with a single simultaneous optimization of the global KS statistic,
+followed by a final single chi-square fit to the water vapor and normalizations.
+After two iterations, the solution was found to be stable to statistical precisions consistent with those
+estimated from the raw counts in the observed spectra.
+The luminosity of each target star was ultimately determined from the brightest value found in the set of observations, 
+and the values of $T_{gray}$ were renormalized by the brightest observation of a given star (i.e. they were all rescaled to be no greater than unity).
+
+As a test of the robustness of the final solution, the instrument efficiencies were varied arbitrarily around their fitted values.
+It was found that local (i.e. wavelength dependent) variations of more than 1\% made it impossible to obtain best-fit solutions
+for the atmospheric parameters at all airmass.
+This was borne out both by visual inspection of the fits and in the goodness-of-fit statistics used in the fitting process.
+The overall slope of the instrument efficiency is degenerate with a common change in the effective temperatures of {\it all} stars in the fit.
+This degeneracy was arbitrarily broken by minimizing the deviation of the normalization of the instrument efficiency
+from that determined with the initial IRAF standardization.
+This process does not change the wavelength-by-wavelength product of the instrument calibration and the probe star spectra,
+and since our goal is to determine the atmospheric parameters, not stellar properties, this is acceptable.
+
+
+\section{Results}
+
+The fit described above yielded the single parameter $C_{mol} = 0.910$,
+and the slowly varying atmospheric parameters $C_{O3}$, $\tau_{i}$, and $\alpha$ given in Table~\ref{table:fits}.
+Values for $T_{gray}$ and $C_{H2O}$ for all observations of calibration stars are shown in Figures~\ref{fig:grays} and \ref{fig:allH2O}.
+An overall chi-square per degree of freedom (DOF) can be computed from the final fit even though the chi-square statistic was only used
+for a portion of the fitting process. 
+This gives a value $\chi^2/$DOF = 1.55 for 181406 degrees of freedom after clipping outliers at 5$\sigma$.  
+
+The aerosol concentrations ($\tau_{0}$) are seen to vary by an order of magnitude or so, but the values are within
+historically typical values \cite{gutierrez86} \cite{burki95}. 
+The single-order spectrographic measurements cover only a factor of two in wavelength, so uncertainty in the spectral index $\alpha$ of the aerosol
+is large and estimated by variation of parameters and use of the chi-square to be $\delta \alpha \sim 0.5$.
+The fitted values are consistent with those that have been historically found at these and similar sites.
+The mean ozone concentration is seen to be consistent with the MODTRAN4 default value (338 Dobson),
+and to display the expected seasonal variation, though the best value on the night of April 26, 2008 is somewhat high.
+The limited wavelength coverage of the fitted range of spectra taken with the Red set-up (5500\AA~- 10000\AA) 
+leaves some ambiguity between the ozone level and the spectral function of the aerosol.
+The airmass dependence of these two components is nearly identical (Figure~\ref{fig:Evsz}), however,
+so the computed broad-band extinction is rather insensitive to this ambiguity. 
+
+The precipitable water vapor is seen in Figure~\ref{fig:allH2O} to have varied in time by significant amounts.
+There were both slow trends, and also rapid changes over times of order an hour or so.
+The ground level relative humidity is seen to not be a useful proxy for the total vertical column height of water vapor.
+So the coefficients that define the vertical column height $C_{H2O}(t)$ (Equation~\ref{eqn:h2o}) determined from the calibration observations
+were interpolated to obtain values of for all non-calibration observations.
+%%The solid line shown in Figure~\ref{fig:allH2O} is the linear interpolation for the data presented here.
+For these observing nights, we found it necessary to choose calibration points at intervals $\le$20 minutes apart to measure $y$-band 
+magnitudes with sub-percent repeatability.
+
+We also looked for spatial variation in the atmospheric water vapor.
+This was done by computing the difference in $C_{H2O}$ for sequentially observed spectra.
+Shown in Figure~\ref{fig:H2OvsHA} is the change in water vapor plotted against the change in the east-west pointing of the telescope ($\delta EW$)
+for two runs of the campaign. 
+There are groups of points near $\delta EW$= 0 in both sets of data that correspond to the repeated spectra 
+of the same star taken following each slew of the telescope. 
+The distribution of the these points gives an estimate of the measurement error of $\delta C_{H2O}$(rms) $\approx$ 0.02 for both data sets.
+The remaining points are those computed from the last spectrum taken at one pointing and the first spectrum taken after a slew of the telescope.
+It can be seen that there was a clear and steady east-to-west increase in the water vapor content taken in November 2007.
+Such a trend is not seen in data from the earlier April run, nor was any other spatial dependence seen in any of the data.
+There is a more rapid variation with position that is statistically greater than the measurement error seen in most of the data.
+But the magnitude of this higher frequency component produces less than 0.1\% of residual scatter in the corrected $y$-band magnitudes,
+so we ignore it in this analysis.
+We used the form given in Equation~\ref{eqn:h2o} with a fixed gradient $dC_{H2O}/dEW$ = 0.166 for this run.
+
+%%The combination of observed temporal and spatial variation found on the night of November 3, 2009 is consistent with the motion of a weather
+%%front moving from west to east across the site at $\approx$ 5-10 km/hour.
+%%Note that, strictly constructed, the projected east-west difference at a fixed altitude should be used as the free parameter here,
+%%but the variation in extinction is small enough that the hour angle serves well as a proxy.
+
+We interpret the ``gray'' opacity as cloud cover, but though plausible, that interpretation is not essential to the analysis.
+The gray opacity is just the wavelength independent portion of the extinction.
+It varies from observation to observation by several per cent, 
+and since the recorded distribution is biased to those points in time when clouds did not prevent a spectrum from being taken,
+the actual variation is greater.
+The spatial structure can be quite complex, and that too shows through in the data reported here. 
+This is discussed further below, but to proceed, we separate presentation of ``gray'' extinction from chromatic terms that depend on wavelength.
+
+Table~\ref{table:fits} also includes data taken in April 2007 with the blue tilt of the spectrograph.
+This setup allows synthesis and analysis of the $g$ and $r$ bands.
+As in the later runs, the analysis favors presence of a weak aerosol component in the atmosphere that was
+spatially uniform and stable during the observing period.
+The ozone concentration was similarly consistent with the later runs.
+
+\section{Discussion}
+
+We present our results in the form of synthesized broad-band photometric magnitudes and colors.
+For this purpose a set of hypothetical instrumental throughput functions $T^{inst}_{b,syn}(\lambda)$ are defined
+for filters $b = grizy$ similar to those used in SDSS and planned for DES and LSST.
+The shortest optical wavelengths were not accessable with the setups of the spectrograph used for these studies,
+so no results for bluer filter bands, e.g. u-band, are given here. 
+These synthetic test functions are shown in Figure~\ref{fig:LSSTbands}. 
+The $y$-band chosen here provides a very stringent test as it includes
+the range 9000\AA~- 10000\AA~where there is strong absorption by water vapor.
+
+We follow the SDSS convention and define a measured broadband magnitude of a celestial source as \cite{fukugita96},
+\begin{equation}
+\label{eqn:ABmag}
+     m_b^{meas} \equiv -2.5\log_{10}\left( { ADU_b^{meas} \over A \Delta T \int_0^\infty \lambda^{-1} F_{AB} T_b(\lambda) d\lambda } \right),
+\end{equation}
+where the measured number of counts $ADU_b^{meas}$ is defined in Equation~\ref{eqn:cnts} by the true source flux and the unknown actual observational bandpass.
+The SDSS magnitude is normalized by a standard observational bandpass
+and a flat SED $F_{AB} = 3631$ Jy (1 Jansky = 10$^{-23}$ erg cm$^{-2}$ s$^{-1}$ Hz$^{-1}$).
+
+To compute a synthesized magnitude from the observed spectra and the fitted parameters, the following steps are taken:
+\begin{itemize}
+\item Each observed spectrum is corrected for the fitted RCSPEC instrumental throughput extracted from the nightly fits to yield the flux 
+that reaches the input pupil of the telescope $F_{\nu}^{pupil}(alt,az,t,\lambda)$.
+(Note that the spectra shown in Figure~\ref{fig:spectra}
+and Figure~\ref{fig:morespectra} are $F_{\lambda}(\lambda) = c F_\nu(\lambda)/\lambda^{2}$.)
+
+\item Synthesized instrumental magnitudes are computed by summing bin-by-bin in wavelength,  
+\begin{equation}
+\label{eqn:magdef}
+ m_b^{syn} = -2.5 \log_{10} \frac{ \int_0^\infty F_{\nu}^{pupil}(\lambda) T^{inst}_{b,syn}(\lambda) \lambda^{-1} d\lambda }
+      {\int_0^\infty T^{inst}_{b,syn}(\lambda) \lambda^{-1} d\lambda } - 48.60, 
+\end{equation}
+where the zero point is computed for $F_{AB}$ expressed in erg cm$^{-2}$ s$^{-1}$ Hz$^{-1}$.
+
+\item The atmospheric transmission $T^{fit}(alt,az,t,\lambda)$ is computed with Equation~\ref{eqn:fitform}
+and the appropriate parameters from the calibration fits.
+
+\item An equivalent atmospheric extinction is computed as,  
+\begin{equation}
+\label{eqn:extcmagdef}
+E_b = -2.5 \log_{10} \frac{ \int_0^\infty  T^{fit}(\lambda) T^{inst}_{b,syn}(\lambda) \lambda^{-1} d\lambda }
+      {\int_0^\infty T^{inst}_{b,syn}(\lambda) \lambda^{-1} d\lambda } 
+\end{equation}
+This is the photon-weighted atmospheric extinction averaged over the test instrumental bandpass $b$ for a source with a flat SED.
+
+\item The corrected {\it top-of-the-atmosphere} source magnitude is then computed,
+\begin{equation}
+\label{eq:mTOA}
+%\begin{align}
+m_b^{TOA} = m_b^{syn} - E_b  \\
+    = -2.5 \log_{10} \frac{ \int_0^\infty  F_{\nu}^{pupil}(\lambda) T^{inst}_{b,syn}(\lambda) \lambda^{-1} d\lambda }
+      {\int_0^\infty  T^{fit}(\lambda) T^{inst}_{b,syn}(\lambda) \lambda^{-1} d\lambda } - 48.60
+%\end{align}
+\end{equation}
+\end{itemize}
+Colors are computed as differences of these source magnitudes.
+Equation~\ref{eq:mTOA} essentially mimics a set of observations made with a perfectly known instrumental bandpass weighted with
+the fitted atmospheric transmittance.
+This formulation isolates the effects of the atmosphere in terms most directly related to ground-based astronomical observations.
+
+\subsection{Synthetic Photometric Analysis}
+
+For demonstration purposes, we first compute the extinction due to only the ``non-gray'' attenuation processes in the atmosphere 
+(i.e. Equation~\ref{eqn:extcmagdef} evaluated with $T^{fit}/T_{gray}$).
+A set of histories of such extinction values are shown in Figure~\ref{fig:calextc} for
+calibration observations made in the $rizy$ bands.
+It can be seen that while atmospheric extinction in the $r$ band exhibits a stable linear dependence on airmass
+(i.e. Equation~\ref{eqn:kcoef} is a good approximation),
+the varying water vapor yields a complex behavior at the longer wavelengths.
+Clearly using a single linear dependence on airmass to compute extinction through the night will lead to large errors in the redder bands.
+The $y$ band correction varied over this one night by as much as 50 millimags (peak-to-peak) at fixed airmass.
+This behavior is typical for the data reported here.
+
+As a measure of the internal precision of the calibration, we next compute the top-of-the-atmosphere magnitudes
+(i.e. Equation~\ref{eq:mTOA}) for each of
+the calibration observations using all the information available (i.e. including the ``gray'' term).
+The dispersions of these values for each night of the campaign are given in Table~\ref{table:dispersions}, 
+and the distribution of data from all nights of the campaign is shown in Figure~\ref{fig:calobs}.
+The rms values of the residuals are found to range from 0.002 to 0.004 magnitudes in $griz$, and 0.0055 to 0.0075 in $y$-band.
+These can be compared with the precision of the data estimated from the statistical counts in the spectra
+to be 0.002 in $gri$, 0.003 in $z$, and 0.005 in $y$.
+Residual contributions due to errors in the atmospheric model, the fitting procedure, and sampling limitations are seen to 
+be most significant in the $y$-band where they are comparable to the statistical error. 
+
+Next we look at the observations of the stars used as blind test sources.
+Shown in Figures~\ref{fig:blindobs_TOA},  \ref{fig:blindobs_GC_TOA}, and \ref{fig:blindobs_color}
+are plots that summarize the analysis of blind observations that are not included in the calibration fit.
+In each case, the magnitude or color derived for the observation is compared to the corresponding average quantity for the set of observations from the same star.
+If we assume that no correction can be made for ``gray'' extinction, then the residual (Figure~\ref{fig:blindobs_TOA})
+reflects the variation seen in the temporal plot of cloud cover (Figure~\ref{fig:grays}).
+Clear correlations in $T_{gray}$ from point to point in time can be seen in Figure~\ref{fig:grays}, and some improvement can be gained by interpolating
+between calibration observations to other points in space and time as done with the water vapor corrections.
+There is a set of observations for which this makes a substantial improvement.
+But the spatial structure of the cloud cover is such that a correction computed from a spectrum taken at one time or
+location can not be used to accurately correct an observation taken at different times or elsewhere.
+
+To examine the completeness of our model of atmospheric extinction we ``cheat''
+and use the values of $T_{gray}$ that are extracted from fits to the blind observations of the probe stars.
+These ``gray-corrected'' residuals are shown in Figure~\ref{fig:blindobs_GC_TOA}, and the values of the residuals are given in Table~\ref{table:dispersions}.
+It is evident that all other calibration factors transfer accurately to the blind observations in the $griz$ bands, with some degradation in the $y$ band.
+As a further test we look at colors computed as differences of magnitudes derived from the same observed spectrum; 
+these will be independent of true ``gray'' extinction.
+The dispersion of colors computed from blind observations are shown in Figure~\ref{fig:blindobs_color}.
+These color dispersions are somewhat smaller than would be expected if the residual errors in separate bands are independent.
+This is consistent with there being remaining errors in the atmospheric model that introduce correlated errors in the individual band magnitudes.
+But the consistency of the dispersion of the corrected magnitudes and the color magnitudes leads to
+the important conclusion that {\it our model accounts for all contributions to extinction larger than $\sim$3 millimagnitudes in these data.}
+
+
+\section{Conclusions}
+
+We have constructed a model for transmission of light from the top of the atmosphere to ground that accurately describes observations made during 
+the nights of this study.
+The model includes all significant components of the atmosphere that contribute to the extinction of light.
+The signatures of these components in observed spectra of stars can be computed accurately,
+and repeated measurements of the spectra of stars as they traverse the sky can be analyzed to extract the parameters of the model.
+Chromatic (non-gray) extinction can be evaluated from the model for arbitrary coordinates on the sky and times during any night included in the calibration.
+The fidelity of the computed signatures makes it possible to determine the parameters with good accuracy.
+Scattering and absorption processes that cause 5-20\% loss of the light at optical wavelengths can be measured with 2-3\% accuracy to leave
+residual errors that are below 0.5\%.
+The calibration is limited by a rapidly changing ``gray'' extinction that is consistent with moving and evolving cloud cover.
+ 
+Specific results for the data used in this study are given in Tables~\ref{table:fits} and \ref{table:dispersions},
+and in Figures~\ref{fig:grays} and \ref{fig:allH2O}.
+The atmospheric parameters summarized in Table \ref{table:fits} are consistent with typical seasonal variations
+(see e.g. \cite{stubbs07}, and references therein),
+and dispersions of the extinction measured in different observing periods and with different data samples are internally consistent.
+The observed magnitude dispersions are, not surprisingly, greatest in the $y$ band.
+This is due in part to poor efficiency at the longer wavelengths of the spectrograph used in these studies, 
+and in part to remaining unaccounted variations in the water vapor column height.
+We note also that observed $r$ band dispersions are larger than those in $g$ and $i$,
+and particularly $r-i$ color dispersions are consistently larger than dispersions of $i-z$ color.
+Dispersions in $g$ and $i$ are consistent with expected statistical errors, while the $r$ band measurements are slightly larger.
+This may be due to modeled temporal or spatial variation in the ozone layer that would have greatest effect in the $r$ band.
+
+%%As noted in the Introduction, it is only the integral of the SED of the celestial target with the observational bandpass that is actually
+%%measured in a broad-band system.
+%%Many SEDs vary substantially across the observational bandpass, so even with a perfectly measured bandpass,
+%%there is ambiguity in the meaning of an in-band magnitude.
+%%Unless {\it both} the wavelength dependence of the observational bandpass and the shape of the spectral energy distribution (SED) are known,
+%%not even the exact integral of the energy flux over the bandpass can be determined.
+%%Knowledge of the detailed shape of the atmospheric bandpass will substantially improve the usefulness of measured colors of celestial objects,
+%%and will enable exploratory fits to be made to their SEDs.
+
+It is important to note that we have not addressed the accuracy of the photometric zero-points, nor the accuracy of measured colors.
+Our results show that, if the cloud cover can be measured separately, then the calibration
+method used here can provide sub-percent precision defined as the reproducibility of measured magnitudes {\it at the top of the atmosphere}
+of individual celestial objects.
+Calibration of absolute broad-band scales will require different techniques.
+Proposals have been made to use observations of well characterized white dwarf stars \cite{holberg06},
+or analysis of the color distributions of main sequence stars \cite{macdonald04} \cite{ivezic07} \cite{sale09} \cite{high09} for this purpose.    
+
+\subsection{Design of Future Surveys, Cloud Shadows and Gray Extinction}
+
+We have presented a strategy that is suitable for implementation at observatories that host dedicated all-sky survey telescopes (e.g. LSST \cite{ivezic09}),
+or could be used to more accurately correct spectra taken with existing instruments.
+We have carried out an observing campaign with existing telescopes that validates this approach.
+We note that the technique will benefit greatly from improved sensors now becoming available with good efficiency at near infrared wavelengths,
+and from multi-order spectrographs that permit simultaneous data to be taken over larger ranges in wavelength.
+Simultaneous measurement of spectra between 4000\AA~and 10500\AA~will provide significantly improved resolution of the parameters of aerosols,
+and clear definition of the main ozone feature between 5000\AA~and 7000\AA.
+As is evident from the studies here, the resolution of the spectrograph need not be high as even modest resolution suffices to cleanly 
+pick out key molecular absorption features.
+It seems likely that more detail can be included in the extinction model (Equation~\ref{eqn:fitform}) used to describe the larger
+and more consistent data sets that will be acquired during future surveys.
+  
+Calibration of broad-band imaging survey data requires that we also be able to correct for
+the gray (wavelength independent) extinction produced by water droplets and ice crystals in clouds.
+Cloud structure can be intricate with significant spatial variations across a single field of view,
+and can change in the interval between exposures.
+In the worst case, the loss of light will be too severe to allow useful data to be taken.
+But it will be important to be able to correct data for thin cloud cover that may not be apparent to the naked eye,
+and it will certainly be of great benefit to be able to take useful data over an extended range of atmospheric conditions. 
+There are several important features of future dedicated surveys that should enable this to be done.
+These surveys will use telescopes with large fields of view several degrees across,
+and they all will be sensitive enough to capture several tens of thousands of stars in each image.
+These surveys also will observe these stars multiple times, and so will be sensitive to changes from ideal observing conditions. 
+
+We would seek a calibration of each image relative to a ``best'' reference condition of the sky encountered during the survey.
+Absolute calibration of this reference condition would then be a second step.
+A possible strategy would be to utilize a catalog of objects, mostly stars, constructed from the survey images themselves.
+The number of such sources on each image will be sufficient to create a map of $T_{gray}$ across each image with spatial resolutions of a few arc minutes.
+Magnitudes for each of these point-like objects would be first corrected for chromatic extinction using the technique discussed in this paper.
+A specific implementation could include color corrections to approximately account for slopes of the object SEDs across standardized bandpasses defined
+for the survey.
+An effective light curve would then be constructed for each star from the repeated observations of it,
+and a gray extinction defined for each observation by normalizing to the brightest observation made in the appropriate bandpass.
+As illustrated in Figure~\ref{fig:blindobs_TOA}, with a sufficiently large data sample taken at sites typical of astronomical observatories, 
+there will be a subset of the data that will be taken in truly ``photometric'' conditions.
+These conditions will constitute a reference observational bandpass for the survey that will be defined by the magnitudes of the reference stars.
+
+It remains to determine the range of atmospheric conditions in which good photometric precision can be maintained with the technique suggested here.
+As part of the campaign described in this paper, we acquired data to address this question.
+We took spectra of our probe stars with the SMARTS 1.5m telescope simultaneously with acquisition of
+imaging data with the SMARTS 0.9m telescope on one occasion \cite{CTIO08A},
+and the Blanco 4m telescope on another occasion \cite{CTIO09A}.
+Analysis of those data is underway, and will be the subject of a subsequent paper.
+
+
+\acknowledgments
+This work has been done as part of the design and development activity of the Large Synoptic Survey Telescope (LSST).
+The LSST is supported by the National Science Foundation under Scientific Program Order No. 9 (AST-0551161)
+through Cooperative Agreement AST-0132798, and under Department of Energy contracts DE-AC02-76SF00515,
+DE-AC02-98Ch10886, DE-FG02-91ER40, DE-FG02-91ER40677, and W-7405-Eng-48.
+Additional funding comes from private donations,
+in-kind support at Department of Energy laboratories and other LSSTC Institutional Members.
+
+Facilities: \facility{SMARTS 1.5m Cassagrain Spectrograph}.
+
+
+%---------BIBLIOGRAPHY----------------------------------------
+
+\begin{thebibliography}{}
+\bibitem[Berk et al. 1999]{MODTRAN} Berk, A., et al. 1999, Proceedings of the SPIE, 3756, 348
+\bibitem[Burke et al. 2009]{CTIO09A} Burke, D.L., Axelrod, T., Claver, C., DePoy, D., Saha, A., Smith, C., Stubbs, C., \& Tucker, D. 2009, CTIO Proposal 09A-0114
+\bibitem[Burki et al. 1995]{burki95} Burki, G., Rufener, F., Burnet, M., Richard, C., Blecha, A., \& Bratschi, P. 1995, A\&AS, 112, 383
+\bibitem[Filippenko 1982]{filippenko} Filippenko, A. 1982, PASP, 94, 715
+\bibitem[Flaugher 2007]{flaugher07} Flaugher, B., DES Collaboration 2007, BAAS, 209, 22.01
+\bibitem[Fukugita et al. 1996]{fukugita96} Fukugita, M., Ichikawa, T., Gunn, J.E., Doi, M., Shimasaku, K., \& Schneider, D.P. 1996, AJ, 111, 1748
+\bibitem[Glazebrook et al. 1994]{glazebrook94} Glazebrook K.,Peacock J.A., Collins, \& Miller, L. 1994, MNRAS, 266, 65
+\bibitem[Gutierrez-Moreno et al. 1986]{gutierrez86} Gutierrez-Moreno, A., Moreno, H., \& Cortes, G. 1986, PASP, 98, 1208
+\bibitem[Hamuy et al. 1994]{hamuy94} Hamuy, M., Suntzeff, N.B., Heathcote, S.R., Walker, A.R., Gigoux, P., \& Phillips, M.M. 1994, PASP, 106, 566
+\bibitem[High et al. 2009]{high09} High, F.W., Stubbs, C. W., Rest, A., Stalder, B., Challis, \& P. 2009, AJ, 138, 110
+\bibitem[Holberg \& Bergeron 2006]{holberg06} Holberg, J. B. \& Bergeron, P 2006, AJ, 132, 1221
+\bibitem[Ivezic et al. 2004]{ivezic04} Ivezic, Z., et al. 2004, Astron. Nachr./AN, 325 
+\bibitem[Ivezic et al. 2007]{ivezic07} Ivezic, Z., et al. 2007, AJ, 134, 973
+\bibitem[Ivezic et al. 2009]{ivezic09} Ivezic, Z., et al. 2008, astro-ph/0805.2366
+\bibitem[Kaiser et al. 2002]{kaiser02} Kaiser, N., Aussel, H., \& Burke, B.G. 2002, Proceedings of the SPIE, 4836, 154
+\bibitem[Kurucz 1993]{kurucz93} Kurucz, R. L., 1979, ApJ Suppl., 40, 1
+\bibitem[Landolt 1992]{landolt92} Landolt, A. U. 1992, AJ, 104, 340
+\bibitem[MacDonald et al. 2004]{macdonald04} MacDonald, E.C., et al. 2004, MNRAS, 352, 1255
+\bibitem[Magnier \& Cuillandre 2004]{magnier04} Magnier, E.A. \& Cuillandre, J.-C. 2004, PASP, 116, 449
+\bibitem[Manfroid 1996]{manfroid96} Manfroid, J. 1996, A\&AS, 118, 391
+\bibitem[Marshall \& DePoy 2005]{marshall05} Marshall, J.L. \& DePoy, D.L. 2005, astro-ph/0510233
+\bibitem[Padmanabhan et al. 2008]{padman08} Padmanabhan, N, et al. 2008, ApJ, 674, 1217
+\bibitem[Regnault et al. 2009]{regnault09} Regnault, N., et al. 2009, A\&A, 506, 999
+\bibitem[Sale et al. 2009]{sale09} Sale, S.E., et al. 2009, MNRAS, 392, 497
+\bibitem[Smith et al. 2008]{CTIO08A} Smith, C., et al. 2008, CTIO Proposal 08A-0477
+\bibitem[Staughton et al. 2002]{stoughton02} Stoughton, C., et al. 2002, AJ, 123, 485
+\bibitem[Sterken 2006]{sterken06} Sterken, Ch, Ed., ``The Future of Photometric, Spectrophotometric and Polarimetric Standardization''  2006, PASP Conf Series 364
+\bibitem[Stetson 2005]{stetson05} Stetson, P. B. 2005, PASP, 117, 563
+\bibitem[Stubbs \& Tonry 2006]{sandt06} Stubbs, Christopher W. \& Tonry, John L. 2006, ApJ, 646, 1436
+\bibitem[Stubbs et al. 2007]{stubbs07} Stubbs, C., et al. 2007, PASP, 119, 1163
+\end{thebibliography}
+
+
+%---------TABLES-------------------------
+%%\pagebreak
+\clearpage
+
+%Observing Summary
+\begin{table} 
+\caption{Periods of Observation.
+         \label{table:observing}}
+\begin{center} 
+\begin{tabular}{lccccc} 
+\tableline 
+\noalign{\smallskip}
+  Dates    & Spectograph Tilt & Spectral Range & Filters    & Observing  &  Spectra   \\
+ (nights)  &                  & (Angstroms)    &            & (hours)    &  (number)  \\  
+\noalign{\smallskip}
+\tableline
+\noalign{\smallskip} 
+Apr 24, 2007    &   Blue     & 4000 - 6800   &  $g,r$      &   9  &   41     \\
+Nov 2-3, 2007   &   Red      & 5500 - 10000  &  $r,i,z,y$  &  17  &   111    \\
+Apr 24-26, 2008 &   Red      & 5500 - 10000  &  $r,i,z,y$  &  22  &   262    \\
+July 23, 2008   &   Red      & 5500 - 10000  &  $r,i,z,y$  &   8  &   94     \\
+\noalign{\smallskip}
+\tableline 
+\end{tabular} 
+\end{center}
+\end{table}
+
+\clearpage
+
+%Targets Summary
+\begin{table} 
+\caption{Target Stars Used to Back-Light the Atmosphere.
+         \label{table:targets}}
+\begin{center} 
+\begin{tabular}{lccccl} 
+\tableline 
+\noalign{\smallskip}
+  Star     & Magnitude (V) & Type &      RA (J2000)    &      DEC (J2000)      &   Observations    \\
+%           &    V      &      &           &               &                   \\  
+\noalign{\smallskip}
+\tableline
+\noalign{\smallskip} 
+CD-34241   &   11.2  &    F   &  00 41 47  &   -33 39 08   &   Nov             \\
+CD-35534   &   10.0  &    F   &  01 32 04  &   -34 29 15   &   Nov and July    \\
+HD 24954   &   9.9   &    F   &  03 56 10  &   -41 35 42   &   Nov             \\
+CD-277546  &   9.5   &    F   &  10 35 08  &   -28 22 38   &   Apr             \\
+HD 103441  &   9.4   &    F   &  11 54 36  &   -54 43 57   &   Apr             \\
+HD 113815  &   9.7   &    F   &  13 06 21  &   -02 46 33   &   Apr             \\
+CD-329927  &   10.4  &    A   &  14 11 46  &   -33 03 14   &   Apr and July    \\
+HD 145330  &   9.9   &    F   &  16 10 45  &   -10 32 18   &   Apr             \\
+EG 274     &   11.0  &   DA   &  16 23 34  &   -39 13 46   &   Apr and July    \\
+LTT 7379   &   10.2  &    G   &  18 36 26  &   -44 18 37   &   July            \\
+HD 189910  &   9.6   &    F   &  20 03 18  &   -25 08 45   &   July            \\
+HD 207474  &   9.6   &    F   &  21 49 10  &   -02 02 24   &   July            \\
+LTT 9239   &   12.1  &    G   &  22 52 41  &   -20 35 33   &   Nov and July    \\
+Feige 110  &   11.8  &   DA   &  23 19 58  &   -05 09 56   &   Nov             \\
+CD-761164  &   10.1  &    A   &  23 26 55  &   -75 38 29   &   July            \\
+\noalign{\smallskip}
+\tableline 
+\end{tabular} 
+\end{center}
+\end{table}
+
+\clearpage
+
+%Summary of Fit Results
+\begin{table}
+\caption{Summary of Calibration Fit Results
+         \label{table:fits}}
+\begin{center}
+\begin{tabular}{lccccc}
+\tableline
+\noalign{\smallskip}
+  Date         & $C_{O3}$   &  $\tau_0(\%)$  &  $\tau_{1}(\%)$   &  $\tau_{2}(\%)$       &  $\alpha$  \\
+\noalign{\smallskip}
+\tableline
+\noalign{\smallskip}
+%%   Apr 24, 2007    &    0.83    &       1.5    &    0.0              &    0.0                &  -0.94   \\
+%%   Nov 2,  2007    &    0.80    &       3.9    &   -0.1              &    0.5                &  -1.70   \\
+%%   Nov 3,  2007    &    0.90    &       5.6    &   -0.3              &    0.2                &  -0.95   \\ 
+%%   Apr 24, 2008    &    0.86    &       1.2    &    0.1              &   -0.1                &  -0.50   \\
+%%   Apr 25, 2008    &    1.04    &       0.8    &   -0.1              &    0.7                &  -1.10   \\
+%%   Apr 26, 2008    &    1.46    &       0.8    &    0.5              &   -0.3                &  -1.50   \\
+%%   Jul 23, 2008    &    1.32    &       0.0    &    NA               &    NA                 &   NA     \\
+   Apr 24, 2007    &    0.83    &       1.5    &    0.00              &    0.00                &  -0.94   \\
+   Nov 2,  2007    &    0.80    &       3.9    &    0.02              &   -0.03               &  -1.70   \\
+   Nov 3,  2007    &    0.90    &       5.6    &    0.01              &   -0.01               &  -0.95   \\ 
+   Apr 24, 2008    &    0.86    &       1.2    &    0.00              &    0.00               &  -0.50   \\
+   Apr 25, 2008    &    1.04    &       0.8    &    0.00              &    0.00               &  -1.10   \\
+   Apr 26, 2008    &    1.46    &       0.8    &    0.00              &   -0.00               &  -1.50   \\
+   Jul 23, 2008    &    1.32    &       0.0    &    NA                &    NA                 &   NA     \\
+\noalign{\smallskip}
+\tableline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+%Summary of Statistical Precision
+\begin{table}
+\caption{Summary of Gray-Corrected Dispersion Measurements
+         \label{table:dispersions}}
+\begin{center}
+\begin{tabular}{lccccccccc}
+\tableline
+\noalign{\smallskip}
+        Data Set                     &   \multicolumn{9}{c}{Band or Color}                        \\
+                                     & $g$ &$g-r$& $r$ &$r-i$& $i$ &$i-z$& $z$ &$z-y$& $y$        \\
+                                     &   \multicolumn{9}{c}{(rms magnitude 10$^{-3})$}              \\          
+\noalign{\smallskip}
+\tableline
+\noalign{\smallskip}
+  April07 Calibration Magnitude      & 2.3 & ... & 4.0 & ... & ... & ... & ... & ... & ...        \\
+  April07 Blind Magnitude            & 1.6 & ... & 3.8 & ... & ... & ... & ... & ... & ...        \\  
+  Nov07   Calibration Magnitude      & ... & ... & 2.2 & ... & 1.9 & ... & 2.6 &     & 7.5        \\ 
+  Nov07   Blind Magnitude            & ... & ... & 4.0 & ... & 3.3 & ... & 3.7 & ... & 7.1        \\    
+  April08 Calibration Magnitude      & ... & ... & 2.8 & ... & 3.2 & ... & 3.6 & ... & 5.5        \\
+  April08 Blind Magnitude            & ... & ... & 3.3 & ... & 2.8 & ... & 3.1 & ... & 7.9        \\
+  July08  Calibration Magnitude      & ... & ... & 2.2 & ... & 2.2 & ... & 3.8 & ... & 5.5        \\
+  July08  Blind Magnitude            & ... & ... & 2.4 & ... & 2.0 & ... & 3.2 & ... & 6.5        \\
+  April07 Color                      & ... & 5.1 & ... & ... & ... & ... & ... & ... & ...        \\
+  Nov07   Color                      & ... & ... & ... & 2.1 & ... & 1.6 & ... & 6.4 & ...        \\
+  April08 Color                      & ... & ... & ... & 4.0 & ... & 1.6 & ... & 6.4 & ...        \\
+  July08  Color                      & ... & ... & ... & 2.9 & ... & 2.4 & ... & 4.0 & ...        \\
+\noalign{\smallskip}
+\tableline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+%---------FIGURES----------------------------
+%\pagebreak
+\clearpage
+
+%Templates
+\begin{figure}
+\plotone{f1.eps}
+\caption{Computed optical transmission at zenith from Tololo to space.
+   The atmospheric mix used in the calculation is the 1976 U.S. Standard option in MODTRAN4.
+   Absorption by ozone $A_{O3}$ (red) and water vapor $A_{H2O}$ (blue) are shown separately, while contributions of
+   oxygen and a number of trace elements are combined into one function $A_{mola}$ (green).
+   Rayleigh scattering $A_{mols}$ by these molecular constituents is also shown (light blue).
+   The total transmission through these constituents is shown as a black line.  
+   The plot includes no contributions from aerosols or clouds.
+          \label{fig:templates}}
+\end{figure}
+
+%Extinction dynamics
+\begin{figure}
+\epsscale{0.75}
+\plotone{f2.eps}
+\caption{Contribution to extinction (magnitudes) from various components in the atmosphere:
+   oxygen (green), ozone (red), water vapor (blue) and Rayleigh scattering (light blue) for the 1976 U.S. Standard mix.
+   The extinction is computed over the range 5000\AA~to 10000\AA~for a source with a flat SED.
+   The slopes of the extinction lines correspond to nearly linear dependence of optical depth with airmass for ozone (slope = 0.97) and Rayleigh scattering (slope = 0.98),
+   while the oxygen and water vapor slopes are 0.59 and 0.71 respectively. 
+          \label{fig:Evsz}}
+\end{figure}
+
+%Example spectra
+\begin{figure}
+\epsscale{1.0}
+\plottwo{f3a.eps}{f3b.eps}
+\caption{Spectrum of the G-star LTT 9239 taken at 1.57 airmass on November 3, 2007 (left).
+   Spectrum of the F-star CD-35 534 taken at 1.50 airmass on July 23, 2008 (right).
+   The flux is $F_{\lambda}(\lambda)$ (ergs cm$^{-2}$ s$^{-1}$ \AA$^{-1}$), and the fitted spectra are overlaid in red in both cases.
+         \label{fig:spectra}}
+\end{figure}
+
+%More example spectra.
+\begin{figure}
+\plottwo{f4a.eps}{f4b.eps}
+\caption{Spectrum of the A-star CD-32 9927 taken at 1.03 airmass on April 26, 2008 (left).
+   Spectrum of the white dwarf EG274 taken at 1.94 airmass on July 23, 2008 (right).
+   The flux is $F_{\lambda}(\lambda)$ (ergs cm$^{-2}$ s$^{-1}$ \AA$^{-1}$), and the fitted spectra are overlaid in red in both cases.  
+\label{fig:morespectra}}
+\end{figure} 
+
+%Example telescope HA-DEC for calibration obs.
+\begin{figure}
+\plotone{f5.eps}
+\caption{The telescope pointing for spectra of calibration stars taken during night of July 23, 2008 observing run.
+   The observations used to fit the atmospheric model are shown as solid dots, and the solid lines trace the temporal order of the observations. 
+          \label{fig:calhadec}}
+\end{figure}
+
+%All gray fits
+\begin{figure}
+\plotone{f6.eps}
+\caption{The coefficients $T_{gray}$ from fits to spectra taken with the ``red'' set-up of the spectrograph. 
+   Calibration observations ($\bullet$) and test observations ($\times$) are shown separately. 
+   The horizontal axis is the running time in hours from UT midnight of the first night (00:00:00 UT November 2, 2007)
+   plus 100 times the run number (0 for Nov 2007 and 2 for July 2008). 
+          \label{fig:grays}}
+\end{figure}
+
+%All H2O fits
+\begin{figure}
+\plotone{f7.eps}
+\caption{The coefficients $C_{H2O}$ ($\bullet$) from fits to calibration spectra taken with the ``red'' set-up of the spectrograph.
+   The horizontal axis is the same as in Figure \ref{fig:grays}.
+   Also shown in this figure are readings of relative humidity ($+$) taken by the Tololo ground weather station.
+   The vertical axis has different meanings for the two sets of points.  
+          \label{fig:allH2O}}
+\end{figure}
+
+\clearpage
+
+%Water vapor spatial variation.
+\begin{figure}
+\plottwo{f8a.eps}{f8b.eps}
+\caption{Spatial variation of water vapor measured as the change in the coefficient $C_{H2O}$ with change in the east-west 
+pointing of the telescope.  
+The plot on the left is for nights in November 2007 and that on the right for nights in April 2008.  The data from November
+are described by a slope of 0.166 while the data from April are consistent with zero slope.
+Note that the vertical scales of the two plots differ.
+\label{fig:H2OvsHA}}
+\end{figure} 
+
+%Test Bandpasses
+\begin{figure}
+\plotone{f9.eps}
+\caption{Instrumental throughput of synthetic {\it grizy} filters used in this study.
+   The vertical axis is the overall normalized efficiency of the telescope, filter, and camera optics and sensors. 
+          \label{fig:LSSTbands}}
+\end{figure}
+
+%Calibrated extinction
+\begin{figure}
+\plotone{f10.eps}
+\caption{Example of non-gray atmospheric extinction (magnitudes) 
+   computed from model coefficients fitted to calibration observations for the night of July 23, 2008.
+   The horizontal axis is the airmass of the observation computed from the telescope altitude.
+   Extinction is computed for synthesized $r$ (red), $i$ (cyan), $z$ (magenta), and $y$ (black) bandpasses.
+   The solid lines trace the temporal sequence of the observations used in the calibration. 
+          \label{fig:calextc}}
+\end{figure}
+
+\begin{figure}
+\plottwo{f11a.eps}{f11b.eps}
+\plottwo{f11c.eps}{f11d.eps}
+\caption{Dispersions of the fully-corrected (including ``gray'' corrections) top-of-the-atmosphere calibration magnitudes.
+   The horizontal axis is the difference between magnitudes from individual observations of a star and the mean magnitude from all observations
+   of the same star. Over and under flow counts would be accumulated in bins at the extreme ends of the horizontal range.
+   (There are none in this data sample.)  Values are shown for $r$ (upper left), $i$ (upper right), $z$ (lower left),
+   and $y$ (lower left) bandpasses.
+   The curves are Gaussian functions with $\sigma$ equal to the rms of the offsets of individual observations from their corresponding mean.   
+          \label{fig:calobs}}
+\end{figure}
+
+%TOA_Blind
+\begin{figure}
+\plotone{f12.eps}
+\caption{Offsets of blind observations when no ``gray'' correction is applied.
+   The horizontal axis is the difference between magnitudes of individual observations and the mean
+   of all observations of the same star.
+   Over and under flow counts are accumulated in bins at the extreme ends of the horizontal range.
+   Values are shown for $r$ (red), $i$ (cyan), $z$ (magenta), and $y$ (black) bandpasses.  
+          \label{fig:blindobs_TOA}}
+\end{figure}
+
+
+%GC_TOA_Blind
+\begin{figure}
+\plottwo{f13a.eps}{f13b.eps}
+\plottwo{f13c.eps}{f13d.eps}
+\caption{Offsets (dispersion) of blind observations after correction for ``gray'' extinction fitted to each observation.
+   The horizontal axis is the same as that in Figure \ref{fig:blindobs_TOA}, but note the different scales.
+   Values are shown for $r$ (upper left), $i$ (upper right), $z$ (lower left), and $y$ (lower right) bandpasses.
+   The curves are Gaussian functions with $\sigma$ equal to the rms of the offsets of individual observations from their corresponding mean.  
+          \label{fig:blindobs_GC_TOA}}
+\end{figure}
+
+%Color_TOA_Blind
+\begin{figure}
+\plotone{f14.eps}
+\caption{Offsets (dispersion) of colors computed from magnitudes of blind observations.
+   The horizontal axis is the difference between colors of individual blind observations and the mean color of all observations of the same star.
+   Over or under flow counts are accumulated in bins at the extreme ends of the horizontal range.
+   Values are shown for $r-i$ (red), $i-z$ (cyan), and $z-y$ (magenta) colors.
+   The curves are Gaussian functions with $\sigma$ equal to the rms of the offsets of individual observations from their corresponding mean. 
+          \label{fig:blindobs_color}}
+\end{figure} 
+
+
+
+\end{document}
