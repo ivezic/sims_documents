@@ -1,0 +1,19 @@
+rsync /data/tmp/July_rev/r_1e6/*.png r_1e6
+rsync /data/tmp/July_rev/r_1e6_nodither/*.png r_1e6_nodither
+
+rsync /data/tmp/July_rev/u_1e6/*.png u_1e6
+rsync /data/tmp/July_rev/g_1e6/*.png g_1e6
+rsync /data/tmp/July_rev/i_1e6/*.png i_1e6
+rsync /data/tmp/July_rev/z_1e6/*.png z_1e6
+rsync /data/tmp/July_rev/y_1e6/*.png y_1e6
+
+rsync /data/tmp/July_rev/r_hd_test/*.png r_hd_test
+
+rsync /data/tmp/July_rev/r_1e6_nodither_regsolver/*.png r_1e6_nodither_regsolver
+
+rsync /data/tmp/July_rev/r_1e6_regsolver/*.png r_1e6_regsolver
+
+rsync /data/tmp/July_rev/u_1e6_4yr/*.png u_1e6_4yr
+rsync /data/tmp/July_rev/r_1e6_newseed/*.png r_1e6_newseed
+rsync /data/tmp/July_rev/u_1e6_neg15/*.png  u_1e6_neg15
+rsync /data/tmp/July_rev/u_1e6_moreghost_small/*.png u_1e6_moreghost_small

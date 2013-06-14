@@ -1419,7 +1419,82 @@ The uniformity errors must meet the uniformity requirement in the SRD (Requireme
 The calibration process presented above is complex, and meeting the SRD requirements
 is dependent on understanding and controlling a large number of small perturbations.  We seek to verify that our approach will produce the required results, and are doing so with different techniques that apply to the stages of LSST's construction and operation.   During the current final design phase, we are employing simulation tools, backed up when possible by measurements on the sky from existing telescopes.   \citep{Burke2013} and \citep{Burke2010b} are examples of this approach.  During the construction phase, we will be able to feed measured data from actual telescope components into the simulations.   During operations, our focus is on designing metrics that will let us assess the calibration quality on an ongoing basis.
 
-\subsection{Self Calibration Simulation}
+\subsection{Self Calibration Simulation}\label{sec:selfcalsim}
+
+One of the final steps in the LSST calibration process is running self-calibration, solving for a large number of stellar magnitudes and observation zeropoints.  The accuracy and precision of the self-calibration procedure has complicated dependencies on various sources of noise as well as the overall observing strategy which determines how well different regions of sky can be tied together.  We have undertaken a serries of simulations to test the validity of the LSST self-calibration process.
+
+To simulate self-calibration, we require a catalog of reallistic LSST observations of bright stars.  We generate this catalog by combining Galfast and Opsim.  The Galfast code generates a realistic model of the Milky Way stellar populations, matching the observed distributions from SDSS.  The LSST Opsim can then be used to generate observations of the stars in the Galfast model.  For each Opsim pointing, we generate a list of observed stars along with an observed magnitude that includes atmospheric and hardware effects.  
+
+An example self-calibration simulation is shown in Figure~\ref{fig:selfcal_fiducial}.  This simulates the first two years of LSST observations in $r$-band, with 1.3 million stars distributed fairly uniformily across the sky.  The observed stellar magnitudes include offsets for cloud extinction, noise based on the Opsim 5$\sigma$-limiting depth, errors due to ghosting and illumination corrections, and errors based on variations in the filter throughput and placement.  The results are promising, showing we easily meet the SRD unifomity requirement, and and very close to meeting the repeatability requirement.  The detailed input parameters of this simulation are listed in \S\ref{sec:siminput}.
+
+Self-calibration simulations will continue to be important during commissioning and regular survey operations.  By running simulations that match the conditions of the actual LSST observations, we will be able to identify regions of the sky which are poorly linked to the rest of the survey.  We will also be able to identify which spatial scales have the largest errors, which can have important ramifications for cosmological observations (e.g., galaxy clustering) \citep{Huterer13}. 
+
+
+
+
+%/data/tmp/July_rev/r_1e6
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\subfloat[\label{nobs}]{\includegraphics[width=3.2in]{SelfcalFigs/r_1e6/Snobs}}
+\subfloat[\label{sdmag}]{\includegraphics[width=3.2in]{SelfcalFigs/r_1e6/Sdmag}} \\
+\subfloat[\label{starstrue}]{\includegraphics[width=3.2in]{SelfcalFigs/r_1e6/Sdamg_hist}}
+\subfloat[\label{starsrms}]{\includegraphics[width=3.2in]{SelfcalFigs/r_1e6/Srepeat_IQR_bright_hist}} 
+\caption{{\small {\bf Results from a self-calibration simulation.}
+Panel \ref{nobs} shows the number of visits across the sky for the
+first two years of the survey in $r$-band.  The color range has been
+truncated since the deep-drilling fields can have over 1000 visits.
+Conditions for this simulation are described in the text.  Panel
+\ref{sdmag} shows the true minus best-fit stellar magnitudes residuals
+across the sky after iterating the self-calibration solver. Panel
+\ref{starstrue} shows similar information, but as a histogram of all
+stars, demonstrating the `uniformity' requirement in the SRD. Panel
+\ref{starsrms} shows a histogram of the RMS of the difference between
+the calibrated and true magnitudes for bright stars, demonstrating the
+`repeatability' requirement in the SRD.  }}
+\label{fig:selfcal_fiducial}
+\end{minipage}
+}
+\end{figure}
+
+
+\subsubsection{Self-Calibration of a Large System Using HEALpixles}
+
+The self-calibration problem for LSST is incredibly large.  For comparison, the uber-cal of SDSS involved 36 million observations of 12 million unique stars.  For LSST in the first two years we will have around 3.2 billion observations of 100 million unique stars.  The memory and computation power required to solve such a system demands that we parallelize the problem in some way.
+
+We have developed a technique using the Hierarchical Equal Area isoLatitude Pixelization (HEALpix) tessellation of a sphere.  The HEALpix tessellation was originally designed for analyzing all-sky CMB observations.  HEALpixels have equal area, and are distributed to make fast calculations of multipole moments and power spectra.  
+
+To run self-calibration in parallel, we assign each observation (consisting of a patch ID, star ID, observed magnitude, magnitude uncertainty, and possibly Illumination patch ID) to the nearest four HEALpixels on the sky.  This divides the observations in such a way that we have regions on the sky that are entire HEALpixels plus an added border of approximately one-half HEALpixel.  We have had good results with using 768 (53 square degrees) or 3072 (13 square degree) HEALpixels.  
+
+Once the observations have been divided, we run the self-calibration solver on each HEALpix region independently.  By solving each HEALpixel in isolation, each result has a unique floating zeropoint.  To tie the system back to a single floating zeropoint, we construct a matrix based on
+\begin{equation}\label{eqn:hp}
+P^{model}_{ij} = P^{best}_{i} + HP_{j}
+\end{equation}
+where the $P^{model}_{ij}$ are the patch zeropoints that were fitted on each HEALpixel.  The equation is solved for the true patch zeropoint $P^{best}_{i}$ and the HEALpixel floating zeropoints $HP_{j}$, completely analogous to Eqn~\ref{eqn:modelmag}.  If an illumination correction is included, we replace the patch ID with a unique ID for each patch ID and illumination ID combination present.  At full density, we expect $\sim100$ stars per calibration patch and $\sim$15 observations per year.  Thus, by using the patches to tie large scale solutions together, we have reduced the computational requirements by three orders of magnitude.  For example, the two-year $r$-band simulation presented shown in Figure~\ref{fig:selfcal_fiducial} has 129 billion non-zero matrix elements in the full self-calibration formulation, but the patch solution needs only 32 million non-zero elements.  
+
+This procedure is inefficient in the sense that each patch zeropoint and stellar magnitude is solved for 4 times.  However, there is substantial speedup provided by not having to run the solver to convergence over very large spatial scales.  Once the final patch zeropoints are solved for, we loop back through the data and apply the zeropoints (and possibly illumination solution) to the stellar observations and calculate a weighted mean for the final best-fit stellar magnitudes.  We are currently weighting the patches in Eqn~\ref{eqn:hp} by the number of stars they contain.  This should probably be refined, as patches taken in cloudy conditions will be poorly fit even if they contain many stars.  
+
+The solutions returned by fitting in parallel are well-matched to solutions which solve the system simultaneously.  Figure~\ref{fig:hpvglobal} compares a fit with the traditional global solver with a solution made with HEALpixels.  
+
+
+\begin{figure}
+\plottwo{SelfcalFigs/HPid_8.png}{SelfcalFigs/HPid_16.png}
+\caption{HEALpixel maps for 8 and 16 sides, resulting in 400 and 1568 individual pixels in the Southern hemisphere respectively.}
+\end{figure}
+
+
+\begin{figure}
+\plottwo{SelfcalFigs/r_1e6_regsolver/Sdmag.png}{SelfcalFigs/r_1e6/Sdmag.png}
+\plottwo{SelfcalFigs/r_1e6_regsolver/Sdamg_hist.png}{SelfcalFigs/r_1e6/Sdamg_hist.png}
+%\plottwo{SelfcalFigs/r_1e6_regsolver/Srepeat_IQR.png}{SelfcalFigs/r_1e6/Srepeat_IQR.png}
+%\plottwo{SelfcalFigs/r_1e6_regsolver/Srepeat_IQR_bright_hist.png}{SelfcalFigs/r_1e6/Srepeat_IQR_bright_hist.png}
+\caption{Comparison of a simulation solved simultaneously (left) with one solved on individual HEALpixels and combined.  Statistically, the differences between the two solutions are at the sub-millimag level, which is much less than the differences we see between runs with different starting seeds (Figure~\ref{fig:diffseed}). \label{fig:hpvglobal}}
+\end{figure}
+
+
+
 \subsection{Auxiliary Telescope Simulation}
 
 \subsection{Calibration Performance Metrics}
@@ -1802,6 +1877,170 @@ with LSST.
 
 %may provide useful SDQA data (especially for alerts/nightly data
 %stream)
+
+
+\section{Fiducial Self-Calibration Input}\label{sec:siminput}
+The input file used with simSelfCalib.py to generate the simlutated LSST catalor presented in \S\ref{sec:selfcalsim}.
+\begin{verbatim}
+#  the number of total stars in the sim
+    nStarTot = 2000000
+#  the magnitude range  
+    magmin = 17
+    magmax = 21
+#  the color (g-i) range of the sim stars
+    colmax = 3.5
+    colmin = -0.8
+#  A value for the random seed, if desired.
+    random_seed = 42
+#  Distribution to use for mag_rand_err.  Options:  Guassian, Cauchy
+    errorDist = Gaussian
+#  Parameters for using flux standard stars.  
+#  Flux standards are all placed on patchid 0.
+#  number of stars per block to use.  
+#  values < 1 make a fraction of the stars standards, 
+#  values > 1 are the number of stars per block.
+    fluxFrac = 0
+#  Gaussian noise to add to the flux standard mags.
+    fluxNoise = 0.0001 
+#  the next few values are about the zeropoint and color terms
+#  the random error added to the stars, distribution set by errorDist.  
+#  This is an error floor.
+    mag_rand_err = 0.003
+#  calculate what LSST will think the error is based on observed mag (True) or output a 
+#  more realistic error (False)
+   calcerror = False
+#  Use Opsim xparency for the gray zeropoints
+    zp_opsim = True
+#  the maximum zeropoint change added to the patches
+    zp_var_max = 1.0
+#  the maximum zeropoint gradient added to the patches
+    zp_grad_max = 0.0
+#  the maximum color term change in mag added to stars in a patch
+    colterm_max = 0.005
+#  the range between -1 < (g-i) < 1 in the color term due to filter bandpass shift. 
+    colterm_rad_max =  -0.040
+#  the uncertainty in the observed color -- 0 or negative values will result
+#  in no color gradient correction
+    color_obs_noise = 0.05
+#  the fractional uncertainty in the color correction term ()
+    color_correction_error = 0.10
+#  fraction of the FoV that the filter can jitter:   
+    filter_jitter = 0.0055
+#  fractional variation in the gain (Gaussian RMS)
+    gainvar = 0.00
+#   fractional error in the exposure time (e.g., from shutter errors)
+    exptvar = 0.001
+#   number of HEALpixel sides to use.  Must be power of 2.
+    nside = 16
+#  Use cloud images.  Each visit has a cloud image generated on a sparse 
+#  grid then interpolated to the star positions.    
+    use_cloudsimage = True
+#  the magnitude of the sinusoidal variation 
+#  in the zero point in the X and Y-directions.  Note, these 
+#  interfere with eachother so the total error 
+#  will be \pm (sinvarx_mag+sinvary_mag)
+    sinvarx_mag = 0.00
+    sinvary_mag = 0.00
+#  the spatial scale for the sinusoidal variation
+#  value of 1 will make the FOV run from -pi to pi, 2--> -2pi to 2pi
+    sinvarx_scale = 1.
+    sinvary_scale = 1.
+    sinx_phase = 0.0
+    siny_phase = 0.0
+#  angle between the x and y variation axes.  This is held constant.
+    sinx_angle = 20.0
+#  a second set of spatially varying sinusoidal errors.  
+#  Here, the phase is randomly set for each night to simulate flat fielding errors
+    flat_sinvarx_mag = 0.00
+    flat_sinvary_mag = 0.00
+    flat_sinvarx_scale = 1.
+    flat_sinvary_scale = 1.
+#  angle between x and y axes.  Held constant, but the phase is 
+#  varied from night-to-night
+    flat_sinx_angle = 0.0
+#  how many nights to keep the phase constant
+    phase_persist = 1
+#  illumination correction file jdsu_utest.dat
+#   illumcorr_filename =   None
+#
+#  illumination correction file jdsu_r.dat  ricbb.dat
+#
+   sed_illumcorr_filename = jdsu_r.dat
+   bb_illumcorr_filename = ricbb.dat
+# what fraction of the illumination error to use
+   illum_err_factor = 0.1
+#  focal plane temperature model file
+#   fpModel1_filename = fpTemp1.dat
+#   fpModel2_filename = fpTemp2.dat
+# spatial variation from cloud removal
+#   fraction of the total zeropoint shift to put in as the cloud magnitude
+    cloud_mag = 0.00
+    cloud_sinvar_scale = 5.
+# Variable star contamination
+    rr_fraction = 0
+    rr_amplitude = 1.
+# Use Kepler stellar variability statistics?
+    kepler_variablity = False
+# limits for sim footprint
+#  the ra/dec limits, in degrees
+    raMin = 0
+    raMax = 360.
+    decMin = -90.
+    decMax = 0.
+# you can use opsim (True or False) to generate fields    
+#  use opsim database (opsim3.61)
+    use_opsim = True
+# flag to use the opsim dither scheme, instead of random dither.
+# note that opsim dither scheme covers the entire 
+# radius_fov (i.e. dith_Offset_frac = 1)
+    use_opsimdither = True
+# opsim filter, if using this
+    opsimfilter = r
+#  then specify time to start/stop, in nights from start of opsim
+    tstart = 0
+    tstop = 730
+# or don't use opsim and specify nEpoch instead
+#  nepoch = number of visits to each field
+    nEpoch = 10
+#  you can use calsim database to generate the stars.  
+#  Available calsimtables include:  "msrgb", "msrgb_1e6", and "msrgb_1e7"
+    use_calsim = True
+    calsimtable = msrgb_1e6
+# you can also change the radius of the field of view
+    radius_fov = 1.8
+# and the number of patches to split this radius into. should be 'square' (nPatch=N^2)
+    nPatch = 25
+# raOff and decOff control dithering
+    dith_raOff_frac = 0.5
+    dith_decOff_frac = 0.5
+#  Limits of camera rotation, in degrees (has a dithering effect) 
+#  (LSST standard = -90 to 90)
+    dith_skyRot_min = -90
+    dith_skyRot_max = 90
+# filenames for outputs
+#  starobs is the file input to the solver
+    starobs_filename = star_obs.dat
+# should starobs contain the subpatch information?  
+# These can then be solved for illumination corrections.
+    print_subpatch = True
+# number of radius bins to use for the illumination correction
+    nRadiusBins = 5
+# number of g-i color bins to use for the illumination correction
+    nColorBins = 1
+# output each ra/dec block to it's own file (only use for very large sims)
+    multifile = False
+#  master file contains everything relevant to every measurement of every star
+    master_filename = /dev/null
+#  stardata is the basic star magnitudes, positions and colors
+    stardata_filename = stardata.dat
+#  star data for re-asigning patches
+    ras_filename = /dev/null
+#  visitdata gives the information on the visits used in the simulation
+    visit_filename = visit.dat
+#  patchdata gives the information on the patches in the simulation 
+    patch_filename = patchdata.dat 
+\end{verbatim}
+
 
 
 \section{Glossary}
@@ -2532,33 +2771,6 @@ the two extremes of the atmospheric transmission in each filter are shown above.
 
 \clearpage
 
-\begin{figure}
-\centering
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\subfloat[\label{stardense}]{\includegraphics[width=3.2in]{Stardensity}}
-\subfloat[\label{sdmag}]{\includegraphics[width=3.2in]{Sdmag}} \\
-\subfloat[\label{starstrue}]{\includegraphics[width=3.2in]{StatsTruemBest}}
-\subfloat[\label{starsrms}]{\includegraphics[width=3.2in]{StatsRMSStars}} 
-\caption{{\small
-{\bf Results from a self-calibration investigation.} Panel \ref{stardense} shows
-the stellar density across the sky relevant for the simulation - note
-the Milky Way plane has been cut out of the simulation, and we have
-only used pointings with declination between -80 and 0 degrees.
-Conditions for this simulation are described in the text.  Panel \ref{sdmag}
-shows the true minus best-fit stellar magnitudes residuals across the
-sky after iterating the self-calibration solver. Panel \ref{starstrue} shows
-similar information, but as a histogram of all stars, demonstrating
-the `uniformity'  requirement in the SRD. Panel \ref{starsrms} shows
-a histogram of the RMS of the difference between the calibrated and
-true magnitudes for each star (after self-calibration iteration),
-demonstrating the `repeatability' requirement in the SRD. 
-}}
-\label{fig:selfcal_fiducial}
-\end{minipage}
-}
-\end{figure}
 
 
 \begin{landscape}
