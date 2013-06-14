@@ -1,0 +1,588 @@
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2012.8.24)  12 JUN 2013 15:09
+entering extended mode
+**scUpdate
+(./scUpdate.tex
+LaTeX2e <2003/12/01>
+Babel <v3.8d> and hyphenation patterns for american, french, german, ngerman, b
+ahasa, basque, bulgarian, catalan, croatian, czech, danish, dutch, esperanto, e
+stonian, finnish, greek, icelandic, irish, italian, latin, magyar, norsk, polis
+h, portuges, romanian, russian, serbian, slovak, slovene, spanish, swedish, tur
+kish, ukrainian, nohyphenation, loaded.
+(/astro/net/tex/texmf/tex/latex/misc/aastex.cls
+Document Class: aastex 2003/12/12 5.2/AAS markup document class
+Class aastex Info: Original \LaTeX2.09 style by Chris Biemesderfer (chris@seago
+at.com). Adapted to \LaTeXe by A. Ogawa (ogawa@teleport.com) on input line 74.
+(/usr/share/texmf/tex/latex/base/article.cls
+Document Class: article 2004/02/16 v1.4f Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/size12.clo
+File: size12.clo 2004/02/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf/tex/latex/base/latexsym.sty
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 47.
+)
+(/usr/share/texmf/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/share/texmf/tex/latex/graphics/graphics.sty
+Package: graphics 2001/07/07 v1.0n Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texmf/tex/latex/graphics/graphics.cfg
+File: graphics.cfg 2005/02/03 v1.3 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 80.
+
+(/usr/share/texmf/tex/latex/graphics/pdftex.def
+File: pdftex.def 2002/06/19 v0.03k graphics/color for pdftex
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+(/usr/share/texmf/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2002/01/22 v2.2d
+
+(/usr/share/texmf/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2001/10/25 v2.2f
+\@emptytoks=\toks15
+\symAMSa=\mathgroup5
+\symAMSb=\mathgroup6
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 132.
+))
+(/astro/net/tex/texmf/tex/latex/misc/natbib.sty
+Package: natbib 2003/06/06 7.1 (PWD)
+\bibhang=\skip43
+\bibsep=\skip44
+LaTeX Info: Redefining \cite on input line 518.
+\c@NAT@ctr=\count88
+)
+(/usr/share/texmf/tex/latex/tools/verbatim.sty
+Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
+\every@verbatim=\toks16
+\verbatim@line=\toks17
+\verbatim@in@stream=\read1
+)
+\@slugcmmntwidth=\dimen105
+\abstract@box=\box26
+\c@editornote=\count89
+\c@cureqno=\count90
+\tnotemarkskip=\skip45
+\@abovenoteskip=\dimen106
+\pt@box=\box27
+\pt@width=\dimen107
+\pt@line=\count91
+\pt@column=\count92
+\pt@nlines=\count93
+\pt@ncol=\count94
+\pt@page=\count95
+\tabbaseskip=\dimen108
+\pt@tmpcapwidth=\dimen109
+\spew@tblnotesbox=\box28
+\restof@tblnotesbox=\box29
+\noteheight=\dimen110
+\pt@tabnoteminht=\dimen111
+\firsttabskip=\dimen112
+\captionbox=\box30
+\pt@reduceline=\dimen113
+\extra@vspace=\dimen114
+\c@plate=\count96
+\my@footins=\box31
+)
+(/usr/share/texmf/tex/latex/url/url.sty
+\Urlmuskip=\muskip10
+Package: url 2004/03/15  ver 3.1  Verb mode for urls, etc.
+)
+(/usr/share/texmf/tex/latex/subfigure/subfigure.sty
+Package: subfigure 2002/07/30 v2.1.4 subfigure package
+\subfigtopskip=\skip46
+\subfigcapskip=\skip47
+\subfigcaptopadj=\dimen115
+\subfigbottomskip=\skip48
+\subfigcapmargin=\dimen116
+\subfiglabelskip=\skip49
+\c@subfigure=\count97
+\c@lofdepth=\count98
+\c@subtable=\count99
+\c@lotdepth=\count100
+
+****************************************
+* Local config file subfigure.cfg used *
+****************************************
+(/usr/share/texmf/tex/latex/subfigure/subfigure.cfg)
+\subfig@top=\skip50
+\subfig@bottom=\skip51
+) (./scUpdate.aux)
+\openout1 = `scUpdate.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+
+(/usr/share/texmf/tex/context/base/supp-pdf.tex
+(/usr/share/texmf/tex/context/base/supp-mis.tex
+loading : Context Support Macros / Miscellaneous (2004.10.26)
+\protectiondepth=\count101
+\scratchcounter=\count102
+\scratchtoks=\toks18
+\scratchdimen=\dimen117
+\scratchskip=\skip52
+\scratchmuskip=\muskip11
+\scratchbox=\box32
+\scratchread=\read2
+\scratchwrite=\write3
+\zeropoint=\dimen118
+\onepoint=\dimen119
+\onebasepoint=\dimen120
+\minusone=\count103
+\thousandpoint=\dimen121
+\onerealpoint=\dimen122
+\emptytoks=\toks19
+\nextbox=\box33
+\nextdepth=\dimen123
+\everyline=\toks20
+\!!counta=\count104
+\!!countb=\count105
+\recursecounter=\count106
+)
+loading : Context Support Macros / PDF (2004.03.26)
+\nofMPsegments=\count107
+\nofMParguments=\count108
+\MPscratchCnt=\count109
+\MPscratchDim=\dimen124
+\MPnumerator=\count110
+\everyMPtoPDFconversion=\toks21
+)
+AAS preprint substyle, v5.2 <12 Dec 2003>.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 51.
+(/usr/share/texmf/tex/latex/base/ulasy.fd
+File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
+)
+LaTeX Font Info:    Try loading font information for U+msa on input line 51.
+
+(/usr/share/texmf/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2002/01/19 v2.2g AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 51.
+
+(/usr/share/texmf/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2002/01/19 v2.2g AMS font definitions
+) [1
+
+{/usr/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 115.
+
+ (/usr/share/texmf/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 115.
+
+[3]
+Overfull \hbox (99.24368pt too wide) detected at line 132
+ [] 
+ []
+
+Page 1 of table 2 has been set to width 568.99867pt with 34 lines per page 
+
+Overfull \hbox (469.75499pt too wide) in paragraph at lines 123--133
+ [][][] 
+ []
+
+[4]
+Plotone included the file Plots/cloud.png
+<Plots/cloud.png, id=53, 578.16pt x 433.62pt>
+File: Plots/cloud.png Graphic file (type png)
+ <use Plots/cloud.png>
+Plottwo included the files Plots/u_band/input_illum_err.png Plots/r_band/input_
+illum_err.png
+<Plots/u_band/input_illum_err.png, id=54, 578.16pt x 433.62pt>
+File: Plots/u_band/input_illum_err.png Graphic file (type png)
+
+<use Plots/u_band/input_illum_err.png>
+<Plots/r_band/input_illum_err.png, id=55, 578.16pt x 433.62pt>
+File: Plots/r_band/input_illum_err.png Graphic file (type png)
+
+<use Plots/r_band/input_illum_err.png> [5] [6 <./Plots/cloud.png>]
+
+LaTeX Warning: Reference `matrix' on page 7 undefined on input line 276.
+
+[7] [8] [9]
+Plottwo included the files Plots/HPid_8.png Plots/HPid_16.png
+<Plots/HPid_8.png, id=72, 578.16pt x 433.62pt>
+File: Plots/HPid_8.png Graphic file (type png)
+ <use Plots/HPid_8.png>
+<Plots/HPid_16.png, id=73, 578.16pt x 433.62pt>
+File: Plots/HPid_16.png Graphic file (type png)
+ <use Plots/HPid_16.png>
+Plottwo included the files Plots/r_1e6_regsolver/Sdmag.png Plots/r_1e6/Sdmag.pn
+g
+<Plots/r_1e6_regsolver/Sdmag.png, id=74, 578.16pt x 433.62pt>
+File: Plots/r_1e6_regsolver/Sdmag.png Graphic file (type png)
+
+<use Plots/r_1e6_regsolver/Sdmag.png>
+<Plots/r_1e6/Sdmag.png, id=75, 578.16pt x 433.62pt>
+File: Plots/r_1e6/Sdmag.png Graphic file (type png)
+
+<use Plots/r_1e6/Sdmag.png>
+Plottwo included the files Plots/r_1e6_regsolver/Sdamg_hist.png Plots/r_1e6/Sda
+mg_hist.png
+<Plots/r_1e6_regsolver/Sdamg_hist.png, id=76, 578.16pt x 433.62pt>
+File: Plots/r_1e6_regsolver/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/r_1e6_regsolver/Sdamg_hist.png>
+<Plots/r_1e6/Sdamg_hist.png, id=77, 578.16pt x 433.62pt>
+File: Plots/r_1e6/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/r_1e6/Sdamg_hist.png>
+Plottwo included the files Plots/r_1e6/Snobs.png Plots/r_1e6_nodither/Snobs.png
+
+<Plots/r_1e6/Snobs.png, id=78, 578.16pt x 433.62pt>
+File: Plots/r_1e6/Snobs.png Graphic file (type png)
+
+<use Plots/r_1e6/Snobs.png>
+<Plots/r_1e6_nodither/Snobs.png, id=79, 578.16pt x 433.62pt>
+File: Plots/r_1e6_nodither/Snobs.png Graphic file (type png)
+
+<use Plots/r_1e6_nodither/Snobs.png>
+Plottwo included the files Plots/r_1e6/Sdmag.png Plots/r_1e6_nodither/Sdmag.png
+
+File: Plots/r_1e6/Sdmag.png Graphic file (type png)
+<use Plots/r_1e6/Sdmag.png>
+<Plots/r_1e6_nodither/Sdmag.png, id=80, 578.16pt x 433.62pt>
+File: Plots/r_1e6_nodither/Sdmag.png Graphic file (type png)
+
+<use Plots/r_1e6_nodither/Sdmag.png>
+Plottwo included the files Plots/r_1e6/Sdamg_hist.png Plots/r_1e6_nodither/Sdam
+g_hist.png
+File: Plots/r_1e6/Sdamg_hist.png Graphic file (type png)
+<use Plots/r_1e6/Sdamg_hist.png>
+<Plots/r_1e6_nodither/Sdamg_hist.png, id=81, 578.16pt x 433.62pt>
+File: Plots/r_1e6_nodither/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/r_1e6_nodither/Sdamg_hist.png>
+Plottwo included the files Plots/r_1e6/Snobs.png Plots/r_1e6/Snobs_hist.png
+File: Plots/r_1e6/Snobs.png Graphic file (type png)
+<use Plots/r_1e6/Snobs.png>
+<Plots/r_1e6/Snobs_hist.png, id=82, 578.16pt x 433.62pt>
+File: Plots/r_1e6/Snobs_hist.png Graphic file (type png)
+
+<use Plots/r_1e6/Snobs_hist.png>
+Plottwo included the files Plots/r_1e6/Sdmag.png Plots/r_1e6/Sdamg_hist.png
+File: Plots/r_1e6/Sdmag.png Graphic file (type png)
+<use Plots/r_1e6/Sdmag.png>
+File: Plots/r_1e6/Sdamg_hist.png Graphic file (type png)
+ <use Plots/r_1e6/Sdamg_hist.png>
+Plottwo included the files Plots/r_1e6/Srepeat_IQR.png Plots/r_1e6/Srepeat_IQR_
+bright_hist.png
+<Plots/r_1e6/Srepeat_IQR.png, id=83, 578.16pt x 433.62pt>
+File: Plots/r_1e6/Srepeat_IQR.png Graphic file (type png)
+
+<use Plots/r_1e6/Srepeat_IQR.png>
+<Plots/r_1e6/Srepeat_IQR_bright_hist.png, id=84, 578.16pt x 433.62pt>
+File: Plots/r_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
+
+<use Plots/r_1e6/Srepeat_IQR_bright_hist.png>
+Plottwo included the files Plots/u_1e6_neg15/Snobs.png Plots/u_1e6_neg15/Snobs_
+hist.png
+<Plots/u_1e6_neg15/Snobs.png, id=85, 578.16pt x 433.62pt>
+File: Plots/u_1e6_neg15/Snobs.png Graphic file (type png)
+
+<use Plots/u_1e6_neg15/Snobs.png>
+<Plots/u_1e6_neg15/Snobs_hist.png, id=86, 578.16pt x 433.62pt>
+File: Plots/u_1e6_neg15/Snobs_hist.png Graphic file (type png)
+
+<use Plots/u_1e6_neg15/Snobs_hist.png>
+Plottwo included the files Plots/u_1e6_neg15/Sdmag.png Plots/u_1e6_neg15/Sdamg_
+hist.png
+<Plots/u_1e6_neg15/Sdmag.png, id=87, 578.16pt x 433.62pt>
+File: Plots/u_1e6_neg15/Sdmag.png Graphic file (type png)
+
+<use Plots/u_1e6_neg15/Sdmag.png>
+<Plots/u_1e6_neg15/Sdamg_hist.png, id=88, 578.16pt x 433.62pt>
+File: Plots/u_1e6_neg15/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/u_1e6_neg15/Sdamg_hist.png>
+Plottwo included the files Plots/u_1e6_neg15/Srepeat_IQR.png Plots/u_1e6_neg15/
+Srepeat_IQR_bright_hist.png
+<Plots/u_1e6_neg15/Srepeat_IQR.png, id=89, 578.16pt x 433.62pt>
+File: Plots/u_1e6_neg15/Srepeat_IQR.png Graphic file (type png)
+
+<use Plots/u_1e6_neg15/Srepeat_IQR.png>
+<Plots/u_1e6_neg15/Srepeat_IQR_bright_hist.png, id=90, 578.16pt x 433.62pt>
+File: Plots/u_1e6_neg15/Srepeat_IQR_bright_hist.png Graphic file (type png)
+
+<use Plots/u_1e6_neg15/Srepeat_IQR_bright_hist.png>
+Plottwo included the files Plots/g_1e6/Snobs.png Plots/g_1e6/Snobs_hist.png
+<Plots/g_1e6/Snobs.png, id=91, 578.16pt x 433.62pt>
+File: Plots/g_1e6/Snobs.png Graphic file (type png)
+
+<use Plots/g_1e6/Snobs.png>
+<Plots/g_1e6/Snobs_hist.png, id=92, 578.16pt x 433.62pt>
+File: Plots/g_1e6/Snobs_hist.png Graphic file (type png)
+
+<use Plots/g_1e6/Snobs_hist.png>
+Plottwo included the files Plots/g_1e6/Sdmag.png Plots/g_1e6/Sdamg_hist.png
+<Plots/g_1e6/Sdmag.png, id=93, 578.16pt x 433.62pt>
+File: Plots/g_1e6/Sdmag.png Graphic file (type png)
+
+<use Plots/g_1e6/Sdmag.png>
+<Plots/g_1e6/Sdamg_hist.png, id=94, 578.16pt x 433.62pt>
+File: Plots/g_1e6/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/g_1e6/Sdamg_hist.png>
+Plottwo included the files Plots/g_1e6/Srepeat_IQR.png Plots/g_1e6/Srepeat_IQR_
+bright_hist.png
+<Plots/g_1e6/Srepeat_IQR.png, id=95, 578.16pt x 433.62pt>
+File: Plots/g_1e6/Srepeat_IQR.png Graphic file (type png)
+
+<use Plots/g_1e6/Srepeat_IQR.png>
+<Plots/g_1e6/Srepeat_IQR_bright_hist.png, id=96, 578.16pt x 433.62pt>
+File: Plots/g_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
+
+<use Plots/g_1e6/Srepeat_IQR_bright_hist.png>
+Plottwo included the files Plots/i_1e6/Snobs.png Plots/i_1e6/Snobs_hist.png
+<Plots/i_1e6/Snobs.png, id=97, 578.16pt x 433.62pt>
+File: Plots/i_1e6/Snobs.png Graphic file (type png)
+
+<use Plots/i_1e6/Snobs.png>
+<Plots/i_1e6/Snobs_hist.png, id=98, 578.16pt x 433.62pt>
+File: Plots/i_1e6/Snobs_hist.png Graphic file (type png)
+
+<use Plots/i_1e6/Snobs_hist.png>
+Plottwo included the files Plots/i_1e6/Sdmag.png Plots/i_1e6/Sdamg_hist.png
+<Plots/i_1e6/Sdmag.png, id=99, 578.16pt x 433.62pt>
+File: Plots/i_1e6/Sdmag.png Graphic file (type png)
+
+<use Plots/i_1e6/Sdmag.png>
+<Plots/i_1e6/Sdamg_hist.png, id=100, 578.16pt x 433.62pt>
+File: Plots/i_1e6/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/i_1e6/Sdamg_hist.png>
+Plottwo included the files Plots/i_1e6/Srepeat_IQR.png Plots/i_1e6/Srepeat_IQR_
+bright_hist.png
+<Plots/i_1e6/Srepeat_IQR.png, id=101, 578.16pt x 433.62pt>
+File: Plots/i_1e6/Srepeat_IQR.png Graphic file (type png)
+
+<use Plots/i_1e6/Srepeat_IQR.png>
+<Plots/i_1e6/Srepeat_IQR_bright_hist.png, id=102, 578.16pt x 433.62pt>
+File: Plots/i_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
+
+<use Plots/i_1e6/Srepeat_IQR_bright_hist.png>
+Plottwo included the files Plots/z_1e6/Snobs.png Plots/z_1e6/Snobs_hist.png
+<Plots/z_1e6/Snobs.png, id=103, 578.16pt x 433.62pt>
+File: Plots/z_1e6/Snobs.png Graphic file (type png)
+
+<use Plots/z_1e6/Snobs.png>
+<Plots/z_1e6/Snobs_hist.png, id=104, 578.16pt x 433.62pt>
+File: Plots/z_1e6/Snobs_hist.png Graphic file (type png)
+
+<use Plots/z_1e6/Snobs_hist.png>
+Plottwo included the files Plots/z_1e6/Sdmag.png Plots/z_1e6/Sdamg_hist.png
+<Plots/z_1e6/Sdmag.png, id=105, 578.16pt x 433.62pt>
+File: Plots/z_1e6/Sdmag.png Graphic file (type png)
+
+<use Plots/z_1e6/Sdmag.png>
+<Plots/z_1e6/Sdamg_hist.png, id=106, 578.16pt x 433.62pt>
+File: Plots/z_1e6/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/z_1e6/Sdamg_hist.png>
+Plottwo included the files Plots/z_1e6/Srepeat_IQR.png Plots/z_1e6/Srepeat_IQR_
+bright_hist.png
+<Plots/z_1e6/Srepeat_IQR.png, id=107, 578.16pt x 433.62pt>
+File: Plots/z_1e6/Srepeat_IQR.png Graphic file (type png)
+
+<use Plots/z_1e6/Srepeat_IQR.png>
+<Plots/z_1e6/Srepeat_IQR_bright_hist.png, id=108, 578.16pt x 433.62pt>
+File: Plots/z_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
+
+<use Plots/z_1e6/Srepeat_IQR_bright_hist.png>
+Plottwo included the files Plots/y_1e6/Snobs.png Plots/y_1e6/Snobs_hist.png
+<Plots/y_1e6/Snobs.png, id=109, 578.16pt x 433.62pt>
+File: Plots/y_1e6/Snobs.png Graphic file (type png)
+
+<use Plots/y_1e6/Snobs.png>
+<Plots/y_1e6/Snobs_hist.png, id=110, 578.16pt x 433.62pt>
+File: Plots/y_1e6/Snobs_hist.png Graphic file (type png)
+
+<use Plots/y_1e6/Snobs_hist.png>
+Plottwo included the files Plots/y_1e6/Sdmag.png Plots/y_1e6/Sdamg_hist.png
+<Plots/y_1e6/Sdmag.png, id=111, 578.16pt x 433.62pt>
+File: Plots/y_1e6/Sdmag.png Graphic file (type png)
+
+<use Plots/y_1e6/Sdmag.png>
+<Plots/y_1e6/Sdamg_hist.png, id=112, 578.16pt x 433.62pt>
+File: Plots/y_1e6/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/y_1e6/Sdamg_hist.png>
+Plottwo included the files Plots/y_1e6/Srepeat_IQR.png Plots/y_1e6/Srepeat_IQR_
+bright_hist.png
+<Plots/y_1e6/Srepeat_IQR.png, id=113, 578.16pt x 433.62pt>
+File: Plots/y_1e6/Srepeat_IQR.png Graphic file (type png)
+
+<use Plots/y_1e6/Srepeat_IQR.png>
+<Plots/y_1e6/Srepeat_IQR_bright_hist.png, id=114, 578.16pt x 433.62pt>
+File: Plots/y_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
+
+<use Plots/y_1e6/Srepeat_IQR_bright_hist.png>
+Plottwo included the files Plots/r_1e6/repeat_examples_hist.png Plots/r_1e6/rep
+eat_examples_cdf.png
+<Plots/r_1e6/repeat_examples_hist.png, id=115, 578.16pt x 433.62pt>
+File: Plots/r_1e6/repeat_examples_hist.png Graphic file (type png)
+
+<use Plots/r_1e6/repeat_examples_hist.png>
+<Plots/r_1e6/repeat_examples_cdf.png, id=116, 578.16pt x 433.62pt>
+File: Plots/r_1e6/repeat_examples_cdf.png Graphic file (type png)
+
+<use Plots/r_1e6/repeat_examples_cdf.png>
+Plottwo included the files Plots/r_1e6/Sdmag.png Plots/r_1e6_newseed/Sdmag.png
+File: Plots/r_1e6/Sdmag.png Graphic file (type png)
+<use Plots/r_1e6/Sdmag.png>
+<Plots/r_1e6_newseed/Sdmag.png, id=117, 578.16pt x 433.62pt>
+File: Plots/r_1e6_newseed/Sdmag.png Graphic file (type png)
+
+<use Plots/r_1e6_newseed/Sdmag.png>
+Plottwo included the files Plots/r_1e6/Sdamg_hist.png Plots/r_1e6_newseed/Sdamg
+_hist.png
+File: Plots/r_1e6/Sdamg_hist.png Graphic file (type png)
+<use Plots/r_1e6/Sdamg_hist.png>
+<Plots/r_1e6_newseed/Sdamg_hist.png, id=118, 578.16pt x 433.62pt>
+File: Plots/r_1e6_newseed/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/r_1e6_newseed/Sdamg_hist.png>
+Plottwo included the files Plots/r_1e6/Srepeat_IQR_bright_hist.png Plots/r_1e6_
+newseed/Srepeat_IQR_bright_hist.png
+File: Plots/r_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
+<use Plots/r_1e6/Srepeat_IQR_bright_hist.png>
+<Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png, id=119, 578.16pt x 433.62pt>
+File: Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png Graphic file (type png)
+
+<use Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png>
+Plottwo included the files Plots/r_hd_test/Snobs.png Plots/r_hd_test/Snobs_hist
+.png
+<Plots/r_hd_test/Snobs.png, id=120, 578.16pt x 433.62pt>
+File: Plots/r_hd_test/Snobs.png Graphic file (type png)
+
+<use Plots/r_hd_test/Snobs.png>
+<Plots/r_hd_test/Snobs_hist.png, id=121, 578.16pt x 433.62pt>
+File: Plots/r_hd_test/Snobs_hist.png Graphic file (type png)
+
+<use Plots/r_hd_test/Snobs_hist.png>
+Plottwo included the files Plots/r_hd_test/Sdmag.png Plots/r_hd_test/Sdamg_hist
+.png
+<Plots/r_hd_test/Sdmag.png, id=122, 578.16pt x 433.62pt>
+File: Plots/r_hd_test/Sdmag.png Graphic file (type png)
+
+<use Plots/r_hd_test/Sdmag.png>
+<Plots/r_hd_test/Sdamg_hist.png, id=123, 578.16pt x 433.62pt>
+File: Plots/r_hd_test/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/r_hd_test/Sdamg_hist.png>
+Plottwo included the files Plots/r_hd_test/Srepeat_IQR.png Plots/r_hd_test/Srep
+eat_IQR_bright_hist.png
+<Plots/r_hd_test/Srepeat_IQR.png, id=124, 578.16pt x 433.62pt>
+File: Plots/r_hd_test/Srepeat_IQR.png Graphic file (type png)
+
+<use Plots/r_hd_test/Srepeat_IQR.png>
+<Plots/r_hd_test/Srepeat_IQR_bright_hist.png, id=125, 578.16pt x 433.62pt>
+File: Plots/r_hd_test/Srepeat_IQR_bright_hist.png Graphic file (type png)
+
+<use Plots/r_hd_test/Srepeat_IQR_bright_hist.png> [10] [11 <./Plots/u_band/inpu
+t_illum_err.png> <./Plots/r_band/input_illum_err.png> <./Plots/HPid_8.png> <./P
+lots/HPid_16.png>] [12 <./Plots/r_1e6_regsolver/Sdmag.png> <./Plots/r_1e6/Sdmag
+.png> <./Plots/r_1e6_regsolver/Sdamg_hist.png> <./Plots/r_1e6/Sdamg_hist.png>]
+[13 <./Plots/r_1e6/Snobs.png> <./Plots/r_1e6_nodither/Snobs.png> <./Plots/r_1e6
+_nodither/Sdmag.png> <./Plots/r_1e6_nodither/Sdamg_hist.png>] [14 <./Plots/r_1e
+6/Snobs_hist.png> <./Plots/r_1e6/Srepeat_IQR.png> <./Plots/r_1e6/Srepeat_IQR_br
+ight_hist.png>] [15 <./Plots/u_1e6_neg15/Snobs.png> <./Plots/u_1e6_neg15/Snobs_
+hist.png> <./Plots/u_1e6_neg15/Sdmag.png> <./Plots/u_1e6_neg15/Sdamg_hist.png> 
+<./Plots/u_1e6_neg15/Srepeat_IQR.png> <./Plots/u_1e6_neg15/Srepeat_IQR_bright_h
+ist.png>] [16 <./Plots/g_1e6/Snobs.png> <./Plots/g_1e6/Snobs_hist.png> <./Plots
+/g_1e6/Sdmag.png> <./Plots/g_1e6/Sdamg_hist.png> <./Plots/g_1e6/Srepeat_IQR.png
+> <./Plots/g_1e6/Srepeat_IQR_bright_hist.png>] [17 <./Plots/i_1e6/Snobs.png> <.
+/Plots/i_1e6/Snobs_hist.png> <./Plots/i_1e6/Sdmag.png> <./Plots/i_1e6/Sdamg_his
+t.png> <./Plots/i_1e6/Srepeat_IQR.png> <./Plots/i_1e6/Srepeat_IQR_bright_hist.p
+ng>] [18 <./Plots/z_1e6/Snobs.png> <./Plots/z_1e6/Snobs_hist.png> <./Plots/z_1e
+6/Sdmag.png> <./Plots/z_1e6/Sdamg_hist.png> <./Plots/z_1e6/Srepeat_IQR.png> <./
+Plots/z_1e6/Srepeat_IQR_bright_hist.png>] [19 <./Plots/y_1e6/Snobs.png> <./Plot
+s/y_1e6/Snobs_hist.png> <./Plots/y_1e6/Sdmag.png> <./Plots/y_1e6/Sdamg_hist.png
+> <./Plots/y_1e6/Srepeat_IQR.png> <./Plots/y_1e6/Srepeat_IQR_bright_hist.png>]
+[20]
+Plottwo included the files Plots/u_1e6_neg15/Saccuracyvcolor.png Plots/u_1e6_mo
+reghost_small/Saccuracyvcolor_mod.png
+<Plots/u_1e6_neg15/Saccuracyvcolor.png, id=161, 578.16pt x 433.62pt>
+File: Plots/u_1e6_neg15/Saccuracyvcolor.png Graphic file (type png)
+
+<use Plots/u_1e6_neg15/Saccuracyvcolor.png>
+<Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png, id=162, 578.16pt x 433.62
+pt>
+File: Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png Graphic file (type pn
+g)
+ <use Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png> (./scUpdate.bbl
+[21]) [22] [23 <./Plots/r_1e6/repeat_examples_hist.png> <./Plots/r_1e6/repeat_e
+xamples_cdf.png>] [24 <./Plots/r_1e6_newseed/Sdmag.png> <./Plots/r_1e6_newseed/
+Sdamg_hist.png> <./Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png>] [25 <./Plo
+ts/r_hd_test/Snobs.png> <./Plots/r_hd_test/Snobs_hist.png> <./Plots/r_hd_test/S
+dmag.png> <./Plots/r_hd_test/Sdamg_hist.png> <./Plots/r_hd_test/Srepeat_IQR.png
+> <./Plots/r_hd_test/Srepeat_IQR_bright_hist.png>] [26 <./Plots/u_1e6_neg15/Sac
+curacyvcolor.png> <./Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png>]
+(./scUpdate.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 2599 strings out of 94500
+ 35622 string characters out of 1176766
+ 90426 words of memory out of 1000000
+ 5727 multiletter control sequences out of 10000+50000
+ 11888 words of font info for 50 fonts, out of 500000 for 2000
+ 580 hyphenation exceptions out of 1000
+ 32i,8n,26p,1128b,270s stack positions out of 1500i,500n,5000p,200000b,5000s
+PDF statistics:
+ 181 PDF objects out of 300000
+ 0 named destinations out of 131072
+ 296 words of extra memory for PDF output out of 65536
+</usr/share/texmf/fonts/type1/bluesky/cm/cmr6.pfb></usr/share/texmf/fonts/typ
+e1/bluesky/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi6.pfb></us
+r/share/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/b
+luesky/cm/cmmi8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/s
+hare/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/type1/blues
+ky/cm/cmr7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/
+texmf/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/
+cmsy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf
+/fonts/type1/bluesky/cm/cmbx12.pfb>
+Output written on scUpdate.pdf (26 pages, 7292304 bytes).
