@@ -643,10 +643,11 @@ $S^{atm}(\lambda,alt,az,t)$ and $S_b^{sys}(\lambda,x,y,t)$.
 Let us first consider measurement of the variations in the hardware
 throughput curve, $S_b^{sys}(\lambda,x,y,t)$. 
 
-\subsection{Effects of PSF Width}
+\subsection{Accounting For Finite PSF Width}
 \label{sec:pixelization}
 The discussion in Section \ref{sec:photons2counts} implicitly assumed that the flux from an object is sampled at a single point in the 
-focal plane.  We must now account for the fact that the system has a PSF with finite width, so that the flux from an object is spread
+focal plane.  We must now extend the formalism to account for the fact that the system has a PSF with finite width, 
+so that the flux from an object is spread
 over multiple pixels, each of which may differ slightly in response from its neighbors.   Let us use $i$ as an index over the
 pixels in the PSF for a particular object, and let $w_i$ be the integral of the PSF over the area of pixel i, with
 $\sum_i{w_i}=1$.  To make the
@@ -655,13 +656,13 @@ notation compact, define
 \begin{equation}
 q_{b,i}(\lambda) = {S^{atm}(\lambda,alt,az,t)\, S_b^{sys}(\lambda,x_i,y_i,t) \, \lambda^{-1}}
 \end{equation}
-Further, define the SED of the object, $f(\lambda)$ by
+Further, define the SED of the object, $f_\nu(\lambda)$ by
 
 \begin{equation}
 F_\nu(\lambda) = F_b f_\nu(\lambda)
 \end{equation}
 
-where $\lambda$ must be within band b, and
+where $\lambda$ is within band b, and
 
 \begin{equation}
 \int_b {f_\nu(\lambda) \, d\lambda} = 1
@@ -670,13 +671,13 @@ where $\lambda$ must be within band b, and
 Then the total number of counts from the object, $C_b^{inst}$ is
 
 \begin{equation}
-C_b^{inst} = F_b \sum_i {w_i \int {q_{b,i}(\lambda) f(\lambda) d\lambda}}
+C_b^{inst} = F_b \sum_i {w_i \int {q_{b,i}(\lambda) f(\lambda)  d\lambda}}
 \end{equation}
 
 For compactness, let's define
 
 \begin{equation}
-Q_{b,i} = \int {q_{b,i}(\lambda) f(\lambda) d\lambda}
+Q_{b,i} = \int {q_{b,i}(\lambda) f_\nu(\lambda) d\lambda}
 \end{equation}
 
 Since we are following the path from counts to flux, we are interested in
@@ -686,26 +687,39 @@ F_b = {C_b^{inst} \over {\sum_i{w_i Q_{b,i}}}}
 \label{eqn:trueFlat}
 \end{equation}
 
-At this point, we notice that $Q_{b,i}$ is what we mean by a 'flat', but there is a problem:  At the time we process the pixels
-in Flat SED Calibration (Figure \ref{fig:overview_flowchart1}), we are unable to calculate $Q_{b,i}$ because we are (probably) ignorant
-of $f(\lambda)$.  Even if we knew it, this prescription would be unworkable because the flat would need to be constructed with an SED 
-that varies rapidly over the focal plane.   So we must accept our inability to work with $Q_{b,i}$ when processing the pixels, and must
-content ourselves with the broadband flat
+At this point, we notice that $Q_{b,i}$ is close to what we mean by a 'flat'.  Let us make it identical, by factoring out 
+the normalization, which is not directly measured:
 
 \begin{equation}
-Q_{b,i}^{BB} = \int {q_{b,i}(\lambda) f^{BB}(\lambda) d\lambda}
+Q_{b,i} = N Q_{b,i}^{norm}
 \end{equation}
 
-where $f^{BB}(\lambda)$ is an SED we are free to choose in constructing the broadband flat. We can now write
+where $N$ is chosen to make $\max_i(Q_{b,i}^{norm}) = 1$.  $N$ will become the zeropoint of the exposure:
+$Z_b^{obs} = -2.5 log_{10}(N)$.
+
+There is a problem with using this flat, however:  At the time we process the pixels
+in Flat SED Calibration (Figure \ref{fig:overview_flowchart1}), we are unable to calculate $Q_{b,i}$ because we are (probably) ignorant
+of both $f_\nu(\lambda)$ and the atmospheric bandpass for the observation, $S_b^{atm}(\lambda)$.  Even if we knew that informatin, 
+this prescription would be unworkable because the flat would need to be constructed with an SED 
+that varies rapidly over the focal plane.   So we must accept our inability to work with $Q_{b,i}$ when processing the pixels, and must
+content ourselves with a broadband flat measured from the dome flatfield system.
 
 \begin{equation}
-F_b = \left[ {C_b^{inst} \over {\sum_i{w_i Q_{b,i}^{BB}}}}\right]  \left[ {\sum_i {w_i Q_{b,i}^{BB} }} \over {\sum_i {w_i Q_{b,i} }}\right]
+Q_{b,i}^{BB} = \int {q_{b,i}^{sys}(\lambda) f_\nu^{BB}(\lambda) d\lambda}
+\end{equation}
+
+where $f_\nu^{BB}(\lambda)$ is an SED we are free to choose in constructing the broadband flat. Note that 
+$q_{b,i}^{sys}(\lambda)=S_b^{sys}(\lambda,x_i,y_i,t) \, \lambda^{-1}$ 
+includes only the system response, not the atmosphere.  We can now write
+
+\begin{equation}
+F_b = {1 \over N} \left[ {C_b^{inst} \over {\sum_i{w_i Q_{b,i}^{BB}}}}\right]  \left[ {\sum_i {w_i Q_{b,i}^{BB} }} \over {\sum_i {w_i Q_{b,i} }}\right]
 \end{equation}
 
 (normalize flat, bring in Zp) Expressed in magnitudes, this becomes
 
 \begin{equation}
-m_b^{nat} = m_b^{inst} + xx
+m_b^{nat} = m_b^{inst} + Z_p - 2.5 log_{10} \left( \left[ {\sum_i {w_i Q_{b,i}^{BB} }} \over {\sum_i {w_i Q_{b,i}^{norm} }}\right] \right)
 \end{equation}
 
 
@@ -716,11 +730,15 @@ not need to actually access the image pixels, but do need to know the PSF and th
 a localized flat from the object SED.  We reserve this as a future option in calibration processing, because it may reduce
 the systematics floor in the instrumental magnitudes.  For the present, however, we make the assumption which is univerally made
 today in doing photometry, albeit almost always implicitly:  The ratio of the true flat to the broadband flat is independent 
-of the pixel within the PSF footprint.
+of the pixel within the PSF footprint, so that:
 
-We have a final problem:  $Q_{b,i}^{BB}$ depends on $S_b^{atm}$.
+\begin{equation}
+m_b^{nat} =  m_b^{inst} + Z_p - 2.5 log_{10} \left( {{Q_b^{BB}}  \over {Q_b^{norm}} \right) 
+\label{eqn:flatCorrection}
+\end{equation}
 
-We now turn to the actual measurement of $q_{b,i}$, and the construction of $Q_{b,i}^{BB}$
+Note that the correction term must be applied in the "SED Correction" block of Figure \ref{fig:overview_flowchart1}.  The 
+required information to compute it is not available earlier.  We now turn to the actual measurement of $q_{b,i}$, and the construction of $Q_{b,i}^{BB}$
 
 \subsection{Measuring the Hardware Response}
 To measure the wavelength-dependent hardware response
@@ -738,32 +756,24 @@ flats is used to construct a synthetic broadband flat field ('BBF') by
 combining the individual narrow-band flats according to a chosen
 spectral energy distribution.  
 
-%In the first stage of the calibration process, that which
-%processes the actual pixels, we assume that sources have flat SEDs within each filter band, so we construct our synthetic flat
-%with a flat SED.  We call this flat the 'flat spectrum flat' (FSF).
 
-As discussed in the previous section, the choice of the SED used to construct the broadband flats is largely arbitrary.  It defines a reference SED $f_\nu^{bbf}(\lambda)$,
-which must later be corrected for (in the SED Correction stage, see Figure \ref{fig:overview_flowchart1}) 
-when both the true $\phi_b^{obs}(\lambda)$ and the actual object SED, $f_\nu(\lambda)$ are known.  The correction takes the form
+As discussed in the previous section, the choice of the SED used to construct the broadband flats is largely arbitrary.  It defines a reference SED $f_\nu^{BB}(\lambda)$,
+which must later be corrected for as shown in equation \ref{eqn:flatCorrection}
+when both the true $\phi_b^{obs}(\lambda)$ and the actual object SED, $f_\nu(\lambda)$ are known.     
 
-\begin{equation}
-m_b^{nat*} = m_b^{nat} -2.5 \, log_{10} \,  \left( { \int_0^\infty {f_\nu^{bbf}(\lambda,t) \,
-    \phi_b^{obs}(\lambda,t) \, d\lambda} \over \int_0^\infty {f_\nu(\lambda,t) \,
-    \phi_b^{obs}(\lambda,t) \, d\lambda}} \right)
-\label{eqn:bbf_corr}
-\end{equation}
-
-Note the similarity to equation \ref{eq:xx} for $\Delta m_b^{obs}$, but also note that here we are correcting for different SEDs 
-through the same $\phi$ versus correcting for different $\phi$s at a fixed SED.   Given the arbitrariness of $f_\nu^{bbf}(\lambda)$,
+Given the arbitrariness of $f_\nu^{BB}(\lambda)$,
 we must choose on grounds of convenience.  At least two choices suggest themselves:
 
 \begin{itemize}
-\item{Choose $f_\nu^{bbf}(\lambda) = const$.  This makes the integral in the numerator of equation \ref{eqn:bbf_corr} unity.}
-\item{Choose $f_\nu^{bbf}(\lambda)$ to be in some sense an average SED for all objects in the survey, such that the average value
+\item{Choose $f_\nu^{bbf}(\lambda) = const$.  This has the virtue of maximal simplicity.}
+\item{Choose $f_\nu^{bbf}(\lambda)$ to be in some sense an average SED for all objects in the survey, propagated
+through an average atmosphere,  such that the average value
 of the BBF correction is minimized.}
 \end{itemize}
 
-We choose the first of these, and subsequently refer to the BBF as the FSF (flat spectrum flat).
+We choose the first of these, and subsequently refer to the BBF as the FSF (flat spectrum flat).  This choice is bound
+to have unaccounted for impact on calibration accuracy, however, because the above formalism does not include the
+propagation of errors.  We can readily change the prescription during construction or commissioning.
 
 
 Generation of the entire data cube of
@@ -932,7 +942,7 @@ simple and well-understood SEDs to minimize confusion with the
 atmospheric extinction. By observing the same grid of stars on
 multiple nights, even if the SEDs are not well determined initially,
 they can be bootstrapped from the many epochs of data. 
-\subsection{Self Calibration}
+\subsection{Finding the Zero Points: Self Calibration}
 In order to correct for the more rapid gray-scale variations in the
 relative normalization of $S^{atm}(alt,az,t)$ due principally to cloud extinction,
 we must use the observations of calibration stars in the images themselves, as
