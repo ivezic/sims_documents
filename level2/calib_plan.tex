@@ -989,7 +989,7 @@ This is similar in
 nature to the ubercal method applied to SDSS in
 \citet{Padmanabhan2008}, and more recently DLS \citep{Wittman2012} and PanSTARRS-1 \citep{Schlafly2012}.
 
-{\bf TODO: Need to discuss healpix implementation, etc}
+{\bf TODO: Need to discuss healpix implementation, incorporation of standards, etc}
 
 Repeating Equation~\ref{eqn:mag2counts} above, adjusting ${obs}$ indexes to ${meas}$ to 
 reflect the difference between the true and measured quantities,
@@ -1133,55 +1133,80 @@ bandpass shape, with above-the-atmosphere fluxes.
 \label{sec:calib_external}
 
 The next two subsections describe how the internally calibrated
-natural magnitudes, independently calibrated in each filter bandpass, are fixed
+standard magnitudes, independently calibrated in each filter bandpass, are fixed
 to an external scale such that the flux in a single band can be compared to the
 flux in another filter band (SRD requirement \ref{color_req}) and that
 the flux in a particular filter band can be compared to an absolute
 external system (SRD requirement \ref{abs_req}). This is equivalent to
-determining $\Delta_{b-r}$ and $\Delta_r$ from Eqn~\ref{eqn:extmags}. 
+determining $\Delta_{b-r}$ and $\Delta_r$ from Eqn~\ref{eqn:extmags}. In practice, the same 
+standards will be used for both tasks, and we discuss them together.
 
-Standard stars enter this process in these ways...
+Both the band to band calibration for each filter $b$ (the $\Delta_{b-r}$
+values) and the absolute calibration of $\Delta_r$ will be determined by measuring the flux from standards
+whose SEDs across the LSST wavelength range are precisely measured and/or
+predicted by physical models, and which are contained in the LSST
+survey fields.
+Although in principle a single standard with known colors would be
+sufficient, the major concern here is with systematic errors, for
+example a variation in color calibration across the sky.  Our current simulations (Section \ref{sec:xx})
+show significant spatial patterns in photometric zeropoints.  Monitoring
+and controlling these
+systematics will require a larger set of standards.
 
-\subsection{Band to band (color)}
+These fall into three groups:
+\begin{itemize}
+\item {DA white dwarfs observed with HST.  Relatively few in number, these form the "gold standard" for the survey,
+and include not only the four fundamental standards (\citep{BohlinGilliland}), but also a growing set from
+the HST program of Saha et al (\citep{AbiProposal}), for which observations are still underway.}
+\item {DA white dwarfs for which accurate spectroscopic determination of $T_{eff}$, $g$, and interstellar
+reddening are available.}
+\item {Stars observed with Gaia.  By roughly 2020, when LSST will be in commissioning, 
+Gaia will achieve 1mmag photometry in the Gaia G band 
+for a large set of stars with $V < 18.5$ (\citep{Jordi2010}).  IF the Gaia G magnitudes can be accurately
+transformed to the LSST bands, we will have a very large set of absolute standards.  This transformation 
+is conceivable, because Gaia produces low resolution spectra for every object.  We are currently
+investigating the photometric accuracy that can be achieved, and do not yet intend to rely on Gaia
+photometry for calibrating LSST.
+\end{itemize}
 
-The band to band calibration for each filter $b$ (the $\Delta_{b-r}$
-values) will be determined by measuring the flux from one or more
-celestial objects whose physics are believed to be well
-understood. In principle, a single object with known colors would be
-sufficient, however many objects across the LSST footprint
-will be used to evaluate possible systematic effects in the internal
-calibration process. 
+Additionally, the main sequence stellar locus can be used to check for systematic errors in 
+photometry.
 
+\subsection{White Dwarf Standards}
 Hot hydrogen (DA) and helium (DB) white dwarf stars have simple
-atmospheres that are reasonably well understood (model colors are
+atmospheres that are well understood (model colors are
 currently reliable to about 0.01 magnitudes). It is estimated that
 there will be $\approx$ 100/10 DA/DB WD stars with $r<24$ in each LSST
-image at the South Galactic Pole. Although in theory only one WD
-with high resolution spectroscopy would be
-required to calibrate colors for the entire survey, on the order of
+image at the South Galactic Pole, though few of these will have available
+the spectra necessary for synthetic photometry. At least
 100--1000 across the sky will be used to search for systematic effects.
 Catalogs of WD stars visible from Cerro Pachon have been constructed
 \citep{1992JRASC..86..309B, 2004AJ....128.3053B}, and a `white dwarf
 calibration system' has been developed
-\citep{2006AJ....132.1221H}. The locus of main sequence stars in
+\citep{2006AJ....132.1221H}.  
+
+\subsection{Population Methods}
+An alternative approach to using a small handful of precisely known standards
+is to use the properties of entire populations of astronomical objects.
+
+The locus of main sequence stars in
 color-color space is also reasonably well understood and has been used
 to calibrate photometry with success in previous surveys
-\citep{2004MNRAS.352.1255M, Ivezic2007}. The use of the main
+\citep{2004MNRAS.352.1255M, Ivezic2007, High09}.
+The use of the main
 sequence stellar locus in addition to WD stars will provide a valuable
 check on systematic effects that may arise from using (primarily)
 white dwarfs in the determination of $\phi^{atm}(\lambda,alt,az,t)$,
 as white dwarfs are bluer than most of the main sequence stars used
 for the bulk of the remainder of the calibration procedures.
+
 Additional checks on the quality of color calibration will be based on
 color residuals when determining photometric redshifts for
 galaxies. Analyzing these residuals as a function of galaxy brightness
 and color, and across the LSST footprint, will yield detailed
-quantiative estimates of the calibration quality.  Although in theory
-one well-measured standard is all that would be necessary to determine
-$\Delta_{b-r}$ values for each bandpass, in practice having multiple
-standard with varying colors will serve as a check on systematics and
-provide estimates of the calibration uniformity throughout the survey.
+quantiative estimates of the calibration quality.  
 
+\subsection{Computational Technique for Determining $\Delta_{b-r}$}
 The values for $\Delta_{b-r}$ will be determined by generating model
 $m_b^{std}$ values for each band-band calibration object, then
 minimizing 
@@ -1194,8 +1219,6 @@ be done using subsets of objects from low Galactic extinction regions,
 and then bootstrapping to the entire sky to check for systematic
 effects. 
 
-\subsection{Single bandpass to external flux system (absolute scale)}
-\label{subsec:fluxstars}
 
 After determining the band to band calibration, there is a one further
 value required to calibrate the entire system to an absolute flux
@@ -1212,7 +1235,6 @@ these targets has not yet been completed. Nevertheless, as a result of
 calibration efforts to support the SDSS-II SNe survey, the absolute
 calibration of the SDSS Stripe 82 region in the $r$ band is believed
 to be accurate at the 0.01 mag level \citep{Frieman2008}. 
-{\bf TODO Tim will update with Abi white dwarf standards details}
 
 Another route to calibrating to an external flux system is to use
 standards from Gaia. These will have the advantage of being numerous
@@ -1221,10 +1243,10 @@ $r=16$ to $r=20$.  The magnitude measurements of stars calibrated with
 the LSST calibration procedure described in this document can be
 transformed to synthetic magnitudes in Gaia's bandpasses and compared
 to Gaia measurements. 
-{\bf TODO Tim will update with more information on Gaia}.
- This comparison across the LSST footprint and as
-a function of stellar brightness and color will provide a powerful
-independent test of the quality of LSST photometric calibration. 
+This comparison across the LSST footprint and as
+a function of stellar brightness and color could provide a powerful
+independent test of the quality of LSST photometric calibration, but we
+are currently unsure of the precision that can be achieved. 
 
 \section{Calibration Hardware}
 \label{sec:calib_hardware}
@@ -1409,7 +1431,8 @@ The uniformity errors must meet the uniformity requirement in the SRD (Requireme
 The calibration process presented above is complex, and meeting the SRD requirements
 is dependent on understanding and controlling a large number of small perturbations.  We seek to verify that our approach will produce the required results, and are doing so with different techniques that apply to the stages of LSST's construction and operation.   During the current final design phase, we are employing simulation tools, backed up when possible by measurements on the sky from existing telescopes.   \citep{Burke2013} and \citep{Burke2010b} are examples of this approach.  During the construction phase, we will be able to feed measured data from actual telescope components into the simulations.   During operations, our focus is on designing metrics that will let us assess the calibration quality on an ongoing basis.
 
-\subsection{Self Calibration Simulation}\label{sec:selfcalsim}
+\subsection{Self Calibration Simulation}
+\label{sec:selfcalsim}
 
 One of the final steps in the LSST calibration process is running self-calibration, solving for a large number of stellar magnitudes and observation zeropoints.  The accuracy and precision of the self-calibration procedure has complicated dependencies on various sources of noise as well as the overall observing strategy which determines how well different regions of sky can be tied together.  We have undertaken a serries of simulations to test the validity of the LSST self-calibration process.
 
