@@ -334,6 +334,7 @@ These quantities are related through equations \ref{eqn:mag2counts} and \ref{eqn
 \end{boxedminipage}
 
 \section{From Flux to Counts}
+\label{sec:photons2counts}
 
 We first consider how the photons from an astronomical object make their
 way to the detector and are converted into counts (ADUs), paying attention to the various
@@ -526,6 +527,9 @@ The zeropoint correction here, $Z_b^{obs}$, contains only gray-scale
 {\it normalization} effects, such as variations due to the flat field
 or cloud extinction.  The SED corrected magnitude, $m_b^{corr}$, is the input to the Self Calibration block in 
 Figure \ref{fig:overview_flowchart1}.
+
+
+
 \subsection{Perturbations to the System Bandpass}
 The normalized system bandpass will vary from exposure to exposure due to a myriad of effects.  The major ones are:
 \begin{itemize}
@@ -639,27 +643,84 @@ $S^{atm}(\lambda,alt,az,t)$ and $S_b^{sys}(\lambda,x,y,t)$.
 Let us first consider measurement of the variations in the hardware
 throughput curve, $S_b^{sys}(\lambda,x,y,t)$. 
 
-%As described in the
-%previous section, these can be separated into wavelength-independent,
-%normalization changes which can occur on short (nightly) timescales,
-%and wavelength-dependent, shape changes which occur over a longer
-%timescale. Examples of wavelength-independent changes include movement
-%of dust particles on an optical surface or change in the gain of an
-%amplifier channel. Examples of wavelength-dependent changes include
-%the variations in the filter bandpass across the focal plane or
-%deterioration of coatings on mirrors or lenses over time. We measure
-%and correct for these variations in different ways.
+\subsection{Effects of PSF Width}
+\label{sec:pixelization}
+The discussion in Section \ref{sec:photons2counts} implicitly assumed that the flux from an object is sampled at a single point in the 
+focal plane.  We must now account for the fact that the system has a PSF with finite width, so that the flux from an object is spread
+over multiple pixels, each of which may differ slightly in response from its neighbors.   Let us use $i$ as an index over the
+pixels in the PSF for a particular object, and let $w_i$ be the integral of the PSF over the area of pixel i, with
+$\sum_i{w_i}=1$.  To make the
+notation compact, define
 
-%We will measure the time- and space-variable gray-scale relative
-%normalization changes in the hardware using standard broadband flat
-%fields acquired at the start and end of each night through each
-%filter, in a manner similar to traditional dome flats. This is
-%discussed in detail in section~\ref{sec:hardware_norm}.  This
-%calibration stage is particularly important for corrections on very
-%small size scales, particularly on the pixel-to-pixel level. Later
-%calibration stages depend on photometric measurements of stars using
-%an aperture proportional to the Point Spread Function (PSF), and thus
-%primarily contribute to calibration on scales larger than the PSF.
+\begin{equation}
+q_{b,i}(\lambda) = {S^{atm}(\lambda,alt,az,t)\, S_b^{sys}(\lambda,x_i,y_i,t) \, \lambda^{-1}}
+\end{equation}
+Further, define the SED of the object, $f(\lambda)$ by
+
+\begin{equation}
+F_\nu(\lambda) = F_b f_\nu(\lambda)
+\end{equation}
+
+where $\lambda$ must be within band b, and
+
+\begin{equation}
+\int_b {f_\nu(\lambda) \, d\lambda} = 1
+\end{equation}
+
+Then the total number of counts from the object, $C_b^{inst}$ is
+
+\begin{equation}
+C_b^{inst} = F_b \sum_i {w_i \int {q_{b,i}(\lambda) f(\lambda) d\lambda}}
+\end{equation}
+
+For compactness, let's define
+
+\begin{equation}
+Q_{b,i} = \int {q_{b,i}(\lambda) f(\lambda) d\lambda}
+\end{equation}
+
+Since we are following the path from counts to flux, we are interested in
+
+\begin{equation}
+F_b = {C_b^{inst} \over {\sum_i{w_i Q_{b,i}}}}
+\label{eqn:trueFlat}
+\end{equation}
+
+At this point, we notice that $Q_{b,i}$ is what we mean by a 'flat', but there is a problem:  At the time we process the pixels
+in Flat SED Calibration (Figure \ref{fig:overview_flowchart1}), we are unable to calculate $Q_{b,i}$ because we are (probably) ignorant
+of $f(\lambda)$.  Even if we knew it, this prescription would be unworkable because the flat would need to be constructed with an SED 
+that varies rapidly over the focal plane.   So we must accept our inability to work with $Q_{b,i}$ when processing the pixels, and must
+content ourselves with the broadband flat
+
+\begin{equation}
+Q_{b,i}^{BB} = \int {q_{b,i}(\lambda) f^{BB}(\lambda) d\lambda}
+\end{equation}
+
+where $f^{BB}(\lambda)$ is an SED we are free to choose in constructing the broadband flat. We can now write
+
+\begin{equation}
+F_b = \left[ {C_b^{inst} \over {\sum_i{w_i Q_{b,i}^{BB}}}}\right]  \left[ {\sum_i {w_i Q_{b,i}^{BB} } \over {\sum_i {w_i Q_{b,i} }\right]
+\end{equation}
+
+(normalize flat, bring in Zp) Expressed in magnitudes, this becomes
+
+\begin{equation}
+m_b^{nat} = m_b^{inst} + xx
+\end{equation}
+
+
+This may not at first seem like an advance over equation \ref{eqn:trueFlat}, but in fact it is:  The first term is just what we usually
+mean by measuring the flux in a flattened image.  It is done at the pixel level in the usual way, without any dependence on 
+$f(\lambda)$.  We can at least imagine calculating the second, correction, term in exactly the way it is written.  We do
+not need to actually access the image pixels, but do need to know the PSF and the object SED, and we need to construct at least
+a localized flat from the object SED.  We reserve this as a future option in calibration processing, because it may reduce
+the systematics floor in the instrumental magnitudes.  For the present, however, we make the assumption which is univerally made
+today in doing photometry, albeit almost always implicitly:  The ratio of the true flat to the broadband flat is independent 
+of the pixel within the PSF footprint.
+
+We have a final problem:  $Q_{b,i}^{BB}$ depends on $S_b^{atm}$.
+
+We now turn to the actual measurement of $q_{b,i}$, and the construction of $Q_{b,i}^{BB}$
 
 \subsection{Measuring the Hardware Response}
 To measure the wavelength-dependent hardware response
@@ -673,12 +734,37 @@ After applying the monochromatic illumination correction
 the photodiode monitors (see Section XX),  this data cube
 records (up to an overall normalization constant) $S_b^{sys}(\lambda,t)$ at each $x$,$y$ location in the focal plane. 
 This data cube of narrow-band
-flats is used to construct a synthetic flat field by
+flats is used to construct a synthetic broadband flat field ('BBF') by
 combining the individual narrow-band flats according to a chosen
-spectral energy distribution.  Since the first stage of the calibration process, that which
-processes the actual pixels, assumes that sources have flat SEDs, we construct our synthetic flat
-with a flat SED propagated through a mean model atmosphere to the entrance pupil of the
-telescope.  We call this flat the 'flat spectrum flat' (FSF).
+spectral energy distribution.  
+
+%In the first stage of the calibration process, that which
+%processes the actual pixels, we assume that sources have flat SEDs within each filter band, so we construct our synthetic flat
+%with a flat SED.  We call this flat the 'flat spectrum flat' (FSF).
+
+As discussed in the previous section, the choice of the SED used to construct the broadband flats is largely arbitrary.  It defines a reference SED $f_\nu^{bbf}(\lambda)$,
+which must later be corrected for (in the SED Correction stage, see Figure \ref{fig:overview_flowchart1}) 
+when both the true $\phi_b^{obs}(\lambda)$ and the actual object SED, $f_\nu(\lambda)$ are known.  The correction takes the form
+
+\begin{equation}
+m_b^{nat*} = m_b^{nat} -2.5 \, log_{10} \,  \left( { \int_0^\infty {f_\nu^{bbf}(\lambda,t) \,
+    \phi_b^{obs}(\lambda,t) \, d\lambda} \over \int_0^\infty {f_\nu(\lambda,t) \,
+    \phi_b^{obs}(\lambda,t) \, d\lambda}} \right)
+\label{eqn:bbf_corr}
+\end{equation}
+
+Note the similarity to equation \ref{eq:xx} for $\Delta m_b^{obs}$, but also note that here we are correcting for different SEDs 
+through the same $\phi$ versus correcting for different $\phi$s at a fixed SED.   Given the arbitrariness of $f_\nu^{bbf}(\lambda)$,
+we must choose on grounds of convenience.  At least two choices suggest themselves:
+
+\begin{itemize}
+\item{Choose $f_\nu^{bbf}(\lambda) = const$.  This makes the integral in the numerator of equation \ref{eqn:bbf_corr} unity.}
+\item{Choose $f_\nu^{bbf}(\lambda)$ to be in some sense an average SED for all objects in the survey, such that the average value
+of the BBF correction is minimized.}
+\end{itemize}
+
+We choose the first of these, and subsequently refer to the BBF as the FSF (flat spectrum flat).
+
 
 Generation of the entire data cube of
 narrow-band flats is too time-consuming to complete on a daily
@@ -1160,27 +1246,7 @@ repeat observations of the same star throughout each night, and then
 fitting the spectroscopic data from the entire night. This improves the 
 signal to noise for the atmospheric absorption profiles generated for each science observation.
 
-%\subsubsubsection{The expected effect of $\phi_b^{atm}(\lambda)$ variations}
-%
-%\citet{Burke2010b} describes a series of observing runs at CTIO carried out over several
-%months, where spectroscopic observations of stars were fit using this method. Using the extremes of the range of $C_{mol}$,
-%$C_{\ozone}$, $C_{\water}$, $\tau_i$ and $\alpha$ parameters from these runs,
-%Figure~\ref{fig:dmag_atm_comps} shows the resulting changes in
-%observed magnitudes due to the changes in bandpass shape when applied
-%to our set of main sequence star Kurucz models. Varying
-%$C_{\water}$ only affects the $z$ and $y$ bands, while changing $C_{\ozone}$,
-%$\tau_0$, and $\alpha$ affect the $u$ and $g$ and, to a lesser extent, $r$
-%bands. Using these `worst-case' parameters, at $X=1.2$ we find
-%differences in the observed natural magnitudes on the order of $\Delta u$=14~mmag, $\Delta g$=7~mmag, $\Delta r$=4.5~mmag,
-%$\Delta i$=1.5~mmag, $\Delta z$=2~mmag, and $\Delta y$=7~mmag. The 
-%atmosphere transmission curves used to generate this data, and a plot
-%of the resulting $\Delta m_b^{obs}$ are in Figures~\ref{fig:atm_changes}
-%and \ref{fig:dmag_atm_max}.  These represent the induced changes in
-%observed counts due to changes in the bandpass shape; however, by
-%achieving 10\% accuracy on $\tau^{aerosol}$, $C_{\ozone}$, and
-%$C_{mol}$, and 30\% accuracy for $C_{\water}$, we can correct for
-%these effects to within 1~mmag in all bands except $y$, where it
-%remains 2~mmag. The limits on remaining uncorrected effects are shown in Figure~\ref{fig:dmag_atm_10}. 
+
 
 \subsection{Water Vapor Monitoring System}
 
@@ -1295,6 +1361,14 @@ Every exposure has a spatial zeropoint model determined by Self Calibration as t
 \end{itemize}
 This makes it clear that the size of a detector segment is a rough boundary, above which zeropoint errors should be negligible,
 while below it they may become quite significant.  In reality, many zeropoint perturbations (such as clouds and focal plane temperature variations) have a continuous spatial power spectrum, and a more sophisticated estimate is required.  
+
+One can place this argument on a firmer mathematical foundation through "objective analysis", a formulation developed by the 
+oceanographic and meteorological communities, and based on the Gauss-Markov theorem (\citep{Bretherton1976}, \citep{McIntosh1990}).
+The problem addressed by objective analysis is:  Given a continuous scalar field, measured in a two dimensional domain at a set of 
+points, what is the optimal estimator for values of the field throughout the domain, and what is the expected error of that estimator?
+In our application, the scalar field is the zeropoint, and there are (noisy) measurements of it at the position of each calibration
+star in the field.
+
 
 We have determined the attenuation factor from simulations of the Self Calibration process (Section \ref{sec:verification}).   Additionally, Gauss-Markov analysis (show results?) {\bf EXPAND }
 
@@ -1449,12 +1523,15 @@ reveals errors in the calibration.
 In addition to main-sequence stars, our flux standards should be
 useful for checking the color calibration.  As with the flux
 calibration in a single band, we can exclude some of the flux
-standards from the analaysis and use the excluded stars to see how
+standards from the analysis and use the excluded stars to see how
 well we recover their colors.
 
 
 \section{Software Implementation}
 \label{sec:software}
+\subsection{Calibration Products Production}
+
+\subsection{Calibration Within the Data Release Production}
 
 \subsection{Level 2 Data Products}
 %reference M. Juric Level 2 doc here
@@ -1490,7 +1567,7 @@ and computation of the recalibrated flux as:
 %
 Note that $f_\nu^{flat}(\lambda) \equiv 1$ and since $\phi_b$ is normalized to one, the denominator of Eq.~\ref{eq:fluxCorr} is identically equal to one as well. Therefore, only the numerator needs to be computed to get $c$.
 
-\subsection{Storing and Obtaining $\phi_b(\lambda|\mathbf{p})$}
+\subsubsection{Storing and Obtaining $\phi_b(\lambda|\mathbf{p})$}
 
 The total system throughput, $S_b(\lambda | \mathbf{p})$, from which $\phi_b(\lambda | \mathbf{p})$ is derived, can be factored into two components, $S_b^{sys}$ and $S_b^{atm}$:
 %
@@ -1506,7 +1583,7 @@ $S_b^{atm}$ will be computed from models of the atmosphere derived using the spe
 
 The radiometer/GPS data on precipitable water vapor will be stored in the database together with other exposure metadata. The user will be able to query this information for each exposure.
 
-\subsection{Database-level Recalibration}
+\subsubsection{Database-level Recalibration}
 
 We will provide an easy-to-use database interface to perform recalibration given user-defined SEDs. While the exact syntax is yet to be finalized, the following example should be illustrative of how the user could obtain recalibrated time series using the highest-level of provided APIs:
 %
@@ -1759,28 +1836,6 @@ scientists may calculate highly precise $m_b^{std}$ magnitudes for
 their objects of interest. This means recording or providing the means
 to recalculate $\phi_b^{sys+atm}(\lambda,t)$ for every object detected
 with LSST. 
-
-
-
-
-
-
-%\section{Comparison of standard calibration and SDSS ubercal (as
-% approximation for this method)}
-
-
-%\section{Thermal IR Camera}
-%possibility to generate measurement of shape of cloud structure over
-%field of view (could function as prior for self-calibration)
-
-%if cloud structure found to vary on scales smaller than length between
-%calibration stars (or minimum scale possible to correct with
-%self-calib), then thermal IR camera would enable generation of
-%these corrections
-
-%may provide useful SDQA data (especially for alerts/nightly data
-%stream)
-
 
 \section{Fiducial Self-Calibration Input}\label{sec:siminput}
 The input file used with simSelfCalib.py to generate the simlutated LSST catalor presented in \S\ref{sec:selfcalsim}.
@@ -2090,7 +2145,7 @@ at zenith.  The units are mm of liquid water equivalent. }
 \fbox{
 \begin{minipage}{6.5in}
 \includegraphics[width=6.5in]{CalibDataProdSchematic2}
-\caption{ {\small {\bf Flat SED Flat Determination.} Determination of the flat SED flat (FSF) is of central importance.  The initial step in the calibration process treats all objects as if their SED were flat.  This is consistent only if the flatfield is that for a flat SED, as transmitted through a reference atmosphere.  Since the illumination source for the actual broadband flat does not have the required SED, we cannot use it directly.  Instead, we synthesize the required flat from the monochromatic flats.  These flats as measured are contaminated by light which arrives from paths other than the direct path, such as ghosting.  These effects are taken out by the illumination correction.  Finally, the monochromatic flats are taken relatively infrequently, and will not reflect changes on shorter timescales, such as the appearance of new dust particles.  We account for this by multiplying the synthesized FSF by the ratio of two broadband flats, one at the current epoch and one at the reference epoch, when the monochromatic flats were gathered.}
+\caption{ {\small {\bf Flat SED Flat Determination.} Determination of the flat SED flat (FSF) is of central importance.  The initial step in the calibration process treats all objects as if their SED were flat.  This is consistent only if the flatfield is that for a flat SED, as transmitted through a reference atmosphere.  Since the illumination source for the actual broadband flat does not have the required SED, we cannot use it directly.  Instead, we synthesize the required flat from the monochromatic flats.  These flats as measured are contaminated by light which arrives from paths other than the direct path, such as ghosting.  These effects are taken out by the illumination correction.  Additionally, the flats must be corrected for the nonuniform pixel solid angle on the sky. Finally, the monochromatic flats are taken relatively infrequently, and will not reflect changes on shorter timescales, such as the appearance of new dust particles.  We account for this by multiplying the synthesized FSF by the ratio of two broadband flats, one at the current epoch and one at the reference epoch, when the monochromatic flats were gathered.}
 \label{fig:overview_flowchart2} }
 \end{minipage}
 }
@@ -2797,6 +2852,20 @@ blue squares, $0.36<z<0.72$ are green squares, and $0.72<z<1$ SNIa are
 red squares. 
 }}
 \label{fig:dmag_allseds}
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{HardwareFigs/calypso}
+\caption{{\small
+The auxiliary telescope 
+}}
+\label{fig:auxtel}
 \end{minipage}
 }
 \end{figure}
