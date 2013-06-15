@@ -1,4 +1,4 @@
-This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2012.8.24)  12 JUN 2013 15:09
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2012.8.24)  14 JUN 2013 15:07
 entering extended mode
 **scUpdate
 (./scUpdate.tex
@@ -312,163 +312,168 @@ File: Plots/r_1e6/Srepeat_IQR.png Graphic file (type png)
 <Plots/r_1e6/Srepeat_IQR_bright_hist.png, id=84, 578.16pt x 433.62pt>
 File: Plots/r_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
 
-<use Plots/r_1e6/Srepeat_IQR_bright_hist.png>
+<use Plots/r_1e6/Srepeat_IQR_bright_hist.png> [10] [11 <./Plots/u_band/input_il
+lum_err.png> <./Plots/r_band/input_illum_err.png> <./Plots/HPid_8.png> <./Plots
+/HPid_16.png>] [12 <./Plots/r_1e6_regsolver/Sdmag.png> <./Plots/r_1e6/Sdmag.png
+> <./Plots/r_1e6_regsolver/Sdamg_hist.png> <./Plots/r_1e6/Sdamg_hist.png>]
+[13 <./Plots/r_1e6/Snobs.png> <./Plots/r_1e6_nodither/Snobs.png> <./Plots/r_1e6
+_nodither/Sdmag.png> <./Plots/r_1e6_nodither/Sdamg_hist.png>]
 Plottwo included the files Plots/u_1e6_neg15/Snobs.png Plots/u_1e6_neg15/Snobs_
 hist.png
-<Plots/u_1e6_neg15/Snobs.png, id=85, 578.16pt x 433.62pt>
+<Plots/u_1e6_neg15/Snobs.png, id=98, 578.16pt x 433.62pt>
 File: Plots/u_1e6_neg15/Snobs.png Graphic file (type png)
 
 <use Plots/u_1e6_neg15/Snobs.png>
-<Plots/u_1e6_neg15/Snobs_hist.png, id=86, 578.16pt x 433.62pt>
+<Plots/u_1e6_neg15/Snobs_hist.png, id=99, 578.16pt x 433.62pt>
 File: Plots/u_1e6_neg15/Snobs_hist.png Graphic file (type png)
 
 <use Plots/u_1e6_neg15/Snobs_hist.png>
 Plottwo included the files Plots/u_1e6_neg15/Sdmag.png Plots/u_1e6_neg15/Sdamg_
 hist.png
-<Plots/u_1e6_neg15/Sdmag.png, id=87, 578.16pt x 433.62pt>
+<Plots/u_1e6_neg15/Sdmag.png, id=100, 578.16pt x 433.62pt>
 File: Plots/u_1e6_neg15/Sdmag.png Graphic file (type png)
 
 <use Plots/u_1e6_neg15/Sdmag.png>
-<Plots/u_1e6_neg15/Sdamg_hist.png, id=88, 578.16pt x 433.62pt>
+<Plots/u_1e6_neg15/Sdamg_hist.png, id=101, 578.16pt x 433.62pt>
 File: Plots/u_1e6_neg15/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/u_1e6_neg15/Sdamg_hist.png>
 Plottwo included the files Plots/u_1e6_neg15/Srepeat_IQR.png Plots/u_1e6_neg15/
 Srepeat_IQR_bright_hist.png
-<Plots/u_1e6_neg15/Srepeat_IQR.png, id=89, 578.16pt x 433.62pt>
+<Plots/u_1e6_neg15/Srepeat_IQR.png, id=102, 578.16pt x 433.62pt>
 File: Plots/u_1e6_neg15/Srepeat_IQR.png Graphic file (type png)
 
 <use Plots/u_1e6_neg15/Srepeat_IQR.png>
-<Plots/u_1e6_neg15/Srepeat_IQR_bright_hist.png, id=90, 578.16pt x 433.62pt>
+<Plots/u_1e6_neg15/Srepeat_IQR_bright_hist.png, id=103, 578.16pt x 433.62pt>
 File: Plots/u_1e6_neg15/Srepeat_IQR_bright_hist.png Graphic file (type png)
 
 <use Plots/u_1e6_neg15/Srepeat_IQR_bright_hist.png>
 Plottwo included the files Plots/g_1e6/Snobs.png Plots/g_1e6/Snobs_hist.png
-<Plots/g_1e6/Snobs.png, id=91, 578.16pt x 433.62pt>
+<Plots/g_1e6/Snobs.png, id=104, 578.16pt x 433.62pt>
 File: Plots/g_1e6/Snobs.png Graphic file (type png)
 
 <use Plots/g_1e6/Snobs.png>
-<Plots/g_1e6/Snobs_hist.png, id=92, 578.16pt x 433.62pt>
+<Plots/g_1e6/Snobs_hist.png, id=105, 578.16pt x 433.62pt>
 File: Plots/g_1e6/Snobs_hist.png Graphic file (type png)
 
 <use Plots/g_1e6/Snobs_hist.png>
 Plottwo included the files Plots/g_1e6/Sdmag.png Plots/g_1e6/Sdamg_hist.png
-<Plots/g_1e6/Sdmag.png, id=93, 578.16pt x 433.62pt>
+<Plots/g_1e6/Sdmag.png, id=106, 578.16pt x 433.62pt>
 File: Plots/g_1e6/Sdmag.png Graphic file (type png)
 
 <use Plots/g_1e6/Sdmag.png>
-<Plots/g_1e6/Sdamg_hist.png, id=94, 578.16pt x 433.62pt>
+<Plots/g_1e6/Sdamg_hist.png, id=107, 578.16pt x 433.62pt>
 File: Plots/g_1e6/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/g_1e6/Sdamg_hist.png>
 Plottwo included the files Plots/g_1e6/Srepeat_IQR.png Plots/g_1e6/Srepeat_IQR_
 bright_hist.png
-<Plots/g_1e6/Srepeat_IQR.png, id=95, 578.16pt x 433.62pt>
+<Plots/g_1e6/Srepeat_IQR.png, id=108, 578.16pt x 433.62pt>
 File: Plots/g_1e6/Srepeat_IQR.png Graphic file (type png)
 
 <use Plots/g_1e6/Srepeat_IQR.png>
-<Plots/g_1e6/Srepeat_IQR_bright_hist.png, id=96, 578.16pt x 433.62pt>
+<Plots/g_1e6/Srepeat_IQR_bright_hist.png, id=109, 578.16pt x 433.62pt>
 File: Plots/g_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
 
 <use Plots/g_1e6/Srepeat_IQR_bright_hist.png>
 Plottwo included the files Plots/i_1e6/Snobs.png Plots/i_1e6/Snobs_hist.png
-<Plots/i_1e6/Snobs.png, id=97, 578.16pt x 433.62pt>
+<Plots/i_1e6/Snobs.png, id=110, 578.16pt x 433.62pt>
 File: Plots/i_1e6/Snobs.png Graphic file (type png)
 
 <use Plots/i_1e6/Snobs.png>
-<Plots/i_1e6/Snobs_hist.png, id=98, 578.16pt x 433.62pt>
+<Plots/i_1e6/Snobs_hist.png, id=111, 578.16pt x 433.62pt>
 File: Plots/i_1e6/Snobs_hist.png Graphic file (type png)
 
 <use Plots/i_1e6/Snobs_hist.png>
 Plottwo included the files Plots/i_1e6/Sdmag.png Plots/i_1e6/Sdamg_hist.png
-<Plots/i_1e6/Sdmag.png, id=99, 578.16pt x 433.62pt>
+<Plots/i_1e6/Sdmag.png, id=112, 578.16pt x 433.62pt>
 File: Plots/i_1e6/Sdmag.png Graphic file (type png)
 
 <use Plots/i_1e6/Sdmag.png>
-<Plots/i_1e6/Sdamg_hist.png, id=100, 578.16pt x 433.62pt>
+<Plots/i_1e6/Sdamg_hist.png, id=113, 578.16pt x 433.62pt>
 File: Plots/i_1e6/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/i_1e6/Sdamg_hist.png>
 Plottwo included the files Plots/i_1e6/Srepeat_IQR.png Plots/i_1e6/Srepeat_IQR_
 bright_hist.png
-<Plots/i_1e6/Srepeat_IQR.png, id=101, 578.16pt x 433.62pt>
+<Plots/i_1e6/Srepeat_IQR.png, id=114, 578.16pt x 433.62pt>
 File: Plots/i_1e6/Srepeat_IQR.png Graphic file (type png)
 
 <use Plots/i_1e6/Srepeat_IQR.png>
-<Plots/i_1e6/Srepeat_IQR_bright_hist.png, id=102, 578.16pt x 433.62pt>
+<Plots/i_1e6/Srepeat_IQR_bright_hist.png, id=115, 578.16pt x 433.62pt>
 File: Plots/i_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
 
 <use Plots/i_1e6/Srepeat_IQR_bright_hist.png>
 Plottwo included the files Plots/z_1e6/Snobs.png Plots/z_1e6/Snobs_hist.png
-<Plots/z_1e6/Snobs.png, id=103, 578.16pt x 433.62pt>
+<Plots/z_1e6/Snobs.png, id=116, 578.16pt x 433.62pt>
 File: Plots/z_1e6/Snobs.png Graphic file (type png)
 
 <use Plots/z_1e6/Snobs.png>
-<Plots/z_1e6/Snobs_hist.png, id=104, 578.16pt x 433.62pt>
+<Plots/z_1e6/Snobs_hist.png, id=117, 578.16pt x 433.62pt>
 File: Plots/z_1e6/Snobs_hist.png Graphic file (type png)
 
 <use Plots/z_1e6/Snobs_hist.png>
 Plottwo included the files Plots/z_1e6/Sdmag.png Plots/z_1e6/Sdamg_hist.png
-<Plots/z_1e6/Sdmag.png, id=105, 578.16pt x 433.62pt>
+<Plots/z_1e6/Sdmag.png, id=118, 578.16pt x 433.62pt>
 File: Plots/z_1e6/Sdmag.png Graphic file (type png)
 
 <use Plots/z_1e6/Sdmag.png>
-<Plots/z_1e6/Sdamg_hist.png, id=106, 578.16pt x 433.62pt>
+<Plots/z_1e6/Sdamg_hist.png, id=119, 578.16pt x 433.62pt>
 File: Plots/z_1e6/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/z_1e6/Sdamg_hist.png>
 Plottwo included the files Plots/z_1e6/Srepeat_IQR.png Plots/z_1e6/Srepeat_IQR_
 bright_hist.png
-<Plots/z_1e6/Srepeat_IQR.png, id=107, 578.16pt x 433.62pt>
+<Plots/z_1e6/Srepeat_IQR.png, id=120, 578.16pt x 433.62pt>
 File: Plots/z_1e6/Srepeat_IQR.png Graphic file (type png)
 
 <use Plots/z_1e6/Srepeat_IQR.png>
-<Plots/z_1e6/Srepeat_IQR_bright_hist.png, id=108, 578.16pt x 433.62pt>
+<Plots/z_1e6/Srepeat_IQR_bright_hist.png, id=121, 578.16pt x 433.62pt>
 File: Plots/z_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
 
 <use Plots/z_1e6/Srepeat_IQR_bright_hist.png>
 Plottwo included the files Plots/y_1e6/Snobs.png Plots/y_1e6/Snobs_hist.png
-<Plots/y_1e6/Snobs.png, id=109, 578.16pt x 433.62pt>
+<Plots/y_1e6/Snobs.png, id=122, 578.16pt x 433.62pt>
 File: Plots/y_1e6/Snobs.png Graphic file (type png)
 
 <use Plots/y_1e6/Snobs.png>
-<Plots/y_1e6/Snobs_hist.png, id=110, 578.16pt x 433.62pt>
+<Plots/y_1e6/Snobs_hist.png, id=123, 578.16pt x 433.62pt>
 File: Plots/y_1e6/Snobs_hist.png Graphic file (type png)
 
 <use Plots/y_1e6/Snobs_hist.png>
 Plottwo included the files Plots/y_1e6/Sdmag.png Plots/y_1e6/Sdamg_hist.png
-<Plots/y_1e6/Sdmag.png, id=111, 578.16pt x 433.62pt>
+<Plots/y_1e6/Sdmag.png, id=124, 578.16pt x 433.62pt>
 File: Plots/y_1e6/Sdmag.png Graphic file (type png)
 
 <use Plots/y_1e6/Sdmag.png>
-<Plots/y_1e6/Sdamg_hist.png, id=112, 578.16pt x 433.62pt>
+<Plots/y_1e6/Sdamg_hist.png, id=125, 578.16pt x 433.62pt>
 File: Plots/y_1e6/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/y_1e6/Sdamg_hist.png>
 Plottwo included the files Plots/y_1e6/Srepeat_IQR.png Plots/y_1e6/Srepeat_IQR_
 bright_hist.png
-<Plots/y_1e6/Srepeat_IQR.png, id=113, 578.16pt x 433.62pt>
+<Plots/y_1e6/Srepeat_IQR.png, id=126, 578.16pt x 433.62pt>
 File: Plots/y_1e6/Srepeat_IQR.png Graphic file (type png)
 
 <use Plots/y_1e6/Srepeat_IQR.png>
-<Plots/y_1e6/Srepeat_IQR_bright_hist.png, id=114, 578.16pt x 433.62pt>
+<Plots/y_1e6/Srepeat_IQR_bright_hist.png, id=127, 578.16pt x 433.62pt>
 File: Plots/y_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
 
 <use Plots/y_1e6/Srepeat_IQR_bright_hist.png>
 Plottwo included the files Plots/r_1e6/repeat_examples_hist.png Plots/r_1e6/rep
 eat_examples_cdf.png
-<Plots/r_1e6/repeat_examples_hist.png, id=115, 578.16pt x 433.62pt>
+<Plots/r_1e6/repeat_examples_hist.png, id=128, 578.16pt x 433.62pt>
 File: Plots/r_1e6/repeat_examples_hist.png Graphic file (type png)
 
 <use Plots/r_1e6/repeat_examples_hist.png>
-<Plots/r_1e6/repeat_examples_cdf.png, id=116, 578.16pt x 433.62pt>
+<Plots/r_1e6/repeat_examples_cdf.png, id=129, 578.16pt x 433.62pt>
 File: Plots/r_1e6/repeat_examples_cdf.png Graphic file (type png)
 
 <use Plots/r_1e6/repeat_examples_cdf.png>
 Plottwo included the files Plots/r_1e6/Sdmag.png Plots/r_1e6_newseed/Sdmag.png
 File: Plots/r_1e6/Sdmag.png Graphic file (type png)
 <use Plots/r_1e6/Sdmag.png>
-<Plots/r_1e6_newseed/Sdmag.png, id=117, 578.16pt x 433.62pt>
+<Plots/r_1e6_newseed/Sdmag.png, id=130, 578.16pt x 433.62pt>
 File: Plots/r_1e6_newseed/Sdmag.png Graphic file (type png)
 
 <use Plots/r_1e6_newseed/Sdmag.png>
@@ -476,7 +481,7 @@ Plottwo included the files Plots/r_1e6/Sdamg_hist.png Plots/r_1e6_newseed/Sdamg
 _hist.png
 File: Plots/r_1e6/Sdamg_hist.png Graphic file (type png)
 <use Plots/r_1e6/Sdamg_hist.png>
-<Plots/r_1e6_newseed/Sdamg_hist.png, id=118, 578.16pt x 433.62pt>
+<Plots/r_1e6_newseed/Sdamg_hist.png, id=131, 578.16pt x 433.62pt>
 File: Plots/r_1e6_newseed/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/r_1e6_newseed/Sdamg_hist.png>
@@ -484,60 +489,54 @@ Plottwo included the files Plots/r_1e6/Srepeat_IQR_bright_hist.png Plots/r_1e6_
 newseed/Srepeat_IQR_bright_hist.png
 File: Plots/r_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
 <use Plots/r_1e6/Srepeat_IQR_bright_hist.png>
-<Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png, id=119, 578.16pt x 433.62pt>
+<Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png, id=132, 578.16pt x 433.62pt>
 File: Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png Graphic file (type png)
 
 <use Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png>
 Plottwo included the files Plots/r_hd_test/Snobs.png Plots/r_hd_test/Snobs_hist
 .png
-<Plots/r_hd_test/Snobs.png, id=120, 578.16pt x 433.62pt>
+<Plots/r_hd_test/Snobs.png, id=133, 578.16pt x 433.62pt>
 File: Plots/r_hd_test/Snobs.png Graphic file (type png)
 
 <use Plots/r_hd_test/Snobs.png>
-<Plots/r_hd_test/Snobs_hist.png, id=121, 578.16pt x 433.62pt>
+<Plots/r_hd_test/Snobs_hist.png, id=134, 578.16pt x 433.62pt>
 File: Plots/r_hd_test/Snobs_hist.png Graphic file (type png)
 
 <use Plots/r_hd_test/Snobs_hist.png>
 Plottwo included the files Plots/r_hd_test/Sdmag.png Plots/r_hd_test/Sdamg_hist
 .png
-<Plots/r_hd_test/Sdmag.png, id=122, 578.16pt x 433.62pt>
+<Plots/r_hd_test/Sdmag.png, id=135, 578.16pt x 433.62pt>
 File: Plots/r_hd_test/Sdmag.png Graphic file (type png)
 
 <use Plots/r_hd_test/Sdmag.png>
-<Plots/r_hd_test/Sdamg_hist.png, id=123, 578.16pt x 433.62pt>
+<Plots/r_hd_test/Sdamg_hist.png, id=136, 578.16pt x 433.62pt>
 File: Plots/r_hd_test/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/r_hd_test/Sdamg_hist.png>
 Plottwo included the files Plots/r_hd_test/Srepeat_IQR.png Plots/r_hd_test/Srep
 eat_IQR_bright_hist.png
-<Plots/r_hd_test/Srepeat_IQR.png, id=124, 578.16pt x 433.62pt>
+<Plots/r_hd_test/Srepeat_IQR.png, id=137, 578.16pt x 433.62pt>
 File: Plots/r_hd_test/Srepeat_IQR.png Graphic file (type png)
 
 <use Plots/r_hd_test/Srepeat_IQR.png>
-<Plots/r_hd_test/Srepeat_IQR_bright_hist.png, id=125, 578.16pt x 433.62pt>
+<Plots/r_hd_test/Srepeat_IQR_bright_hist.png, id=138, 578.16pt x 433.62pt>
 File: Plots/r_hd_test/Srepeat_IQR_bright_hist.png Graphic file (type png)
 
-<use Plots/r_hd_test/Srepeat_IQR_bright_hist.png> [10] [11 <./Plots/u_band/inpu
-t_illum_err.png> <./Plots/r_band/input_illum_err.png> <./Plots/HPid_8.png> <./P
-lots/HPid_16.png>] [12 <./Plots/r_1e6_regsolver/Sdmag.png> <./Plots/r_1e6/Sdmag
-.png> <./Plots/r_1e6_regsolver/Sdamg_hist.png> <./Plots/r_1e6/Sdamg_hist.png>]
-[13 <./Plots/r_1e6/Snobs.png> <./Plots/r_1e6_nodither/Snobs.png> <./Plots/r_1e6
-_nodither/Sdmag.png> <./Plots/r_1e6_nodither/Sdamg_hist.png>] [14 <./Plots/r_1e
-6/Snobs_hist.png> <./Plots/r_1e6/Srepeat_IQR.png> <./Plots/r_1e6/Srepeat_IQR_br
-ight_hist.png>] [15 <./Plots/u_1e6_neg15/Snobs.png> <./Plots/u_1e6_neg15/Snobs_
-hist.png> <./Plots/u_1e6_neg15/Sdmag.png> <./Plots/u_1e6_neg15/Sdamg_hist.png> 
-<./Plots/u_1e6_neg15/Srepeat_IQR.png> <./Plots/u_1e6_neg15/Srepeat_IQR_bright_h
-ist.png>] [16 <./Plots/g_1e6/Snobs.png> <./Plots/g_1e6/Snobs_hist.png> <./Plots
-/g_1e6/Sdmag.png> <./Plots/g_1e6/Sdamg_hist.png> <./Plots/g_1e6/Srepeat_IQR.png
-> <./Plots/g_1e6/Srepeat_IQR_bright_hist.png>] [17 <./Plots/i_1e6/Snobs.png> <.
-/Plots/i_1e6/Snobs_hist.png> <./Plots/i_1e6/Sdmag.png> <./Plots/i_1e6/Sdamg_his
-t.png> <./Plots/i_1e6/Srepeat_IQR.png> <./Plots/i_1e6/Srepeat_IQR_bright_hist.p
-ng>] [18 <./Plots/z_1e6/Snobs.png> <./Plots/z_1e6/Snobs_hist.png> <./Plots/z_1e
-6/Sdmag.png> <./Plots/z_1e6/Sdamg_hist.png> <./Plots/z_1e6/Srepeat_IQR.png> <./
-Plots/z_1e6/Srepeat_IQR_bright_hist.png>] [19 <./Plots/y_1e6/Snobs.png> <./Plot
-s/y_1e6/Snobs_hist.png> <./Plots/y_1e6/Sdmag.png> <./Plots/y_1e6/Sdamg_hist.png
-> <./Plots/y_1e6/Srepeat_IQR.png> <./Plots/y_1e6/Srepeat_IQR_bright_hist.png>]
-[20]
+<use Plots/r_hd_test/Srepeat_IQR_bright_hist.png> [14] [15 <./Plots/r_1e6/Snobs
+_hist.png> <./Plots/r_1e6/Srepeat_IQR.png> <./Plots/r_1e6/Srepeat_IQR_bright_hi
+st.png>] [16 <./Plots/u_1e6_neg15/Snobs.png> <./Plots/u_1e6_neg15/Snobs_hist.pn
+g> <./Plots/u_1e6_neg15/Sdmag.png> <./Plots/u_1e6_neg15/Sdamg_hist.png> <./Plot
+s/u_1e6_neg15/Srepeat_IQR.png> <./Plots/u_1e6_neg15/Srepeat_IQR_bright_hist.png
+>] [17 <./Plots/g_1e6/Snobs.png> <./Plots/g_1e6/Snobs_hist.png> <./Plots/g_1e6/
+Sdmag.png> <./Plots/g_1e6/Sdamg_hist.png> <./Plots/g_1e6/Srepeat_IQR.png> <./Pl
+ots/g_1e6/Srepeat_IQR_bright_hist.png>] [18 <./Plots/i_1e6/Snobs.png> <./Plots/
+i_1e6/Snobs_hist.png> <./Plots/i_1e6/Sdmag.png> <./Plots/i_1e6/Sdamg_hist.png> 
+<./Plots/i_1e6/Srepeat_IQR.png> <./Plots/i_1e6/Srepeat_IQR_bright_hist.png>]
+[19 <./Plots/z_1e6/Snobs.png> <./Plots/z_1e6/Snobs_hist.png> <./Plots/z_1e6/Sdm
+ag.png> <./Plots/z_1e6/Sdamg_hist.png> <./Plots/z_1e6/Srepeat_IQR.png> <./Plots
+/z_1e6/Srepeat_IQR_bright_hist.png>] [20 <./Plots/y_1e6/Snobs.png> <./Plots/y_1
+e6/Snobs_hist.png> <./Plots/y_1e6/Sdmag.png> <./Plots/y_1e6/Sdamg_hist.png> <./
+Plots/y_1e6/Srepeat_IQR.png> <./Plots/y_1e6/Srepeat_IQR_bright_hist.png>]
 Plottwo included the files Plots/u_1e6_neg15/Saccuracyvcolor.png Plots/u_1e6_mo
 reghost_small/Saccuracyvcolor_mod.png
 <Plots/u_1e6_neg15/Saccuracyvcolor.png, id=161, 578.16pt x 433.62pt>
@@ -548,27 +547,24 @@ File: Plots/u_1e6_neg15/Saccuracyvcolor.png Graphic file (type png)
 pt>
 File: Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png Graphic file (type pn
 g)
- <use Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png> (./scUpdate.bbl
-[21]) [22] [23 <./Plots/r_1e6/repeat_examples_hist.png> <./Plots/r_1e6/repeat_e
-xamples_cdf.png>] [24 <./Plots/r_1e6_newseed/Sdmag.png> <./Plots/r_1e6_newseed/
-Sdamg_hist.png> <./Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png>] [25 <./Plo
-ts/r_hd_test/Snobs.png> <./Plots/r_hd_test/Snobs_hist.png> <./Plots/r_hd_test/S
-dmag.png> <./Plots/r_hd_test/Sdamg_hist.png> <./Plots/r_hd_test/Srepeat_IQR.png
-> <./Plots/r_hd_test/Srepeat_IQR_bright_hist.png>] [26 <./Plots/u_1e6_neg15/Sac
-curacyvcolor.png> <./Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png>]
-(./scUpdate.aux)
+ <use Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png> [21]
+(./scUpdate.bbl) [22] [23 <./Plots/r_1e6/repeat_examples_hist.png> <./Plots/r_1
+e6/repeat_examples_cdf.png>] [24 <./Plots/r_1e6_newseed/Sdmag.png> <./Plots/r_1
+e6_newseed/Sdamg_hist.png> <./Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png>]
+[25 <./Plots/r_hd_test/Snobs.png> <./Plots/r_hd_test/Snobs_hist.png> <./Plots/r
+_hd_test/Sdmag.png> <./Plots/r_hd_test/Sdamg_hist.png> <./Plots/r_hd_test/Srepe
+at_IQR.png> <./Plots/r_hd_test/Srepeat_IQR_bright_hist.png>] [26 <./Plots/u_1e6
+_neg15/Saccuracyvcolor.png> <./Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.
+png>] (./scUpdate.aux)
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 2599 strings out of 94500
- 35622 string characters out of 1176766
- 90426 words of memory out of 1000000
- 5727 multiletter control sequences out of 10000+50000
+ 2598 strings out of 94500
+ 35608 string characters out of 1176766
+ 82477 words of memory out of 1000000
+ 5726 multiletter control sequences out of 10000+50000
  11888 words of font info for 50 fonts, out of 500000 for 2000
  580 hyphenation exceptions out of 1000
  32i,8n,26p,1128b,270s stack positions out of 1500i,500n,5000p,200000b,5000s
@@ -585,4 +581,4 @@ ky/cm/cmr7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/
 texmf/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/
 cmsy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf
 /fonts/type1/bluesky/cm/cmbx12.pfb>
-Output written on scUpdate.pdf (26 pages, 7292304 bytes).
+Output written on scUpdate.pdf (26 pages, 7293814 bytes).
