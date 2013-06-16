@@ -1640,9 +1640,28 @@ A suite of lower level functions will be provided as well, providing a more gran
 
 \section{Risks and Mitigations}
 \label{sec:risks}
-The calibration process that we have designed is very similar to those of PS-1 and DES, as previously mentioned.  It is therefore
-cause for some concern that the PS-1 results reported in \citep{Tonry2012} are significantly poorer than we expect from our
-error analysis in Section \ref{sec:error_budget}.  The need for the "tweak factor", and the lack of an explanation of its source, is of particular concern.
+The error budget presented in Section \ref{sec:error_budget}, and the simulation results presented in Section \ref{sec:verification} show that
+LSST will meet SRD requirements for calibration, but with small margin.   There is clearly a risk
+that once commissioning or survey operations begin, an unanticipated source of error will arise, or
+that known error sources will have been underestimated.
+The calibration process that we have designed is very similar to those of PS-1 and DES, as previously mentioned, though with some significant improvements.  It is therefore
+cause for some concern that the PS-1 results reported in \citep{Tonry2012} are 
+significantly poorer than we would expect from our
+error analysis, and show clear evidence for systematic errors that are not understood.
+Before turning to more specific risks, we first address this general concern.
+
+One mitigation that we will explore involves a modification of the overall calibration process.  As presented in Sections x and y, the current design cleanly separates compensation for changing system
+bandpass shape (performed in SED Correction \ref{fig:overview_flowchart1}), and for changing zeropoints
+(performed in Self Calibration).  The SED Correction process is based completely on forward modeling,
+in which the effect of some wavelength-dependent perturbation (eg change in atmospheric aerosols) on
+a particular calibration star is predicted by a measurement-based model of the effect.  As
+an alternative, one can imagine combining the SED Correction and Self Calibration processes into one
+large least squares problem, in which not only the zeropoints are determined, but all the 
+wavelength-dependent effects as well.  
+
+We have tested a first step in this direction by incorporating
+a parameterized model of the wavelength-dependent illumination into Self Calibration.  Initial 
+results have not been promising, but this is far from invalidating the overall approach.
 
 \begin{itemize}
 \item Systematics error floor for photometry is higher than expected
