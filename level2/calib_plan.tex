@@ -28,7 +28,8 @@
 \title{Level 2 Photometric Calibration for the LSST Survey}
 
 \author{
-R. Lynne Jones\altaffilmark{1}, {\v Z}eljko Ivezi{\'c}\altaffilmark{1},  Tim Axelrod\altaffilmark{2}, David Burke\altaffilmark{3}, \\
+R. Lynne Jones\altaffilmark{1}, Tim Axelrod\altaffilmark{2},
+{\v Z}eljko Ivezi{\'c}\altaffilmark{1},   David Burke\altaffilmark{3}, \\
 James G. Bartlett\altaffilmark{4}, 
 Gurvan Bazin\altaffilmark{4},
 Guillaume Blanc\altaffilmark{4},
@@ -1404,8 +1405,17 @@ star in the field.
 
 We have determined the attenuation factor from simulations of the Self Calibration process (Section \ref{sec:verification}).   Additionally, Gauss-Markov analysis (show results?) {\bf EXPAND }
 
-Note that, to first order, zeropoint errors are expected to depend on their spatial scale, but {\it not} on magnitude of the zeropoint
-perturbations that drive them.  This expectation is confirmed by Figure \ref{fig:ZPErrVsZP}.
+Zeropoint errors depend not only on the spatial scale of the zeropoint perturbations, as argued above,
+but also on the magnitude of those perturbations.   This is shown in Figures x - y, which present
+the results of a self calibration simulation which includes {\it only} zeropoint perturbations, without
+color-dependent effects.
+
+The impact of zeropoint variations on calibration performance as a whole will depend strongly on
+the pdf of the cloud extinction, as shown by Figures x - y.  This dependence derives partly from
+the fact that increasing extinction increases the photometric errors in the measurements of the
+calibration stars.  Our current data supports only a 
+crude measure of this pdf, and there are consequently uncertainties in the overall distribution of
+repeatability errors.
 
 Perturbations to the zeropoints arise from:
 \begin{itemize}
