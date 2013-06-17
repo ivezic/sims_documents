@@ -1416,9 +1416,10 @@ is roughly a gaussian core with fat tails.  When the zeropoint is between 0 and 
 1 mmag.  Under extinction conditions near the limit at which we propose to continue survey operations, between
 1 and 1.5 mag, the gaussian core has a sigma of 30 mmag.
 The impact of zeropoint variations on calibration performance as a whole will depend strongly on
-the pdf of the cloud extinction, as these results show.  This dependence derives partly from
-the fact that increasing extinction increases the photometric errors in the measurements of the
-calibration stars.  Our current data supports only a 
+the pdf of the cloud extinction, as these results show.  The strength of this dependence derives partly from the fact that
+the variance in cloud extinction is roughly proportional to the extinction itself.  Additionally, 
+increasing extinction increases the photometric errors in the measurements of the
+calibration stars.  Our current data on sky conditions at Cerro Pachon supports only a 
 crude measure of this pdf, and there are consequently uncertainties in the overall distribution of
 repeatability errors.
 
@@ -1677,6 +1678,9 @@ wavelength-dependent effects as well.
 We have tested a first step in this direction by incorporating
 a parameterized model of the wavelength-dependent illumination into Self Calibration.  Initial 
 results have not been promising, but this is far from invalidating the overall approach.
+
+A further risk is clearly that our overall conclusion about the performance of the calibration process is based largely on
+simulation tools.  These tools require significant further development, and completion of a validation process.
 
 \begin{itemize}
 \item Systematics error floor for photometry is higher than expected
@@ -2800,11 +2804,12 @@ the two extremes of the atmospheric transmission in each filter are shown above.
 \centering
 \fbox{
 \begin{minipage}{6.5in}
-\includegraphics[width=6.5in]{SelfcalFigs/zpErrsHist.png}
-\caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation.  The color scale
+\includegraphics[width=6.5in]{SelfcalFigs/zp_errs_2d.png}
+\caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation without color-dependent
+errors.  The color scale
 shows the log10 of the number of samples at that point.  The periodic behavior of the zeropoint density is an
 artifact of OpSim's treatment of cloud cover.} }
-\label{fig:ZPErrVsZP} }
+\label{fig:zp2dhist} }
 \end{minipage}
 }
 \end{figure}
@@ -2814,10 +2819,9 @@ artifact of OpSim's treatment of cloud cover.} }
 \fbox{
 \begin{minipage}{6.5in}
 \includegraphics[width=6.5in]{SelfcalFigs/zp_errs_0_05_w_gaussian.png}
-\caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation.  The color scale
-shows the log10 of the number of samples at that point.  The periodic behavior of the zeropoint density is an
-artifact of OpSim's treatment of cloud cover.} }
-\label{fig:ZPErrVsZP} }
+\caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation without color-dependent
+errors. The histogram shows a vertical crossection of the error fan, with zeropoint in the range $0 < zp < 0.5 mag$} }
+\label{fig:zpHist0_0.5} }
 \end{minipage}
 }
 \end{figure}
@@ -2827,10 +2831,9 @@ artifact of OpSim's treatment of cloud cover.} }
 \fbox{
 \begin{minipage}{6.5in}
 \includegraphics[width=6.5in]{SelfcalFigs/zp_errs_10_15_w_gaussian.png}
-\caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation.  The color scale
-shows the log10 of the number of samples at that point.  The periodic behavior of the zeropoint density is an
-artifact of OpSim's treatment of cloud cover.} }
-\label{fig:ZPErrVsZP} }
+\caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation without color-dependent
+errors. The histogram shows a vertical crossection of the error fan, with zeropoint in the range $1.0 < zp < 1.5 mag$} }
+\label{fig:zpHist1.0_1.5} }
 \end{minipage}
 }
 \end{figure}
