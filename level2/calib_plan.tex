@@ -1406,12 +1406,17 @@ star in the field.
 We have determined the attenuation factor from simulations of the Self Calibration process (Section \ref{sec:verification}).   Additionally, Gauss-Markov analysis (show results?) {\bf EXPAND }
 
 Zeropoint errors depend not only on the spatial scale of the zeropoint perturbations, as argued above,
-but also on the magnitude of those perturbations.   This is shown in Figures x - y, which present
+but also on the magnitude of those perturbations.   This is shown in Figures \ref{fig:zp2dhist}, \ref{fig:zpHist0_0.5} and 
+\ref{fig:zpHist1.0_1.5}, which present
 the results of a self calibration simulation which includes {\it only} zeropoint perturbations, without
-color-dependent effects.
-
+color-dependent effects.  As the first of these figures illustrates, the zeropoint error has the shape of a fan
+in (zp, zp-error) space, with the width of the fan increasing as the input zeropoint increases.  The other two
+figures, which are cross sections of the fan at different zeropoint levels, show that the error distribution
+is roughly a gaussian core with fat tails.  When the zeropoint is between 0 and 0.5 mag, the gaussian sigma is only
+1 mmag.  Under extinction conditions near the limit at which we propose to continue survey operations, between
+1 and 1.5 mag, the gaussian core has a sigma of 30 mmag.
 The impact of zeropoint variations on calibration performance as a whole will depend strongly on
-the pdf of the cloud extinction, as shown by Figures x - y.  This dependence derives partly from
+the pdf of the cloud extinction, as these results show.  This dependence derives partly from
 the fact that increasing extinction increases the photometric errors in the measurements of the
 calibration stars.  Our current data supports only a 
 crude measure of this pdf, and there are consequently uncertainties in the overall distribution of
@@ -2791,6 +2796,44 @@ the two extremes of the atmospheric transmission in each filter are shown above.
 
 \clearpage
 
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{SelfcalFigs/zpErrsHist.png}
+\caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation.  The color scale
+shows the log10 of the number of samples at that point.  The periodic behavior of the zeropoint density is an
+artifact of OpSim's treatment of cloud cover.} }
+\label{fig:ZPErrVsZP} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{SelfcalFigs/zp_errs_0_05_w_gaussian.png}
+\caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation.  The color scale
+shows the log10 of the number of samples at that point.  The periodic behavior of the zeropoint density is an
+artifact of OpSim's treatment of cloud cover.} }
+\label{fig:ZPErrVsZP} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{SelfcalFigs/zp_errs_10_15_w_gaussian.png}
+\caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation.  The color scale
+shows the log10 of the number of samples at that point.  The periodic behavior of the zeropoint density is an
+artifact of OpSim's treatment of cloud cover.} }
+\label{fig:ZPErrVsZP} }
+\end{minipage}
+}
+\end{figure}
 
 
 \begin{landscape}
