@@ -1400,10 +1400,12 @@ oceanographic and meteorological communities, and based on the Gauss-Markov theo
 The problem addressed by objective analysis is:  Given a continuous scalar field, measured in a two dimensional domain at a set of 
 points, what is the optimal estimator for values of the field throughout the domain, and what is the expected error of that estimator?
 In our application, the scalar field is the zeropoint, and there are (noisy) measurements of it at the position of each calibration
-star in the field.
+star in the field.  The formalism allows the error to be predicted based on the measurement errors and the structure function
+of the field.  Figure \ref{fig:GaussMarkov} shows an example result using a realistic cloud structure function, with 
+characteristic length scale of 500 meters, which is at the short (and more stressing) end of what we expect.  This development
+has just begun, but it will offer an independent check of the simulation results.  Early results show consistency between
+the two methods.
 
-
-We have determined the attenuation factor from simulations of the Self Calibration process (Section \ref{sec:verification}).   Additionally, Gauss-Markov analysis (show results?) {\bf EXPAND }
 
 Zeropoint errors depend not only on the spatial scale of the zeropoint perturbations, as argued above,
 but also on the magnitude of those perturbations.   This is shown in Figures \ref{fig:zp2dhist}, \ref{fig:zpHist0_0.5} and 
@@ -1415,22 +1417,38 @@ figures, which are cross sections of the fan at different zeropoint levels, show
 is roughly a gaussian core with fat tails.  When the zeropoint is between 0 and 0.5 mag, the gaussian sigma is only
 1 mmag.  Under extinction conditions near the limit at which we propose to continue survey operations, between
 1 and 1.5 mag, the gaussian core has a sigma of 30 mmag.
-The impact of zeropoint variations on calibration performance as a whole will depend strongly on
-the pdf of the cloud extinction, as these results show.  The strength of this dependence derives partly from the fact that
+
+In practice, zeropoint variations are dominated by clouds, with lesser effects described below.
+The impact of these variations on calibration performance as a whole will depend strongly on
+the pdf of the cloud extinction, as the above results show.  The strength of this dependence derives partly from the fact that
 the variance in cloud extinction is roughly proportional to the extinction itself.  Additionally, 
 increasing extinction increases the photometric errors in the measurements of the
-calibration stars.  Our current data on sky conditions at Cerro Pachon supports only a 
-crude measure of this pdf, and there are consequently uncertainties in the overall distribution of
-repeatability errors.
+calibration stars.  Our current estimate for the cloud extinction pdf is based on rather crude data from CTIO, and is shown in Figure
+\ref{fig:CloudyPDF}.  This suggests that the extinction should be less than 0.5 mag approximately 90\% [\bf{CHECK}]
+of the time.  The higher extinction data therefore comfortably falls within the 10\% fraction of the data excludable
+from the repeatability requirement by the SRD.
 
-Perturbations to the zeropoints arise from:
+Other perturbations to the zeropoints arise from:
 \begin{itemize}
-\item{Clouds, and the varying gray averages of extinction from aerosols, water vapor, and ozone}
-\item{Camera gain variation}
-\item{Shutter travel time variation}
-\item{Detector QE variation due to varying focal plane temperature}
+\item{Varying gray averages of extinction from aerosols, water vapor, and ozone.  These are dominated by aerosols, 
+and Figure \ref{fig:CASLEO} suggests that variations of more than 0.1 mag will be restricted to far fewer than 
+10\% of the observations.}
+\item{Camera gain variation.  This is constrained by Camera requirements to be less than 1 mmag rms over a 1 hour
+period, and less than 10 mmag over 12 hours.  Because the gain variations occur at the detector segment level, the
+argument earlier in this section implies that we can correct them to no better than 1 mmag, so this error goes
+directly into the error budget.}
+\item{Shutter travel time variation.  Camera requirements constrain this to 20 mmag, but the effects are over
+large spatial scales, well controlled by self calibration.}
+\item{Detector QE variation due to varying focal plane temperature. These occur over full detectors,
+affect only the y-band, and knowledge of them is constrained by Camera requirements to be better than 0.5 deg K.
+This results in a 1 mmag zeropoint effect. }
 \end{itemize}
 
+In summary, we therefore expect repeatability errors due to zeropoint variations to be at the 1 mmag level for 90\% of the 
+survey observations due to clouds, atmospheric component variations, shutter travel time variations, and long term 
+camera gain variations.  Short term camera gain variations add another 1 mmag to the error budget.
+
+The error budget for repeatability errors, including all of the above effects, is summarized in Table \ref{tab:rpt_error_budget}.
 \subsection{Uniformity Errors}
 The uniformity errors must meet the uniformity requirement in the SRD (Requirement 2 in Section \ref{sec:photoreq}).  These are driven by systematic errors in $Z_b^{obs}$ and $\Delta m_b^{obs}$.  There are several sources:
 \begin{itemize}
@@ -2797,6 +2815,17 @@ the two extremes of the atmospheric transmission in each filter are shown above.
 %\end{figure}
 
 
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{CloudSfFigs/PhotoErrs1.png}
+\caption{ {\small {\bf Gauss-Markov predictions for zeropoint errors from clouds with average extinction
+of 0.8 mag, characteristic scale 500 meters, and averaging length 300 meters.} }
+\label{fig:GaussMarkov} }
+\end{minipage}
+}
+\end{figure}
 
 \clearpage
 
@@ -2856,13 +2885,10 @@ Affected term & Effect &  $u$  & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
 & Focal plane temperature errors & 0 & 0 & 0 & 0 & 0 & 0.2 \\ 
 & {\bf Total} & 6.7 & 2.5 & 0.9 & 0.6 & 1.1 & 2.1 \\ \hline
 $Z_b^{obs}$ & & & & \\
-& Clouds & & &  \\
-& Camera gain variation & & & \\
-& Shutter variation & & & \\
-& Temperature induced QE variations & & & \\
-& Errors in standards & & & \\
-& {\bf Total} & & & \\ \hline
-{\bf Total} & & 7.4 & 3.9 & 3.1 & 3.1 & 3.2 & 3.7 \\ \hline
+& Clouds and cloud-like effects (90\% of obs) & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 \\
+& Camera gain variation (short term) & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 \\
+& {\bf Total} & 1.4 & 1.4 & 1.4 & 1.4 & 1.4 & 1.4 \\ \hline
+{\bf Total} & & 7.5 & 4.1 & 3.5 & 3.4 & 3.5 & 3.9 \\ \hline
 {\bf Design Requirement} & & 7.5 & 5.0 & 5.0 & 5.0 & 7.5 & 7.5 \\ 
 {\bf Min. Requirement} & & 12 & 8.0 & 8.0 & 8.0 & 12 & 12 \\
 \end{tabular}
@@ -2870,19 +2896,6 @@ $Z_b^{obs}$ & & & & \\
 \end{table}
 \end{center}
 \end{landscape}
-
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6.5in]{ZPErrVsZP}
-\caption{ {\small {\bf Zeropoint errors vs zeropoint, from a self calibration simulation.  The color scale
-shows the log10 of the number of samples at that point.  The periodic behavior of the zeropoint density is an
-artifact of OpSim's treatment of cloud cover.} }
-\label{fig:ZPErrVsZP} }
-\end{minipage}
-}
-\end{figure}
 
 \clearpage
 
