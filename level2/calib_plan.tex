@@ -1396,7 +1396,8 @@ This makes it clear that the size of a detector segment is a rough boundary, abo
 while below it they may become quite significant.  In reality, many zeropoint perturbations (such as clouds and focal plane temperature variations) have a continuous spatial power spectrum, and a more sophisticated estimate is required.  
 
 One can place this argument on a firmer mathematical foundation through "objective analysis", a formulation developed by the 
-oceanographic and meteorological communities, and based on the Gauss-Markov theorem (\citep{Bretherton1976}, \citep{McIntosh1990}).
+oceanographic and meteorological communities, and based on the Gauss-Markov theorem (\citep{Bretherton1976}, 
+\citep{Bretherton1980},\citep{McIntosh1990}).
 The problem addressed by objective analysis is:  Given a continuous scalar field, measured in a two dimensional domain at a set of 
 points, what is the optimal estimator for values of the field throughout the domain, and what is the expected error of that estimator?
 In our application, the scalar field is the zeropoint, and there are (noisy) measurements of it at the position of each calibration
@@ -1424,8 +1425,9 @@ the pdf of the cloud extinction, as the above results show.  The strength of thi
 the variance in cloud extinction is roughly proportional to the extinction itself.  Additionally, 
 increasing extinction increases the photometric errors in the measurements of the
 calibration stars.  Our current estimate for the cloud extinction pdf is based on rather crude data from CTIO, and is shown in Figure
-\ref{fig:CloudyPDF}.  This suggests that the extinction should be less than 0.5 mag approximately 90\% [\bf{CHECK}]
-of the time.  The higher extinction data therefore comfortably falls within the 10\% fraction of the data excludable
+\ref{fig:CloudyPDF} for the r filter.  Averaged over all filters and the full survey, this data suggests that the extinction should be 
+less than 0.5 mag for approximately 94\% of the observations.
+The higher extinction data therefore comfortably falls within the 10\% fraction of the data excludable
 from the repeatability requirement by the SRD.
 
 Other perturbations to the zeropoints arise from:
