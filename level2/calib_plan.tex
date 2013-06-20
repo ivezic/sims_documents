@@ -29,11 +29,12 @@
 
 \author{
 R. Lynne Jones\altaffilmark{1}, Tim Axelrod\altaffilmark{2},
-{\v Z}eljko Ivezi{\'c}\altaffilmark{1},   David Burke\altaffilmark{3}, \\
-James G. Bartlett\altaffilmark{4}, 
+{\v Z}eljko Ivezi{\'c}\altaffilmark{1},   David Burke\altaffilmark{3},
+James G. Bartlett\altaffilmark{4}, \\
 Gurvan Bazin\altaffilmark{4},
 Guillaume Blanc\altaffilmark{4},
-Alexandre Boucaud\altaffilmark{4}, 
+Alexandre Boucaud\altaffilmark{4},
+Jean Marc Colley\altaffilmark{4},
 Michel Cr{\'e}z{\'e}\altaffilmark{4}, \\ 
 C{\'e}cile Roucelle\altaffilmark{4}, 
 Abhijit Saha\altaffilmark{5}, 
@@ -747,15 +748,20 @@ curve as a function of position in the focal plane, we will use a
 dome-screen system that is capable of producing narrow-band light 
 over a range of wavelengths, producing a data cube of `narrow-band flat
 fields'.  A similar approach has already been employed at PS-1 (\citep{StubbsTonry2012}; \citep{Tonry2012}), 
-and at DES (\citep{Marshall2013})
-After applying the monochromatic illumination correction 
-(see Section \ref{sec:ic}) and applying the normalization at each wavelength from
-the photodiode monitors (see Section XX),  this data cube
+and at DES (\citep{Marshall2013}).  A series of steps is needed to convert this data cube into
+$S_b^{sys}(\lambda,t)$ at each $x$,$y$ location in the focal plane. 
+
+\begin{itemize}
+\item{Apply the monochromatic illumination correction (see Section \ref{sec:ic})}
+\item{Normalize fluxes across wavelengths using the photodiode monitors}
+\item{Correct for pixel geometry}
+\end{itemize}
+
+Further processing constructs
+a synthetic broadband flat field ('BBF') that will be used to flatten incoming science exposures.
+The broadband flat then
 records (up to an overall normalization constant) $S_b^{sys}(\lambda,t)$ at each $x$,$y$ location in the focal plane. 
-This data cube of narrow-band
-flats is used to construct a synthetic broadband flat field ('BBF') by
-combining the individual narrow-band flats according to a chosen
-spectral energy distribution.  
+ 
 
 
 As discussed in the previous section, the choice of the SED used to construct the broadband flats is largely arbitrary.  It defines a reference SED $f_\nu^{BB}(\lambda)$,
@@ -833,6 +839,8 @@ optical path of the telescope are altered.
 Because the illumination correction is wavelength dependent (highly so near the edges of the filter bandpasses), its effect on photometry is dependent on the SED of the object in question.  Figure \ref{fig:IllumCorrKurucz} shows this effect as a function of both 
 radius in the focal plane and star color, for a set of Kurucz main sequence stars.   The effects are clearly too large to ignore, or they would overwhelm the error budget.   This is discussed further in Section \ref{sec:error_budget}.  It seems likely that the quality 
 of the illumination corrections is currently limiting the photometric accuracy of large surveys, and we expect the LSST treatment of the illumination correction to yield significant improvement.
+
+\subsubsection{Correcting for Pixel Geometry}
 
 \subsection{Measuring the Atmospheric Transmission}
 Next, considering $S^{atm}(\lambda,alt,az,t)$, we will again separate
@@ -943,6 +951,43 @@ simple and well-understood SEDs to minimize confusion with the
 atmospheric extinction. By observing the same grid of stars on
 multiple nights, even if the SEDs are not well determined initially,
 they can be bootstrapped from the many epochs of data. 
+
+\subsection{Estimating SEDs From Colors}
+
+Correcting for the color terms resulting from the difference between
+$\phi_b^{meas}(\lambda,t)$ and $\phi_b^{std}(\lambda)$ requires some
+preliminary measurement of the color of each calibration star (to
+within 0.02 magnitudes).  This means we must either have some prior
+knowledge of the colors of each star (from Gaia, for example) or we
+must have some other method for measuring colors in the $ugi$ bands
+relevant to determining metallicity and the color corrections detailed
+in Section~\ref{sec:phi}, presumably by measuring the magnitudes of
+these stars in photometric data.  Without
+this requirement, we could just combine all photometric and
+non-photometric data in the self-calibration routine, leaving the
+self-calibration solver to determine the appropriate $\delta z_j$ to
+compensate for any non-photometric images.
+
+Assuming that we must first identify and use photometric data to
+determine the colors of each object, this could proceed as follows. 
+Identify all observations which were obtained in relatively
+photometric conditions by searching for images where the average
+scatter in magnitude measured for each source was less than some
+threshhold (say $<0.05$ magnitudes). Using these images and standard
+stars in these images, measure a preliminary color for each
+object. With this preliminary color, make a correction for $\Delta
+m_b^{meas}$ and run the self-calibration solver for this (photometric) subset of the
+data. Iterate the results of the self-calibration solver to improve
+the color determination for each star, until the color measurement
+converges to within 0.02 magnitudes. 
+
+At this point, we have colors accurate enough to apply a $\Delta
+m_b^{meas}$ correction sufficient to run self-calibration on all
+images, including the non-photometric data.  There will be some data
+which is not calibrateable, due to a large amount of cloud
+extinction; these images will be identifiable by the low
+signal-to-noise ratio of the stars in the image. 
+
 \subsection{Finding the Zero Points: Self Calibration}
 In order to correct for the more rapid gray-scale variations in the
 relative normalization of $S^{atm}(alt,az,t)$ due principally to cloud extinction,
@@ -1058,42 +1103,7 @@ equivalent to the natural magnitudes. Accurately calibrating the internal
 magnitudes to an external scale is discussed in the next section, 
 Section~\ref{sec:calib_external}. 
 
-\subsubsection{Photometric vs. Non-photometric data}
 
-Correcting for the color terms resulting from the difference between
-$\phi_b^{meas}(\lambda,t)$ and $\phi_b^{std}(\lambda)$ requires some
-preliminary measurement of the color of each calibration star (to
-within 0.02 magnitudes).  This means we must either have some prior
-knowledge of the colors of each star (from Gaia, for example) or we
-must have some other method for measuring colors in the $ugi$ bands
-relevant to determining metallicity and the color corrections detailed
-in Section~\ref{sec:phi}, presumably by measuring the magnitudes of
-these stars in photometric data.  Without
-this requirement, we could just combine all photometric and
-non-photometric data in the self-calibration routine, leaving the
-self-calibration solver to determine the appropriate $\delta z_j$ to
-compensate for any non-photometric images.
-
-Assuming that we must first identify and use photometric data to
-determine the colors of each object, this could proceed as follows. 
-Identify all observations which were obtained in relatively
-photometric conditions by searching for images where the average
-scatter in magnitude measured for each source was less than some
-threshhold (say $<0.05$ magnitudes). Using these images and standard
-stars in these images, measure a preliminary color for each
-object. With this preliminary color, make a correction for $\Delta
-m_b^{meas}$ and run the self-calibration solver for this (photometric) subset of the
-data. Iterate the results of the self-calibration solver to improve
-the color determination for each star, until the color measurement
-converges to within 0.02 magnitudes. 
-
-At this point, we have colors accurate enough to apply a $\Delta
-m_b^{meas}$ correction sufficient to run self-calibration on all
-images, including the non-photometric data.  There will be some data
-which is not calibrateable, due to a large amount of cloud
-extinction; these images will be identifiable by the low
-%signal-to-noise ratio of the stars in the image. 
-{\bf END}
 
 \subsection{Calibration Operations}
 The sequence for photometric calibration is then:
