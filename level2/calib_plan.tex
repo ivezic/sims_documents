@@ -36,6 +36,7 @@ Guillaume Blanc\altaffilmark{4},
 Alexandre Boucaud\altaffilmark{4},
 Jean Marc Colley\altaffilmark{4},
 Michel Cr{\'e}z{\'e}\altaffilmark{4}, \\ 
+Mario Juric\altaffilmark{8},
 C{\'e}cile Roucelle\altaffilmark{4}, 
 Abhijit Saha\altaffilmark{5}, 
 J. Allyn Smith\altaffilmark{7}
@@ -52,6 +53,8 @@ Docushare-8123, --/--/-- \\
 \altaffiltext{5}{NOAO}
 \altaffiltext{6}{Princeton University}
 \altaffiltext{7}{Austin Peay State University}
+\altaffiltext{8}{LSST Corp}
+
 % Gurvan Bazin
 % 1- Department of Physics, Ludwig-Maximilians-Universit\"at, Scheinerstr. 1, 81679 Munich, Germany
 %2- Excellence Cluster Universe, Boltzmannstr. 2, 85748 Garching, Germany
@@ -645,9 +648,86 @@ $S^{atm}(\lambda,alt,az,t)$ and $S_b^{sys}(\lambda,x,y,t)$.
 Let us first consider measurement of the variations in the hardware
 throughput curve, $S_b^{sys}(\lambda,x,y,t)$. 
 
-\subsection{Accounting For Finite PSF Width}
+
+
+\subsection{Measuring the Hardware Response}
+To measure the wavelength-dependent hardware response
+curve as a function of position in the focal plane, we will use a
+dome-screen system that is capable of producing narrow-band light 
+over a range of wavelengths, producing a data cube of `narrow-band flat
+fields'.  A similar approach has already been employed at PS-1 (\citep{StubbsTonry2012}; \citep{Tonry2012}), 
+and at DES (\citep{Marshall2013}).  A series of steps is needed to convert this data cube into
+$S_b^{sys}(\lambda,t)$ at each $x$,$y$ location in the focal plane:
+
+\begin{itemize}
+\item{Determine and apply the monochromatic illumination correction (see Section \ref{sec:ic})}
+\item{Normalize fluxes across wavelengths using the photodiode monitors}
+\item{Correct for pixel geometry}
+\end{itemize}
+
+The resulting data cube then
+records (up to an overall normalization constant) $S_b^{sys}(\lambda,t)$ at each $x$,$y$ location in the focal plane. 
+Further processing constructs a synthetic broadband flat field ('BBF') that will be used to flatten incoming science exposures.
+
+We discuss each of these in turn.
+
+
+\subsubsection{Determining the Illumination Correction}
+\label{sec:ic}
+As mentioned above, before dome flats (either
+broadband or narrow-band) can be used to measure
+$S_b^{sys}$, they must be modified to correctly produce {\it
+photometrically} uniform measurements of a collimated source 
+across the field of view. This correction is called the
+`illumination correction'.  The illumination correction must correct
+the observed flat fields for effects resulting from non-uniform
+illumination of the dome screen, for ghosting caused by internal
+reflections in the camera, and for the presence of stray or scattered
+light arriving in the focal plane on paths other than the direct
+image path (such as light bouncing from the dome floor or glinting
+off a filter holder). Figure \ref{fig:FRED360nm} gives a perspective
+on the difference between the direct, total, and ghost flatfield 
+illumination from a realistic model of the LSST telescope, camera,
+and domescreen illumination system.
+
+The illumination correction is difficult to measure directly.  To
+do so would require a collimated light source with diameter small compared 
+with the telescope pupil that is able to scan in pupil position, angle,
+and wavelength.  Aside from the engineering challenges in producing such
+a light source in the dome, the resulting 5-dimensional data cube would require
+an inordinate amount of time to collect, and we have deemed this approach 
+impractical.  Instead, we plan to combine data from several paths to generate
+an illumination correction which is consistent with all of them:
+
+\begin{itemize}
+\item Detailed monte carlo optics models, such as FRED
+\item {Laboratory measurements of the as-built camera with the CCOB (see Appendix X).  This provides
+the detailed data cube envisioned above, but only for the camera in isolation.  This is sufficient to
+characterize ghosts, but not scattered light in the full system.}
+\item {Raster scans of star fields in photometric conditions.  The star fields will be chosen
+to be dense, without compromising photometry due to crowding, and to contain a wide range of colors.}
+\item {Second order corrections from running self calibration.  Self calibration is particularly capable
+at determining corrections which are position dependent but wavelength independent, such as 
+arise from nonuniform illumination of the dome screen (see Figure \ref{fig:SelfCalIllumCorr}).}
+\end{itemize}
+
+This process will consume significant amounts of time in the lab, time on the sky, and time in analysis.  
+Fortunately, the illumination correction is expected to be stable with time and will be remeasured only when components in the
+optical path of the telescope are altered.
+
+Because the illumination correction is wavelength dependent (highly so near the edges of the filter bandpasses), its effect on photometry is dependent on the SED of the object in question.  Figure \ref{fig:IllumCorrKurucz} shows this effect as a function of both 
+radius in the focal plane and star color, for a set of Kurucz main sequence stars.   The effects are clearly too large to ignore, or they would overwhelm the error budget.   This is discussed further in Section \ref{sec:error_budget}.  It seems likely that the quality 
+of the illumination corrections is currently limiting the photometric accuracy of large surveys, and we expect the LSST treatment of the illumination correction to yield significant improvement.
+
+\subsubsection{Normalize Fluxes Across Wavelengths}
+
+\subsubsection{Correcting for Pixel Geometry}
+
+
+
+\subsubsection{Accounting For Finite PSF Width}
 \label{sec:pixelization}
-The discussion in Section \ref{sec:photons2counts} implicitly assumed that the flux from an object is sampled at a single point in the 
+Before we can discuss construction of the BBF, we must take a brief detour and extend the discussion in Section \ref{sec:photons2counts}.  There, we implicitly assumed that the flux from an object is sampled at a single point in the 
 focal plane.  We must now extend the formalism to account for the fact that the system has a PSF with finite width, 
 so that the flux from an object is spread
 over multiple pixels, each of which may differ slightly in response from its neighbors.   Let us use $i$ as an index over the
@@ -742,28 +822,7 @@ m_b^{nat} =  m_b^{inst} + Z_p - 2.5 log_{10} \left( {Q_b^{BB}}  \over {Q_b^{norm
 Note that the correction term must be applied in the "SED Correction" block of Figure \ref{fig:overview_flowchart1}.  The 
 required information to compute it is not available earlier.  We now turn to the actual measurement of $q_{b,i}$, and the construction of $Q_{b,i}^{BB}$
 
-\subsection{Measuring the Hardware Response}
-To measure the wavelength-dependent hardware response
-curve as a function of position in the focal plane, we will use a
-dome-screen system that is capable of producing narrow-band light 
-over a range of wavelengths, producing a data cube of `narrow-band flat
-fields'.  A similar approach has already been employed at PS-1 (\citep{StubbsTonry2012}; \citep{Tonry2012}), 
-and at DES (\citep{Marshall2013}).  A series of steps is needed to convert this data cube into
-$S_b^{sys}(\lambda,t)$ at each $x$,$y$ location in the focal plane. 
-
-\begin{itemize}
-\item{Apply the monochromatic illumination correction (see Section \ref{sec:ic})}
-\item{Normalize fluxes across wavelengths using the photodiode monitors}
-\item{Correct for pixel geometry}
-\end{itemize}
-
-Further processing constructs
-a synthetic broadband flat field ('BBF') that will be used to flatten incoming science exposures.
-The broadband flat then
-records (up to an overall normalization constant) $S_b^{sys}(\lambda,t)$ at each $x$,$y$ location in the focal plane. 
- 
-
-
+\subsubsection{Constructing the Broadband Flat}
 As discussed in the previous section, the choice of the SED used to construct the broadband flats is largely arbitrary.  It defines a reference SED $f_\nu^{BB}(\lambda)$,
 which must later be corrected for as shown in equation \ref{eqn:flatCorrection}
 when both the true $\phi_b^{obs}(\lambda)$ and the actual object SED, $f_\nu(\lambda)$ are known.     
@@ -783,66 +842,18 @@ to have unaccounted for impact on calibration accuracy, however, because the abo
 propagation of errors.  We can readily change the prescription during construction or commissioning.
 
 
-Generation of the entire data cube of
-narrow-band flats is too time-consuming to complete on a daily
-basis. Instead, the full narrow-band flat field scan will only be
+Generation of the entire data cube of narrow-band flats is too time-consuming to complete on a daily
+basis (the domescreen requirements allow 4 hours per filter, so 24 hours per set).
+Instead, the full narrow-band flat field scan will only be
 repeated on a time interval adequate for measurement of
 the more slowly variable components of $S_b^{sys}(\lambda,t)$, approximately
 monthly (but to be determined during commissioning).   Since the system response can change 
 on shorter timescales, principally due to a changing population of dust particles on optical surfaces, we correct the FSF
-nightly by multiplying by the ratio of two broad-band flats, one at the current epoch and one at the 
+nightly by multiplying by the ratio of two flats obtained with the broadband light source, one at the current epoch and one at the 
 reference epoch when the narrow-band flats were acquired.
 
-\subsubsection{Determining the Illumination Correction}
-\label{sec:ic}
-As mentioned above, before dome flats (either
-broadband or narrow-band) can be used to measure
-$S_b^{sys}$, they must be modified to correctly produce {\it
-photometrically} uniform measurements of a collimated source 
-across the field of view. This correction is called the
-`illumination correction'.  The illumination correction must correct
-the observed flat fields for effects resulting from non-uniform
-illumination of the dome screen, for ghosting caused by internal
-reflections in the camera, and for the presence of stray or scattered
-light arriving in the focal plane on paths other than the direct
-image path (such as light bouncing from the dome floor or glinting
-off a filter holder). Figure \ref{fig:FRED360nm} gives a perspective
-on the difference between the direct, total, and ghost flatfield 
-illumination from a realistic model of the LSST telescope, camera,
-and domescreen illumination system.
-
-The illumination correction is difficult to measure directly.  To
-do so would require a collimated light source with diameter small compared 
-with the telescope pupil that is able to scan in pupil position, angle,
-and wavelength.  Aside from the engineering challenges in producing such
-a light source in the dome, the resulting 5-dimensional data cube would require
-an inordinate amount of time to collect, and we have deemed this approach 
-impractical.  Instead, we plan to combine data from several paths to generate
-an illumination correction which is consistent with all of them:
-
-\begin{itemize}
-\item Detailed monte carlo optics models, such as FRED
-\item {Laboratory measurements of the as-built camera with the CCOB (see Appendix X).  This provides
-the detailed data cube envisioned above, but only for the camera in isolation.  This is sufficient to
-characterize ghosts, but not scattered light in the full system.}
-\item {Raster scans of star fields in photometric conditions.  The star fields will be chosen
-to be dense, without compromising photometry due to crowding, and to contain a wide range of colors.}
-\item {Second order corrections from running self calibration.  Self calibration is particularly capable
-at determining corrections which are position dependent but wavelength independent, such as 
-arise from nonuniform illumination of the dome screen (see Figure \ref{fig:SelfCalIllumCorr}).}
-\end{itemize}
-
-This process will consume significant amounts of time in the lab, time on the sky, and time in analysis.  
-Fortunately, the illumination correction is expected to be stable with time and will be remeasured only when components in the
-optical path of the telescope are altered.
-
-Because the illumination correction is wavelength dependent (highly so near the edges of the filter bandpasses), its effect on photometry is dependent on the SED of the object in question.  Figure \ref{fig:IllumCorrKurucz} shows this effect as a function of both 
-radius in the focal plane and star color, for a set of Kurucz main sequence stars.   The effects are clearly too large to ignore, or they would overwhelm the error budget.   This is discussed further in Section \ref{sec:error_budget}.  It seems likely that the quality 
-of the illumination corrections is currently limiting the photometric accuracy of large surveys, and we expect the LSST treatment of the illumination correction to yield significant improvement.
-
-\subsubsection{Correcting for Pixel Geometry}
-
 \subsection{Measuring the Atmospheric Transmission}
+\label{sec:atmmeas}
 Next, considering $S^{atm}(\lambda,alt,az,t)$, we will again separate
 the measurement of the shape of the atmospheric response and the
 measurement of normalization of the transmission.  The currently
@@ -1263,31 +1274,37 @@ are currently unsure of the precision that can be achieved.
 \label{sec:calib_hardware}
 
 \subsection{Flat Field Illumination System}
-The dome screen projector is an array of projectors mounted in the
-dome of the LSST enclosure, specially designed to provide very uniform
-illumination to the LSST \'{e}tendue (the incoming aperture of the
-telescope, taking into consideration the desired angle of the incoming
-light) while minimizing any light straying beyond the \'{e}tendue. In
-addition, the dome screen will be able to project both broadband and
-tunable narrow-band (essentially monochromatic) light sources,
-providing both broadband (broadband) and narrow-band flat fielding
-capabilities.  
-
+The flat field illumination system is designed to illuminate the dome screen with a uniform flood of either 
+broadband or tunable narrowband light.  A precision photodiode measures the intensity of the illumination.  
+The requirements for the flat field illumination system are in Sebag and Krabbendam (\citep{LSE-60}).  The overall
+goals are very similar to the DECal system used for the Dark Energy Survey (\citep{Marshall2013}), but due to the 
+larger telescope aperture, and more compact dome, is designed somewhat differently.   The overall design is shown
+in Figure \ref{fig:GresslerTBD}.
 
 \subsection{Auxiliary Telescope}
 
-reference figure of observing pattern from Burke 2010
+The role of the auxiliary telescope in the calibration process was described in Section \ref{sec:atmmeas}.
+The requirements for the auxiliary telescope are in Sebag and Krabbendam (\citep{LSE-60}).  We will use
+the refurbished Calypso telescope, which will be moved from Kitt Peak to Cerro Pachon.  It has a 1.2 meter
+diameter F/18 primary mirror, with instruments at the Nasmyth focus.  Figure \ref{fig:CalypsoSite}
+shows the siting of the auxiliary telescope in relation to LSST, and Figure \ref{fig:auxtel} shows the auxiliary
+telescope itself.
 
-
-
+The auxiliary telescope will be instrumented with a spectrograph covering the wavelength range of 400 to 1125 nm at
+a resolution of approximately 400.  Exposure times for typical atmospheric probe stars, to 
+obtain $SNR \approx 200$ are estimated to be between 60 and 250 sec.
+Its operation will be automated, and under the control of the LSST Scheduler.
 Generally, the auxiliary telescope will {\it not} observe stars along the
-same line of sight as LSST, as the values for
+same line of sight as LSST, for two reasons:  First, it requires exposure times roughly
+ten times longer than LSST, so it would rapidly get left behind.  Second, the values for
 $C_{mol/\ozone/\water}$ and $\tau^{aerosol}$ are better
 constrained by observing a wide variety of airmasses and locations on
 the sky that cover a wide range in N/S/E/W directions, as well as utilizing
 repeat observations of the same star throughout each night, and then
 fitting the spectroscopic data from the entire night. This improves the 
 signal to noise for the atmospheric absorption profiles generated for each science observation.
+
+
 
 
 
@@ -2962,6 +2979,20 @@ red squares.
 }
 \end{figure}
 
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{HardwareFigs/CalypsoSite}
+\caption{{\small
+The auxiliary telescope is sited adjacent to LSST
+}}
+\label{fig:CalypsoSite}
+\end{minipage}
+}
+
+\end{figure}
 \begin{figure}
 \centering
 \centering
