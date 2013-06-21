@@ -1481,12 +1481,17 @@ The error budget for repeatability errors, including all of the above effects, i
 \subsection{Uniformity Errors}
 The uniformity errors must meet the uniformity requirement in the SRD (Requirement 2 in Section \ref{sec:photoreq}).  These are driven by systematic errors in $Z_b^{obs}$ and $\Delta m_b^{obs}$.  There are several sources:
 \begin{itemize}
-\item{errors in standards}
-\item{systematic variation of calibration star properties across the sky, which modulate imperfect correction of color terms}
-\item{unmodeled systematic variations in the atmosphere}
+\item{Errors in standards.  Because standards are relatively sparse on the sky (Section \ref{sec:calib_external}}), an error in the flux of a single standard can create significant
+nonuniformity in the overall calibration}
+\item{Systematic variation of calibration star properties across the sky, which modulate imperfect correction of color terms}
+\item{Unmodelled systematic variations in the atmosphere}
+\item{Unmodelled variation of system bandpass as a function of focal plane position, which can beat
+against the sparse dither pattern of the survey}
 \end{itemize}
 
-
+For reasons not yet understood, the least squares system solved by self calibration does not strongly
+damp errors with long spatial wavelengths.  These error modes can be driven to significant levels by
+systematic errors on focalplane scales when these are sampled by the survey's dither pattern.
 
 \section{Testing and Verification}
 \label{sec:verification}
