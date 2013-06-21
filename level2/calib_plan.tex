@@ -1329,6 +1329,7 @@ signal to noise for the atmospheric absorption profiles generated for each scien
 Many sources of errors feed into the calibration process.  It is a challenging task to identify and quantify all of them, and we have not yet completely done so.  We present our current estimates here, but they are subject to change as our analysis improves. We first
 discuss repeatability errors, and then uniformity errors.   The band-to-band, and absolute calibration errors flow directly from the characteristics of the standard stars, and have already been discussed in Section \ref{sec:calib_external}.
 \subsection{Repeatability Errors}
+\label{sec:rpterrs}
 The repeatability error in $m_b^{std}$ for individual calibration stars must meet the requirement in the SRD (Requirement 1 in Section \ref{sec:photoreq}).  The contributions to this error are best discussed in the context of Figure \ref{fig:overview_flowchart1}.  If we recall that
 \begin{equation}
 m_b^{std} = m_b^{inst} - \Delta m_b^{obs} + Z_b^{obs}
@@ -1478,20 +1479,46 @@ survey observations due to clouds, atmospheric component variations, shutter tra
 camera gain variations.  Short term camera gain variations add another 1 mmag to the error budget.
 
 The error budget for repeatability errors, including all of the above effects, is summarized in Table \ref{tab:rpt_error_budget}.
+
 \subsection{Uniformity Errors}
-The uniformity errors must meet the uniformity requirement in the SRD (Requirement 2 in Section \ref{sec:photoreq}).  These are driven by systematic errors in $Z_b^{obs}$ and $\Delta m_b^{obs}$.  There are several sources:
+Uniformity errors must meet the uniformity requirement in the SRD (Requirement 2 in Section \ref{sec:photoreq}).  Nonuniformity 
+can arise from systematic errors in either $Z_b^{obs}$, $\Delta m_b^{obs}$, or both.  
+These in turn tend to arise from the combination of two factors: systematic patterns across the sky in stellar populations, 
+and the way they are observed by the survey (sky systematics);  
+incompletely modelled systematic
+variation of the system bandpass with respect to focalplane position and/or color (system systematics).
+
+There are several sources of sky systematics:
 \begin{itemize}
 \item{Errors in standards.  Because standards are relatively sparse on the sky (Section \ref{sec:calib_external}}), an error in the flux of a single standard can create significant
-nonuniformity in the overall calibration}
-\item{Systematic variation of calibration star properties across the sky, which modulate imperfect correction of color terms}
-\item{Unmodelled systematic variations in the atmosphere}
+nonuniformity in the overall calibration in the area of the sky which is near to it.}
+\item{Systematic variation of calibration star properties across the sky, in color or in more subtle effects on the SEDs, for
+example from interstellar reddening.}
+\item{Unmodelled systematic variations in the atmosphere. These can include persistent patterns in cloud extinction or 
+wavelength-dependent atmospheric components, such as aerosols.  These are especially pernicious when they exhibit a N-S
+dependence.}
+\end{itemize}
+
+Two examples of sky systematics are shown in Figures \ref{fig:RA_Dec_radius} and \ref{fig:RA_Dec_Zp}.  In the first of
+these, the survey's dither pattern leaves intact a pattern of varying radius on the focalplane.   In the second, there
+is systematic variation over the sky of cloud extinction (likely unrealistic).
+
+
+Turning to system systemaics, we discussed many causes for varying system bandbass in Section \ref{sec:rpterrs}, and several of these can act as the second factor in generating nonuniformity:
+
+\begin{itemize}
 \item{Unmodelled variation of system bandpass as a function of focal plane position, which can beat
 against the sparse dither pattern of the survey}
 \end{itemize}
 
-For reasons not yet understood, the least squares system solved by self calibration does not strongly
-damp errors with long spatial wavelengths.  These error modes can be driven to significant levels by
-systematic errors on focalplane scales when these are sampled by the survey's dither pattern.
+
+For reasons not yet fully understood, the least squares system solved by self calibration mixes spatial modes of 
+different scales.  In particular, input errors with focalplane scale can drive output errors with much larger
+spatial scales.  Further, modes with large spatial scales tend to be poorly damped, so small amplitude errors on
+focalplane scales can sometimes result in long wavelength error modes with larger amplitude.
+
+We do not at present have the analytical tools to usefully predict these error processes.  We are forced to rely
+on the results of simulations, as discussed in the following section.
 
 \section{Testing and Verification}
 \label{sec:verification}
@@ -1691,7 +1718,20 @@ significantly poorer than we would expect from our
 error analysis, and show clear evidence for systematic errors that are not understood.
 Before turning to more specific risks, we first address this general concern.
 
-One mitigation that we will explore involves a modification of the overall calibration process.  As presented in Sections x and y, the current design cleanly separates compensation for changing system
+While the similarities between calibration for LSST, PS-1, and DES are strong, LSST will nonetheless incorporate
+some improvements:
+
+\begin{itemize}
+\end{itemize}
+
+We are confident that these improvements will go a significant way to better control of the systematics.  If it turns
+out that our confidence is misplaced, we are pursuing a number of mitigation strategies that will further improve
+performance.
+
+One mitigation that we will explore is a more rigorous treatment of finite PSF effects, along the lines of equation 
+\ref{eqn:xx}.
+
+A second mitigation involves a modification of the overall calibration process.  As presented in Sections x and y, the current design cleanly separates compensation for changing system
 bandpass shape (performed in SED Correction \ref{fig:overview_flowchart1}), and for changing zeropoints
 (performed in Self Calibration).  The SED Correction process is based completely on forward modeling,
 in which the effect of some wavelength-dependent perturbation (eg change in atmospheric aerosols) on
@@ -1703,6 +1743,9 @@ wavelength-dependent effects as well.
 We have tested a first step in this direction by incorporating
 a parameterized model of the wavelength-dependent illumination into Self Calibration.  Initial 
 results have not been promising, but this is far from invalidating the overall approach.
+
+Finally, it is clear that systematic errors that affect the uniformity of calibration tie in to the overall
+survey strategy, and in particular its dithering pattern.
 
 A further risk is clearly that our overall conclusion about the performance of the calibration process is based largely on
 simulation tools.  These tools require significant further development, and completion of a validation process.
@@ -2903,6 +2946,28 @@ $Z_b^{obs}$ & & & & \\
 \end{table}
 \end{center}
 \end{landscape}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{SelfcalFigs/RA_Dec_radius}
+\caption{ {\small {\bf Pattern of focal plane radius across sky} }
+\label{fig:RA_Dec_radius} }
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{SelfcalFigs/RA_Dec_Zp}
+\caption{ {\small {\bf Pattern of cloud zeropoints across sky} }
+\label{fig:RA_Dec_Zp} }
+\end{minipage}
+}
+\end{figure}
 
 \clearpage
 
