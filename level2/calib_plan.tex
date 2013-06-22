@@ -169,36 +169,43 @@ taking to mitigate them.
 
 The LSST Science Requirements Document (SRD) provides a set of
 requirements on the annual Data Release (Level 2) photometry.  These
-requirements are extended in the XXX (OSS) to cover aspects which are
-too detailed for the SRD.   based on
-measurements of bright, unresolved, isolated, non-variable objects
+requirements are extended in the LSST System Requirements (LSR),
+the Observatory System Specifications (OSS), and the individual
+subsystem requirements documents, to cover aspects which are
+too detailed for the SRD.  In this section we consider only 
+requirements from the SRD.  Calibration requirements from the LSR
+and below are discussed further in Section \ref{sec:error_budget} on the 
+calibration error budget.
+
+The SRD requirements are based on
+measurements of bright, unresolved, isolated, non-variable main-sequence stars
 from individual LSST visits. 
-{\bf TODO - address what these requirements actually apply to. MS stars vs other SEDs and reference App C. Also be explicit that calibration is based on objects with well-known SEDs - i.e. MS stars. }
-Bright implies that the
+In this context, ``bright'' implies that the
 measurement of the star's brightness is not dominated by photon
 statistics, approximately 1-4 magnitudes fainter than the saturation
-limit in a given filter. Isolated implies that the star can be
-successfully de-blended from background galaxies and other
-stars. Non-variable objects are intrinsically not variable; these will
+limit in a given filter. ``Isolated'' implies that the star's
+photometry is not significantly affected by nearby galaxies or stars. 
+``Non-variable'' objects are astrophysically non-variable at levels
+well below calibration requirements (1 mmag or less); these will
 be identified in an iterative fashion from the many epochs of LSST
-observations. The SRD specifications are: 
+observations.  The ``main-sequence'' restriction derives from the need
+for accurate knowledge of the SEDs of calibration objects, given
+only their multi-band photometry.  Calibration of objects with non-MS
+SEDs is discussed in Appendix \ref{sec:photo_better}
+
+The SRD specifications are: 
 \begin{enumerate}
 \item{{\bf Repeatability:} the median value of the photometric scatter
 for each star (the rms of calibrated magnitude measurements around the
 mean calibrated magnitude) shall not exceed 5 millimags in $gri$, 7.5
-millimags in $uzy$ for bright, unresolved, isolated, non-variable
-objects. No more than 10\% of these objects should have a photometric
+millimags in $uzy$. No more than 10\% of these objects should have a photometric
 scatter larger than 15 mmag in $gri$, 22.5 mmag in $uzy$.  This
-specifies the distribution of photometric errors ($\sigma$) and
-constrains both the repeatability of extracting counts from images and
-the ability to monitor (or model) the changes in the system
-response. It could be thought of as requiring the photometry
-of a single source to be consistent over
-time. \label{repeatability_req}}
+requirement sets the level above which we can reliably detect intrinsic
+variability in a single source. \label{repeatability_req}}
+
 \item{{\bf Uniformity:} the rms of the internal photometric zeropoint
-error (for each visit) shall not exceed 10 millimags in $grizy$, 20 millimags in $uzy$,
-where the zeropoint for each visit is determined using bright, unresolved, isolated, non-variable
-sources. No more than 10\% of these sources should be more than 15
+error (for each visit) shall not exceed 10 millimags in $grizy$, 20 millimags in $uzy$. 
+No more than 10\% of these sources can be more than 15
 mmag in $gri$ or 22.5 mmag in $uzy$ from the mean internal zeropoint.
 This places a constraint on the stability of the photometric system
 across the sky as well as an upper limit on various systematic
@@ -207,26 +214,24 @@ varying stellar populations (or colors). This makes the photometry of
 many sources comparable over the entire sky, and when combined with
 the previous requirement, creates a stable photometric system across
 the sky and over time, in a single filter. \label{uniformity_req}}
+
 \item{{\bf Band-to-band photometric calibration:} The absolute
 band-to-band zeropoint calibration for main sequence stars must be
 known with an rms accuracy of 5 millimags for any color not involving $u$
 band, 10 millimags for colors constructed with $u$ band
-photometry. This places an upper limit on the systematic error in
-the measurement of the system throughput as a function of
-wavelength. This requirement ties photometric measurements in
-different filters together, enabling precise measurement of colors. 
+photometry. This requirement ties photometric measurements in
+different filters together, enabling precise measurement of colors, and
+allows LSST photometry to be compared with that from other optical telescopes, and
+with astrophysical models.
 \label{color_req}}
+
 \item{{\bf Absolute photometric calibration:} The LSST photometric
 system must transform to an external physical scale ({\it e.g.} AB
-mags) with an rms accuracy of 10 millimags. This requirement not only
-ties LSST internal photometry to photometry obtained from other
-telescopes, using other photometric systems, but also ties LSST
-internal photometry to a real physical scale. This places a constraint
-on the upper limit of the systematic error in the measurement of the
-total system throughput. This final step enables LSST photometry to be
-compared directly to data from other telescopes or to models ({\it
-e.g.} such as determining the albedo of an asteroid with a known
-diameter). \label{abs_req}}
+mags) with an rms accuracy of 10 millimags.  This is essential for
+comparing with photometry from other wavelength regions, such as IR
+or UV.
+
+\label{abs_req}}
 \end{enumerate}
 
 Requirements \ref{repeatability_req} and \ref{uniformity_req} must be
@@ -242,14 +247,13 @@ system.  Performance of the LSST system regarding requirement
 the calibrated magnitude measurements. Verification of requirement
 \ref{uniformity_req} is more complicated; in a simulated system it is
 simple to compare the (simulated, thus known) true magnitudes of the
-stars to the best-fit magnitudes produced after calibration. {\bf TODO forward reference new section on verification - Tim to write} 
+stars to the best-fit magnitudes produced after calibration. 
 In operations, this will be verified using a combination of simulations,
 comparisons to known standards, and evaluation of science outputs such
 as stellar locus diagrams. These last two tests are also relevant to
 verifying the final two requirements, \ref{color_req} and
-\ref{abs_req}.
-
-{\bf TODO - Lynne (or someone) to verify consistency with new SRD reqs, *after* updating rest of doc and seeing effect of including new SEDs in SRD requirements. Plus need update of SRD to verify}. 
+\ref{abs_req}.  These issues are discussed further in Sections 
+\ref{sec:error_budget} and \ref{sec:verification}
 
 
 \section{The Photometric Calibration Process}
@@ -3116,7 +3120,7 @@ The auxiliary telescope
 \begin{minipage}{6.5in}
 \includegraphics[width=6in]{HardwareFigs/DomeScreenOLD}
 \caption{{\small
-The flat field illumination system
+The flat field illumination system (PLACEHOLDER)
 }}
 \label{fig:domescreen}
 \end{minipage}
