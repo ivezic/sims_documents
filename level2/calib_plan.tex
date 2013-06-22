@@ -1490,7 +1490,7 @@ variation of the system bandpass with respect to focalplane position and/or colo
 
 There are several sources of sky systematics:
 \begin{itemize}
-\item{Errors in standards.  Because standards are relatively sparse on the sky (Section \ref{sec:calib_external}}), an error in the flux of a single standard can create significant
+\item{Errors in standards.  Because standards are relatively sparse on the sky (Section \ref{sec:calib_external}), an error in the flux of a single standard can create significant
 nonuniformity in the overall calibration in the area of the sky which is near to it.}
 \item{Systematic variation of calibration star properties across the sky, in color or in more subtle effects on the SEDs, for
 example from interstellar reddening.}
@@ -1531,7 +1531,7 @@ is dependent on understanding and controlling a large number of small perturbati
 
 One of the final steps in the LSST calibration process is running self-calibration, solving for a large number of stellar magnitudes and observation zeropoints.  The accuracy and precision of the self-calibration procedure has complicated dependencies on various sources of noise as well as the overall observing strategy which determines how well different regions of sky can be tied together.  We have undertaken a serries of simulations to test the validity of the LSST self-calibration process.
 
-To simulate self-calibration, we require a catalog of reallistic LSST observations of bright stars.  We generate this catalog by combining Galfast and Opsim.  The Galfast code generates a realistic model of the Milky Way stellar populations, matching the observed distributions from SDSS.  The LSST Opsim can then be used to generate observations of the stars in the Galfast model.  For each Opsim pointing, we generate a list of observed stars along with an observed magnitude that includes atmospheric and hardware effects.  
+To simulate self-calibration, we require a catalog of realistic LSST observations of bright stars.  We generate this catalog by combining Galfast and Opsim.  The Galfast code generates a realistic model of the Milky Way stellar populations, matching the observed distributions from SDSS.  The LSST Opsim can then be used to generate observations of the stars in the Galfast model.  For each Opsim pointing, we generate a list of observed stars along with an observed magnitude that includes atmospheric and hardware effects.  
 
 An example self-calibration simulation is shown in Figure~\ref{fig:selfcal_fiducial}.  This simulates the first two years of LSST observations in $r$-band, with 1.3 million stars distributed fairly uniformily across the sky.  The observed stellar magnitudes include offsets for cloud extinction, noise based on the Opsim 5$\sigma$-limiting depth, errors due to ghosting and illumination corrections, and errors based on variations in the filter throughput and placement.  The results are promising, showing we easily meet the SRD unifomity requirement, and and very close to meeting the repeatability requirement.  The detailed input parameters of this simulation are listed in \S\ref{sec:siminput}.
 
@@ -1712,24 +1712,31 @@ The error budget presented in Section \ref{sec:error_budget}, and the simulation
 LSST will meet SRD requirements for calibration, but with small margin.   There is clearly a risk
 that once commissioning or survey operations begin, an unanticipated source of error will arise, or
 that known error sources will have been underestimated.
-The calibration process that we have designed is very similar to those of PS-1 and DES, as previously mentioned, though with some significant improvements.  It is therefore
+The calibration process that we have designed is very similar to those of PS-1 and DES, as previously mentioned.  It is therefore
 cause for some concern that the PS-1 results reported in \citep{Tonry2012} are 
 significantly poorer than we would expect from our
 error analysis, and show clear evidence for systematic errors that are not understood.
 Before turning to more specific risks, we first address this general concern.
 
-While the similarities between calibration for LSST, PS-1, and DES are strong, LSST will nonetheless incorporate
-some improvements:
+LSST will incorporate some significant improvements over PS-1:
 
 \begin{itemize}
+\item{Continuous determination of atmospheric extinction through the auxiliary telescope and water
+vapor monitoring system}
+\item{Determination of monochromatic illumination corrections through forward modelling, observations of
+star grids, and feedback from self calibration}
+\item{Careful treatment of the difference between the SED used for construction of the broadband flat and 
+that of objects being photometered}
 \end{itemize}
 
-We are confident that these improvements will go a significant way to better control of the systematics.  If it turns
-out that our confidence is misplaced, we are pursuing a number of mitigation strategies that will further improve
-performance.
+We are confident that these improvements will go a significant way toward better control of the systematics.  
+To control the possibility
+that our confidence is misplaced, we are pursuing a number of mitigation strategies that will 
+further improve performance.
 
-One mitigation that we will explore is a more rigorous treatment of finite PSF effects, along the lines of equation 
-\ref{eqn:xx}.
+The first mitigation that we will develop is a more rigorous treatment of finite PSF effects, 
+along the lines of equation \ref{eqn:xx}.  We have some reason to expect that this may lower the
+systematics error floor on instrumental magnitudes.
 
 A second mitigation involves a modification of the overall calibration process.  As presented in Sections x and y, the current design cleanly separates compensation for changing system
 bandpass shape (performed in SED Correction \ref{fig:overview_flowchart1}), and for changing zeropoints
@@ -1738,22 +1745,22 @@ in which the effect of some wavelength-dependent perturbation (eg change in atmo
 a particular calibration star is predicted by a measurement-based model of the effect.  As
 an alternative, one can imagine combining the SED Correction and Self Calibration processes into one
 large least squares problem, in which not only the zeropoints are determined, but all the 
-wavelength-dependent effects as well.  
-
-We have tested a first step in this direction by incorporating
+wavelength-dependent effects as well.  We have tested a first step in this direction by incorporating
 a parameterized model of the wavelength-dependent illumination into Self Calibration.  Initial 
 results have not been promising, but this is far from invalidating the overall approach.
 
 Finally, it is clear that systematic errors that affect the uniformity of calibration tie in to the overall
-survey strategy, and in particular its dithering pattern.
+survey strategy, and in particular its dithering pattern.  The survey strategy is not rigid, and changes
+to improve calibration performance may well be possible.
 
-A further risk is clearly that our overall conclusion about the performance of the calibration process is based largely on
-simulation tools.  These tools require significant further development, and completion of a validation process.
+We are also tracking a number of more specific risks:
 
 \begin{itemize}
-\item Systematics error floor for photometry is higher than expected
-\item Forward models for illumination correction are less accurate than expected
-\item Stability of $S_b^{sys}$ is less than expected
+\item {Simulation tools may produce misleading results because their development is still ongoing, and
+validation is not complete.}
+\item {Systematics error floor for photometry is higher than expected}
+\item {Forward models for illumination correction are less accurate than expected}
+\item {Stability of $S_b^{sys}$ is less than expected}
 \end{itemize}
 
 \bibliographystyle{apj}
