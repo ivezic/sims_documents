@@ -562,17 +562,41 @@ Ozone is dominantly a stratospheric component of the atmosphere, and is routinel
 
 To summarize the effects of wavelength-dependent atmospheric variations, they are sufficiently large, and occur sufficiently rapidly, that they must be corrected by an atmospheric model with fidelity substantially greater than the traditional photometrist's extinction model.   The combination of the auxiliary telescope and the water vapor monitoring system will supply the data required for construction of these atmospheric models.  It is also worth emphasizing that correcting for these effects requires not only an accurate bandpass model, but also SEDs for the objects being calibrated.   Calibration stars will be picked from well defined stellar populations to minimize SED uncertainty.   SED determination for arbitrary science objects, such as supernovae and galaxies, will be more challenging, and may limit the accuracy of their photometric calibration.
 
-
-
-
-
-
-
 \subsection{Throughput Variations Due to Contamination}
+The rates of contamination buildup on surfaces has been evaluated for both the
+telescope (\citep{LTS-66}) and the camera (\citep{LCA-18}).  Many contaminants
+have wavelength-dependent effects, so they will affect the system bandpass.  The
+variation, however, is expected to be very slow, with a year being a typical
+timescale.   These effects will be adequately measured by the collection of monthly monochromatic 
+dome flats, as discussed in Section \ref{sec:hdw_response}.  
+We do not specifically account for them in the calibration error budget.
 
 \subsection{Variations in Detector Quantum Efficiency}
 
+The detector quantum efficiency as a function of wavelength varies with the detector
+temperature.  The camera both measures and actively controls the temperature, but
+there is still variation  on the order of 0.5 degK.  The variation affects only 
+wavelengths near the silicon bandgap at 1100 nm, and therefore only the y filter.
+Figure \ref{fig:TempVarEffects} shows the resulting effect.
+	
 \subsection{Throughput Variations Due to Filter Position Shifts}
+The LSST filters are quite large interference filters, with diameter 75 cm.  
+As manufactured, such filters always display some variation of the bandpass
+with position on the filter surface.  This results in a system bandpass which
+is a function of position on the sky.   Additionally, the LSST filters are
+exchanged by a mechanism which is not perfectly repeatable, and has some sag
+due to gravity.  This results in a time-dependent variation of the filter
+position with respect to the telescope optical axis, leading to an additional
+bandpass variation.  
+
+Modeling of these effects is difficult due to the lack of knowledge of the detailed
+filter characteristics, which will not be available until they are manufactured.
+To do so in our simulations, we currently
+use a simple model that the filter bandpass has a shift which is a linear function
+of radius.  The effect of a 1\% bandpass shift on natural magnitudes is shown
+in Figure \ref{fig:dmag_filtershift}  It is worthy of note that this effect is
+large in all bands, so it must be carefully corrected in the calibration
+process.
 
 \subsection{Putting it All Together}
 Examples of the $\Delta m_b^{obs}$ due to variations in the shape of
@@ -645,6 +669,7 @@ throughput curve, $S_b^{sys}(\lambda,x,y,t)$.
 
 
 \subsection{Measuring the Hardware Response}
+\label{sec:hdw_response}
 To measure the wavelength-dependent hardware response
 curve as a function of position in the focal plane, we will use a
 dome-screen system that is capable of producing narrow-band light 
@@ -1404,6 +1429,17 @@ The focal plane temperature is monitored by the camera, allowing the temperature
 0.5 deg K with respect to the reference condition when the monochromatic dome flats were obtained.  Figure \ref{fig:TempVarEffects}
 shows, as expected, that the effect of that prediction error on the natural magnitudes is negligible for all but the y-band, where 
 it is 0.2 mmag.   There is, of course, a larger effect on the zeropoints, discussed below.
+
+\item{Uncertainties in filter bandpass due to variation in position with respect to the optical axis}
+
+The magnitude of these effects is constrained by the OSS and
+the camera subsystem requirements.   In particular, OSS-REQ-0331 states that
+
+\begin{quote}
+The maximum un-modelled RSS contribution to the photometric repeatability 
+budget from filter placement errors and/or response variations over the FOV shall
+be no more than 0.5 mmag
+\end{quote}
 
 \end{itemize}
 
@@ -3101,7 +3137,6 @@ The auxiliary telescope
 }
 \end{figure}
 
-\end{figure}
 \begin{figure}
 \centering
 \centering
