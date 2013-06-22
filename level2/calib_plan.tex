@@ -328,21 +328,6 @@ is physically happening to photons in their path toward the focal
 plane, and then outline how LSST will translate the
 measured ADU counts back to fluxes above the atmosphere.
 
-
-
-\begin{boxedminipage}{6.5in}
-We find it helpful to define four different magnitudes, and their associated fluxes:
-\begin{itemize}
-\item{$m_b^{inst}$, the instrumental magnitude.  $m_b^{inst} = -2.5 log10(C_b^{obs})$, where $C_b^{obs}$ are the instrumental counts (ADU) that are attributed to the object}
-\item{$m_b^{nat}$, the natural magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the actual normalized system bandpass, $\phi_b^{obs}(\lambda)$, at the top of the atmosphere.  This bandpass varies
-from exposure to exposure.  See equations \ref{eqn:Fb} and \ref{eqn:natmag}. $m_b^{nat} = m_b^{inst} + Z_b^{obs}$}
-\item{$m_b^{std}$}, the standard magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the standard normalized system bandpass, $\phi_b^{std}(\lambda)$, at the top of the atmosphere.  This bandpass is 
-selected as part of the survey design, and does not vary.  See equation \ref{eqn:stdFlux}. 
-\item{$m_b^{corr}$, the SED corrected instrumental magnitude.  This is the standard magnitude, but with an unknown gray zeropoint correction, which will be removed by self calibration.  These magnitudes are the input to self calibration. $m_b^{corr} = m_b^{inst} + \Delta m_b^{obs}$}
-\end{itemize}
-These quantities are related through equations \ref{eqn:mag2counts} and \ref{eqn:mag2counts}.
-\end{boxedminipage}
-
 \section{From Flux to Counts}
 \label{sec:photons2counts}
 
@@ -438,7 +423,7 @@ motivate us to separate the measurement of the normalization of
 $S_b^{sys}$ and $S^{atm}$ from the measurement of the
 wavelength-dependent shape of the bandpass.
 
-\subsection{Normalized bandpass response, $\phi_b(\lambda)$}
+\subsection{Bandpasses and Associated Magnitudes}
 \label{sec:phi}
 
 This then leads us to introduce a `normalized bandpass response
@@ -457,8 +442,8 @@ bandpass, as by definition
 \begin{equation}
 \int_0^\infty {\phi_b(\lambda)  d\lambda}=1. 
 \end{equation}
-Using $\phi_b^{obs}(\lambda, t)$ we can represent the (true, total)
-in-band flux of an object for each observation as
+Using $\phi_b^{obs}(\lambda, t)$ we can represent the
+in-band flux at the top of the atmosphere for each observation as
 \begin{equation}
 \label{eqn:Fb}
 F_b^{obs}(t) = \int_0^\infty {F_\nu(\lambda,t) \,\phi_b^{obs}(\lambda,t) \, d\lambda},
@@ -476,8 +461,8 @@ non-variable sources, we also introduce the `standardized bandpass response
 function', $\phi_b^{std}(\lambda)$, a curve that will be defined before
 the start of LSST operations (most likely during
 commissioning). $\phi_b^{std}(\lambda)$ represents a typical hardware
-and atmospheric transmission curve, minimizing the difference between
-$\phi_b^{obs}(\lambda,t)$ and the standardized reported bandpass.
+and atmospheric transmission curve, roughly minimizing the average difference between
+the varying $\phi_b^{obs}(\lambda,t)$ and the standard bandpass.
 Now, 
 \begin{equation}
 \label{eqn:stdFlux}
@@ -486,17 +471,15 @@ F_b^{std}(t) = \int_0^{\infty} {F_\nu(\lambda,t) \,
 \end{equation}
 is a constant value for non-variable sources. 
 
-Magnitudes provide an easy way to conceptualize the relationship
-between $F_b^{obs}$ and $F_b^{std}$, provided that we define a
-`natural magnitude' 
+We define a `natural magnitude' 
 \begin{equation}
 \label{eqn:natmag}
 m_b^{nat}  = -2.5\, log_{10} \left( {F_b^{obs} \over F_{AB}}  \right)
 \end{equation}
-where $F_{AB}$ = 3631 Jy. The natural magnitude, like $F_b^{obs}$ will
+where $F_{AB}$ = 3631 Jy. The natural magnitude will
 vary from observation to observation as $\phi_b^{obs}(\lambda,t)$
 changes, even if the source itself is non-variable. The natural
-magnitude can be translated to a `standard magnitude', $m_b^{std}$, as
+magnitude can be transformed to a `standard magnitude', $m_b^{std}$, as
 follows:
 \begin{eqnarray}
 m_b^{nat} & = &-2.5\, log_{10} \left( {F_b^{obs} \over F_{AB}} \right) \\
@@ -516,9 +499,7 @@ where $\Delta m_b^{obs}$ varies with the {\it shape} of the source
 spectrum, $f_\nu(\lambda,t)$ and the {\it shape} of the bandpass
 $\phi_b^{obs}(\lambda,t)$ in each observation. Note that $\Delta
 m_b^{obs}=0$ for flat (constant) SEDs, as the integral of
-$\phi_b(\lambda)$ is always one.  For non-variable sources,
-$m_b^{std}$ will be non-variable as it represents the throughput in a
-standardized bandpass, $\phi_b^{std}(\lambda)$.
+$\phi_b(\lambda)$ is always one.  
 
 The natural and standard magnitudes can be tied back to the counts
 produced by the system by adding the correct zeropoint offsets. As
@@ -526,18 +507,26 @@ $\Delta m_b^{obs}$ removes all wavelength dependent variations in $m_b^{std}$,
 \begin{eqnarray}
 \label{eqn:mag2counts}
 m_b^{std} & = & m_b^{inst} \, - \Delta m_b^{obs} + Z_b^{obs} \\
- & \equiv & m_b^{corr} + Z_b^{obs}
+ & \equiv & m_b^{corr} + Z_b^{obs} \\
+ m_b^{inst} & = & -2.5\,log_{10}(C_b^{obs})
 \end{eqnarray}
-where
-\begin{equation}
-m_b^{inst} = -2.5\,log_{10}(C_b^{obs})
-\end{equation}
+
 
 The zeropoint correction here, $Z_b^{obs}$, contains only gray-scale
 {\it normalization} effects, such as variations due to the flat field
 or cloud extinction.  The SED corrected magnitude, $m_b^{corr}$, is the input to the Self Calibration block in 
-Figure \ref{fig:overview_flowchart1}.
+Figure \ref{fig:overview_flowchart1}, and $m_b^{std}$ is its output.
 
+To summarize the various magnitudes utilized, and their associated fluxes:
+
+\begin{itemize}
+\item{$m_b^{inst}$, the instrumental magnitude.  $m_b^{inst} = -2.5 log10(C_b^{obs})$, where $C_b^{obs}$ are the instrumental counts (ADU) that are attributed to the object}
+\item{$m_b^{nat}$, the natural magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the actual normalized system bandpass, $\phi_b^{obs}(\lambda)$, at the top of the atmosphere.  This bandpass varies
+from exposure to exposure.  See equations \ref{eqn:Fb} and \ref{eqn:natmag}. $m_b^{nat} = m_b^{inst} + Z_b^{obs}$}
+\item{$m_b^{std}$}, the standard magnitude.  This is the magnitude in the AB system that would be measured for the object if it were measured through the standard normalized system bandpass, $\phi_b^{std}(\lambda)$, at the top of the atmosphere.  This bandpass is 
+selected as part of the survey design, and does not vary.  See equation \ref{eqn:stdFlux}. 
+\item{$m_b^{corr}$, the SED corrected instrumental magnitude.  This is the standard magnitude, but with an unknown gray zeropoint correction, which will be removed by self calibration.  These magnitudes are the input to self calibration. $m_b^{corr} = m_b^{inst} + \Delta m_b^{obs}$}
+\end{itemize}
 
 
 \subsection{Perturbations to the System Bandpass}
