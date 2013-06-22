@@ -39,12 +39,12 @@ Michel Cr{\'e}z{\'e}\altaffilmark{4}, \\
 Mario Juric\altaffilmark{8},
 C{\'e}cile Roucelle\altaffilmark{4}, 
 Abhijit Saha\altaffilmark{5}, 
-J. Allyn Smith\altaffilmark{7}
+J. Allyn Smith\altaffilmark{7}, \\
 Michael A. Strauss\altaffilmark{6},
 Peter Yoachim \altaffilmark{1}\\
 on behalf of 
 The Photometric Calibration Team \\ 
-Docushare-8123, --/--/-- \\
+Docushare-8123, 07/01/13 \\
 }
 \altaffiltext{1}{University of Washington}
 \altaffiltext{2}{University of Arizona}
@@ -76,12 +76,11 @@ to deliver 1\%-level photometry across the observed sky.
 
 \section{Introduction}
 
-LSST is required to deliver 1\%-level photometry across the observed
-sky and under a wide range of observing conditions (0.5\%-level for
-repeat observations of the same source). This represents about a
-factor of two improvement over the current state-of-the-art wide-field
-optical photometry delivered by SDSS under photometric
-conditions. This factor of two improvement will have a major impact on
+LSST is required to deliver photometry with 1\% uniformity and
+0.5\% repeatability across the observed
+sky and under a wide range of observing conditions. This represents at least a
+factor of two improvement over current wide-field surveys such as
+SDSS, CFHTLS, and PanSTARRS. This factor of two improvement will have a major impact on
 science deliverables because it implies that the error volume in the
 five-dimensional LSST color space will be over thirty times smaller
 than for SDSS-like photometry. This smaller error volume will improve
@@ -108,9 +107,12 @@ happen by chance in only 0.1\% of all cases. Therefore, the ability to
 reliably detect color differences between sources is a strong function
 of photometric errors.
 
+SDSS is widely credited with pioneering high accuracy photometry for large
+surveys, and it is instructive to compare its photometric calibration procedure with LSST's.
 The factor of two reduction in photometric error results from two major differences
-between LSST and SDSS. First, each source will receive hundreds of
-observations over the ten years of the LSST survey. These series of
+between the surveys. First, each source will receive hundreds of
+observations over the ten years of the LSST survey, a much greater number
+than possible with SDSS. These series of
 repeat observations will be used to self-calibrate the photometric
 system across the sky and for each observation (akin, but not
 identical to, the uber-calibration procedure used by SDSS
@@ -122,20 +124,19 @@ scales to enable their explicit inclusion in the calibration
 procedure, rather than resorting to traditional approximations such as
 linear color terms. SNLS re-processing of CFHT Legacy Survey data
 found these color-dependent terms to be a significant contributor to
-the photometric calibration process \citep{Regnault2009}, on
-the level of a few to several percent. {\bf TODO here on why it's hard - drift scan and all weather}
+photometric calibration errors \citep{Regnault2009}, on
+the level of several percent.
 
 This document describes the calibration requirements and processes for
 LSST Data Release photometry. At each Data Release, there will be a
 complete recalibration of all data acquired to that point, on
 approximately an annual schedule.  These data products are referred to
 as Level 2 Data Products.  There will
-also be a real-time data calibration process, based on the best
-available set of prior calibrated observations, to provide real-time, but lower quality,
-                                                                                                 photometry for quality assurance,
-generation of alerts, and other quantities appropriate for nightly
-data generation (aka Level 1 Data Products).  The Level 1 photometric
-calibration is not discussed here.
+also be a separate photometric calibration process that provides
+near real-time, but lower quality, photometry for quality assurance,
+generation of alerts, and other quantities required on a nightly
+basis. This Level 1 photometric
+calibration process is not discussed here.
 
 Section~\ref{sec:photoreq} reviews the survey requirements for
 photometric calibration, while Section~\ref{sec:calib_overview}
