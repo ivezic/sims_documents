@@ -551,7 +551,7 @@ that would be made in ignoring this effect.  This requires us to maintain an atm
 to any position in the focal plane.
 
 \subsection{Effects of Atmospheric Variations}
-
+\label{sec:atmvar}
 The main components of wavelength-dependent atmospheric extinction are Rayleigh scattering from molecules; oxygen molecular lines; water vapor; ozone; and aerosols.   Rayleigh scattering and molecular oxygen extinctions are directly proportional to barometric pressure at the surface.  As is well known from looking at surface pressure charts, away from weather fronts the pressure varies significantly on timescales of hours or more and spatial scales of hundreds of km.  Variations can be much more rapid in the vicinity of fronts.   In any case, this component can be compensated for very accurately just by measuring the barometric pressure, and we do not further consider it here.  The other components are not so easily measured, and in the case of water vapor and aerosols, can display complex patterns of variability.  
 
 Figures \ref{fig:CTIO_PWV}, \ref{fig:GeminiPWV}, and \ref{fig:PWV_satellite} give three different perspectives on historical water vapor variability in the vicinity of CP.  There are broad patterns in space (the E-W gradient), and in time (the regular seasonal variations).  There are large variabilities on top of these, amounting to several mm of PWV, which can occur in hours or less.   The biggest effect of water vapor is in the y-band, since it contains a strong water band (Figure \ref{fig:xx}).   Figure \ref{fig:KuruczPWV} shows the change in natural magnitude when the PWV is varied from 1mm to 6mm for a set of Kurucz stars.  The 4mm variation in PWV shown in Figure \ref{fig:GeminiPWV} would lead to a roughly +/-3mmag color-dependent scatter in calibration of y photometry, if not compensated for. 
@@ -1150,7 +1150,7 @@ Section~\ref{sec:calib_external}.
 The sequence for photometric calibration is then:
 \begin{enumerate}
 \item{Acquire the data cube of narrow-band flat field images,
-approximately monthly. Apply wavelength-dependent illumination
+approximately monthly. Determine and apply wavelength-dependent illumination
 correction. Measure $\phi_b^{sys}(\lambda,t,x,y)$. Note that the time
 required to acquire these flats is required to be less than four hours
 per filter, so a full set of filters requires 24 hours.}
@@ -1339,8 +1339,31 @@ signal to noise for the atmospheric absorption profiles generated for each scien
 
 \subsection{Water Vapor Monitoring System}
 
+As discussed in Section \ref{sec:atmvar}, water vapor can potentially vary on spatial and temporal scales that will
+not be adequately sampled by the auxiliary telescope.   Because y-band photometry is so sensitive to water vapor
+(PWV), the LSST has a dedicated system to monitor it.  The system has two components
+\begin{itemize}
+\item A GPS system that measures an all sky value for PWV.  This system operates continuously, whether the LSST is
+observing or not, and forms part of the site's complement of weather instruments
+\item A microwave radiometer optimized for measuring PWV that is copointed with the LSST, so that a PWV measurement
+is available for every exposure.
+\end{itemize}
+Both of these system components are well tested in astronomical applications, and are relatively inexpensive
+(\citep{Radomski2010}, \citep{Gaffard2003}).  Their data will be logged through the Engineering and Facility Data Base. 
 
 \subsection{Camera System Telemetry}
+
+The calibration process relies on measurements collected by the camera system on a per-exposure basis, and stored in
+the Engineering and Facility Database.  The measurements directly utilized are:
+
+\begin{itemize}
+\item focalplane temperature
+\item shutter travel time
+\end{itemize}
+
+There is a much wider range of available information, and we have the option to mine it to understand and compensate
+for systematics in the system.
+
 
 
 
@@ -1672,9 +1695,29 @@ well we recover their colors.
 
 \section{Software Implementation}
 \label{sec:software}
+The calibration process presented above is software intensive, as is clear from Figures \ref{fig:overview_flowchart1} -
+\ref{fig:overview_flowchart4}.  All software components are implemented within the LSST Data Management System, in
+two separate productions, described briefly here, and in much more detail in DM publications {\bf NEED REFS for DM}.
+The end products of the calibration process are Level 2 data products, also described below.
+
 \subsection{Calibration Products Production}
+The Calibration Products Production is responsible for the processes shown in Figures \ref{fig:overview_flowchart2}
+and \ref{fig:overview_flowchart3}.  These processes occur with varying frequencies:
+\begin{itemize}
+\item {The monochromatic illumination correction is determined at most monthly, and likely less frequently, since
+it is expected to be quite stable.}
+\item{The corrected monochromatic flats are formed monthly.}
+\item{The synthetic broadband flats used in nightly reductions are computed every night.}
+\item{Atmospheric models are computed from the auxiliary telescope spectra and water vapor monitoring system every 24 hours.}
+\end{itemize}
+
+Additionally, this production creates other data products used in nightly image processing, including bias frames, fringe
+frames, and crosstalk correction matrices.  These are produced as needed.
 
 \subsection{Calibration Within the Data Release Production}
+
+The processes shown in Figure \ref{fig:overview_flowchart1} are performed as part of the Data Release Production (Figure \ref{fig:DRP}).
+
 
 \subsection{Level 2 Data Products}
 %reference M. Juric Level 2 doc here
@@ -2377,7 +2420,7 @@ at zenith.  The units are mm of liquid water equivalent. }
 \fbox{
 \begin{minipage}{6.5in}
 \includegraphics[width=6.5in]{CalibDataProdSchematic4}
-\caption{ {\small {\bf Science Object Calibration.}  Photometric calibration for science objects takes place in two stages.  In the first, the natural magnitudes are calculated, using the zeropoint model for each exposure.  These are stored in the Level 2 databases.  The second, optional, stage, relies on knowledge of the object SEDs, which is an external input to the system, supplied by the user.   The object SED, in conjunction with the system bandpass, $\phi$, allows standard magnitudes to be calculated.  These are considered a Level 3 data product }
+\caption{ {\small {\bf Science Object Calibration.}  Photometric calibration for science objects takes place in two stages.  In the first, the natural magnitudes are calculated, using the zeropoint model for each exposure.  These are stored in the Level 2 databases.  The second, optional, stage, relies on knowledge of the object SEDs, which is an external input to the system, supplied by the user.   The object SED, in conjunction with the system bandpass, $\phi$, allows standard magnitudes to be calculated. }
 \label{fig:overview_flowchart4} }
 \end{minipage}
 }
@@ -3003,13 +3046,14 @@ Affected term & Effect &  $u$  & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
 & Monochromatic illumination correction errors & 3.0 & 0.5 & 0.8 & 0.5 & 0.1 & 0.6\\
 & Photodiode monitoring system errors & 0.8 & 0.5 & 0 & 0 & 0 & 0.1 \\
 & Calibration star SED errors & 5.6 & 0.8 & 0.5 & 0.4 & 0.4 & 0.2 \\
-& Focal plane temperature errors & 0 & 0 & 0 & 0 & 0 & 0.2 \\ 
-& {\bf Total} & 6.7 & 2.5 & 0.9 & 0.6 & 1.1 & 2.1 \\ \hline
+& Focal plane temperature errors & 0 & 0 & 0 & 0 & 0 & 0.2 \\
+& Filter positioning errors & 0.5 & 0.5 & 0.5 & 0.5 & 0.5 & 0.5 \\ 
+& {\bf Total} & 6.7 & 2.5 & 1.0 & 0.8 & 1.2 & 2.2 \\ \hline
 $Z_b^{obs}$ & & & & \\
 & Clouds and cloud-like effects (90\% of obs) & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 \\
 & Camera gain variation (short term) & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 \\
 & {\bf Total} & 1.4 & 1.4 & 1.4 & 1.4 & 1.4 & 1.4 \\ \hline
-{\bf Total} & & 7.5 & 4.1 & 3.5 & 3.4 & 3.5 & 3.9 \\ \hline
+{\bf Total} & & 7.5 & 4.1 & 3.5 & 3.4 & 3.5 & 4.0 \\ \hline
 {\bf Design Requirement} & & 7.5 & 5.0 & 5.0 & 5.0 & 7.5 & 7.5 \\ 
 {\bf Min. Requirement} & & 12 & 8.0 & 8.0 & 8.0 & 12 & 12 \\
 \end{tabular}
@@ -3237,7 +3281,7 @@ the Kurucz spectra used for the stars.
 \caption{{\small
 Data Release Production
 }}
-\label{fig:auxtel}
+\label{fig:DRP}
 \end{minipage}
 }
 \end{figure}
