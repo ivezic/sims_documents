@@ -798,7 +798,7 @@ includes only the system response, not the atmosphere.  We can now write
 F_b = {1 \over N} \left[ {C_b^{inst} \over {\sum_i{w_i Q_{b,i}^{BB}}}}\right]  \left[ {\sum_i {w_i Q_{b,i}^{BB} }} \over {\sum_i {w_i Q_{b,i} }}\right]
 \end{equation}
 
-(normalize flat, bring in Zp) Expressed in magnitudes, this becomes
+Expressed in magnitudes, this becomes
 
 \begin{equation}
 m_b^{nat} = m_b^{inst} + Z_p - 2.5 log_{10} \left( \left[ {\sum_i {w_i Q_{b,i}^{BB} }} \over {\sum_i {w_i Q_{b,i}^{norm} }}\right] \right)
@@ -1279,7 +1279,7 @@ broadband or tunable narrowband light.  A precision photodiode measures the inte
 The requirements for the flat field illumination system are in Sebag and Krabbendam (\citep{LSE-60}).  The overall
 goals are very similar to the DECal system used for the Dark Energy Survey (\citep{Marshall2013}), but due to the 
 larger telescope aperture, and more compact dome, is designed somewhat differently.   The overall design is shown
-in Figure \ref{fig:GresslerTBD}.
+in Figure \ref{fig:domescreen}.
 
 \subsection{Auxiliary Telescope}
 
@@ -1414,6 +1414,7 @@ it is 0.2 mmag.   There is, of course, a larger effect on the zeropoints, discus
 \end{itemize}
 
 \subsubsection{Errors in $Z_b^{obs}$}
+\label{sec:Zb_errors}
 Every exposure has a spatial zeropoint model determined by Self Calibration as the solution to a large linear least squares problem, as discussed in Section \ref{sec:counts2photons}.  The errors in the zero points are dependent on the spatial scale of the perturbations, as one can see from a simple argument.  One can reasonably expect that Self Calibration will determine the true magnitudes of the calibration stars with an error that is well below the repeatability requirement ($\sigma \approx 5~mmag$) for individual measurements, so for present purposes we ignore the errors in the true magnitudes.  Suppose a perturbation shifts, for a single exposure, the zeropoint over an area $A$ by some constant $\delta Z$.   If that area contains $N$ calibration stars, each provides an estimate of $\delta Z$ with an error of $\sigma$.   The full set of calibration stars, assuming that their measurement errors are uncorrelated, allows $\delta Z$ to be estimated to a precision of $\sigma_{\delta Z} = \sigma / \sqrt{N}$.  The density of calibration stars varies over the sky.  Here we will use a mean value of $2~arcmin^{-2}$, which corresponds to stars in the range $20 > V > 18$ at galactic latitude of 30 degrees. This provides the following rough estimates for spatial scales of relevance:
 \begin{itemize}
 \item{Detector segment:  $A=11~arcmin^2$, $N \approx 22$, $\sigma_{\delta Z} \approx 1~mmag$}
@@ -1718,7 +1719,7 @@ significantly poorer than we would expect from our
 error analysis, and show clear evidence for systematic errors that are not understood.
 Before turning to more specific risks, we first address this general concern.
 
-LSST will incorporate some significant improvements over PS-1:
+It is important to recognize that LSST will incorporate some significant improvements over PS-1:
 
 \begin{itemize}
 \item{Continuous determination of atmospheric extinction through the auxiliary telescope and water
@@ -1730,16 +1731,18 @@ that of objects being photometered}
 \end{itemize}
 
 We are confident that these improvements will go a significant way toward better control of the systematics.  
-To control the possibility
+To address the possibility
 that our confidence is misplaced, we are pursuing a number of mitigation strategies that will 
 further improve performance.
 
-The first mitigation that we will develop is a more rigorous treatment of finite PSF effects, 
-along the lines of equation \ref{eqn:xx}.  We have some reason to expect that this may lower the
-systematics error floor on instrumental magnitudes.
+\begin{itemize}
+\item{The first mitigation that we will develop is a more rigorous treatment of finite PSF effects, 
+along the lines of equation \ref{eqn:flatCorrection}.  We have some reason to expect that this will lower the
+systematics error floor on instrumental magnitudes.}
 
-A second mitigation involves a modification of the overall calibration process.  As presented in Sections x and y, the current design cleanly separates compensation for changing system
-bandpass shape (performed in SED Correction \ref{fig:overview_flowchart1}), and for changing zeropoints
+\item{A second mitigation involves a modification of the overall calibration process.  
+As presented in Section \ref{sec:calib_overview}, the current design cleanly separates compensation for changing system
+bandpass shape (performed in SED Correction, see Figure \ref{fig:overview_flowchart1}), and for changing zeropoints
 (performed in Self Calibration).  The SED Correction process is based completely on forward modeling,
 in which the effect of some wavelength-dependent perturbation (eg change in atmospheric aerosols) on
 a particular calibration star is predicted by a measurement-based model of the effect.  As
@@ -1747,20 +1750,40 @@ an alternative, one can imagine combining the SED Correction and Self Calibratio
 large least squares problem, in which not only the zeropoints are determined, but all the 
 wavelength-dependent effects as well.  We have tested a first step in this direction by incorporating
 a parameterized model of the wavelength-dependent illumination into Self Calibration.  Initial 
-results have not been promising, but this is far from invalidating the overall approach.
+results have not been promising, but this is far from invalidating the overall approach.}
 
-Finally, it is clear that systematic errors that affect the uniformity of calibration tie in to the overall
+\item{Third, we will develop the Gauss-Markov approach to error modelling, mentioned in Section \ref{sec:Zb_errors},
+into a tool which can act as an independent check on many aspects of the simulations.}
+
+\item{Finally, it is clear that systematic errors that affect the uniformity of calibration tie in to the overall
 survey strategy, and in particular its dithering pattern.  The survey strategy is not rigid, and changes
-to improve calibration performance may well be possible.
+to improve calibration performance may well be possible.}
+
+\end{itemize}
 
 We are also tracking a number of more specific risks:
 
 \begin{itemize}
-\item {Simulation tools may produce misleading results because their development is still ongoing, and
-validation is not complete.}
+\item {Simulation tools may produce misleading results because their functionality is limited, and
+validation is not complete.}  
+
+We are well along in the development of a second generation calibration
+simulator which will address these concerns.
+
 \item {Systematics error floor for photometry is higher than expected}
+
+We are working with LSST Data Management to evaluate this risk as the software and hardware evolve,
+and mitigate it with improved image processing algorithms.
+
 \item {Forward models for illumination correction are less accurate than expected}
+
+There is considerable scope to improve the models, and add additional sources of data as required.
+
 \item {Stability of $S_b^{sys}$ is less than expected}
+
+The issues most likely to arise can be handled with improved telemetry from the system, coupled with 
+more capable forward models.
+
 \end{itemize}
 
 \bibliographystyle{apj}
@@ -3080,6 +3103,21 @@ The auxiliary telescope is sited adjacent to LSST
 The auxiliary telescope 
 }}
 \label{fig:auxtel}
+\end{minipage}
+}
+\end{figure}
+
+\end{figure}
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{HardwareFigs/DomeScreenOLD}
+\caption{{\small
+The flat field illumination system
+}}
+\label{fig:domescreen}
 \end{minipage}
 }
 \end{figure}
