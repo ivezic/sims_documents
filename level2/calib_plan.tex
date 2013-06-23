@@ -1582,8 +1582,9 @@ different scales.  In particular, input errors with focalplane scale can drive o
 spatial scales.  Further, modes with large spatial scales tend to be poorly damped, so small amplitude errors on
 focalplane scales can sometimes result in long wavelength error modes with larger amplitude.
 
-We do not at present have the analytical tools to usefully predict these error processes.  We are forced to rely
-on the results of simulations, as discussed in the following section.
+We do not at present have the analytical tools to usefully predict these error processes.  We must rely
+on the results of simulations, as discussed in the following section.  The error budget for uniformity,
+based on these simulations, is summarized in Table \ref{tab:uniform_error_budget}
 
 \section{Testing and Verification}
 \label{sec:verification}
@@ -1794,7 +1795,8 @@ A suite of lower level functions will be provided as well, providing a more gran
 \section{Risks and Mitigations}
 \label{sec:risks}
 The error budget presented in Section \ref{sec:error_budget}, and the simulation results presented in Section \ref{sec:verification} show that
-LSST will meet SRD requirements for calibration, but with small margin.   There is clearly a risk
+LSST will meet SRD requirements for calibration, easily for uniformity, but with small margin for repeatability.   
+There is clearly a risk
 that once commissioning or survey operations begin, an unanticipated source of error will arise, or
 that known error sources will have been underestimated.
 The calibration process that we have designed is very similar to those of PS-1 and DES, as previously mentioned.  It is therefore
@@ -3032,6 +3034,7 @@ errors. The histogram shows a vertical crossection of the error fan, with zeropo
 \end{figure}
 
 
+
 \begin{landscape}
 \begin{center}
 \begin{table}[htb]
@@ -3053,7 +3056,8 @@ $Z_b^{obs}$ & & & & \\
 & Clouds and cloud-like effects (90\% of obs) & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 \\
 & Camera gain variation (short term) & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 \\
 & {\bf Total} & 1.4 & 1.4 & 1.4 & 1.4 & 1.4 & 1.4 \\ \hline
-{\bf Total} & & 7.5 & 4.1 & 3.5 & 3.4 & 3.5 & 4.0 \\ \hline
+{\bf Total Estimate} & & 7.5 & 4.1 & 3.5 & 3.4 & 3.5 & 4.0 \\ 
+{\bf Simulation Result (IQR Median)} & & 8.0 & 4.9 & 5.0 & 5.0 & 4.4 & 6.1 \\ \hline
 {\bf Design Requirement} & & 7.5 & 5.0 & 5.0 & 5.0 & 7.5 & 7.5 \\ 
 {\bf Min. Requirement} & & 12 & 8.0 & 8.0 & 8.0 & 12 & 12 \\
 \end{tabular}
@@ -3061,6 +3065,19 @@ $Z_b^{obs}$ & & & & \\
 \end{table}
 \end{center}
 \end{landscape}
+
+\begin{center}
+\begin{table}[htb]
+\caption{{\bf Simulated uniformity errors.  All values are in mmag} }
+\begin{tabular}{l | c c c c c c }
+ &   $u$  & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
+{\bf Simulation Result (RMS)}  & 8.0 & 2.0 & 1.6 & 1.8 & 2.3 & 21.8 \\ \hline
+{\bf Design Requirement} &  20 & 10 & 10 & 10 & 10 & 10 \\ 
+{\bf Min. Requirement} &  30 & 15 & 15 & 15 & 15 & 15 \\
+\end{tabular}
+\label{tab:uniform_error_budget}
+\end{table}
+\end{center}
 
 \begin{figure}[htbp]
 \centering
