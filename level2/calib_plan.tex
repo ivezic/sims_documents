@@ -554,9 +554,9 @@ to any position in the focal plane.
 \label{sec:atmvar}
 The main components of wavelength-dependent atmospheric extinction are Rayleigh scattering from molecules; oxygen molecular lines; water vapor; ozone; and aerosols.   Rayleigh scattering and molecular oxygen extinctions are directly proportional to barometric pressure at the surface.  As is well known from looking at surface pressure charts, away from weather fronts the pressure varies significantly on timescales of hours or more and spatial scales of hundreds of km.  Variations can be much more rapid in the vicinity of fronts.   In any case, this component can be compensated for very accurately just by measuring the barometric pressure, and we do not further consider it here.  The other components are not so easily measured, and in the case of water vapor and aerosols, can display complex patterns of variability.  
 
-Figures \ref{fig:CTIO_PWV}, \ref{fig:GeminiPWV}, and \ref{fig:PWV_satellite} give three different perspectives on historical water vapor variability in the vicinity of CP.  There are broad patterns in space (the E-W gradient), and in time (the regular seasonal variations).  There are large variabilities on top of these, amounting to several mm of PWV, which can occur in hours or less.   The biggest effect of water vapor is in the y-band, since it contains a strong water band (Figure \ref{fig:xx}).   Figure \ref{fig:KuruczPWV} shows the change in natural magnitude when the PWV is varied from 1mm to 6mm for a set of Kurucz stars.  The 4mm variation in PWV shown in Figure \ref{fig:GeminiPWV} would lead to a roughly +/-3mmag color-dependent scatter in calibration of y photometry, if not compensated for. 
+Figures \ref{fig:CTIO_PWV}, \ref{fig:GeminiPWV}, and \ref{fig:PWV_satellite} give three different perspectives on historical water vapor variability in the vicinity of CP.  There are broad patterns in space (the E-W gradient), and in time (the regular seasonal variations).  There are large variabilities on top of these, amounting to several mm of PWV, which can occur in hours or less.   The biggest effect of water vapor is in the y-band, since it contains a strong water band (Figure \ref{fig:filterset}).   Figure \ref{fig:KuruczPWV} shows the change in natural magnitude when the PWV is varied from 1mm to 6mm for a set of Kurucz stars.  The 4mm variation in PWV shown in Figure \ref{fig:GeminiPWV} would lead to a roughly +/-3mmag color-dependent scatter in calibration of y photometry, if not compensated for. 
 
-While we do not have aerosol variability data for Cerro Pachon (CP), data from CASLEO, a site at 2550m in Argentina (\citep{CASLEO}) serves as a reasonable proxy.  Figure \ref{fig:CASLEO} shows the time history of aerosol optical depth at 675nm over a period of roughly a year.  The spiky nature of the data is notable, suggesting rapid variations on timescales of perhaps a few hours.  Figure \ref{fig:AerosolVar}, which shows a time-altitude profile of aerosol variations at a site in the US, backs up this impression.  Although the site is at much lower altitude than CP, there are nonetheless significant variation of aerosol extinction at altitudes above 3000m on time scales well under an hour, and we should expect similar variations at CP.  Determining the effects of aerosol variations on the system bandpass is more complex than for other atmospheric components, because the spectral shape of the aerosol extinction varies as well as its magnitude.  Figure \ref{fig:KuruczAerosol} shows the change in natural magnitude when the aerosol optical depth is varied from 0.04 mag to 0.16 mag, roughly the range of the CASLEO data, while keeping a constant spectral index of $\alpha = -1.7$.  Unlike water vapor, which affected the reddest bands most strongly, aerosols affect the bluest bands the most.  The effects in the u-band range from -5 mmag to +35 mmag, strongly dependent on star color.
+While we do not have aerosol variability data for Cerro Pachon (CP), data from CASLEO, a site at 2550m in Argentina, serves as a reasonable proxy.  Figure \ref{fig:CASLEO} shows the time history of aerosol optical depth at 675nm over a period of roughly a year.  The spiky nature of the data is notable, suggesting rapid variations on timescales of perhaps a few hours.  Figure \ref{fig:AerosolVar}, which shows a time-altitude profile of aerosol variations at a site in the US, backs up this impression.  Although the site is at much lower altitude than CP, there are nonetheless significant variation of aerosol extinction at altitudes above 3000m on time scales well under an hour, and we should expect similar variations at CP.  Determining the effects of aerosol variations on the system bandpass is more complex than for other atmospheric components, because the spectral shape of the aerosol extinction varies as well as its magnitude.  Figure \ref{fig:KuruczAerosol} shows the change in natural magnitude when the aerosol optical depth is varied from 0.04 mag to 0.16 mag, roughly the range of the CASLEO data, while keeping a constant spectral index of $\alpha = -1.7$.  Unlike water vapor, which affected the reddest bands most strongly, aerosols affect the bluest bands the most.  The effects in the u-band range from -5 mmag to +35 mmag, strongly dependent on star color.
 
 Ozone is dominantly a stratospheric component of the atmosphere, and is routinely monitored by satellite.   There is little evidence for variations on short time or space scales, with most variation on a seasonal scale.   Figure \ref{fig:O3atCP} shows the overall variability of ozone at CP over a roughly 8 year period.  Figure \ref{fig:KuruczO3} shows the changes in the natural magnitudes for a variation in ozone by 50 Dobson units.   The effect is very small, except in the u-band, where it has a noticeable effect on red stars.
 
@@ -599,6 +599,7 @@ large in all bands, so it must be carefully corrected in the calibration
 process.
 
 \subsection{Putting it All Together}
+\label{sec:allvars}
 Examples of the $\Delta m_b^{obs}$ due to variations in the shape of
 the hardware and atmospheric response curves are shown in
 Figure~\ref{fig:delta_mags} and Table~\ref{tab:delta_mags}. Two main
@@ -686,7 +687,7 @@ $S_b^{sys}(\lambda,t)$ at each $x$,$y$ location in the focal plane:
 
 The resulting data cube then
 records (up to an overall normalization constant) $S_b^{sys}(\lambda,t)$ at each $x$,$y$ location in the focal plane. 
-Further processing constructs a synthetic broadband flat field ('BBF') that will be used to flatten incoming science exposures.
+Further processing constructs a synthetic field that will be used to flatten incoming science exposures.
 
 We discuss each of these in turn.
 
@@ -755,7 +756,9 @@ point sources, with a source at the edge being measured brighter than the same s
 
 \subsubsection{Accounting For Finite PSF Width}
 \label{sec:pixelization}
-Before we can discuss construction of the BBF, we must take a brief detour and extend the discussion in Section \ref{sec:photons2counts}.  There, we implicitly assumed that the flux from an object is sampled at a single point in the 
+Before we can discuss construction of the synthetic flat, we must take a brief detour and extend the discussion 
+in Section \ref{sec:photons2counts}.  There, we implicitly assumed that the flux from an object is 
+sampled at a single point in the 
 focal plane.  We must now extend the formalism to account for the fact that the system has a PSF with finite width, 
 so that the flux from an object is spread
 over multiple pixels, each of which may differ slightly in response from its neighbors.   Let us use $i$ as an index over the
@@ -850,24 +853,26 @@ m_b^{nat} =  m_b^{inst} + Z_p - 2.5 log_{10} \left( {Q_b^{BB}}  \over {Q_b^{norm
 Note that the correction term must be applied in the "SED Correction" block of Figure \ref{fig:overview_flowchart1}.  The 
 required information to compute it is not available earlier.  We now turn to the actual measurement of $q_{b,i}$, and the construction of $Q_{b,i}^{BB}$
 
-\subsubsection{Constructing the Synthetic Broadband Flat}
+\subsubsection{Constructing the Synthetic Flat}
 \label{sec:synthflat}
-As discussed in the previous section, the choice of the SED used to construct the broadband flats is largely arbitrary.  It defines a reference SED $f_\nu^{BB}(\lambda)$,
+As discussed in the previous section, the choice of the SED used to construct the synthetic flats is largely arbitrary.  It defines a reference SED $f_\nu^{BB}(\lambda)$,
 which must later be corrected for as shown in equation \ref{eqn:flatCorrection}
 when both the true $\phi_b^{obs}(\lambda)$ and the actual object SED, $f_\nu(\lambda)$ are known.     
 
 Given the arbitrariness of $f_\nu^{BB}(\lambda)$,
-we must choose on grounds of convenience.  At least two choices suggest themselves:
+we must choose on grounds of convenience.  At least three choices suggest themselves:
 
 \begin{itemize}
-\item{Choose $f_\nu^{bbf}(\lambda) = const$.  This has the virtue of maximal simplicity.}
-\item{Choose $f_\nu^{bbf}(\lambda)$ to be in some sense an average SED for all objects in the survey, propagated
+\item{Choose $f_\nu^{BB}(\lambda) = const$.  This has the virtue of maximal simplicity.}
+\item{Choose $f_\nu^{BB}(\lambda)$ to be a flat SED at the top of the atmosphere, propagated through
+an average atmosphere.}
+\item{Choose $f_\nu^{BB}(\lambda)$ to be in some sense an average SED for all objects in the survey, propagated
 through an average atmosphere,  such that the average value
 of the BBF correction is minimized.}
 \end{itemize}
 
-We choose the first of these, and subsequently refer to the BBF as the FSF (flat spectrum flat).  This choice is bound
-to have unaccounted for impact on calibration accuracy, however, because the above formalism does not include the
+We will initially choose the first of these.  This choice may have unaccounted for impact on calibration 
+accuracy, however, because the above formalism does not include the
 propagation of errors.  We can readily change the prescription during construction or commissioning.
 
 
@@ -909,7 +914,7 @@ spectrograph efficiency as a function of wavelength, were fit to all the observe
 \ref{fig:BurkeSpectrumFit} and \ref{fig:BurkeWaterVapor}
 show some results.   The fit to the individual spectra are impressively good, and the coefficients in the resulting 
 atmospheric models show strong variation, as expected for the highly variable nights for which the data was obtained.  
-Traditional extinction plots (Figure \ref{fig:BurkeWaterExtinction}), show behavior that would 
+Traditional extinction plots (Figure \ref{fig:BurkeExtinction}), show behavior that would 
 be well fit by traditional calibration in the r- 
 and i-bands, together with behavior in the z- and y-bands that would not.  In subsequent development of the approach,
 Burke et al (\citep{Burke2013}) obtained probe star spectra while simultaneously imaging over a wide field - roughly 
@@ -951,7 +956,7 @@ With this capability, we can fit the auxiliary telescope spectroscopic data take
 throughout the night for the values of
 $C_{mol,\ozone,\water}$, increasing our SNR for these
 coefficients by modeling their expected behavior over time and across
-the sky as detailed in \ref{sec:atmo_behavior} above. The Rayleigh
+the sky. The Rayleigh
 scattering and molecular absorption due to \oxy\,and other trace
 species are fit with a single coefficient, $C_{mol}$, which simply
 scales the MODTRAN templates to the appropriate level for Cerro
@@ -1199,7 +1204,7 @@ predicted by physical models, and which are contained in the LSST
 survey fields.
 Although in principle a single standard with known colors would be
 sufficient, the major concern here is with systematic errors, for
-example a variation in color calibration across the sky.  Our current simulations (Section \ref{sec:xx})
+example a variation in color calibration across the sky.  Our current simulations (Section \ref{sec:verification})
 show significant spatial patterns in photometric zeropoints.  Monitoring
 and controlling these
 systematics will require a larger set of standards.
@@ -1207,8 +1212,8 @@ systematics will require a larger set of standards.
 These fall into three groups:
 \begin{itemize}
 \item {DA white dwarfs observed with HST.  Relatively few in number, these form the "gold standard" for the survey,
-and include not only the four fundamental standards (\citep{BohlinGilliland}), but also a growing set from
-the HST program of Saha et al (\citep{AbiProposal}), for which observations are still underway.}
+and include not only the four fundamental standards (\citep{Bohlin2004}), but also a growing set from
+the HST program of Saha et al, for which observations are still underway.}
 \item {DA white dwarfs for which accurate spectroscopic determination of $T_{eff}$, $g$, and interstellar
 reddening are available.}
 \item {Stars observed with Gaia.  By roughly 2020, when LSST will be in commissioning, 
@@ -1232,7 +1237,7 @@ image at the South Galactic Pole, though few of these will have available
 the spectra necessary for synthetic photometry. At least
 100--1000 across the sky will be used to search for systematic effects.
 Catalogs of WD stars visible from Cerro Pachon have been constructed
-\citep{1992JRASC..86..309B, 2004AJ....128.3053B}, and a `white dwarf
+\citep{1992JRASC..86..309B}, and a `white dwarf
 calibration system' has been developed
 \citep{2006AJ....132.1221H}.  
 
@@ -1305,7 +1310,7 @@ are currently unsure of the precision that can be achieved.
 \subsection{Flat Field Illumination System}
 The flat field illumination system is designed to illuminate the dome screen with a uniform flood of either 
 broadband or tunable narrowband light.  A precision photodiode measures the intensity of the illumination.  
-The requirements for the flat field illumination system are in Sebag and Krabbendam (\citep{LSE-60}).  The overall
+The requirements for the flat field illumination system are in \citep{LSE-60}.  The overall
 goals are very similar to the DECal system used for the Dark Energy Survey (\citep{Marshall2013}), but due to the 
 larger telescope aperture, and more compact dome, is designed somewhat differently.   The overall design is shown
 in Figure \ref{fig:domescreen}.
@@ -1414,7 +1419,8 @@ As shown in Section \ref{sec:counts2photons}, $\Delta m_b^{obs}$ is a function b
 	We do not yet have reliable error levels for aerosols and ozone.  Based on the data from \citep{Burke2010b},
 	we estimate that the errors are no more than 10\% of the total variation seen in each of those components,
 	RSSed together.  
-	Figures \ref{fig:MaxAerVar} and \ref{fig:MaxO3Var} show that the resulting errors are roughly 1.6 mmag in u-, 2.1 in g-band, 
+	Figures \ref{fig:dmag_aer_10percent} and \ref{fig:dmag_O3_10percent} show that the resulting errors are 
+	roughly 1.6 mmag in u-, 2.1 in g-band, 
 	0.1 in r, and negligible in all other bands.
 	 
 	\item{Unmodelled spatial and/or temporal variation of atmospheric components, particularly aerosols}
@@ -1428,7 +1434,7 @@ As shown in Section \ref{sec:counts2photons}, $\Delta m_b^{obs}$ is a function b
 	}
 \item{Errors in determination of monochromatic illumination correction, which propagate directly into errors in $S_b^{sys}$.  
 
-If the monochromatic illumination correction was ignored, the resulting errors in $\Delta m_b^{obs}$ are as shown in Figure \ref{fig:KuruczIllumCorr}.  The maximum effect is roughly 15mmag in u-band and 3mmag or less in the other bands.  As discussed in Section \ref{sec:ic}, we will determine the illumination correction from a combination of modelling and dedicated measurements.
+If the monochromatic illumination correction was ignored, the resulting errors in $\Delta m_b^{obs}$ are as shown in Figure \ref{fig:IllumCorrKurucz}.  The maximum effect is roughly 15mmag in u-band and 3mmag or less in the other bands.  As discussed in Section \ref{sec:ic}, we will determine the illumination correction from a combination of modelling and dedicated measurements.
 While the accuracy of the result is difficult to assess in advance, we conservatively assume that the error will be 20\%. 
 This results in an error contribution of 3mmag in u-band, and 0.6mmag in the others.
 }
@@ -1888,154 +1894,14 @@ sensitivity functions.
 
 
 
-
-%\section{Areas for further investigation}
-%\label{sec:investigation}
-%
-%LSST is pushing to improve traditional photometric accuracy by a
-%factor of 2, through the use of independent measurements of the
-%hardware and atmospheric transmission curve normalization and
-%shape. As full-survey photometric calibration has never been attempted
-%before at this level, there are understandably many areas which
-%require further development and investigation.  This section is
-%intended to briefly document some of those areas.
-%
-%\begin{itemize}
-%
-%\item{The broad-band flat field source spectrum. For simplicity, we have assumed above
-%    that the broad-band flat field is created using a white-light
-%    source SED. However, any source SED could be used to create the
-%    broad-band flat field, and an SED other than flat might be
-%    desireable. An SED which corresponds to the extincted
-%    spectrum of our fundamental standard might provide smaller systematic
-%    photometric errors when comparing individual stellar measurements
-%    to an absolute flux scale. On the other hand, an SED which matches
-%    an average calibration star could produce smaller systematic
-%    photometric errors in generating internally calibrated
-%    measurements. This choice of the source SED should be studied
-%    further. }
-%
-%\item{A cosmetic flat field. A photometric flat field, as discussed above, is
-%    necessary for photometric calibration. However, there may be some
-%    stages of image processing where a `cosmetic' flat field, which
-%    creates a flat background sky is desirable (instead of the photometric flat
-%    field, which creates a background sky which varies according to
-%    the geometric size of the pixels). The details of the production
-%    of the photometric flat field, the image processing, and whether a
-%    cosmetic flat field is necessary must be discussed among the
-%    various software teams working on LSST.}
-%
-%\item{The illumination correction. As discussed in the document above, the
-%    photometric uniformity which must be achieved from the broad-band
-%    flats is a significant source of error in the final photometric
-%    calibration. Some of this photometric uniformity is currently
-%    achieved through extremely strong constraints on the dome screen
-%    illumination pattern, while some will be achieved through a
-%    combination of forward modeling of the optical path (a ZEMAX
-%    model) and rastering dense fields of bright stars across the focal
-%    plane. We strongly suspect that the self-calibration procedure can
-%    compensate for a much greater non-uniformity in the photometric
-%    flat than is currently budgeted; that is, the self-calibration
-%    procedure can help build a more accurate illumination correction
-%    to apply to the observed flat field. The exact limits of the
-%    self-calibration procedure in building an illumination correction in the face of realistic errors from
-%    the bandpass shape correction and atmospheric extinction must be
-%    explored in more detail. }
-%
-%\item{Hardware response curve - $\phi_b^{sys}(\lambda,t)$. There is a
-%    narrow-band dome screen projector system installed at Pan-STARRS which
-%    will be extremely useful to study for comparison to the planned LSST
-%    dome screen. The Pan-STARRS system has demonstrated that ghosting is a
-%    significant problem in the narrow-band flat field, and must be
-%    compensated for in a narrow-band illumination correction (one per
-%    narrow-band flat, as this ghosting is wavelength dependent).  Some
-%    methods for measuring the ghosts in the Pan-STARRS system as a function of
-%    wavelength have already been implemented (Chris Stubbs, private
-%    communication), and these tests will feed back to the plans for the
-%    LSST dome screen projectors. LSST must continue to improve our ZEMAX
-%    modeling of these updated projector screens with expected LSST optical
-%    components to study ghosting, as well as how the error induced by
-%    these wavelength-dependent ghosts propagates through the rest of
-%    calibration. In addition, we will investigate how the self-calibration
-%    procedure could contribute towards compensating for these narrow band,
-%    wavelength-dependent illumination corrections. A major problem in
-%    attempting to generate narrow-band illumination corrections from
-%    the self-calibration procedure is that these illumination
-%    corrections would then only be appropriate for main-sequence SEDs
-%    (as these are the stars used in self-calibration); we must
-%    investigate how these could be applied to non-main-sequence SEDs.  }
-%
-%\item{Atmospheric absorption - $\phi_b^{atm}(\lambda,t)$. Further
-%    observing runs where spectroscopic (and preferably, also
-%    broad-band photometry) observations of known sources under a wider
-%    variety of weather conditions and at a variety of pointings over
-%    the sky will be obtained to verify that the range of atmospheric
-%    conditions described in Section~\ref{sec:atmo_phi} are appropriate
-%    and that the model used to describe the water vapor variation
-%    across the sky is adequate. This is particularly important when
-%    considering $y$ band photometric calibration and will feed back
-%    into the observation plan for the auxiliary telescope. Using data acquired
-%    in these observing runs, we will also test the
-%    wavelength resolution necessary for the auxiliary telescope.}
-%
-%\item{Cloud extinction.The expected cloud structure function at Cerro
-%     Pach\'{o}n is not well understood; the extent of its `clumpiness' as a
-%    function of total cloud extinction is a significant unknown in the
-%    self-calibration procedure. LSST plans to install 
-%    small wide-field camera systems to measure cloud extinction across the sky and on small
-%    scales on Cerro Pachon to address this issue. }
-%
-%\item{Self-calibration. The self-calibration software must be
-%    developed further to run efficiently on full LSST data sets. Work
-%    is already underway to test alternative solver methods (conjugate
-%    gradient, least-squares) and add multi-threading to the
-%    solver, to both speed up the self-calibration procedure and to
-%    to handle more observations of more stars, requiring more
-%    memory. The extent to which additional terms can be added to the
-%    model magnitude with each of these algorithms will also be
-%    investigated. In addition, further tests to probe the boundaries
-%    of `where self-calibration breaks down' will be conducted for each
-%    parameter and updated as the algorithms are improved. The
-%    self-calibration algorithm will also be included into LSST Data
-%    Challenges and applied to real-world data, as well as data from
-%    the LSST end-to-end simulations.}
-%
-%\item{Effects on non-main sequence stars. Each of the calibration
-%    steps above have been considered in terms of main sequence
-%    stars (as these become the `calibration' stars for
-%    self-calibration).  The wavelength-independent stages are
-%    identical for main-sequence or non-main-sequence stars. However,
-%    the wavelength-dependent corrections have differing effects on
-%    non-main sequence or extreme SEDs. For example, the results of a
-%    30\% \water variation may have a much larger effect on the final
-%    calibrated magnitudes for MLT dwarfs (which have many absorption
-%    and emission lines in and near the $y$ band) than the same 30\%
-%    variation did on the main sequence
-%    stars. Section~\ref{sec:photo_better} describes these effects
-%    further. Further modeling is required to understand the full
-%    photometric calibration potential for all types of objects that
-%    LSST will observe, with consideration of the potential photometric
-%    calibration accuracy for objects for which the SED may not be well
-%    known (such as SN with an unknown redshift). }
-%  
-%\item{External calibration standards, for both band-to-band and
-%    absolute calibration. These calibration standards need to be
-%    identified and observing programs to determine full
-%    spectro-photometric characteristics for the required sample must
-%    be conducted. The required size of this sample is approximately
-%    known, but should be studied further. }
-%
-%\end{itemize}
-
-
 \section{Photometric measurements for non-main sequence stars}
 \label{sec:photo_better}
 
 LSST will record a series of $m_b^{nat}$ measurements for each
 astronomical object in each visit. These $m_b^{nat}$ measurements are
 generated directly from the counts recorded in each image, corrected
-with the photometrically uniform, broad-band flat field and for gray
-(cloud) atmospheric extinction effects. However, these $m_b^{nat}$
+with the photometrically uniform, synthetic broad-band flat field and for gray
+(cloud) atmospheric extinction effects. However, unless the object SED is flat, $m_b^{nat}$
 measurements will vary as the shape of the bandpass changes, whether
 as a function of position in the focal plane or as a function of
 changes in atmospheric absorption components. Correcting for these
@@ -2044,16 +1910,14 @@ produces $m_b^{std}$ values after applying $\Delta m_b^{meas}$ offsets
 (see the overview of calibration in section~\ref{sec:counts2photons}
 for a review).
 
-For most objects, LSST will simply assume the source has a flat SED,
-which means that $m_b^{std}$ is exactly equal to $m_b^{nat}$, as by
-definition then $\Delta m_b^{meas}$ is zero. To permit scientists to
-generate higher precision photometry for objects using arbitrary SEDs,
-LSST must provide a record of $\phi_b^{meas}(\lambda,alt,az,x,y,t)$ as
-well as the normalization zeropoint offsets for each observation. With
-these additional pieces of information, scientists can generate more
-appropriate $\Delta m_b^{meas}$ corrections, using their own chosen
-object SED to generate $m_b^{std}$. Sections~\ref{sec:hardware_phi}
-and ~\ref{sec:atmo_phi} outline the typical magnitudes of these
+To generate precision photometry for objects with arbitrary SEDs,
+LSST will provide a record of $\phi_b^{meas}(\lambda,alt,az,x,y,t)$ as
+well as the zeropoint offsets, $Z_b^{obs}$, for each observation, as
+discussed in Section \ref{sec:software}. With
+these data products, users can generate the
+appropriate $\Delta m_b^{meas}$ corrections and $m_b^{std}$ for their chosen
+object SED. Section~\ref{sec:allvars}
+outlines the typical magnitudes of these
 corrections for main sequence stars; $\Delta m_b^{meas}$ can easily be
 on the order of 20 mmag for $gri$, or even 100 mmag in $u$ band. For
 more extreme SEDs, these corrections may be even larger.
@@ -2084,13 +1948,6 @@ star), the resulting $m_b^{std}$ values would be incorrect by the
 value of the offset between the true $\Delta m_b^{meas}$ for the SED
 and the main sequence $\Delta m_b^{meas}$ values at each color; this
 could easily be more than 20mmag.  
-
-With the wide variety of objects and SEDs that will be possible in the
-LSST data set, it is crucial to provide the information and tools so that
-scientists may calculate highly precise $m_b^{std}$ magnitudes for
-their objects of interest. This means recording or providing the means
-to recalculate $\phi_b^{sys+atm}(\lambda,t)$ for every object detected
-with LSST. 
 
 \section{Fiducial Self-Calibration Input}\label{sec:siminput}
 The input file used with simSelfCalib.py to generate the simlutated LSST catalor presented in \S\ref{sec:selfcalsim}.
@@ -2312,29 +2169,28 @@ the CCOB are available in LSST-10015 and LSST-8217.}
 
 \item{{\bf Broadband flat field.} An image obtained by observing a
 light source which generates photons with a wide range of wavelengths
-(as opposed to a narrow-band flat), with relatively uniform
+with relatively uniform
 illumination across the field of view. Night sky flats, twilight
 flats, and white-light or broadband dome screen flats would all
 generate broadband flat fields.}
 
-\item{{\bf Narrow-band flat field.} An image obtained by
+\item{{\bf Narrowband flat field.} An image obtained by
     observing a light source which generates photons with a very
-    narrow range of wavelengths (hypothetically, even a single
-    wavelength), with relatively uniform illumination across the field
+    narrow range of wavelengths  with relatively uniform illumination across the field
     of view. A dome screen illuminated with a narrow-band laser light
     source will generate a narrow-band flat field. }
 
-\item{{\bf `Observed' flat field.} A flat field, as obtained by
-    observing the dome screen projectors. Generally would refer to a
-    broadband flat field.}
+\item{{\bf `Synthetic' flat field.} A flat field constructed from a datacube of
+narrowband flats.  This flat is used in image reduction, and has had a
+number of corrections applied to ensure that the resulting photometry
+is uniform as long as the objects possess the same SED as used in 
+constructing the synthetic flat.}
 
-\item{{\bf Photometric flat field.} A flat field which produces
-    uniform photometric measurements across the field of view for a
-    flat $F_\nu(\lambda)$ source. A photometric flat field must be
-    based on a broadband flat.}
-
-\item{{\bf Illumination Correction.} The ratio between the
-    photometric flat field  and the observed flat field. 
+\item{{\bf Illumination Correction.} The ratio between an
+	ideal photometric flat obtained by a raster scan across
+	the field of a
+	collimated light source at infinity,
+    and the observed flat field. 
 \begin{equation}
 \rm{Flat}_{photometric} = \rm{Flat}_{observed} * \rm{Illumination
  Correction}
@@ -2400,7 +2256,7 @@ at zenith.  The units are mm of liquid water equivalent. }
 \fbox{
 \begin{minipage}{6.5in}
 \includegraphics[width=6.5in]{CalibDataProdSchematic2}
-\caption{ {\small {\bf Flat SED Flat Determination.} Determination of the flat SED flat (FSF) is of central importance.  The initial step in the calibration process treats all objects as if their SED were flat.  This is consistent only if the flatfield is that for a flat SED, as transmitted through a reference atmosphere.  Since the illumination source for the actual broadband flat does not have the required SED, we cannot use it directly.  Instead, we synthesize the required flat from the monochromatic flats.  These flats as measured are contaminated by light which arrives from paths other than the direct path, such as ghosting.  These effects are taken out by the illumination correction.  Additionally, the flats must be corrected for the nonuniform pixel solid angle on the sky. Finally, the monochromatic flats are taken relatively infrequently, and will not reflect changes on shorter timescales, such as the appearance of new dust particles.  We account for this by multiplying the synthesized FSF by the ratio of two broadband flats, one at the current epoch and one at the reference epoch, when the monochromatic flats were gathered.}
+\caption{ {\small {\bf Synthetic Flat Determination.} Determination of the synthetic flat is of central importance.  The initial step in the calibration process treats all objects as if their SED were flat.  This is consistent only if the flatfield is that for a flat SED, as transmitted through a reference atmosphere.  Since the illumination source for the actual broadband flat does not have the required SED, and since the illumination correction is a function of wavelength, we cannot use it directly.  Instead, we synthesize the required flat from the monochromatic flats.  These flats as measured are contaminated by light which arrives from paths other than the direct path, such as ghosting.  These effects are taken out by the illumination correction.  Additionally, the flats must be corrected for the nonuniform pixel solid angle on the sky. Finally, the monochromatic flats are taken relatively infrequently, and will not reflect changes on shorter timescales, such as the appearance of new dust particles.  We account for this by multiplying the synthetic flat by the ratio of two broadband flats, one at the current epoch and one at the reference epoch, when the monochromatic flats were gathered.}
 \label{fig:overview_flowchart2} }
 \end{minipage}
 }
@@ -2429,6 +2285,17 @@ at zenith.  The units are mm of liquid water equivalent. }
 \end{figure}
 
 \clearpage
+
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{delta_mags_airmass_big.png}
+\caption{ {Effect on natural magnitudes of Kurucz stars from changing the airmass from 1.0 to 2.1}.
+\label{fig:dmag_airmass} }
+\end{minipage}
+}
+\end{figure}
 
 \begin{figure}[htbp]
 \centering
@@ -2962,23 +2829,53 @@ the two extremes of the atmospheric transmission in each filter are shown above.
 }
 \end{figure}
 
-%\begin{figure}
-%\centering
-%\centering
-%\fbox{
-%\begin{minipage}{6.5in}
-%\includegraphics[width=6in]{delta_mags_10}
-%\caption{{\small
-%{\bf $\Delta m_b^{obs}$ due to 10\% variations of 
-%atmospheric transmission in \ozone\,and aerosol, with 30\% variation of \water.} 
-%This is similar to Figure~\ref{fig:dmag_atm_max}, except $C_{\ozone}$,
-%$\tau_0$ and $\alpha$ were only varied by 10\% of the total range of
-%values measured in \citet{Burke2010b}, and $C_{\water}$ was varied by 30\%
-%of the total range. }}
-%\label{fig:dmag_atm_10}
-%\end{minipage}
-%}
-%\end{figure}
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/aerosols_10percentvar}
+\caption{{\small
+{\bf$\Delta m_b^{obs}$ due to an error of 10\% of the expected
+aerosol}
+}}
+\label{fig:dmag_aer_10percent}
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{AtmoFigs/ozone_10percentvar}
+\caption{{\small
+{\bf$\Delta m_b^{obs}$ due to an error of 10\% of the expected
+ozone}
+}}
+\label{fig:dmag_O3_10percent}
+\end{minipage}
+}
+\end{figure}
+
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6in]{delta_mags_10}
+\caption{{\small
+{\bf $\Delta m_b^{obs}$ due to 10\% variations of 
+atmospheric transmission in \ozone\,and aerosol, with 30\% variation of \water.} 
+This is similar to Figure~\ref{fig:dmag_atm_max}, except $C_{\ozone}$,
+$\tau_0$ and $\alpha$ were only varied by 10\% of the total range of
+values measured in \citet{Burke2010b}, and $C_{\water}$ was varied by 30\%
+of the total range. }}
+\label{fig:dmag_atm_10}
+\end{minipage}
+}
+\end{figure}
 
 
 \begin{figure}[htbp]
