@@ -3,7 +3,7 @@
 \citation{pad08}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Simulated LSST Catalog}{2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Basic properties of the GALFAST catalog used to generate LSST observations. For our subsample of $\sim $1 million stars, we plot the densities of the different stellar populations along with the average $g-i$ stellar color.}}{3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Basic properties of the GALFAST catalog used to generate LSST observations. For our sub-sample of $\sim $1 million stars, we plot the densities of the different stellar populations along with the average $g-i$ stellar color.}}{3}}
 \newlabel{fig:gfpop}{{1}{3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Resulting Calibration Star Catalog}{4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Simulated Offsets}{4}}
@@ -33,7 +33,7 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces HEALpixel maps for 8 and 16 sides, resulting in 400 and 1568 individual pixels respectively.}}{12}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Comparison of a simulation solved simultaneously (left) with one solved on individual HEALpixels and combined. Statistically, the differences between the two solutions are at the sub-millimag level, which is much less than the differences we see between runs with different starting seeds (Figure\nobreakspace  {}14\hbox {}). }}{13}}
 \newlabel{fig:hpvglobal}{{5}{13}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Example of when solving the self-calibration problem in parallel fails. One the left are the results from a 1-million star simulation in $r$-band. On the right, the same input parameters were used, but the Opsim hex-dither option was turned off, resulting in a survey that has much less uniformity. The top panel shows a map of the number of visits. The bottom two panels show how well stellar magnitudes are recovered by self-calibration. By turning off dithering, the self-calibration problem is poorly-linked and we are not able to solve the system in parallel. }}{14}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Example of when solving the self-calibration problem in parallel fails. One the left are the results from a 1-million star simulation in $r$-band. On the right, the same input parameters were used, but the Opsim hex-dither option was turned off, resulting in a survey that has much less spatial coverage uniformity. The top panel shows a map of the number of visits. The bottom two panels show how well stellar magnitudes are recovered by self-calibration. By turning off dithering, the self-calibration problem is poorly-linked and we are not able to solve the system in parallel. }}{14}}
 \newlabel{fig:nodither}{{6}{14}}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  {\bf  Full-Sky, Low-Density simulation for the $r$-filter.} }}{15}}
 \newlabel{fig:r1e6}{{7}{15}}
@@ -49,29 +49,34 @@
 \newlabel{fig:y1e6}{{12}{20}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Small-Sky, Full-Density}{21}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Full-Sky, High-Density}{21}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Dominant Effects}{21}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Flux Calibration and Colors}{21}}
-\newlabel{sec:fluxcal}{{6.5}{21}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}Magnitude Recovery}{22}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.7}Results from earlier runs}{22}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.8}What Self-Calibration Can't Do}{22}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Lessons Learned}{22}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Time Evolution}{21}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Dominant Effects}{21}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}Flux Calibration and Colors}{21}}
+\newlabel{sec:fluxcal}{{6.6}{21}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.7}Magnitude Recovery}{22}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.8}Results from earlier runs}{22}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.9}What Self-Calibration Can't Do}{22}}
 \bibdata{cal}
 \bibcite{Burke2010}{{1}{2010}{{{Burke} {et~al.}}}{{{Burke}, {Axelrod}, {Blondin}, {Claver}, {Ivezi{\'c}}, {Jones}, {Saha}, {Smith}, {Smith}, \& {Stubbs}}}}
 \bibcite{Ivezic2007}{{2}{2007}{{{Ivezi{\'c}} {et~al.}}}{{{Ivezi{\'c}}, {Smith}, {Miknaitis}, {Lin}, {Tucker}, {Lupton}, {Gunn}, {Knapp}, {Strauss}, {Sesar}, {Doi}, {Tanaka}, {Fukugita}, {Holtzman}, {Kent}, {Yanny}, {Schlegel}, {Finkbeiner}, {Padmanabhan}, {Rockosi}, {Juri{\'c}}, {Bond}, {Lee}, {Stoughton}, {Jester}, {Harris}, {Harding}, {Morrison}, {Brinkmann}, {Schneider}, \& {York}}}}
 \bibcite{Ofek11}{{3}{2011}{{{Ofek} {et~al.}}}{{{Ofek}, {Frail}, {Breslauer}, {Kulkarni}, {Chandra}, {Gal-Yam}, {Kasliwal}, \& {Gehrels}}}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Lessons Learned}{23}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Future Refinements}{23}}
 \bibcite{pad08}{{4}{2008}{{{Padmanabhan} {et~al.}}}{{{Padmanabhan}, {Schlegel}, {Finkbeiner}, {Barentine}, {Blanton}, {Brewington}, {Gunn}, {Harvanek}, {Hogg}, {Ivezi{\'c}}, {Johnston}, {Kent}, {Kleinman}, {Knapp}, {Krzesinski}, {Long}, {Neilsen}, {Nitta}, {Loomis}, {Lupton}, {Roweis}, {Snedden}, {Strauss}, \& {Tucker}}}}
 \bibcite{Schaf12}{{5}{2012}{{{Schlafly} {et~al.}}}{{{Schlafly}, {Finkbeiner}, {Juri{\'c}}, {Magnier}, {Burgett}, {Chambers}, {Grav}, {Hodapp}, {Kaiser}, {Kudritzki}, {Martin}, {Morgan}, {Price}, {Rix}, {Stubbs}, {Tonry}, \& {Wainscoat}}}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Future Refinements}{23}}
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces The residual distribution for individual observations is very non-Gaussian. This is an example of all the observations in a single $r$-band HEALpixel. The left panel shows the histogram of residuals of individual observations while the right shows the cumulative distribution. Both panels show a Gaussian for comparison. This shows for any individual star, about 60\% of the observations follow a Gaussian distribution with $\sim 5$ mmag RMS, while the other 40\% of the observations are in a much broader tail. This well matches the Opsim input which has about 60\% of observations taken in photometric conditions. }}{24}}
-\newlabel{fig:resid_dist}{{13}{24}}
-\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Comparing two $r$-band simulations started with different random number generator seeds. The residual histograms look very similar, but the sky maps show large changes in the structure.  }}{25}}
-\newlabel{fig:diffseed}{{14}{25}}
-\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces  {\bf  Small-Sky, Full-Density simulation for the $r$-filter.} }}{26}}
-\newlabel{fig:r1e6hd}{{15}{26}}
-\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces  {\bf  Full-Sky, High-Density simulation for the $r$-filter. } }}{27}}
-\newlabel{fig:25mil}{{16}{27}}
-\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Recovering stellar magnitudes that were not included in the self-calibration fit. The panels on the left show the residuals of stars that were not included in the fit, while the panel on the right shows the residuals for stars that were. }}{28}}
-\newlabel{fig:zpcheck}{{17}{28}}
-\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces The left panel shows the standard $u$-band simulation, where the color-dependent illumination errors have been mostly removed before solving. On the right, the illumination errors are uncorrected before solving. }}{29}}
-\newlabel{fig:badcolor}{{18}{29}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces The residual distribution for individual observations is very non-Gaussian. This is an example of all the observations in a single $r$-band HEALpixel. The left panel shows the histogram of residuals of individual observations while the right shows the cumulative distribution. Both panels show a Gaussian for comparison. This shows for any individual star, about 60\% of the observations follow a Gaussian distribution with $\sim 5$ mmag RMS, while the other 40\% of the observations are in a much broader tail. This well matches the Opsim input which has about 60\% of observations taken in photometric conditions. }}{25}}
+\newlabel{fig:resid_dist}{{13}{25}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Comparing two $r$-band simulations started with different random number generator seeds. The residual histograms look very similar, but the sky maps show large changes in the structure.  }}{26}}
+\newlabel{fig:diffseed}{{14}{26}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces  {\bf  Small-Sky, Full-Density simulation for the $r$-filter.} }}{27}}
+\newlabel{fig:r1e6hd}{{15}{27}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces  {\bf  Full-Sky, High-Density simulation for the $r$-filter. } }}{28}}
+\newlabel{fig:25mil}{{16}{28}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces The evolution of the $r$-band self-calibration solution. From top to bottom, 1, 2, 5, and 10 years of $r$-band observations. }}{29}}
+\newlabel{fig:timeevo}{{17}{29}}
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Color residuals after using 30 WD flux standards to move each band to a flux-calibrated system. }}{30}}
+\newlabel{fig:colorcolor}{{18}{30}}
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces Recovering stellar magnitudes that were not included in the self-calibration fit. The panels on the left show the residuals of stars that were not included in the fit, while the panel on the right shows the residuals for stars that were. }}{31}}
+\newlabel{fig:zpcheck}{{19}{31}}
+\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces The left panel shows the standard $u$-band simulation, where the color-dependent illumination errors have been mostly removed before solving. On the right, the illumination errors are uncorrected before solving. }}{32}}
+\newlabel{fig:badcolor}{{20}{32}}

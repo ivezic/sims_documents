@@ -1,4 +1,4 @@
-This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2012.8.24)  19 JUN 2013 16:09
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2012.8.24)  24 JUN 2013 14:08
 entering extended mode
 **scUpdate
 (./scUpdate.tex
@@ -586,84 +586,165 @@ File: Plots/25mil/Srepeat_IQR.png Graphic file (type png)
 <Plots/25mil/Srepeat_IQR_bright_hist.png, id=170, 578.16pt x 433.62pt>
 File: Plots/25mil/Srepeat_IQR_bright_hist.png Graphic file (type png)
 
-<use Plots/25mil/Srepeat_IQR_bright_hist.png> [21]
+<use Plots/25mil/Srepeat_IQR_bright_hist.png>
+Plotone included the file Plots/r_1e6_1yr/Snobs.png
+<Plots/r_1e6_1yr/Snobs.png, id=171, 578.16pt x 433.62pt>
+File: Plots/r_1e6_1yr/Snobs.png Graphic file (type png)
+
+<use Plots/r_1e6_1yr/Snobs.png>
+Plotone included the file Plots/r_1e6_1yr/Sdmag.png
+<Plots/r_1e6_1yr/Sdmag.png, id=172, 578.16pt x 433.62pt>
+File: Plots/r_1e6_1yr/Sdmag.png Graphic file (type png)
+
+<use Plots/r_1e6_1yr/Sdmag.png>
+Plotone included the file Plots/r_1e6_1yr/Sdamg_hist.png
+<Plots/r_1e6_1yr/Sdamg_hist.png, id=173, 578.16pt x 433.62pt>
+File: Plots/r_1e6_1yr/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/r_1e6_1yr/Sdamg_hist.png>
+Plotone included the file Plots/r_1e6/Snobs.png
+File: Plots/r_1e6/Snobs.png Graphic file (type png)
+<use Plots/r_1e6/Snobs.png>
+Plotone included the file Plots/r_1e6/Sdmag.png
+File: Plots/r_1e6/Sdmag.png Graphic file (type png)
+<use Plots/r_1e6/Sdmag.png>
+Plotone included the file Plots/r_1e6/Sdamg_hist.png
+File: Plots/r_1e6/Sdamg_hist.png Graphic file (type png)
+<use Plots/r_1e6/Sdamg_hist.png> [21]
+Plottwo included the files Plots/flux_color/coloru_g.png Plots/flux_color/map_c
+oloru_g.png
+<Plots/flux_color/coloru_g.png, id=177, 578.16pt x 433.62pt>
+File: Plots/flux_color/coloru_g.png Graphic file (type png)
+
+<use Plots/flux_color/coloru_g.png>
+<Plots/flux_color/map_coloru_g.png, id=178, 578.16pt x 433.62pt>
+File: Plots/flux_color/map_coloru_g.png Graphic file (type png)
+
+<use Plots/flux_color/map_coloru_g.png>
+Plottwo included the files Plots/flux_color/colorg_r.png Plots/flux_color/map_c
+olorg_r.png
+<Plots/flux_color/colorg_r.png, id=179, 578.16pt x 433.62pt>
+File: Plots/flux_color/colorg_r.png Graphic file (type png)
+
+<use Plots/flux_color/colorg_r.png>
+<Plots/flux_color/map_colorg_r.png, id=180, 578.16pt x 433.62pt>
+File: Plots/flux_color/map_colorg_r.png Graphic file (type png)
+
+<use Plots/flux_color/map_colorg_r.png>
+Plottwo included the files Plots/flux_color/colorr_i.png Plots/flux_color/map_c
+olorr_i.png
+<Plots/flux_color/colorr_i.png, id=181, 578.16pt x 433.62pt>
+File: Plots/flux_color/colorr_i.png Graphic file (type png)
+
+<use Plots/flux_color/colorr_i.png>
+<Plots/flux_color/map_colorr_i.png, id=182, 578.16pt x 433.62pt>
+File: Plots/flux_color/map_colorr_i.png Graphic file (type png)
+
+<use Plots/flux_color/map_colorr_i.png>
+Plottwo included the files Plots/flux_color/colori_z.png Plots/flux_color/map_c
+olori_z.png
+<Plots/flux_color/colori_z.png, id=183, 578.16pt x 433.62pt>
+File: Plots/flux_color/colori_z.png Graphic file (type png)
+
+<use Plots/flux_color/colori_z.png>
+<Plots/flux_color/map_colori_z.png, id=184, 578.16pt x 433.62pt>
+File: Plots/flux_color/map_colori_z.png Graphic file (type png)
+
+<use Plots/flux_color/map_colori_z.png>
+Plottwo included the files Plots/flux_color/colorz_y.png Plots/flux_color/map_c
+olorz_y.png
+<Plots/flux_color/colorz_y.png, id=185, 578.16pt x 433.62pt>
+File: Plots/flux_color/colorz_y.png Graphic file (type png)
+
+<use Plots/flux_color/colorz_y.png>
+<Plots/flux_color/map_colorz_y.png, id=186, 578.16pt x 433.62pt>
+File: Plots/flux_color/map_colorz_y.png Graphic file (type png)
+
+<use Plots/flux_color/map_colorz_y.png>
+
+LaTeX Warning: Float too large for page by 36.02489pt on input line 547.
+
 Plottwo included the files Plots/mag_recover/20per_results/Sdmag.png Plots/mag_
 recover/80per_results/Sdmag.png
-<Plots/mag_recover/20per_results/Sdmag.png, id=174, 578.16pt x 433.62pt>
+<Plots/mag_recover/20per_results/Sdmag.png, id=187, 578.16pt x 433.62pt>
 File: Plots/mag_recover/20per_results/Sdmag.png Graphic file (type png)
 
 <use Plots/mag_recover/20per_results/Sdmag.png>
-<Plots/mag_recover/80per_results/Sdmag.png, id=175, 578.16pt x 433.62pt>
+<Plots/mag_recover/80per_results/Sdmag.png, id=188, 578.16pt x 433.62pt>
 File: Plots/mag_recover/80per_results/Sdmag.png Graphic file (type png)
 
 <use Plots/mag_recover/80per_results/Sdmag.png>
 Plottwo included the files Plots/mag_recover/20per_results/Sdamg_hist.png Plots
 /mag_recover/80per_results/Sdamg_hist.png
-<Plots/mag_recover/20per_results/Sdamg_hist.png, id=176, 578.16pt x 433.62pt>
+<Plots/mag_recover/20per_results/Sdamg_hist.png, id=189, 578.16pt x 433.62pt>
 File: Plots/mag_recover/20per_results/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/mag_recover/20per_results/Sdamg_hist.png>
-<Plots/mag_recover/80per_results/Sdamg_hist.png, id=177, 578.16pt x 433.62pt>
+<Plots/mag_recover/80per_results/Sdamg_hist.png, id=190, 578.16pt x 433.62pt>
 File: Plots/mag_recover/80per_results/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/mag_recover/80per_results/Sdamg_hist.png>
 Plottwo included the files Plots/mag_recover/20per_results/Srepeat_IQR_bright_h
 ist.png Plots/mag_recover/80per_results/Srepeat_IQR_bright_hist.png
 
-<Plots/mag_recover/20per_results/Srepeat_IQR_bright_hist.png, id=178, 578.16pt 
+<Plots/mag_recover/20per_results/Srepeat_IQR_bright_hist.png, id=191, 578.16pt 
 x 433.62pt>
 File: Plots/mag_recover/20per_results/Srepeat_IQR_bright_hist.png Graphic file 
 (type png)
  <use Plots/mag_recover/20per_results/Srepeat_IQR_bright_hist.png>
-<Plots/mag_recover/80per_results/Srepeat_IQR_bright_hist.png, id=179, 578.16pt 
+<Plots/mag_recover/80per_results/Srepeat_IQR_bright_hist.png, id=192, 578.16pt 
 x 433.62pt>
 File: Plots/mag_recover/80per_results/Srepeat_IQR_bright_hist.png Graphic file 
 (type png)
  <use Plots/mag_recover/80per_results/Srepeat_IQR_bright_hist.png>
+[22]
 Plottwo included the files Plots/u_1e6_neg15/Saccuracyvcolor.png Plots/u_1e6_mo
 reghost_small/Saccuracyvcolor_mod.png
-<Plots/u_1e6_neg15/Saccuracyvcolor.png, id=180, 578.16pt x 433.62pt>
+<Plots/u_1e6_neg15/Saccuracyvcolor.png, id=196, 578.16pt x 433.62pt>
 File: Plots/u_1e6_neg15/Saccuracyvcolor.png Graphic file (type png)
 
 <use Plots/u_1e6_neg15/Saccuracyvcolor.png>
-<Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png, id=181, 578.16pt x 433.62
+<Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png, id=197, 578.16pt x 433.62
 pt>
 File: Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png Graphic file (type pn
 g)
- <use Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png> [22]
-(./scUpdate.bbl) [23] [24 <./Plots/r_1e6/repeat_examples_hist.png> <./Plots/r_1
-e6/repeat_examples_cdf.png>] [25 <./Plots/r_1e6_newseed/Sdmag.png> <./Plots/r_1
-e6_newseed/Sdamg_hist.png> <./Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png>]
-[26 <./Plots/r_hd_test/Snobs.png> <./Plots/r_hd_test/Snobs_hist.png> <./Plots/r
-_hd_test/Sdmag.png> <./Plots/r_hd_test/Sdamg_hist.png> <./Plots/r_hd_test/Srepe
-at_IQR.png> <./Plots/r_hd_test/Srepeat_IQR_bright_hist.png>] [27 <./Plots/25mil
-/Snobs.png> <./Plots/25mil/Snobs_hist.png> <./Plots/25mil/Sdmag.png> <./Plots/2
-5mil/Sdamg_hist.png> <./Plots/25mil/Srepeat_IQR.png> <./Plots/25mil/Srepeat_IQR
-_bright_hist.png>] [28 <./Plots/mag_recover/20per_results/Sdmag.png> <./Plots/m
-ag_recover/80per_results/Sdmag.png> <./Plots/mag_recover/20per_results/Sdamg_hi
-st.png> <./Plots/mag_recover/80per_results/Sdamg_hist.png> <./Plots/mag_recover
-/20per_results/Srepeat_IQR_bright_hist.png> <./Plots/mag_recover/80per_results/
-Srepeat_IQR_bright_hist.png>] [29 <./Plots/u_1e6_neg15/Saccuracyvcolor.png> <./
-Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png>] (./scUpdate.aux)
+ <use Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png> (./scUpdate.bbl
+[23]) [24] [25 <./Plots/r_1e6/repeat_examples_hist.png> <./Plots/r_1e6/repeat_e
+xamples_cdf.png>] [26 <./Plots/r_1e6_newseed/Sdmag.png> <./Plots/r_1e6_newseed/
+Sdamg_hist.png> <./Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png>] [27 <./Plo
+ts/r_hd_test/Snobs.png> <./Plots/r_hd_test/Snobs_hist.png> <./Plots/r_hd_test/S
+dmag.png> <./Plots/r_hd_test/Sdamg_hist.png> <./Plots/r_hd_test/Srepeat_IQR.png
+> <./Plots/r_hd_test/Srepeat_IQR_bright_hist.png>] [28 <./Plots/25mil/Snobs.png
+> <./Plots/25mil/Snobs_hist.png> <./Plots/25mil/Sdmag.png> <./Plots/25mil/Sdamg
+_hist.png> <./Plots/25mil/Srepeat_IQR.png> <./Plots/25mil/Srepeat_IQR_bright_hi
+st.png>] [29 <./Plots/r_1e6_1yr/Snobs.png> <./Plots/r_1e6_1yr/Sdmag.png> <./Plo
+ts/r_1e6_1yr/Sdamg_hist.png>] [30 <./Plots/flux_color/coloru_g.png> <./Plots/fl
+ux_color/map_coloru_g.png> <./Plots/flux_color/colorg_r.png> <./Plots/flux_colo
+r/map_colorg_r.png> <./Plots/flux_color/colorr_i.png> <./Plots/flux_color/map_c
+olorr_i.png> <./Plots/flux_color/colori_z.png> <./Plots/flux_color/map_colori_z
+.png> <./Plots/flux_color/colorz_y.png> <./Plots/flux_color/map_colorz_y.png>]
+[31 <./Plots/mag_recover/20per_results/Sdmag.png> <./Plots/mag_recover/80per_re
+sults/Sdmag.png> <./Plots/mag_recover/20per_results/Sdamg_hist.png> <./Plots/ma
+g_recover/80per_results/Sdamg_hist.png> <./Plots/mag_recover/20per_results/Srep
+eat_IQR_bright_hist.png> <./Plots/mag_recover/80per_results/Srepeat_IQR_bright_
+hist.png>] [32 <./Plots/u_1e6_neg15/Saccuracyvcolor.png> <./Plots/u_1e6_moregho
+st_small/Saccuracyvcolor_mod.png>] (./scUpdate.aux)
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 2672 strings out of 94500
- 38346 string characters out of 1176766
- 89703 words of memory out of 1000000
- 5793 multiletter control sequences out of 10000+50000
+ 2738 strings out of 94500
+ 40367 string characters out of 1176766
+ 89755 words of memory out of 1000000
+ 5847 multiletter control sequences out of 10000+50000
  11888 words of font info for 50 fonts, out of 500000 for 2000
  580 hyphenation exceptions out of 1000
  32i,8n,26p,1128b,270s stack positions out of 1500i,500n,5000p,200000b,5000s
 PDF statistics:
- 206 PDF objects out of 300000
+ 229 PDF objects out of 300000
  0 named destinations out of 131072
- 376 words of extra memory for PDF output out of 65536
+ 441 words of extra memory for PDF output out of 65536
 </usr/share/texmf/fonts/type1/bluesky/cm/cmr6.pfb></usr/share/texmf/fonts/typ
 e1/bluesky/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi6.pfb></us
 r/share/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/b
@@ -673,4 +754,4 @@ ky/cm/cmr7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/
 texmf/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/
 cmsy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf
 /fonts/type1/bluesky/cm/cmbx12.pfb>
-Output written on scUpdate.pdf (29 pages, 9264013 bytes).
+Output written on scUpdate.pdf (32 pages, 10743889 bytes).

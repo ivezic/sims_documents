@@ -91,7 +91,7 @@ Our model Milky Way includes $\sim1$ billion stars, with a magnitude range of $1
 \begin{figure}
 \plottwo{Plots/r_1e6/GFdensity.png}{Plots/r_1e6/GFwddensity.png}\\
 \plottwo{Plots/r_1e6/GFbhbdensity.png}{Plots/r_1e6/GFcolor.png}
-\caption{Basic properties of the GALFAST catalog used to generate LSST observations.  For our subsample of $\sim$1 million stars, we plot the densities of the different stellar populations along with the average $g-i$ stellar color.\label{fig:gfpop}}
+\caption{Basic properties of the GALFAST catalog used to generate LSST observations.  For our sub-sample of $\sim$1 million stars, we plot the densities of the different stellar populations along with the average $g-i$ stellar color.\label{fig:gfpop}}
 \end{figure}
 
 
@@ -164,7 +164,7 @@ where $\Delta m_{filter}$ is the offset caused by the variable filter throughput
 
 We have developed a robust procedure for generating realistic clouds based on previously observed cloud structure functions \citep{Ivezic2007,Burke2010}. Clouds are particularly difficult for LSST because the short exposure times means clouds have little time to drift across the field of view, resulting in extinction which is more structured than in surveys with longer exposure times like SDSS.  
 
-We first calculate an ARMA-based structure function, drawing from realisitic distributions of physical scales for clouds and average extinctions from Opsim.  The strcuture function is then used to generate a cloud image with LSST's field-of-view and sampled at a resolution similar to the average spacing between stars.  An example of a simulated cloud in shown in Figure~\ref{fig:cloud}.  
+We first calculate an ARMA-based structure function, drawing from realistic distributions of physical scales for clouds and average extinctions from Opsim.  The structure function is then used to generate a cloud image with LSST's field-of-view and sampled at a resolution similar to the average spacing between stars.  An example of a simulated cloud in shown in Figure~\ref{fig:cloud}.  
 
 
 \begin{figure}
@@ -310,7 +310,7 @@ number of observations to close the system).
 
 XXX--describe the two primary metrics we compare to:  The repeatability and the uniformity.  Repeatability is a measure of how well we make repeat measurements of the same star.  Because cloud structure can generate large offsets, we compute the RMS by scaling the inter-quartile range (IQR).  How residuals in individual observations departs from Gaussianity is shown in Figure~\ref{fig:resid_dist}.
 
-Since most of our simulations were done with stars uniformly distributed over the sky, the distribution of true minus bestfit stellar magnitude is a good measure of the calibration uniformity.  When we make simulations with variable densities, we average the residuals in HEALpixels (see \S\ref{sec:hp}).
+Since most of our simulations were done with stars uniformly distributed over the sky, the distribution of true minus best-fit stellar magnitude is a good measure of the calibration uniformity.  When we make simulations with variable densities, we average the residuals in HEALpixels (see \S\ref{sec:hp}).
 
 Measuring how well we can return stellar colors and tie the system to an external flux scale are discussed in \S\ref{sec:fluxcal}.
 
@@ -358,7 +358,7 @@ We have not explored optimizing the amount of overlap needed when solving indivi
 
 
 \begin{figure}
-\plottwo{Plots/r_1e6_regsolver/Sdmag.png}{Plots/r_1e6/Sdmag.png}
+\plottwo{Plots/r_1e6_regsolver/Sdmag.png}{Plots/r_1e6/Sdmag.png} \\
 \plottwo{Plots/r_1e6_regsolver/Sdamg_hist.png}{Plots/r_1e6/Sdamg_hist.png}
 %\plottwo{Plots/r_1e6_regsolver/Srepeat_IQR.png}{Plots/r_1e6/Srepeat_IQR.png}
 %\plottwo{Plots/r_1e6_regsolver/Srepeat_IQR_bright_hist.png}{Plots/r_1e6/Srepeat_IQR_bright_hist.png}
@@ -370,7 +370,7 @@ We have not explored optimizing the amount of overlap needed when solving indivi
 \plottwo{Plots/r_1e6/Snobs.png}{Plots/r_1e6_nodither/Snobs.png}\\
 \plottwo{Plots/r_1e6/Sdmag.png}{Plots/r_1e6_nodither/Sdmag.png}\\
 \plottwo{Plots/r_1e6/Sdamg_hist.png}{Plots/r_1e6_nodither/Sdamg_hist.png}
-\caption{Example of when solving the self-calibration problem in parallel fails.  One the left are the results from a 1-million star simulation in $r$-band.  On the right, the same input parameters were used, but the Opsim hex-dither option was turned off, resulting in a survey that has much less uniformity.  The top panel shows a map of the number of visits.  The bottom two panels show how well stellar magnitudes are recovered by self-calibration.  By turning off dithering, the self-calibration problem is poorly-linked and we are not able to solve the system in parallel.  \label{fig:nodither}}
+\caption{Example of when solving the self-calibration problem in parallel fails.  One the left are the results from a 1-million star simulation in $r$-band.  On the right, the same input parameters were used, but the Opsim hex-dither option was turned off, resulting in a survey that has much less spatial coverage uniformity.  The top panel shows a map of the number of visits.  The bottom two panels show how well stellar magnitudes are recovered by self-calibration.  By turning off dithering, the self-calibration problem is poorly-linked and we are not able to solve the system in parallel.  \label{fig:nodither}}
 \end{figure}
 
 
@@ -477,6 +477,26 @@ XXX-still running.  Results show in Figure~\ref{fig:25mil}.
 \caption{ {\bf Full-Sky, High-Density simulation for the $r$-filter.  }  \label{fig:25mil}}
 \end{figure}
 
+
+\subsection{Time Evolution}
+
+Figure~\ref{fig:timeevo} shows the time evolution of the self-calibration solution.  After one-year, the $r$-band still has regions that are not well connected to the rest of the survey.  However, the solution does meet the SRD requirements for relative photometry repeatability even when regions are not well connected.  XXX-After 2-years, the self-calibration solution gradually improves with increasing numbers of observations.
+
+XXX-5 and 10 yr running.
+
+
+
+\begin{figure}
+\epsscale{0.3}
+\plotone{Plots/r_1e6_1yr/Snobs.png}\plotone{Plots/r_1e6_1yr/Sdmag.png}\plotone{Plots/r_1e6_1yr/Sdamg_hist.png} \\
+\plotone{Plots/r_1e6/Snobs.png}\plotone{Plots/r_1e6/Sdmag.png}\plotone{Plots/r_1e6/Sdamg_hist.png} \\
+%\plotone{Plots/r_1e6_5yr/Snobs.png}\plotone{Plots/r_1e6_5yr/Sdmag.png}\plotone{Plots/r_1e6_5yr/Sdamg_hist.png} \\
+%\plotone{Plots/r_1e6_10yr/Snobs.png}\plotone{Plots/r_1e6_10yr/Sdmag.png}\plotone{Plots/r_1e6_10yr/Sdamg_hist.png} 
+\epsscale{1}
+\caption{The evolution of the $r$-band self-calibration solution.  From top to bottom, 1, 2, 5, and 10 years of $r$-band observations.  \label{fig:timeevo}}
+\end{figure}
+
+
 \subsection{Dominant Effects}
 
 Looking for what the main driver is in the best-fit stellar magnitude residuals.  Given the large differences between different realizations of otherwise identical simulations, it suggests that the cloud extinction is a primary driver.  
@@ -492,28 +512,42 @@ By default, the self-calibration procedure does not tie the solution to a physic
 XXX-have code done to tie all the calibrations together using the same WD stars.  Making color-color plots.
 
 
-With only 10 WD flux standards at 1\% accuracy, the absolute flux level in each filter can be set with an RMS of 3-5 mmag.  If we have 30 standards, that drops to 2-3 mmag.  The $u$ and $y$ filters have issues since the large scale residuals after self-calibration are strong around the equator, they have systematic offsets of 6-7 mmag compared to the other filters which have systematic offsets of 0-3 mmag.  
+With only 10 WD flux standards at 1\% accuracy, the absolute flux level in each filter can be set with an RMS of 3-5 mmag.  If we have 30 standards, that drops to 2-3 mmag.  The $y$ filters has issues since the large scale residuals after self-calibration are strong around the equator, and has a systematic offset of 6-7 mmag compared to the other filters which have systematic offsets of 0-3 mmag.  Figure~\ref{fig:colorcolor} shows the residuals of the colors after calibrating with 30 randomly chosen WD stars.
+
 
 %30 standards
 %filter mean       std
-%u 6.15848727259 3.30417034999
-%g -3.09394701216 2.42201852398
-%r -1.31328400535 2.12557754747
-%i -0.684679370397 2.05434780174
-%z -0.347638371088 1.82400999573
-%y 7.57278241384 2.73254347471
+%u: True zp - fit zp = 2.330944 (mmag)
+%g: True zp - fit zp = -3.379508 (mmag)
+%r: True zp - fit zp = -1.781482 (mmag)
+%i: True zp - fit zp = -0.214748 (mmag)
+%z: True zp - fit zp = -2.381536 (mmag)
+%y: True zp - fit zp = 5.172899 (mmag)
+
 
 %10 standards
-%u 6.24826169916 5.82709917906
-%g -3.00387927333 4.40788093129
-%r -1.17497834473 3.6340663804
-%i -0.57908221764 3.57438443916
-%z -0.611544542918 3.2303954308
-%y 7.26124677987 4.85583929037
+%u: True zp - fit zp = -3.738901 (mmag)
+%g: True zp - fit zp = -2.963236 (mmag)
+%r: True zp - fit zp = 3.790768 (mmag)
+%i: True zp - fit zp = -7.200404 (mmag)
+%z: True zp - fit zp = 2.097253 (mmag)
+%y: True zp - fit zp = 6.204528 (mmag)
 
+
+
+\begin{figure}
+\epsscale{.75}
+\plottwo{Plots/flux_color/coloru_g.png} {Plots/flux_color/map_coloru_g.png} \\
+\plottwo{Plots/flux_color/colorg_r.png}{Plots/flux_color/map_colorg_r.png} \\
+\plottwo{Plots/flux_color/colorr_i.png}{Plots/flux_color/map_colorr_i.png} \\
+\plottwo{Plots/flux_color/colori_z.png}{Plots/flux_color/map_colori_z.png} \\
+\plottwo{Plots/flux_color/colorz_y.png}{Plots/flux_color/map_colorz_y.png} 
+\epsscale{1}
+\caption{Color residuals after using 30 WD flux standards to move each band to a flux-calibrated system.   \label{fig:colorcolor}}
+\end{figure}
 
 \subsection{Magnitude Recovery}
-As a test of how accuratly we recover patch zeropoints, we randomly selected 20\% of the stars from the $r$-band full-sky low-density simulation and re-computed the self-calibration solution without including those stars.  We then used the best-fit patch zeropoints to calculate the stellar magnitudes of the withheld stars.  Figure~\ref{fig:zpcheck} shows the residuals are nearly identical for stars included in the fit as those that were not.  
+As a test of how accurately we recover patch zeropoints, we randomly selected 20\% of the stars from the $r$-band full-sky low-density simulation and re-computed the self-calibration solution without including those stars.  We then used the best-fit patch zeropoints to calculate the stellar magnitudes of the withheld stars.  Figure~\ref{fig:zpcheck} shows the residuals are nearly identical for stars included in the fit as those that were not.  
 
 
 \begin{figure}
@@ -683,4 +717,4 @@ g_2 = g_1\frac{sky_1}{sky_2} \pm (sky_1+(RN/g_1)^2)/sky_1^2\sqrt{N_{pix}} + (sky
 % LocalWords:  FoV expvar illumcorr dmag LSQR parallelize HEALpix HEALpixel Eqn
 % LocalWords:  WDs starsFOV rmagobs rmagtrue gainvar exptvar mmag Yusra kx elec
 % LocalWords:  ADU interpCloud opsim hexdither CCOB uber isoLatitude multipole
-% LocalWords:  Pixelization QE expt Illum Ivezic IQR WD
+% LocalWords:  Pixelization QE expt Illum Ivezic IQR WD ARMA LSST's
