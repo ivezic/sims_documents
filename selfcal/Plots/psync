@@ -17,3 +17,7 @@ rsync /data/tmp/July_rev/u_1e6_4yr/*.png u_1e6_4yr
 rsync /data/tmp/July_rev/r_1e6_newseed/*.png r_1e6_newseed
 rsync /data/tmp/July_rev/u_1e6_neg15/*.png  u_1e6_neg15
 rsync /data/tmp/July_rev/u_1e6_moreghost_small/*.png u_1e6_moreghost_small
+rsync /data/tmp/July_rev/mag_recover/20per_results/*.png mag_recover/20per_results/
+rsync /data/tmp/July_rev/mag_recover/80per_results/*.png mag_recover/80per_results/
+
+rsync /data/tmp/July_rev/r_full_full/25mil/HP_star_obs/All_files/*.png 25mil

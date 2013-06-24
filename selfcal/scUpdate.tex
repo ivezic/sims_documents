@@ -23,8 +23,7 @@
 \v{Z}eljko Ivezi\'{c} (UW), Tim Axelrod (LSST)}
 
 \begin{abstract}
-We describe the planned self-calibration procedure for LSST and compare results of simulations to the SRD requirements.  By combining Opsim pointing histories with a realistic model of the Galactic stellar distribution we generate a mock-catalog of calibrated LSST observations.  We simulate the major sources of error expected in LSST observations and measure how well sensitive the self-calibration procedure is to them.  We demonstrate a new technique for solving the self-calibration problem in parallel using HEALpixels, making it possible to solve the system on current computer hardware.
-
+We describe the planned self-calibration procedure for LSST and compare results of simulated observations to SRD requirements.  By combining Opsim pointing histories with a realistic model of the Galactic stellar distribution we generate a mock-catalog of calibrated LSST observations.  We simulate the major sources of error expected in LSST observations and measure how sensitive the self-calibration procedure is to them.  We demonstrate a new technique for solving the self-calibration problem in parallel using HEALpixels, making it possible to solve an LSST-sized data set on current computer hardware.
 \end{abstract}
 
 
@@ -73,10 +72,9 @@ linear color terms.
 
 
 
-Using large catalogs of stellar photometry to perform a global calibration fit has become common practice in large surveys \citep{pad08,Ofek11,Schaf12}.  LSST 
+%Using large catalogs of stellar photometry to perform a global calibration fit has become common practice in large surveys \citep{pad08,Ofek11,Schaf12}.  LSST 
 
-
-Comparison to other surveys:  \citet{Schaf12} fit each filter independently and solve for the system throughput and atmospheric transparency nightly, an illumination correction, and a correction based on the image quality.  Since we fit a zero-point for every observation, we are combining the atmospheric and system throughput into a single term, and dropping the dependence on observation airmass.  The 3$\pi$\ survey takes 40s exposures.  
+%Comparison to other surveys:  \citet{Schaf12} fit each filter independently and solve for the system throughput and atmospheric transparency nightly, an illumination correction, and a correction based on the image quality.  Since we fit a zero-point for every observation, we are combining the atmospheric and system throughput into a single term, and dropping the dependence on observation airmass.  The 3$\pi$\ survey takes 40s exposures.  
 
 
 \section{Simulated LSST Catalog}
@@ -87,12 +85,18 @@ We combine the following elements to generate a simulated LSST catalog of observ
 \noindent{\bf{Milky Way Model}}\\
 The stars used as the basis for self-calibration are generated using Mario Juri\'{c}'s GALFAST code\footnote{ http://mwscience.net/trac/wiki/galfast}.  This provides a mock Milky Way stellar catalog to act as ``ground truth'' for our simulations.  
 
-Our model Milky Way includes $\sim1$ billion stars, with a magnitude range of $10 < r < 21$.  The model includes several stellar components (thin disk, thick disk, bulge, halo) with magnitude and color distributions based on SDSS. The catalog is dominated by main-sequence and red giant branch stars, but also includes white dwarf stars and blue horizontal branch stars.  We do not have O, B, or A stars, however, these stars are concentrated near the galactic plane and are expected to be saturated in LSST exposures.  This is a subset of the object catalog currently used by Imsim.  For most of our simulations, we have pre-selected a subset of one million stars that are uniformly distributed across the sky.  This pre-selection is done to limit the amount of computational memory the self-calibration requires, and prevents systematic effects from having a steep density gradient of stars across the field of view.  XXX-make some basic plots of the catalog
-%The stellar density, magnitude range, and color distributions of our fiducial model catalog are plotted in Figure~\ref{stars_colors}.  
+Our model Milky Way includes $\sim1$ billion stars, with a magnitude range of $17 < r < 21$.  The model includes several stellar components (thin disk, thick disk, bulge, halo) with magnitude and color distributions based on SDSS. The catalog is dominated by main-sequence and red giant branch stars, but also includes white dwarf stars and blue horizontal branch stars.  We do not have O, B, or A stars, however, these stars are concentrated near the galactic plane and are expected to be saturated in LSST exposures.  Our catalog is drawn from the object catalog currently used by Imsim.  For most of our simulations, we have pre-selected a subset of one million stars that are uniformly distributed across the sky.  This pre-selection is done to limit the amount of computational memory the self-calibration requires, and prevents systematic effects from having a steep density gradient of stars across the field of view.  The densities of the various stellar populations is shown in Figure~\ref{fig:gfpop}.
+
+
+\begin{figure}
+\plottwo{Plots/r_1e6/GFdensity.png}{Plots/r_1e6/GFwddensity.png}\\
+\plottwo{Plots/r_1e6/GFbhbdensity.png}{Plots/r_1e6/GFcolor.png}
+\caption{Basic properties of the GALFAST catalog used to generate LSST observations.  For our subsample of $\sim$1 million stars, we plot the densities of the different stellar populations along with the average $g-i$ stellar color.\label{fig:gfpop}}
+\end{figure}
 
 
 \noindent{\bf{Telescope and Survey Properties}}\\
-A simulated pointing history of the telescope is generated by the LSST Operations Simulation. We are using the Opsim 3.61 run as our baseline survey.  Opsim simulations include scheduled and unscheduled downtime, main survey visits, deep drilling fields, and a few other observing programs. The Opsim database includes the $5\sigma$ depth for each observation, calculated using the expected sky background emission in that filter at that altitude/azimuth, lunar distance and phase, as well the seeing and exposure time of each observation.  We use this 5$\sigma$\ value when calculating the signal-to-noise ratio for each observation.  We modify the 5$\sigma$\ depth across the field of view to model the telescope vignetting.  Opsim also includes the extinction from cloud cover.  Because Opsim reports cloud extinction in a limited number of bins, we interpolate the Opsim values to fully cover the possible phase space.  Opsim typically lists 60-70\% of LSST observations as being taken in cloudless conditions, with the remainder of observations being taken through clouds with 0.1-0.6 magnitudes of extinction.  
+A simulated pointing history of the telescope is generated by the LSST Operations Simulation. We are using the Opsim 3.61 run as our baseline survey.  Opsim simulations include scheduled and unscheduled downtime, main survey visits, deep drilling fields, and a few other observing programs. The Opsim database includes the $5\sigma$ depth for each observation, calculated using the expected sky background emission in that filter at that altitude/azimuth, lunar distance and phase, as well the seeing and exposure time of each observation.  We use this 5$\sigma$\ value when calculating the signal-to-noise ratio for each observation.  We modify the 5$\sigma$\ depth across the field of view to model the telescope vignetting.  Opsim also includes the extinction from cloud cover.  Because Opsim reports cloud extinction in a limited number of bins, we interpolate the Opsim values to fully cover the possible phase space.  Opsim typically lists 60-70\% of LSST observations as being taken in cloudless conditions, with the remainder of observations being taken through clouds with 0.1-0.8 magnitudes of extinction.  
 
 
 \noindent{\bf{Atmospheric Extinction}}\\
@@ -158,13 +162,16 @@ where $\Delta m_{filter}$ is the offset caused by the variable filter throughput
 
 
 
-We have developed a robust procedure for generating realistic clouds based on previously observed cloud structure functions \citep{Ivezic2007,Burke2010}. Clouds are particularly difficult for LSST because the short exposure times means clouds have little time to drift across the field of view, resulting in extinction which is more structured than in surveys with longer exposure times like SDSS.  An example of a simulated cloud in shown in Figure~\ref{fig:cloud}.  
+We have developed a robust procedure for generating realistic clouds based on previously observed cloud structure functions \citep{Ivezic2007,Burke2010}. Clouds are particularly difficult for LSST because the short exposure times means clouds have little time to drift across the field of view, resulting in extinction which is more structured than in surveys with longer exposure times like SDSS.  
+
+We first calculate an ARMA-based structure function, drawing from realisitic distributions of physical scales for clouds and average extinctions from Opsim.  The strcuture function is then used to generate a cloud image with LSST's field-of-view and sampled at a resolution similar to the average spacing between stars.  An example of a simulated cloud in shown in Figure~\ref{fig:cloud}.  
+
 
 \begin{figure}
 \epsscale{.6}
 \plotone{Plots/cloud.png}
 \epsscale{1}
-\caption{Example of a simulated cloud image with an average extinction of 0.5 magnitudes.  The large square shows the size of an LSST raft while the small square shows a single LSST CCD.  \label{fig:cloud}}
+\caption{Example of a simulated cloud image with an average extinction of 0.5 magnitudes.  The large square shows the size of an LSST raft while the small square shows the scale of a single LSST CCD.  \label{fig:cloud}}
 \end{figure}
 
 We have used FRED runs to calculate the expected illumination correction errors for each filter.  Examples of the magnitude of the illumination corrections can be seen in Figure~\ref{fig:illum}.  For our simulations, we typically assume the illumination errors will be removed by a map derived from dense star field observations and measurements from the camera calibration optical bench (CCOB).  We assume the illumination corrections will only be able to remove these effects at the 90\%-level, and thus leave 10\% of the offsets in.  
@@ -461,8 +468,14 @@ As a test, we simulated observations on a small section of sky at full stellar d
 
 \subsection{Full-Sky, High-Density}
 
-XXX-still running.
+XXX-still running.  Results show in Figure~\ref{fig:25mil}.
 
+\begin{figure}
+\plottwo{Plots/25mil/Snobs.png}{Plots/25mil/Snobs_hist.png} \\
+\plottwo{Plots/25mil/Sdmag.png}{Plots/25mil/Sdamg_hist.png} \\
+\plottwo{Plots/25mil/Srepeat_IQR.png}{Plots/25mil/Srepeat_IQR_bright_hist.png}
+\caption{ {\bf Full-Sky, High-Density simulation for the $r$-filter.  }  \label{fig:25mil}}
+\end{figure}
 
 \subsection{Dominant Effects}
 
@@ -474,13 +487,42 @@ In the absence of color terms, the solution becomes excellent, with very small s
 
 \subsection{Flux Calibration and Colors}\label{sec:fluxcal}
 
-By default, the self-calibration procedure does not tie the solution to a physical flux scale.  We keep track of which stars are WDs and can select a subset to determine how well we could fix the floating zeropoints.
+By default, the self-calibration procedure does not tie the solution to a physical flux scale.  We keep track of which stars are WDs and can select a subset to determine how well we could fix the floating zeropoints.  
 
 XXX-have code done to tie all the calibrations together using the same WD stars.  Making color-color plots.
 
-\subsection{Magnitude Recovery}
 
-XXX-Check for how well we are able to recover stellar magnitudes that were not included in the self-calibration solution.  This is a simple test to show we are not over-fitting the problem, and that our patches can be used to recover calibrated magnitudes.
+With only 10 WD flux standards at 1\% accuracy, the absolute flux level in each filter can be set with an RMS of 3-5 mmag.  If we have 30 standards, that drops to 2-3 mmag.  The $u$ and $y$ filters have issues since the large scale residuals after self-calibration are strong around the equator, they have systematic offsets of 6-7 mmag compared to the other filters which have systematic offsets of 0-3 mmag.  
+
+%30 standards
+%filter mean       std
+%u 6.15848727259 3.30417034999
+%g -3.09394701216 2.42201852398
+%r -1.31328400535 2.12557754747
+%i -0.684679370397 2.05434780174
+%z -0.347638371088 1.82400999573
+%y 7.57278241384 2.73254347471
+
+%10 standards
+%u 6.24826169916 5.82709917906
+%g -3.00387927333 4.40788093129
+%r -1.17497834473 3.6340663804
+%i -0.57908221764 3.57438443916
+%z -0.611544542918 3.2303954308
+%y 7.26124677987 4.85583929037
+
+
+\subsection{Magnitude Recovery}
+As a test of how accuratly we recover patch zeropoints, we randomly selected 20\% of the stars from the $r$-band full-sky low-density simulation and re-computed the self-calibration solution without including those stars.  We then used the best-fit patch zeropoints to calculate the stellar magnitudes of the withheld stars.  Figure~\ref{fig:zpcheck} shows the residuals are nearly identical for stars included in the fit as those that were not.  
+
+
+\begin{figure}
+\plottwo{Plots/mag_recover/20per_results/Sdmag.png}{Plots/mag_recover/80per_results/Sdmag.png} \\
+\plottwo{Plots/mag_recover/20per_results/Sdamg_hist.png}{Plots/mag_recover/80per_results/Sdamg_hist.png} \\
+\plottwo{Plots/mag_recover/20per_results/Srepeat_IQR_bright_hist.png}{Plots/mag_recover/80per_results/Srepeat_IQR_bright_hist.png}
+\caption{Recovering stellar magnitudes that were not included in the self-calibration fit.  The panels on the left show the residuals of stars that were not included in the fit, while the panel on the right shows the residuals for stars that were.  \label{fig:zpcheck}}
+\end{figure}
+
 
 \subsection{Results from earlier runs}
 Here we summarize some results from earlier self-calibration simulations, performed with earlier versions of the code and stellar catalog
