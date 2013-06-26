@@ -21,3 +21,11 @@ rsync /data/tmp/July_rev/mag_recover/20per_results/*.png mag_recover/20per_resul
 rsync /data/tmp/July_rev/mag_recover/80per_results/*.png mag_recover/80per_results/
 
 rsync /data/tmp/July_rev/r_full_full/25mil/HP_star_obs/All_files/*.png 25mil
+
+rsync /data/tmp/July_rev/flux_color/*.png flux_color
+
+rsync /data/tmp/July_rev/r_1e6_1yr/*.png r_1e6_1yr
+rsync /data/tmp/July_rev/r_1e6_5yr/*.png r_1e6_5yr
+rsync /data/tmp/July_rev/r_1e6_10yr/*.png r_1e6_10yr
+
+rsync /data/tmp/July_rev/y_fd/*.png y_fd
