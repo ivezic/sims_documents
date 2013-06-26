@@ -27,3 +27,5 @@ rsync /data/tmp/July_rev/flux_color/*.png flux_color
 rsync /data/tmp/July_rev/r_1e6_1yr/*.png r_1e6_1yr
 rsync /data/tmp/July_rev/r_1e6_5yr/*.png r_1e6_5yr
 rsync /data/tmp/July_rev/r_1e6_10yr/*.png r_1e6_10yr
+
+rsync /data/tmp/July_rev/y_fd/*.png y_fd

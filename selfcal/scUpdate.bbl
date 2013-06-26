@@ -1,4 +1,4 @@
-\begin{thebibliography}{5}
+\begin{thebibliography}{4}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 
 \bibitem[{{Burke} {et~al.}(2010){Burke}, {Axelrod}, {Blondin}, {Claver},
@@ -12,11 +12,6 @@
   {Harris}, {Harding}, {Morrison}, {Brinkmann}, {Schneider}, \&
   {York}}]{Ivezic2007}
 {Ivezi{\'c}}, {\v Z}. {et~al.} 2007, \aj, 134, 973
-
-\bibitem[{{Ofek} {et~al.}(2011){Ofek}, {Frail}, {Breslauer}, {Kulkarni},
-  {Chandra}, {Gal-Yam}, {Kasliwal}, \& {Gehrels}}]{Ofek11}
-{Ofek}, E.~O., {Frail}, D.~A., {Breslauer}, B., {Kulkarni}, S.~R., {Chandra},
-  P., {Gal-Yam}, A., {Kasliwal}, M.~M., \& {Gehrels}, N. 2011, \apj, 740, 65
 
 \bibitem[{{Padmanabhan} {et~al.}(2008){Padmanabhan}, {Schlegel}, {Finkbeiner},
   {Barentine}, {Blanton}, {Brewington}, {Gunn}, {Harvanek}, {Hogg},
