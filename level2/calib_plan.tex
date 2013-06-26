@@ -29,17 +29,17 @@
 
 \author{
 R. Lynne Jones\altaffilmark{1}, Tim Axelrod\altaffilmark{2},
-{\v Z}eljko Ivezi{\'c}\altaffilmark{1},   David Burke\altaffilmark{3},
-James G. Bartlett\altaffilmark{4}, \\
+{\v Z}eljko Ivezi{\'c}\altaffilmark{1},   David Burke\altaffilmark{3}, Christopher Stubbs\altaffilmark{9}, \\
+James G. Bartlett\altaffilmark{4},
 Gurvan Bazin\altaffilmark{4},
 Guillaume Blanc\altaffilmark{4},
-Alexandre Boucaud\altaffilmark{4},
-Jean Marc Colley\altaffilmark{4},
-Michel Cr{\'e}z{\'e}\altaffilmark{4}, \\ 
+Alexandre Boucaud\altaffilmark{4}, \\
+Jean Marc Colley\altaffilmark{4}, 
+Michel Cr{\'e}z{\'e}\altaffilmark{4},  
 Mario Juric\altaffilmark{8},
 C{\'e}cile Roucelle\altaffilmark{4}, 
-Abhijit Saha\altaffilmark{5}, 
-J. Allyn Smith\altaffilmark{7}, \\
+Abhijit Saha\altaffilmark{5}, \\
+J. Allyn Smith\altaffilmark{7}, 
 Michael A. Strauss\altaffilmark{6},
 Peter Yoachim \altaffilmark{1}\\
 on behalf of 
@@ -54,7 +54,7 @@ Docushare-8123, 07/01/13 \\
 \altaffiltext{6}{Princeton University}
 \altaffiltext{7}{Austin Peay State University}
 \altaffiltext{8}{LSST Corp}
-
+\altaffiltext{9}{Harvard University}
 % Gurvan Bazin
 % 1- Department of Physics, Ludwig-Maximilians-Universit\"at, Scheinerstr. 1, 81679 Munich, Germany
 %2- Excellence Cluster Universe, Boltzmannstr. 2, 85748 Garching, Germany
@@ -1198,13 +1198,13 @@ determining $\Delta_{b-r}$ and $\Delta_r$ from Eqn~\ref{eqn:extmags}. In practic
 standards will be used for both tasks, and we discuss them together.
 
 Both the band to band calibration for each filter $b$ (the $\Delta_{b-r}$
-values) and the absolute calibration of $\Delta_r$ will be determined by measuring the flux from standards
-whose SEDs across the LSST wavelength range are precisely measured and/or
+values) and the absolute calibration of $\Delta_r$ will be determined by measuring the flux from standards.
+Ideally these would be standard sources placed above the atmosphere, but in practice must be celestial objects whose SEDs across the LSST wavelength range are precisely measured and/or
 predicted by physical models, and which are contained in the LSST
 survey fields.
 Although in principle a single standard with known colors would be
 sufficient, the major concern here is with systematic errors, for
-example a variation in color calibration across the sky.  Our current simulations (Section \ref{sec:verification})
+example a variation in color calibration across the sky induced by say seasonal and/or directional variations in water vapor and aerosol content.   Our current simulations (Section \ref{sec:verification})
 show significant spatial patterns in photometric zeropoints.  Monitoring
 and controlling these
 systematics will require a larger set of standards.
@@ -1212,8 +1212,8 @@ systematics will require a larger set of standards.
 These fall into three groups:
 \begin{itemize}
 \item {DA white dwarfs observed with HST.  Relatively few in number, these form the "gold standard" for the survey,
-and include not only the four fundamental standards (\citep{Bohlin2004}), but also a growing set from
-the HST program of Saha et al, for which observations are still underway.}
+and include not only the three fundamental standards (\citep{Bohlin2004}) that are used to calibrate instruments on board the HST that is self-consistent to better than 5 milli-mag, but also a growing set from
+the HST program GO-12697 of Saha et al,  for which observations are still underway.}
 \item {DA white dwarfs for which accurate spectroscopic determination of $T_{eff}$, $g$, and interstellar
 reddening are available.}
 \item {Stars observed with Gaia.  By roughly 2020, when LSST will be in commissioning, 
@@ -1230,17 +1230,34 @@ photometry.
 
 \subsection{White Dwarf Standards}
 \label{sec:WDStandards}
-Hot hydrogen (DA) and helium (DB) white dwarf stars have simple
-atmospheres that are well understood (model colors are
-currently reliable to about 0.01 magnitudes). It is estimated that
+
+DA white dwarfs have atmospheres dominated by hydrogen, and thus are the simplest stellar atmospheres to model.  The opacities are known from first principles, and in the temperature ranges we are interested in, photospheres are purely radiative and photometrically stable.  The emergent fluxes from such an atmosphere can be defined by just two parameters: effective temperature and a surface gravity, which only require a flux normalization at some wavelength.  These parameters are easily determined spectrosopically from a detailed analysis of the H I Balmer profiles, without reference to any photometry.  Thus the entire spectral energy distribution (SED) from the UV to the IR can be calculated at arbitrary spectral resolution and folded through any well determined photometric band pass or spectroscopic system.  The primary example of such an effort is Holberg and Bergeron (2006), \citet{2006AJ....132.1221H}, where synthetic photometry of DA white dwarfs was used to place $UBVRI$, 2MASS $JHK$, SDSS $ugriz$ and Stromgren $uby$ magnitudes on the HST photometric scale to 1\% using a consistent set of photometric zero points and magnitude offsets.    A fundamental independent check on this photometric calibration was established by using a set of DA white dwarfs having good trigonometric parallaxes and calculating the corresponding photometric parallaxes from the Bergeron photometric grid (Holberg, Bergeron \& Gianninas 2008).   The two parallaxes agreed at the 1\%. 
+
+This idea has been quantitatively tested 
+with HST/STIS spectroscopy (Bohlin 2000), who observed 4 bright DA white dwarfs spanning a range of temperatures and unaffected by reddening (due to their proximity to us), and found their relative flux distributions to be internally consistent with model predictions (Finley et al. 1997) from spectroscopic $T_{e}$ and $\log g$ to better than 1\% in the wavelength range $0.2 - 0.9\mu$. Spectrophotometry of Vega with STIS (Bohlin \& Gilliland 2004, Bohlin 2007) referred to the DA white dwarf (WD) flux scale shows agreement with the Hayes (1985) calibration at the 1 to 2\% level, and with the Kurucz (2003) Vega atmosphere model to better than 1\%   in the wavelength range $0.5 - 0.8\mu$.  This seems to indicate  that in the visible region, the Kurucz model is a better predictor of the flux from Vega than the ground based comparisons to standard sources. The WD based calibration disagrees with Hayes (1985) by 5\% at $0.4\mu$, and by 10\% between 
+$0.9$ and $1.0\mu$. The 9400K Kurucz model for Vega agrees with the STIS observations of Vega tied 
+to the WD scale to $\sim 2$\%  from 0.28 to 1.0$\mu$. We surmise that  1) outside $0.5 - 0.8\mu$, the atmospheric extinction is a real hindrance to setting up calibrators, and 2) the self-consistency of the WDs 
+is better than the comparison with the best {\it model} for Vega, verifying that the WD modeling is superior to that for  A  stars, and validating the assertion that  DA white dwarfs are best understood as standard SEDs. 
+The calibration in place for HST instruments relies on Vega for the flux at $555.6\mu$: fluxes relative to 
+this wavelength are determined by 3 (4 are available) primary WD models.
+
+For LSST, it is desirable to have a larger set of calibrated DA white dwarfs which are faint enough to be unsaturated in the regular survey observations. Ideally there should be at least 3 of them visible in the sky at any time spanning a range of airmass and direction.  However, DA white dwarfs fainter than 17th mag 
+in general suffer some reddening, which must therefore be determined in addition to $T_{eff}$ and $\log g$.
+The HST program GO-12697 (PI: Saha) is photometrically measuring a set of 9 such DA white dwarfs near the equator and distributed in RA with ACS on board the HST. This photometry will be on the gold standard 
+of the three white dwarfs that define the HST absolute scale, and systemically accurate to within 10 mmag.
+The program is also obtaining high S/N spectra with the Gemini telescope(s) to determine accurate 
+$T_{eff}$ and $\log g$.  Comparison of the photometric colors, and the model SED will then yield the 
+reddening, and thus render the object as an SED standard.  To date only 2 of the 9 objects have been observed by HST,  while the Gemini spectroscopy is farther along.   A proposal to augment the targets to span 
+non-equitorial declinations 
+in a follow up proposal in the HST cycle was rejected by their TAC.  
+
+In addition to the selectively crafted effort described above, it is estimated that
 there will be $\approx$ 100/10 DA/DB WD stars with $r<24$ in each LSST
 image at the South Galactic Pole, though few of these will have available
 the spectra necessary for synthetic photometry. At least
 100--1000 across the sky will be used to search for systematic effects.
 Catalogs of WD stars visible from Cerro Pachon have been constructed
-\citep{1992JRASC..86..309B}, and a `white dwarf
-calibration system' has been developed
-\citep{2006AJ....132.1221H}.  
+%\citep{1992JRASC..86..309B}.
 
 \subsection{Population Methods}
 An alternative approach to using a small handful of precisely known standards
@@ -1304,6 +1321,7 @@ This comparison across the LSST footprint and as
 a function of stellar brightness and color could provide a powerful
 independent test of the quality of LSST photometric calibration, but we
 are currently unsure of the precision that can be achieved. 
+ 
 
 \section{Calibration Hardware}
 \label{sec:calib_hardware}
@@ -2985,7 +3003,7 @@ $Z_b^{obs}$ & & & & \\
 \caption{{\bf Simulated uniformity errors.  All values are in mmag} }
 \begin{tabular}{l | c c c c c c }
  &   $u$  & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
-{\bf Simulation Result (RMS)}  & 8.0 & 2.0 & 1.6 & 1.8 & 2.3 & 21.8 \\ \hline
+{\bf Simulation Result (RMS)}  & 8.0 & 2.0 & 1.6 & 1.8 & 2.3 & TBD \\ \hline
 {\bf Design Requirement} &  20 & 10 & 10 & 10 & 10 & 10 \\ 
 {\bf Min. Requirement} &  30 & 15 & 15 & 15 & 15 & 15 \\
 \end{tabular}
