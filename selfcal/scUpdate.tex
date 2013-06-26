@@ -498,8 +498,6 @@ XXX-still running.  Results show in Figure~\ref{fig:25mil}.
 
 Figure~\ref{fig:timeevo} shows the time evolution of the self-calibration solution, using 1 million star simulations in the $r$-band.  After one-year, the $r$-band still has regions that are not well connected to the rest of the survey.  However, the solution does meet the SRD requirements for relative photometry repeatability even when regions are not well connected.  After 2-years, the self-calibration solution gradually improves with increasing numbers of observations.  
 
-XXX 10 yr still running.
-
 
 
 \begin{figure}
@@ -507,9 +505,9 @@ XXX 10 yr still running.
 \plotone{Plots/r_1e6_1yr/Snobs.png}\plotone{Plots/r_1e6_1yr/Sdmag.png}\plotone{Plots/r_1e6_1yr/Sdamg_hist.png} \\
 \plotone{Plots/r_1e6/Snobs.png}\plotone{Plots/r_1e6/Sdmag.png}\plotone{Plots/r_1e6/Sdamg_hist.png} \\
 \plotone{Plots/r_1e6_5yr/Snobs.png}\plotone{Plots/r_1e6_5yr/Sdmag.png}\plotone{Plots/r_1e6_5yr/Sdamg_hist.png} \\
-%\plotone{Plots/r_1e6_10yr/Snobs.png}\plotone{Plots/r_1e6_10yr/Sdmag.png}\plotone{Plots/r_1e6_10yr/Sdamg_hist.png} 
+\plotone{Plots/r_1e6_10yr/Snobs.png}\plotone{Plots/r_1e6_10yr/Sdmag.png}\plotone{Plots/r_1e6_10yr/Sdamg_hist.png} 
 \epsscale{1}
-\caption{The evolution of the $r$-band self-calibration solution.  From top to bottom, 1, 2, 5, and 10 years of $r$-band observations.  xxx-10 year still running.  \label{fig:timeevo}}
+\caption{The evolution of the $r$-band self-calibration solution.  From top to bottom, 1, 2, 5, and 10 years of $r$-band observations.   \label{fig:timeevo}}
 \end{figure}
 
 
@@ -569,7 +567,7 @@ As a test of how accurately we recover patch zeropoints, we randomly selected 20
 
 
 
-\subsection{What Self-Calibration Can't Do}
+\subsection{Self-Calibration Limitations}
 
 It is very easy to introduce degeneracies when adding additional terms to the self-calibration solver.  For example, we were tempted to solve the illumination correction in separate color bins.  Unfortunately, this makes the solution degenerate and each color bin is free to diverge on its own floating zeropoint.  
 
