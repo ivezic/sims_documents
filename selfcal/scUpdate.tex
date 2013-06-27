@@ -396,13 +396,47 @@ Since a full-scale self-calibration simulation is still computationally expensiv
 
 All of these simulations use the same sub-catalog of stars shown in Figure~\ref{fig:gfpop}.  This is one-million bright main-sequence and red giant stars, selected to be distributed fairly uniformly across the sky.  There are additionally white dwarf and blue horizontal branch stars added, so we can better detect any color-dependent effects.
 
-In general, areas that have fewer visits have the largest residuals.  The repeatability is these simulations is dominated by the cloud cover.  The repeatability is particularly bad in regions that have few visits and those visits were in clouds conditions.  The visit distribution, uniformity, and repeatability for each filter are shown im Figures~\ref{fig:r1e6}-\ref{fig:y1e6}.
+In general, areas that have fewer visits have the largest residuals.  The repeatability is these simulations is dominated by the cloud cover.  The repeatability is particularly bad in regions that have few visits and those visits were in clouds conditions.  The visit distribution, uniformity, and repeatability for each filter are shown im Figures~\ref{fig:r1e6}-\ref{fig:y1e6}.  The repeatability and uniformity along with the relevant SRD values are listed in Tables~\ref{tab:repeat} and~\ref{tab:uniform}.
 
-XXX-insert table of results compared to SRD requirements.
+An important aspect of the self-calibration simulations is to see if the residual magnitudes and shapes are understood and repeatable.  To test this, we re-ran the $r$-band simulation with a different starting random number seed.  The results are shown in Figure~\ref{fig:diffseed}.  The areas on the sky with the largest areas are very similar to the original simulation, with both having the largest areas where the Opsim visit density is the lowest.  One important point is that the residual structure can flip sign, implying self-calibration simulations can identify areas that are subject to large uncertainties, but cannot necessarily be used to make corrections to those areas.
 
-XXX-different seeds:  Figure~\ref{fig:diffseed}
+The $y$-filter (Figure~\ref{fig:y_fd}) is poorly fit because the simulation includes temperature variation, which in turn change the effective quantum efficiency, at the CCD level.  Since these simulation have raft-sized patches, the offsets from the temperature variations are not fit well.  
 
-XXX-the $y$-filter is poorly fit because the simulation includes temperature variation, which in turn change the effective quantum efficiency, at the CCD level.  Since these simulation have raft-sized patches, the offsets from the temperature variations are not fit well.  
+
+\begin{table}[htb]
+\caption{Comparison of SRD relative photometry (repeatability) RMS requirements to simulations.\label{tab:repeat} }
+\begin{tabular}{lccc}
+\colhead{filter} & \colhead{Design Spec} & \colhead{Minimum Spec}&\colhead{Simulation Results} \\
+       & \colhead{(mmag)}        &  \colhead{(mmag)}       & \colhead{(mmag)} \\
+\hline
+$u$    &     7.5        & 12 & 11.5    \\
+$g$    &     5          & 8 &  4.89 \\
+$r$    &     5          & 8 & 5.0 \\
+$i$    &     5          & 8 & 5.0 \\
+$z$    &     7.5        & 12 & 4.4 \\
+$y$    &     7.5        & 12 & 6.1\\
+\hline
+\end{tabular}
+\end{table}
+
+There is the additional relative photometry design (minimum) goal that not more than 10\% (20\%) of measurements deviatate by 15 (15) millimag.  Figure~\ref{fig:resid_dist} shows that in the $r$-band we meet the minimum requirement, but not the design goal.  The relative photometry values should improve slightly as we move from raft-sized patches to CCD-sized patches.
+
+\begin{table}[htb]
+\caption{Comparison of SRD uniformity RMS requirements to simulations. \label{tab:uniform}}
+\begin{tabular}{lccc}
+filter & Design Spec & Minimum Spec&Simulation Results \\
+       & \colhead{(mmag)}        &  \colhead{(mmag)}       & \colhead{(mmag)} \\
+\hline
+$u$      &  20    & 30 & 5.2 \\
+$g$      &  10    & 20 &  2.0 \\
+$r$      &  10    & 20 & 1.6 \\
+$i$      &  10    & 20 & 1.8 \\
+$z$      &  10    & 20 & 2.3  \\
+$y$      &  10    & 20 & 21.8 \\
+\hline
+\end{tabular}
+\end{table}
+
 
 \begin{figure}
 \plottwo{Plots/r_1e6/Snobs.png}{Plots/r_1e6/Snobs_hist.png} \\
@@ -517,9 +551,26 @@ Figure~\ref{fig:timeevo} shows the time evolution of the self-calibration soluti
 By default, the self-calibration procedure does not tie the solution to a physical flux scale.  We keep track of which stars are WDs and select a subset as flux standards.  
 
 
-We assume that by the time LSST begins observations, there will be white dwarf standard stars available with $\sim1\%$ absolute flux precision.  Here, we attempt to flux calibrate the low-density full-sky simulations from \S\ref{sec:fsld}.  Using only 10 WD flux standards, the absolute flux level in each filter can be set with an RMS of 3-5 mmag.  If we have 30 standards, that drops to 2-3 mmag.  Figure~\ref{fig:colorcolor} shows the residuals of the colors after calibrating with 30 randomly chosen WD stars.  
+We assume that by the time LSST begins observations, there will be white dwarf standard stars available with $\sim1\%$ absolute flux precision.  Here, we attempt to flux calibrate the low-density full-sky simulations from \S\ref{sec:fsld}.  Using only 10 WD flux standards, the absolute flux level in each filter can be set with an RMS of 3-5 mmag.  If we have 30 standards, that drops to 2-3 mmag.  These values are well below the SRD design spec of 10 millimags.  Figure~\ref{fig:colorcolor} shows the residuals of the colors after calibrating with 30 randomly chosen WD stars.  Table~\ref{tab:color} compares the color accuracies with SRD requirements.  
 
-XXX-insert table comparing to SRD requirements
+band-to-band zeropoint transformations:
+\begin{table}[htb]
+\caption{Comparison of SRD band-to-band requirements to simulations.\label{tab:color} }
+\begin{tabular}{lccc}
+\colhead{filter} & \colhead{Design Spec} & \colhead{Minimum Spec}&\colhead{Simulation Results} \\
+       & \colhead{(mmag)}        &  \colhead{(mmag)}       & \colhead{(mmag)} \\
+\hline
+$u-g$    &   10           &    15         & 7.4 \\
+$g-r$    & 5	      &	10	          & 4.2 \\
+$r-i$    & 	5      &	10	   & 1.8 \\
+$i-z$    & 	 5     &		10   & 2.2 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+
 
 
 %30 standards
@@ -724,3 +775,4 @@ g_2 = g_1\frac{sky_1}{sky_2} \pm (sky_1+(RN/g_1)^2)/sky_1^2\sqrt{N_{pix}} + (sky
 % LocalWords:  WDs starsFOV rmagobs rmagtrue gainvar exptvar mmag Yusra kx elec
 % LocalWords:  ADU interpCloud opsim hexdither CCOB uber isoLatitude multipole
 % LocalWords:  Pixelization QE expt Illum Ivezic IQR WD ARMA LSST's phot illum
+% LocalWords:  lccc
