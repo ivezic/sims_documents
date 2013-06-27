@@ -518,13 +518,20 @@ We have simulated observations on a small section of sky at full stellar density
 
 \subsection{Full-Sky, High-Density}
 
-XXX-still running.  Results show in Figure~\ref{fig:25mil}.
+With the ability to solve self-calibration in parallel with HEALpixels, we can now solve systems that have a similar number of stars as we expect LSST will have.  We have generated an $r$-band observation similar to what was run in \S\ref{sec:fsld}, only now with 25 million stars and CCD-sized calibration patches.  Stellar properties are shown in Figure~\ref{fig:25mil_about} and results of the self-calibration are shown in Figure~\ref{fig:25mil}.  The uniformity and repeatability both show a modest improvement.  
+
+
+\begin{figure}
+\plottwo{Plots/25mil/Sdensity.png}{Plots/25mil/Sdepth90.png}
+\plottwo{Plots/25mil/Pnstars_hist.png}{Plots/25mil/Pzphist.png}
+\caption{Properties of our 25 million star simulation.  We vary the stellar catalog depth across the sky to maintain uniform density.  The bottom plots show the number of stars per calibration patch and the cloud extinction distribution from Opsim. \label{fig:25mil_about}}
+\end{figure}
 
 \begin{figure}
 \plottwo{Plots/25mil/Snobs.png}{Plots/25mil/Snobs_hist.png} \\
 \plottwo{Plots/25mil/Sdmag.png}{Plots/25mil/Sdamg_hist.png} \\
 \plottwo{Plots/25mil/Srepeat_IQR.png}{Plots/25mil/Srepeat_IQR_bright_hist.png}
-\caption{ {\bf Full-Sky, High-Density simulation for the $r$-filter.  XXX-updated plots coming, these suffer from strong stellar density gradients.}  \label{fig:25mil}}
+\caption{ {\bf Full-Sky, High-Density simulation for the $r$-filter.  }  \label{fig:25mil}}
 \end{figure}
 
 
