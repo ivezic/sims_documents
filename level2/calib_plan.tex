@@ -87,7 +87,7 @@ than for SDSS-like photometry. This smaller uncertainty volume will improve
 source classification and the precision of quantities such as
 photometric redshifts for galaxies and photometric metallicity for
 stars.  For example, a given spectral energy distribution (SED)
-corresponding to some galaxy type produces a line in the $ugrizy$
+corresponding to some galaxy type produces a 1-D locus in the $ugrizy$
 multi-dimensional color space when redshifted, where the position of
 the galaxy along that line in $ugrizy$ space is a function of
 redshift. Different galaxy SEDs produce lines that are often close to
@@ -111,13 +111,13 @@ SDSS is widely credited with pioneering high accuracy photometry for large
 surveys, and it is instructive to compare its photometric calibration procedure with LSST's.
 The factor of two reduction in photometric uncertainty results from two major differences
 between the surveys. First, each source will receive hundreds of
-observations over the ten years of the LSST survey, a much greater number
+observations in each band over the ten years of the LSST survey, a much greater number
 than possible with SDSS. These series of
 repeat observations will be used to self-calibrate the photometric
 system across the sky and for each observation (akin, but not
 identical to, the uber-calibration procedure used by SDSS
-\citep{Padmanabhan2008}), allowing LSST to operate in a wide variety
-of conditions. Secondly, the wavelength dependence of the hardware and
+\citep{Padmanabhan2008}), allowing LSST to operate in strongly nonphotometric
+conditions. Secondly, the wavelength dependence of the hardware and
 atmospheric transmission response functions will be measured with
 auxiliary instrumentation on sufficiently fine angular and temporal
 scales to enable their explicit inclusion in the calibration
@@ -191,7 +191,7 @@ be identified in an iterative fashion from the many epochs of LSST
 observations.  The ``main-sequence'' restriction derives from the need
 for accurate knowledge of the SEDs of calibration objects, given
 only their multi-band photometry.  Calibration of objects with non-MS
-SEDs is discussed in Appendix \ref{sec:photo_better}
+SEDs is discussed in Appendix \ref{sec:photo_better}.
 
 The SRD specifications are: 
 \begin{enumerate}
@@ -253,13 +253,13 @@ comparisons to known standards, and evaluation of science outputs such
 as stellar locus diagrams. These last two tests are also relevant to
 verifying the final two requirements, \ref{color_req} and
 \ref{abs_req}.  These issues are discussed further in Sections 
-\ref{sec:uncertainty_budget} and \ref{sec:verification}
+\ref{sec:uncertainty_budget} and \ref{sec:verification}.
 
 
 \section{The Photometric Calibration Process}
 \label{sec:calib_overview}
 
-In traditional photometric calibration, a set of standard stars are
+In traditional photometric calibration, a set of standard stars is
 observed at a range of airmasses to calculate zeropoint offsets and
 (typically) a single color-dependent extinction curve per night. With care,
 this approach can deliver 1\% photometry in stable photometric conditions.
@@ -300,14 +300,14 @@ describe them here, with full descriptions in Section~\ref{sec:calib_hardware}:
     by a tunable laser, capable of producing light from $300-1100$~nm
     and tunable in 1~nm increments. The brightness of the screen is measured 
     with a NIST-calibrated photodiode, so that the relative intensity at different 
-    wavelengths is precisely determined. } 
+    wavelengths can be precisely determined. } 
 \item{A 1.2-m auxiliary telescope with an $R \approx 400$ spectrograph,
     located adjacent to the LSST itself. This auxiliary telescope will
     obtain spectra of a chosen set of atmospheric probe stars across the sky to
     determine an atmospheric absorption model.} 
 \item{Water vapor monitoring system, consisting of a GPS system and a 
-    microwave radiometer attached copointed with the LSST telescope, and monitoring 
-    the same field of view.  This supplements the auxiliary telescope spectra, which are
+    microwave radiometer copointed with the LSST telescope, and monitoring 
+    a similar field of view.  This supplements the auxiliary telescope spectra, which are
     unable to track the sometimes rapid variations of water vapor in time and space.}  
 \end{itemize}
 
@@ -319,7 +319,7 @@ Figures \ref{fig:overview_flowchart1}, \ref{fig:overview_flowchart2},
 Note that four classes of objects participate in the calibration process in different ways:
 \begin{itemize}
 \item Standard stars.  These are stars whose absolute flux as a function of wavelength above the atmosphere is precisely known.  This class contains only a few members, perhaps as few as ten.  Their role is to enable the self calibration process to set absolute zeropoints for each band, and to allow testing of the SRD uniformity requirements.  See Section~\ref{sec:calib_external}.
-\item Calibration stars.  These are stars that densely cover the sky, with typical spacings between stars of order 1 arcminute.  Unlike standard stars, neither their SEDs nor their absolute fluxes are precisely known, and their standard magnitudes are determined by the self calibration process.   They have been selected to be on the stellar main sequence, to be nonvariable, and to be relatively isolated so that their photometry is not degraded by crowding effects.
+\item Calibration stars.  These are stars that densely cover the sky, with typical spacings between stars of order 1 arcminute.  Unlike standard stars, neither their SEDs nor their absolute fluxes are precisely known a priori, and their standard magnitudes are determined by the self calibration process.   They have been selected to be on the stellar main sequence, to be nonvariable, and to be relatively isolated so that their photometry is not degraded by crowding effects.
 \item Atmospheric probe stars.   These are bright stars of known type, distributed roughly uniformly over the LSST sky, which yield high SNR spectra from the auxiliary telescope.  
 \item Science objects.  Calibration of science objects utilizes the results of processing the standards and the calibration stars, and the measurement of the system bandpass.   If an SED is supplied for an object, an accurate standard magnitude can then be calculated.
 \end{itemize}
@@ -340,7 +340,7 @@ system to affect the final ADU counts.
 
 Given $F_\nu(\lambda, t)$ --
 the specific flux\footnote{Hereafter, the units for specific
-flux (flux per unit  are Jansky (1 Jy = 10$^{-23}$ erg cm$^{-2}$ s$^{-1}$
+flux (flux per unit frequency  are Jansky (1 Jy = 10$^{-23}$ erg cm$^{-2}$ s$^{-1}$
 Hz$^{-1}$). The choice of $F_\nu$ vs. $F_\lambda$ makes the flux
 conversion to the AB magnitude scale more transparent, and the choice
 of $\lambda$ as the running variable is more convenient than the
@@ -351,7 +351,7 @@ quantities are averaged over that short exposure time, so that $t$
 refers to quantities that can vary from exposure to exposure. }
 (flux per unit frequency) of an astronomical object at
 the top of the atmosphere -- at a position described by ($alt$,$az$),
-the total flux from the object transmitted through the atmosphere to the telescope pupil is
+the total specific flux from the object transmitted through the atmosphere to the telescope pupil is
 \begin{equation}
 \label{eqn:Fpupil}
    F_\nu^{pupil}(\lambda,alt,az,t) = F_\nu(\lambda, t) \, S^{atm}(\lambda,alt,az,t),
@@ -384,7 +384,7 @@ Here, $S_b^{sys}(\lambda,x,y,t)$ is the (dimensionless) probability
 that a photon will pass through the telescope's optical path to be
 converted into an ADU count, and 
 includes the mirror reflectivities, lens transmissions, filter
-transmisions, and detector sensitivities. The term
+transmissions, and detector sensitivities. The term
 $\lambda^{-1}$ comes from the conversion of energy per unit frequency
 into the number of photons per unit wavelength and $b$ refers to a particular filter, $ugrizy$. The
 dimensional conversion constant $C$ is
@@ -404,9 +404,9 @@ in the $y$ band) results from temperature changes in the detector, but
 only on scales equivalent to a CCD or larger.  There will also be
 wavelength-dependent spatial variations in $S_b^{sys}$ due to
 irregularities in the filter material; these are required by the
-camera specifications to vary (at a maximum)
-slowly from the center of the field of view to the outer edges,
-equivalent to a bandpass shift on the order of 1-2\% of the effective
+camera specifications to vary 
+slowly from the center of the field of view to the outer edges.  The
+equivalent bandpass shift can be no more than 2.5\% of the effective
 wavelength of the filter. Wavelength-independent (gray-scale)
 variations in $S_b^{sys}$ can occur more rapidly, on timescales of a
 day for variations caused by dust particles on the filter or dewar
@@ -498,7 +498,7 @@ m_b^{nat} & = & \Delta m_b^{obs} + m_b^{std} \\
     \phi_b^{std}(\lambda,t) \, d\lambda}} \right)
 \end{eqnarray}
 where $\Delta m_b^{obs}$ varies with the {\it shape} of the source
-spectrum, $f_\nu(\lambda,t)$ and the {\it shape} of the bandpass
+spectrum, $F_\nu(\lambda,t)$ and the {\it shape} of the bandpass
 $\phi_b^{obs}(\lambda,t)$ in each observation. Note that $\Delta
 m_b^{obs}=0$ for flat (constant) SEDs, as the integral of
 $\phi_b(\lambda)$ is always one.  
@@ -534,7 +534,7 @@ selected as part of the survey design, and does not vary.  See equation \ref{eqn
 \subsection{Perturbations to the System Bandpass}
 The normalized system bandpass will vary from exposure to exposure due to a myriad of effects.  The major ones are:
 \begin{itemize}
-\item{Atmospheric transmission variations.  The major wavelength-dependent sources of atmospheric absorption, Rayleigh scattering from molecules, molecular oxygen lines, ozone, water vapor, and aerosols, all vary in time and space, with widely varying temporal and spatial scales.  Even in the absence of intrinsic variation in the atmosphere, of course, the bandpass varies due to changing airmass.  This latter effect is compensated for in traditional photometric calibration, but the others are generally ignored}
+\item{Atmospheric transmission variations.  The major wavelength-dependent sources of atmospheric absorption, Rayleigh scattering from molecules, molecular oxygen lines, ozone, water vapor, and aerosols, all vary in time and space, with widely varying temporal and spatial scales.  Even in the absence of intrinsic variation in the atmosphere, of course, the bandpass varies due to changing airmass.  This latter effect is compensated for in traditional photometric calibration, but the others are generally ignored.}
 \item{Long term variations in the throughput of the optical path due to contamination}
 \item{Changing detector quantum efficiency, particularly in the y-band, due to varying focal plane temperature}
 \item{Shifts in filter position with respect to the system optical axis, due to positioning jitter and gravity sag}
@@ -548,13 +548,13 @@ The effects of airmass variation on photometry is well known to all photometrist
 always accounted for in photometric calibration, and quite often the only effect.   Figure \ref{fig:dmag_airmass} shows the effects
 of variation over the full airmass range expected for the LSST survey.  There is a more subtle effect, however, which is important
 because of the LSST's large field of view: the airmass can vary significantly from one side of the field to the other. For example,
-if the field center is airmass 2.1, the airmass varies from 1.98 to 2.22 across the field.  Figure \ref{fig:dmag_fov} shows the error
+if the field center is at airmass 2.1, the airmass varies from 1.98 to 2.22 across the field.  Figure \ref{fig:dmag_fov} shows the error
 that would be made in ignoring this effect.  This requires us to maintain an atmospheric model which can be interpolated
 to any position in the focal plane.
 
 \subsection{Effects of Atmospheric Variations}
 \label{sec:atmvar}
-The main components of wavelength-dependent atmospheric extinction are Rayleigh scattering from molecules; oxygen molecular lines; water vapor; ozone; and aerosols.   Rayleigh scattering and molecular oxygen extinctions are directly proportional to barometric pressure at the surface.  As is well known from looking at surface pressure charts, away from weather fronts the pressure varies significantly on timescales of hours or more and spatial scales of hundreds of km.  Variations can be much more rapid in the vicinity of fronts.   In any case, this component can be compensated for very accurately just by measuring the barometric pressure, and we do not further consider it here.  The other components are not so easily measured, and in the case of water vapor and aerosols, can display complex patterns of variability.  
+The main components of wavelength-dependent atmospheric extinction are Rayleigh scattering from molecules; oxygen molecular lines; water vapor; ozone; and aerosols.   Rayleigh scattering and molecular oxygen extinctions are directly proportional to barometric pressure at the surface.  As is well known from looking at surface pressure charts, away from weather fronts the pressure varies significantly on timescales of hours or more and spatial scales of hundreds of km.  Variations can be much more rapid in the vicinity of fronts.   In any case, this component can be compensated for very accurately just by measuring the barometric pressure, and we do not consider it further here.  The other components are not so easily measured, and in the case of water vapor and aerosols, can display complex patterns of variability.  
 
 Figures \ref{fig:CTIO_PWV}, \ref{fig:GeminiPWV}, and \ref{fig:PWV_satellite} give three different perspectives on historical water vapor variability in the vicinity of CP.  There are broad patterns in space (the E-W gradient), and in time (the regular seasonal variations).  There are large variabilities on top of these, amounting to several mm of PWV, which can occur in hours or less.   The biggest effect of water vapor is in the y-band, since it contains a strong water band (Figure \ref{fig:filterset}).   Figure \ref{fig:KuruczPWV} shows the change in natural magnitude when the PWV is varied from 1mm to 6mm for a set of Kurucz stars.  The 4mm variation in PWV shown in Figure \ref{fig:GeminiPWV} would lead to a roughly +/-3mmag color-dependent scatter in calibration of y photometry, if not compensated for. 
 
@@ -596,7 +596,7 @@ filter characteristics, which will not be available until they are manufactured.
 To do so in our simulations, we currently
 use a simple model that the filter bandpass has a shift which is a linear function
 of radius.  The effect of a 1\% bandpass shift on natural magnitudes is shown
-in Figure \ref{fig:dmag_filtershift}  It is worthy of note that this effect is
+in Figure \ref{fig:dmag_filtershift}.  It is worthy of note that this effect is
 large in all bands, so it must be carefully corrected in the calibration
 process.
 
@@ -624,7 +624,7 @@ gray-scale changes) can be much larger than the SRD repeatability
 requirements would permit. Roughly speaking, these effects reach a level of about 
 50 mmag.  This suggests that our measurement-based model of wavelength-dependent
 effects must be accurate at the 90-95\% level.  This issue is discussed in detail in Section
-\ref{sec:uncertainty_budget}
+\ref{sec:uncertainty_budget}.
 
 
 
@@ -814,7 +814,7 @@ $Z_b^{obs} = -2.5 log_{10}(N)$.
 
 There is a problem with using this flat, however:  At the time we process the pixels
 in Flat SED Calibration (Figure \ref{fig:overview_flowchart1}), we are unable to calculate $Q_{b,i}$ because we are (probably) ignorant
-of both $f_\nu(\lambda)$ and the atmospheric bandpass for the observation, $S_b^{atm}(\lambda)$.  Even if we knew that informatin, 
+of both $f_\nu(\lambda)$ and the atmospheric bandpass for the observation, $S_b^{atm}(\lambda)$.  Even if we knew that information, 
 this prescription would be unworkable because the flat would need to be constructed with an SED 
 that varies rapidly over the focal plane.   So we must accept our inability to work with $Q_{b,i}$ when processing the pixels, and must
 content ourselves with a broadband flat measured from the dome flatfield system.
@@ -840,9 +840,10 @@ m_b^{nat} = m_b^{inst} + Z_p - 2.5 log_{10} \left( \left[ {\sum_i {w_i Q_{b,i}^{
 \end{equation}
 
 \noindent
-This may not at first seem like an advance over equation \ref{eqn:trueFlat}, but in fact it is:  The first term is just what we usually
+This may not at first seem like an advance over equation \ref{eqn:trueFlat}, but in fact it is:  The first term on the RHS 
+is just what we usually
 mean by measuring the flux in a flattened image.  It is done at the pixel level in the usual way, without any dependence on 
-$f(\lambda)$.  We can at least imagine calculating the second, correction, term in exactly the way it is written.  We do
+$f(\lambda)$.  We can at least imagine calculating the third, correction, term in exactly the way it is written.  We do
 not need to actually access the image pixels, but do need to know the PSF and the object SED, and we need to construct at least
 a localized flat from the object SED.  We reserve this as a future option in calibration processing, because it may reduce
 the systematics floor in the instrumental magnitudes.  For the present, however, we make the assumption which is univerally made
@@ -855,7 +856,7 @@ m_b^{nat} =  m_b^{inst} + Z_p - 2.5 log_{10} \left( {Q_b^{BB}}  \over {Q_b^{norm
 \end{equation}
 
 Note that the correction term must be applied in the "SED Correction" block of Figure \ref{fig:overview_flowchart1}.  The 
-required information to compute it is not available earlier.  We now turn to the actual measurement of $q_{b,i}$, and the construction of $Q_{b,i}^{BB}$
+required information to compute it is not available earlier.  We now turn to the actual measurement of $q_{b,i}$, and the construction of $Q_{b,i}^{BB}$.
 
 \subsubsection{Constructing the Synthetic Flat}
 \label{sec:synthflat}
@@ -895,7 +896,7 @@ reference epoch when the narrow-band flats were acquired.
 Next, considering $S^{atm}(\lambda,alt,az,t)$, we will again separate
 the measurement of the shape of the atmospheric response and the
 measurement of normalization of the transmission.  The currently
-available data is still incomplete, but suggests that the
+available data are still incomplete, but suggests that the
 wavelength-dependent variations in $\phi^{atm}(\lambda,t)$ change
 smoothly over spatial scales larger than the field of view and over
 several minutes.  By using an auxiliary telescope equipped with a
@@ -909,9 +910,9 @@ interpolated in time and space to generate a wavelength-dependent
 atmospheric absorption profile, $\phi_b^{atm}(\lambda,alt,az,t)$, for
 each observation.
 
-This approach has been put into practice by Burke et al (\citep{Burke2010b}).  Probe stars were selected in
+This approach has been put into practice by \cite{Burke2010b}.  Probe stars were selected in
 the range $9 < V < 12$, and spectra were taken on a 1.5m telescope with a $R \approx 400$ resolution 
-spectrograph.  Exposure times were 2 to 4 minutes.  The observing pattern is shown in Figure \ref{fig:BurkeObsPattern}.  
+spectrograph covering a usable wavelength range of approximately $500 < \lambda <  1000 nm$.  Exposure times were 2 to 4 minutes.  The observing pattern is shown in Figure \ref{fig:BurkeObsPattern}.  
 The atmospheric model was a simple linear combination of templates generated by Modtran4 for molecular scattering,
 molecular absorption, aerosols, ozone, and water vapor.  The models, together with some factors to account for the
 spectrograph efficiency as a function of wavelength, were fit to all the observed spectra simultaneously.   Figures 
@@ -921,7 +922,7 @@ atmospheric models show strong variation, as expected for the highly variable ni
 Traditional extinction plots (Figure \ref{fig:BurkeExtinction}), show behavior that would 
 be well fit by traditional calibration in the r- 
 and i-bands, together with behavior in the z- and y-bands that would not.  In subsequent development of the approach,
-Burke et al (\citep{Burke2013}) obtained probe star spectra while simultaneously imaging over a wide field - roughly 
+\cite{Burke2013} obtained probe star spectra while simultaneously imaging over a wide field - roughly 
 comparable to LSST operations.  Unlike LSST, however, the imaging exposures were managed to keep the pixel coordinates
 of a given star nearly constant for all exposures.  The full calibration process on the imaging data, 
 including both atmospheric fitting and gray extinction determination through self calibration, yielded repeatability 
@@ -990,13 +991,9 @@ using a constant spatial EW and NS gradient per night and a $C_{\water}(t)$ that
 is fit to each auxiliary telescope measurement (and interpolated
 between these times). 
 
-The coefficients $C_{mol/\ozone/\water}$ and $\tau^{aerosol}$ will be
+The coefficients $C_{mol/\ozone/\water}$ and $\tau_{aerosol}$ will be
 determined using spectra of bright stars obtained from the 1.2-m LSST
-auxiliary telescope. The auxiliary telescope will be equipped with a
-modest resolution (R$\sim400$) spectrograph, sufficient to capture the
-signatures of the atmospheric extinction components, and covering the
-entire wavelength range of LSST ($300<\lambda<1100$~nm) in each
-exposure. The stars observed with the auxiliary telescope must be
+auxiliary telescope.  The stars observed with the auxiliary telescope must be
 bright ($r<12$) and ideally either white dwarfs or F stars -- stars with relatively
 simple and well-understood SEDs to minimize confusion with the
 atmospheric extinction. By observing the same grid of stars on
@@ -1042,9 +1039,7 @@ signal-to-noise ratio of the stars in the image.
 \subsection{Finding the Zero Points: Self Calibration}
 In order to correct for the more rapid gray-scale variations in the
 relative normalization of $S^{atm}(alt,az,t)$ due principally to cloud extinction,
-we must use the observations of calibration stars in the images themselves, as
- observations (\citep{Burke2013}, \citep{Ivezic2007}) suggest that cloud extinction can vary by 0.01 magnitudes on the scale of a CCD
-on timescales as fast as a few minutes. This
+we must use the observations of calibration stars in the images themselves. This
 `self-calibration' procedure could be thought of as creating a massive
 calibration `standard' star catalog, where the calibration stars are
 a selected set of the non-variable, main-sequence stars in the science images;
@@ -1079,7 +1074,7 @@ normalization of the total system throughput beyond those contributed
 by cloud extinction (such as remaining errors in the illumination
 correction for the broadband and narrow-band flat fields), but is
 generally limited by the number of stars and number of observations of
-each star that are obtained. A CCD size patch provides several hundred stars
+each star that are obtained. A CCD size patch provides several hundred
 calibration stars per patch, allowing good signal to noise when determining cloud
 extinction which varies from observation to observation.
 This is similar in
@@ -1144,7 +1139,7 @@ some amount of dither is required. Our investigations have shown
 that dither patterns where the overlap is one quarter of the field of
 view or more produce results meeting the SRD requirements. 
 
-Note that $m_{b,i}^{best}$ and $\delta z_j$ are
+Note that $m_{b,i}^{best}$ and $\delta z_{b,j}$ are
 constrained only up to an arbitrary additive constant. For
 convenience, this constant can be set so that stars have roughly
 correct AB magnitudes, however the goal after self-calibration is
@@ -1163,11 +1158,11 @@ approximately monthly. Determine and apply wavelength-dependent illumination
 correction. Measure $\phi_b^{sys}(\lambda,t,x,y)$. Note that the time
 required to acquire these flats is required to be less than four hours
 per filter, so a full set of filters requires 24 hours.}
-\item{Acquire a broadband flat in each filter at the start of
+\item{Acquire a broadband flat in each filter at the start 
 of each observing night. Generate the flats which will be used for
 the night's images by scaling each synthetic broadband flat by the
 ratio of tonight's broadband flat to the reference broadband
-flat (Section \ref{sec:synthflat}}.  These flats will also be used to do 
+flat (Section \ref{sec:synthflat})}.  These flats will also be used to do 
 a nightly camera gain calibration.
 \item{After performing usual mosaic image processing (bias correction, fringe
 correction, flattening, etc) extract ADU counts of sources from images. }
@@ -1270,7 +1265,7 @@ is to use the properties of entire populations of astronomical objects.
 
 The locus of main sequence stars in
 color-color space is also reasonably well understood and has been used
-to calibrate photometry with success in previous surveys
+to calibrate photometric colors with success in previous surveys
 \citep{2004MNRAS.352.1255M, Ivezic2007, High09}.
 The use of the main
 sequence stellar locus in addition to WD stars will provide a valuable
@@ -1299,7 +1294,7 @@ and then bootstrapping to the entire sky to check for systematic
 effects. 
 
 
-After determining the band to band calibration, there is a one further
+After determining the band to band calibration, there is one further
 value required to calibrate the entire system to an absolute flux
 scale: $\Delta_r$.  This could again be determined using a single
 object with a well-known flux and spectral energy distribution,
@@ -1354,12 +1349,12 @@ not be adequately sampled by the auxiliary telescope.   Because y-band photometr
 (PWV), the LSST has a dedicated system to monitor it.  The system has two components
 \begin{itemize}
 \item A GPS system that measures an all sky value for PWV.  This system operates continuously, whether the LSST is
-observing or not, and forms part of the site's complement of weather instruments
+observing or not, and forms part of the site's complement of weather instruments.
 \item A microwave radiometer optimized for measuring PWV that is copointed with the LSST, so that a PWV measurement
 is available for every exposure.
 \end{itemize}
 Both of these system components are well tested in astronomical applications, and are relatively inexpensive
-(\citep{Blake2011}, \citep{Radomski2010}, \citep{Gaffard2003}).  Their data will be logged through the Engineering and Facility Data Base. 
+(\cite{Blake2011}, \cite{Radomski2010}, \cite{Gaffard2003}).  Their data will be logged through the Engineering and Facility Data Base. 
 
 \subsection{Camera System Telemetry}
 
@@ -1418,11 +1413,11 @@ As shown in Section \ref{sec:counts2photons}, $\Delta m_b^{obs}$ is a function b
 	\begin{itemize}
 	\item{errors induced by measurement noise in atmospheric probe instruments (auxiliary telescope; water vapor monitoring system)}
 	
-	Measurement errors from the water vapor monitoring system are expected to be +/-1mm.  Making use of the plots in 
+	Measurement errors from the water vapor monitoring system are expected to be $\pm 1$mm.  Making use of the plots in 
 	Figure \ref{fig:KuruczPWV}, which is for a variation of 5mm, this translates to errors of 0.2 mmag in u-band, 
 	negligible in g,r, and i-bands, 1 mmag in z, and 2mmag in y.
 	
-	We do not yet have reliable error levels for aerosols and ozone.  Based on the data from \citep{Burke2010b},
+	We do not yet have reliable error levels for aerosols and ozone.  Based on the data from \cite{Burke2010b},
 	we estimate that the errors are no more than 10\% of the total variation seen in each of those components,
 	RSSed together.  
 	Figures \ref{fig:dmag_aer_10percent} and \ref{fig:dmag_O3_10percent} show that the resulting errors are 
@@ -1432,7 +1427,7 @@ As shown in Section \ref{sec:counts2photons}, $\Delta m_b^{obs}$ is a function b
 	\item{Unmodelled spatial and/or temporal variation of atmospheric components, particularly aerosols}
 	
 	The water vapor extinction is measured along the LSST's line of sight by the co-pointed microwave radiometer, so it is 
-	not subject to this errors.  For aerosols we again take 10\% of the total variation seen.  this gives 1.4 mmag in u, 
+	not subject to this errors.  For aerosols we again take 10\% of the total variation seen.  This gives 1.4 mmag in u, 
 	0.7 mmag in g, and neglible for others.
 	
 	
@@ -1440,7 +1435,7 @@ As shown in Section \ref{sec:counts2photons}, $\Delta m_b^{obs}$ is a function b
 	}
 \item{errors in determination of monochromatic illumination correction, which propagate directly into errors in $S_b^{sys}$.  
 
-If the monochromatic illumination correction was ignored, the resulting errors in $\Delta m_b^{obs}$ are as shown in Figure \ref{fig:IllumCorrKurucz}.  The maximum effect is roughly 15mmag in u-band and 3mmag or less in the other bands.  As discussed in Section \ref{sec:ic}, we will determine the illumination correction from a combination of modelling and dedicated measurements.
+If the monochromatic illumination correction is ignored, the resulting errors in $\Delta m_b^{obs}$ are shown in Figure \ref{fig:IllumCorrKurucz}.  The maximum effect is roughly 15mmag in u-band and 3mmag or less in the other bands.  As discussed in Section \ref{sec:ic}, we will determine the illumination correction from a combination of modelling and dedicated measurements.
 While the accuracy of the result is difficult to assess in advance, we conservatively assume that the error will be 20\%. 
 This results in an error contribution of 3mmag in u-band, and 0.6mmag in the others.
 }
@@ -1484,14 +1479,14 @@ the camera subsystem requirements.   In particular, OSS-REQ-0331 states that
 \begin{quote}
 The maximum un-modelled RSS contribution to the photometric repeatability 
 budget from filter placement errors and/or response variations over the FOV shall
-be no more than 0.5 mmag
+be no more than 0.5 mmag.
 \end{quote}
 
 \end{itemize}
 
 \subsubsection{errors in $Z_b^{obs}$}
 \label{sec:Zb_errors}
-Every exposure has a spatial zeropoint model determined by Self Calibration as the solution to a large linear least squares problem, as discussed in Section \ref{sec:counts2photons}.  The errors in the zero points are dependent on the spatial scale of the perturbations, as one can see from a simple argument.  One can reasonably expect that Self Calibration will determine the true magnitudes of the calibration stars with an error that is well below the repeatability requirement ($\sigma \approx 5~mmag$) for individual measurements, so for present purposes we ignore the errors in the true magnitudes.  Suppose a perturbation shifts, for a single exposure, the zeropoint over an area $A$ by some constant $\delta Z$.   If that area contains $N$ calibration stars, each provides an estimate of $\delta Z$ with an error of $\sigma$.   The full set of calibration stars, assuming that their measurement errors are uncorrelated, allows $\delta Z$ to be estimated to a precision of $\sigma_{\delta Z} = \sigma / \sqrt{N}$.  The density of calibration stars varies over the sky.  Here we will use a mean value of $2~arcmin^{-2}$, which corresponds to stars in the range $20 > V > 18$ at galactic latitude of 30 degrees. This provides the following rough estimates for spatial scales of relevance:
+Every exposure has a spatial zeropoint model determined by Self Calibration as the solution to a large linear least squares problem, as discussed in Section \ref{sec:counts2photons}.  The errors in the zero points are dependent on the spatial scale of the perturbations, as one can see from a simple argument.  One can reasonably expect that Self Calibration will determine the true magnitudes of the calibration stars with an error that is well below the repeatability requirement ($\sigma \approx 5~mmag$) for individual measurements, so for present purposes we ignore the errors in the true magnitudes.  Suppose a perturbation shifts, for a single exposure, the zeropoint over an area $A$ by some constant $\delta Z$.   If that area contains $N$ calibration stars, each provides an estimate of $\delta Z$ with an error of $\sigma$.   The full set of calibration stars, assuming that their measurement errors are uncorrelated, allows $\delta Z$ to be estimated to a precision of $\sigma_{\delta Z} = \sigma / \sqrt{N}$.  The density of calibration stars varies over the sky.  Here we will use a mean value of $2~arcmin^{-2}$, which corresponds to stars in the range $20 > V > 18$ at Galactic latitude of 30 degrees. This provides the following rough estimates for spatial scales of relevance:
 \begin{itemize}
 \item{Detector segment:  $A=11~arcmin^2$, $N \approx 22$, $\sigma_{\delta Z} \approx 1~mmag$}
 \item{Detector: $A=178~arcmin^2$, $N \approx 356$, $\sigma_{\delta Z} \approx 0.25~mmag$}
@@ -1581,7 +1576,7 @@ these, the survey's dither pattern leaves intact a pattern of varying radius on 
 is systematic variation over the sky of cloud extinction (likely unrealistic).
 
 
-Turning to system systemaics, we discussed many causes for varying system bandbass in Section \ref{sec:rpterrs}, and several of these can act as the second factor in generating nonuniformity:
+Turning to system systematics, we discussed many causes for varying system bandpass in Section \ref{sec:rpterrs}, and several of these can act as the second factor in generating nonuniformity:
 
 \begin{itemize}
 \item{Unmodelled variation of system bandpass as a function of focal plane position, which can beat
@@ -1596,7 +1591,7 @@ focalplane scales can sometimes result in long wavelength error modes with large
 
 We do not at present have the analytical tools to usefully predict these error processes.  We must rely
 on the results of simulations, as discussed in the following section.  The error budget for uniformity,
-based on these simulations, is summarized in Table \ref{tab:uniform_error_budget}
+based on these simulations, is summarized in Table \ref{tab:uniform_error_budget}.
 
 \section{Testing and Verification}
 \label{sec:verification}
@@ -1611,7 +1606,7 @@ One of the final steps in the LSST calibration process is running self-calibrati
 
 To simulate self-calibration, we require a catalog of realistic LSST observations of bright stars.  We generate this catalog by combining Galfast and Opsim.  The Galfast code generates a realistic model of the Milky Way stellar populations, matching the observed distributions from SDSS.  The LSST Opsim can then be used to generate observations of the stars in the Galfast model.  For each Opsim pointing, we generate a list of observed stars along with an observed magnitude that includes atmospheric and hardware effects.  
 
-An example self-calibration simulation is shown in Figure~\ref{fig:selfcal_fiducial}.  This simulates the first two years of LSST observations in $r$-band, with 1.3 million stars distributed fairly uniformily across the sky.  The observed stellar magnitudes include offsets for cloud extinction, noise based on the Opsim 5$\sigma$-limiting depth, errors due to ghosting and illumination corrections, and errors based on variations in the filter throughput and placement.  The results are promising, showing we easily meet the SRD unifomity requirement, and and very close to meeting the repeatability requirement.  The detailed input parameters of this simulation are listed in \S\ref{sec:siminput}.
+An example self-calibration simulation is shown in Figure~\ref{fig:selfcal_fiducial}.  This simulates the first two years of LSST observations in $r$-band, with 1.3 million stars distributed fairly uniformily across the sky.  The observed stellar magnitudes include offsets for cloud extinction, noise based on the Opsim 5$\sigma$-limiting depth, errors due to ghosting and illumination corrections, and errors based on variations in the filter throughput and placement.  The results are promising, showing we easily meet the SRD uniformity requirement, and are very close to meeting the repeatability requirement.  The detailed input parameters of this simulation are listed in \S\ref{sec:siminput}.
 
 Self-calibration simulations will continue to be important during commissioning and regular survey operations.  By running simulations that match the conditions of the actual LSST observations, we will be able to identify regions of the sky which are poorly linked to the rest of the survey.  We will also be able to identify which spatial scales have the largest errors, which can have important ramifications for cosmological observations (e.g., galaxy clustering) \citep{Huterer13}. 
 
@@ -1626,7 +1621,7 @@ Self-calibration simulations will continue to be important during commissioning 
 
 The self-calibration problem for LSST results in a very large least squares system.  For comparison, the uber-cal of SDSS involved 36 million observations of 12 million unique stars.  For LSST in the first two years we will have around 3.2 billion observations of 100 million unique stars.  The memory and computation power required to solve such a system demands that we parallelize the problem in some way.
 
-We have developed a technique using the Hierarchical Equal Area isoLatitude Pixelization (HEALpix) tessellation of a sphere.  The HEALpix tessellation was originally designed for analyzing all-sky CMB observations.  HEALpixels have equal area, and are distributed to make fast calculations of multipole moments and power spectra.  
+We have developed a technique using the Hierarchical Equal Area isoLatitude Pixelization (HEALpix) tessellation of a sphere.  The HEALpix tessellation was originally designed for analyzing all-sky CMB observations.  HEALpixels have equal area, and are distributed to allow fast calculations of multipole moments and power spectra.  
 
 To run self-calibration in parallel, we assign each observation (consisting of a patch ID, star ID, observed magnitude, magnitude error, and possibly Illumination patch ID) to the nearest four HEALpixels on the sky.  This divides the observations in such a way that we have regions on the sky that are entire HEALpixels plus an added border of approximately one-half HEALpixel.  We have had good results with using 768 (53 square degrees) or 3072 (13 square degree) HEALpixels.  
 
@@ -1647,7 +1642,7 @@ The solutions returned by fitting in parallel are well-matched to solutions whic
 
 \subsection{Auxiliary Telescope Simulation}
 
-We have a simulator under development, "auxteles", for the generation of spectra by the auxiliary telescope, 
+We have a simulator under development, ``auxteles'', for the generation of spectra by the auxiliary telescope, 
 and the fitting of atmospheric 
 models to them.  The spectrum generation is done by simSpectro, which propagates Kurucz spectra through
 atmospheres generated by Modtran4, and into a simplified spectrograph model.  The atmospheric model fitting is done by
@@ -1665,7 +1660,7 @@ any external data.  We simply apply the best-fit patch zeropoints to
 each patch and measure how well we make repeat measurements of each
 star.  By comparing the repeatability in data taken in photometric
 conditions versus non-photometric, we can empirically test the
-systematic limits of the photometry pipeline as well as constrian the
+systematic limits of the photometry pipeline as well as constraining the
 structure function of typical clouds at Cerro Pachon.
 
 \subsubsection{Spatial Uniformity}
@@ -1698,7 +1693,7 @@ if the flux standards are concentrated qlong the celestial equator.
 \subsubsection{Color Calibration}
 
 There are now a number of techniques for comparing stellar colors
-accross the sky.  \citet{Ivezic04} use a principal color analysis,
+across the sky.  \citet{Ivezic04} use a principal color analysis,
 \citet{High09} use a stellar locus regression, and \citet{Schlafly10}
 look at the color of main-sequence turn-off stars.  For all of these
 techniques, the signal is usually dominated by dust extinction.
@@ -1716,7 +1711,7 @@ well we recover their colors.
 \label{sec:software}
 The calibration process presented above is software intensive, as is clear from Figures \ref{fig:overview_flowchart1} -
 \ref{fig:overview_flowchart4}.  All software components are implemented within the LSST Data Management System, in
-two separate productions, described briefly here, and in much more detail in DM publications {\bf NEED REFS for DM}.
+two separate productions, described briefly here, and in much more detail in DM publications.
 The end products of the calibration process are Level 2 data products, also described below.
 
 \subsection{Calibration Products Production}
@@ -1818,9 +1813,10 @@ There is clearly a risk
 that once commissioning or survey operations begin, an unanticipated source of error will arise, or
 that known error sources will have been underestimated.
 The calibration process that we have designed is very similar to those of PS-1 and DES, as previously mentioned.  It is therefore
-cause for some concern that the PS-1 results reported in \citep{Tonry2012} are 
-significantly poorer than we would expect from our
-error analysis, and show clear evidence for systematic errors that are not understood.
+cause for some concern that the PS-1 results reported in \citep{Tonry2012} show clear evidence for systematic errors 
+that are not understood.  \cite{Schlafly2012} nonetheless achieved 10 mmag calibration by empirically correcting for those errors,
+but it's far from clear that a further improvement by a factor of two would be achievable without better understanding of the 
+source of the systematics. 
 Before turning to more specific risks, we first address this general concern.
 
 It is important to recognize that LSST will incorporate some significant improvements over PS-1:
@@ -2620,7 +2616,7 @@ the temporal order of the observations}
 \begin{minipage}{6.5in}
 \includegraphics[width=6in]{AtmoFigs/burk0711/f10.png}
 \caption{ {Non-gray atmospheric extinction from \citep{Burke2010b}.  Red is r-band, cyan is i-band,
-magenta is z-band, black is y-band.} 
+magenta is z-band, black is y-band.  The excess scatter in the z- and y-bands is to to variability of PWV} 
 \label{fig:BurkeExtinction} }
 \end{minipage}
 }
@@ -2681,6 +2677,16 @@ shifted redward by 1\% of the central wavelength.}}
 \end{figure}
 
 \clearpage
+\begin{figure}[htbp]
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\includegraphics[width=6.5in]{fpTempEffects.png}
+\caption{ {\small {\bf Effect of 0.5 K variation in focal plane temperature on natural mags} }
+\label{fig:TempVarEffects} }
+\end{minipage}
+}
+\end{figure}
 
 \begin{figure}
 \centering
@@ -3049,16 +3055,7 @@ on Kurucz SEDs.}
 }
 \end{figure}
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{6.5in}
-\includegraphics[width=6.5in]{fpTempEffects.png}
-\caption{ {\small {\bf Effect of 0.5 K variation in focal plane temperature on natural mags} }
-\label{fig:TempVarEffects} }
-\end{minipage}
-}
-\end{figure}
+
 
 \begin{figure}[h!]
 \centering
