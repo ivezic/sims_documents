@@ -151,7 +151,7 @@ Section~\ref{sec:calib_external} describes how the LSST's internal
 photometric scale is tied to external references.
 Section~\ref{sec:calib_hardware} describes the hardware required
 to realize the calibration process.
-Section~\ref{sec:uncertainty_budget} presents the uncertainty budget for each step of the 
+Section~\ref{sec:error_budget} presents the uncertainty budget for each step of the 
 calibration procedure.
 Section~\ref{sec:verification} describes how we will verify that the
 calibration system functions as designed, and meets the science
@@ -174,7 +174,7 @@ the Observatory System Specifications (OSS), and the individual
 subsystem requirements documents, to cover aspects which are
 too detailed for the SRD.  In this section we consider only 
 requirements from the SRD.  Calibration requirements from the LSR
-and below are discussed further in Section \ref{sec:uncertainty_budget} on the 
+and below are discussed further in Section \ref{sec:error_budget} on the 
 calibration uncertainty budget.
 
 The SRD requirements are based on
@@ -253,7 +253,7 @@ comparisons to known standards, and evaluation of science outputs such
 as stellar locus diagrams. These last two tests are also relevant to
 verifying the final two requirements, \ref{color_req} and
 \ref{abs_req}.  These issues are discussed further in Sections 
-\ref{sec:uncertainty_budget} and \ref{sec:verification}.
+\ref{sec:error_budget} and \ref{sec:verification}.
 
 
 \section{The Photometric Calibration Process}
@@ -624,7 +624,7 @@ gray-scale changes) can be much larger than the SRD repeatability
 requirements would permit. Roughly speaking, these effects reach a level of about 
 50 mmag.  This suggests that our measurement-based model of wavelength-dependent
 effects must be accurate at the 90-95\% level.  This issue is discussed in detail in Section
-\ref{sec:uncertainty_budget}.
+\ref{sec:error_budget}.
 
 
 
@@ -738,7 +738,7 @@ Fortunately, the illumination correction is expected to be stable with time and 
 optical path of the telescope are altered.
 
 Because the illumination correction is wavelength dependent (highly so near the edges of the filter bandpasses), its effect on photometry is dependent on the SED of the object in question.  Figure \ref{fig:IllumCorrKurucz} shows this effect as a function of both 
-radius in the focal plane and star color, for a set of Kurucz main sequence stars.   The effects are clearly too large to ignore, or they would overwhelm the uncertainty budget.   This is discussed further in Section \ref{sec:uncertainty_budget}.  It seems likely that the quality 
+radius in the focal plane and star color, for a set of Kurucz main sequence stars.   The effects are clearly too large to ignore, or they would overwhelm the uncertainty budget.   This is discussed further in Section \ref{sec:error_budget}.  It seems likely that the quality 
 of the illumination corrections is currently limiting the photometric accuracy of large surveys, and we expect the LSST treatment of the illumination correction to yield significant improvement.
 
 \subsubsection{Normalizing Fluxes Across Wavelengths}
@@ -1225,16 +1225,17 @@ investigating the photometric accuracy that can be achieved, and do not yet inte
 photometry for calibrating LSST.}
 \end{itemize}
 
+\noindent
 Additionally, the main sequence stellar locus can be used to check for systematic errors in 
 photometry.
 
 \subsection{White Dwarf Standards}
 \label{sec:WDStandards}
 
-DA white dwarfs have atmospheres dominated by hydrogen, and thus are the simplest stellar atmospheres to model.  The opacities are known from first principles, and in the temperature ranges we are interested in, photospheres are purely radiative and photometrically stable.  The emergent fluxes from such an atmosphere can be defined by just two parameters: effective temperature and a surface gravity, which only require a flux normalization at some wavelength.  These parameters are easily determined spectrosopically from a detailed analysis of the H I Balmer profiles, without reference to any photometry.  Thus the entire spectral energy distribution (SED) from the UV to the IR can be calculated at arbitrary spectral resolution and folded through any well determined photometric band pass or spectroscopic system.  The primary example of such an effort is Holberg and Bergeron (2006), \citet{2006AJ....132.1221H}, where synthetic photometry of DA white dwarfs was used to place $UBVRI$, 2MASS $JHK$, SDSS $ugriz$ and Stromgren $uby$ magnitudes on the HST photometric scale to 1\% using a consistent set of photometric zero points and magnitude offsets.    A fundamental independent check on this photometric calibration was established by using a set of DA white dwarfs having good trigonometric parallaxes and calculating the corresponding photometric parallaxes from the Bergeron photometric grid (Holberg, Bergeron \& Gianninas 2008).   The two parallaxes agreed at the 1\%. 
+DA white dwarfs have atmospheres dominated by hydrogen, and thus are the simplest stellar atmospheres to model.  The opacities are known from first principles, and in the temperature ranges we are interested in, photospheres are purely radiative and photometrically stable.  The emergent fluxes from such an atmosphere can be defined by just two parameters: effective temperature and a surface gravity, which only require a flux normalization at some wavelength.  These parameters are easily determined spectrosopically from a detailed analysis of the H I Balmer profiles, without reference to any photometry.  Thus the entire spectral energy distribution (SED) from the UV to the IR can be calculated at arbitrary spectral resolution and folded through any well determined photometric band pass or spectroscopic system.  The primary example of such an effort is \cite{Holberg2006}, where synthetic photometry of DA white dwarfs was used to place $UBVRI$, 2MASS $JHK$, SDSS $ugriz$ and Stromgren $uby$ magnitudes on the HST photometric scale to 1\% using a consistent set of photometric zero points and magnitude offsets.    A fundamental independent check on this photometric calibration was established by using a set of DA white dwarfs having good trigonometric parallaxes and calculating the corresponding photometric parallaxes from the Bergeron photometric grid \citep{Holberg2008}.   The two parallaxes agreed at the 1\%. 
 
 This idea has been quantitatively tested 
-with HST/STIS spectroscopy (Bohlin 2000), who observed 4 bright DA white dwarfs spanning a range of temperatures and unaffected by reddening (due to their proximity to us), and found their relative flux distributions to be internally consistent with model predictions (Finley et al. 1997) from spectroscopic $T_{e}$ and $\log g$ to better than 1\% in the wavelength range $0.2 - 0.9\mu$. Spectrophotometry of Vega with STIS (Bohlin \& Gilliland 2004, Bohlin 2007) referred to the DA white dwarf (WD) flux scale shows agreement with the Hayes (1985) calibration at the 1 to 2\% level, and with the Kurucz (2003) Vega atmosphere model to better than 1\%   in the wavelength range $0.5 - 0.8\mu$.  This seems to indicate  that in the visible region, the Kurucz model is a better predictor of the flux from Vega than the ground based comparisons to standard sources. The WD based calibration disagrees with Hayes (1985) by 5\% at $0.4\mu$, and by 10\% between 
+with HST/STIS spectroscopy \citep{Bohlin2000}, who observed 4 bright DA white dwarfs spanning a range of temperatures and unaffected by reddening (due to their proximity to us), and found their relative flux distributions to be internally consistent with model predictions (Finley et al. 1997) from spectroscopic $T_{e}$ and $\log g$ to better than 1\% in the wavelength range $0.2 - 0.9\mu$. Spectrophotometry of Vega with STIS (\cite{Bohlin2004a}, \cite{Bohlin2007}) referred to the DA white dwarf (WD) flux scale shows agreement with the \cite{Hayes1985} calibration at the 1 to 2\% level, and with the Kurucz (2003) Vega atmosphere model to better than 1\%   in the wavelength range $0.5 - 0.8\mu$.  This seems to indicate  that in the visible region, the Kurucz model is a better predictor of the flux from Vega than the ground based comparisons to standard sources. The WD based calibration disagrees with Hayes (1985) by 5\% at $0.4\mu$, and by 10\% between 
 $0.9$ and $1.0\mu$. The 9400K Kurucz model for Vega agrees with the STIS observations of Vega tied 
 to the WD scale to $\sim 2$\%  from 0.28 to 1.0$\mu$. We surmise that  1) outside $0.5 - 0.8\mu$, the atmospheric extinction is a real hindrance to setting up calibrators, and 2) the self-consistency of the WDs 
 is better than the comparison with the best {\it model} for Vega, verifying that the WD modeling is superior to that for  A  stars, and validating the assertion that  DA white dwarfs are best understood as standard SEDs. 
@@ -1256,7 +1257,7 @@ there will be $\approx$ 100/10 DA/DB WD stars with $r<24$ in each LSST
 image at the South Galactic Pole, though few of these will have available
 the spectra necessary for synthetic photometry. At least
 100--1000 across the sky will be used to search for systematic effects.
-Catalogs of WD stars visible from Cerro Pachon have been constructed
+Catalogs of WD stars visible from Cerro Pachon have been constructed.
 %\citep{1992JRASC..86..309B}.
 
 \subsection{Population Methods}
@@ -3141,9 +3142,9 @@ The auxiliary telescope
 \centering
 \fbox{
 \begin{minipage}{6.5in}
-%\includegraphics[width=6in]{HardwareFigs/DomeScreenOLD}
+\includegraphics[width=6in]{HardwareFigs/TelAsm_DomeCalibScreen}
 \caption{{\small
-The flat field illumination system (PLACEHOLDER)
+The flat field dome screen in front of the telescope
 }}
 \label{fig:domescreen}
 \end{minipage}
@@ -3221,7 +3222,7 @@ the Kurucz spectra used for the stars.
 \centering
 \fbox{
 \begin{minipage}{6.5in}
-\includegraphics[width=6in]{DataReleaseProduction}
+\includegraphics[width=6in]{DM_DRP}
 \caption{{\small
 Data Release Production
 }}
