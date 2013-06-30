@@ -1474,14 +1474,22 @@ it is 0.2 mmag.   There is, of course, a larger effect on the zeropoints, discus
 
 \item{errors in filter bandpass due to variation in position with respect to the optical axis}
 
-The magnitude of these effects is constrained by the OSS and
-the camera subsystem requirements.   In particular, OSS-REQ-0331 states that
+Figure \ref{fig:dmag_filtershift} shows the effects of shifting the filter bandpass by 1\% of the central wavelength.  The effect varies
+with the filter band, but an ensemble of stars of varied color will show an increased scater of roughly 40 mmag.  The LSST filter
+requirements permit a 2.5\% shift in the bandpass from center to edge, and require a smooth variation.   Assuming that variation
+is linear, a shift in the filter position by $\delta R$ mm, results in a bandpass shift
+\begin{equation}
+{\delta \lambda \over \lambda} = {{ 0.025 \,\delta R } \over  325 }
+\end{equation}
+\noindent
+The resulting magnitude scatter, in mmag, is then
+\begin{equation}
+\delta m \approx {50 \over 0.01} {\delta \lambda \over \lambda} \approx 0.30 \,\delta R
+\end{equation}
 
-\begin{quote}
-The maximum un-modelled RSS contribution to the photometric repeatability 
-budget from filter placement errors and/or response variations over the FOV shall
-be no more than 0.5 mmag.
-\end{quote}
+\noindent
+If we require that the effect be no more than 0.5 mmag, $\delta R < 1.6$ mm.  The camera requirement for filter position
+knowledge is chosen to meet this photometric requirement.
 
 \end{itemize}
 
@@ -3015,11 +3023,11 @@ Affected term & Effect &  $u$  & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
 & Photodiode monitoring system errors & 0.8 & 0.5 & 0 & 0 & 0 & 0.1 \\
 & Calibration star SED errors & 5.6 & 0.8 & 0.5 & 0.4 & 0.4 & 0.2 \\
 & Focal plane temperature errors & 0 & 0 & 0 & 0 & 0 & 0.2 \\
-& Filter positioning errors & 2.2 & 0.5 & 0.2 & 0.2 & 0.3 & 0.3 \\ 
-& {\bf Total} & 7.0 & 2.5 & 1.0 & 0.8 & 1.2 & 2.2 \\ \hline
+& Filter positioning errors & 1.0 & 0.5 & 0.5 & 0.5 & 0.5 & 0.5 \\ 
+& {\bf Total} & 6.8 & 2.5 & 1.1 & 0.8 & 1.2 & 2.2 \\ \hline
 $Z_b^{obs}$ & & & & \\
 & Saturated self calibration errors from clouds (90\% of obs), atmosphere, and camera effects  & 2.0 & 2.0 & 2.0 & 2.0 & 2.0 & 2.0 \\ \hline
-{\bf Total Estimate} & & 7.9 & 4.4 & 3.7 & 3.7 & 3.8 & 4.2 \\ 
+{\bf Total Estimate} & & 7.7 & 4.4 & 3.7 & 3.8 & 3.8 & 4.2 \\ 
 {\bf Simulation Result (IQR Median)} & & 8.0 & 4.9 & 5.0 & 5.0 & 4.4 & 6.1 \\ \hline
 {\bf Design Requirement} & & 7.5 & 5.0 & 5.0 & 5.0 & 7.5 & 7.5 \\ 
 {\bf Min. Requirement} & & 12 & 8.0 & 8.0 & 8.0 & 12 & 12 \\
