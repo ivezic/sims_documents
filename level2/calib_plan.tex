@@ -1851,7 +1851,7 @@ that of objects being photometered}
 
 We are confident that these improvements will go a significant way toward better control of the systematics.  
 To address the possibility
-that our confidence is misplaced, we are pursuing a number of mitigation strategies that will 
+that our confidence is misplaced, we are pursuing several mitigation strategies that will 
 further improve performance.
 
 \begin{itemize}
@@ -1871,10 +1871,7 @@ wavelength-dependent effects as well.  We have tested a first step in this direc
 a parameterized model of the wavelength-dependent illumination into Self Calibration.  Initial 
 results have not been promising, but this is far from invalidating the overall approach.}
 
-\item{Third, we will develop the Gauss-Markov approach to error modelling, mentioned in Section \ref{sec:Zb_errors},
-into a tool which can act as an independent check on many aspects of the simulations.}
-
-\item{Finally, it is clear that systematic errors that affect the uniformity of calibration tie in to the overall
+\item{Third, it is clear that systematic errors that affect the uniformity of calibration tie in to the overall
 survey strategy, and in particular its dithering pattern.  The survey strategy is not rigid, and changes
 to improve calibration performance may well be possible.}
 
@@ -1887,7 +1884,8 @@ We are also tracking a number of more specific risks:
 validation is not complete.}  
 
 We are well along in the development of a second generation calibration
-simulator which will address these concerns.
+simulator which will address these concerns.  Also, we will develop the Gauss-Markov approach to error modelling, mentioned in Section \ref{sec:Zb_errors},
+into a tool which can act as an independent check on many aspects of the simulations.
 
 \item {Systematics error floor for photometry is higher than expected}
 
@@ -1898,10 +1896,21 @@ and mitigate it with improved image processing algorithms.
 
 There is considerable scope to improve the models, and add additional sources of data as required.
 
-\item {Stability of $S_b^{sys}$ is less than expected}
+\item {Sensor complexities may affect calibration}
 
-The issues most likely to arise can be handled with improved telemetry from the system, coupled with 
-more capable forward models.
+Testing of prototype LSST sensors has uncovered complex behavior which has not generally been recognized
+in previous generations of CCD detectors (though it is likely to be there at lower levels).   Effects include
+"tree rings", intensity dependent PSF, and charge dependent electron transport.   These may leave an 
+imprint on calibration which is not removed by the standard image processing approach.   
+
+We are working with LSST Data Management to develop better calibration products, particularly flat fields, that,
+in conjunction with improved image processing algorithms, will reduce the impact.
+
+\item {The currently planned 400nm short wavelength cutoff of the auxiliary telescope may result in
+insufficient precision in ozone determination}
+
+The effect of the short wavelength cutoff can readily be evaluated with existing data, prior to FDR,
+allowing a change in the spectrograph design if needed.
 
 \end{itemize}
 
