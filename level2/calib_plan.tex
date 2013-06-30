@@ -1487,6 +1487,7 @@ be no more than 0.5 mmag.
 
 \subsubsection{errors in $Z_b^{obs}$}
 \label{sec:Zb_errors}
+\noindent
 Every exposure has a spatial zeropoint model determined by Self Calibration as the solution to a large linear least squares problem, as discussed in Section \ref{sec:counts2photons}.  The errors in the zero points are dependent on the spatial scale of the perturbations, as one can see from a simple argument.  One can reasonably expect that Self Calibration will determine the true magnitudes of the calibration stars with an error that is well below the repeatability requirement ($\sigma \approx 5~mmag$) for individual measurements, so for present purposes we ignore the errors in the true magnitudes.  Suppose a perturbation shifts, for a single exposure, the zeropoint over an area $A$ by some constant $\delta Z$.   If that area contains $N$ calibration stars, each provides an estimate of $\delta Z$ with an error of $\sigma$.   The full set of calibration stars, assuming that their measurement errors are uncorrelated, allows $\delta Z$ to be estimated to a precision of $\sigma_{\delta Z} = \sigma / \sqrt{N}$.  The density of calibration stars varies over the sky.  Here we will use a mean value of $2~arcmin^{-2}$, which corresponds to stars in the range $20 > V > 18$ at Galactic latitude of 30 degrees. This provides the following rough estimates for spatial scales of relevance:
 \begin{itemize}
 \item{Detector segment:  $A=11~arcmin^2$, $N \approx 22$, $\sigma_{\delta Z} \approx 1~mmag$}
@@ -1494,9 +1495,8 @@ Every exposure has a spatial zeropoint model determined by Self Calibration as t
 \item{Focalplane: $A=3.4*10^4~arcmin^2$, $N \approx 6.8*10^4$, $\sigma_{\delta Z} \approx 0.02~mmag$}
 \end{itemize}
 This makes it clear that the size of a detector segment is a rough boundary, above which zeropoint errors should be negligible,
-while below it they may become quite significant.  In reality, many zeropoint perturbations (such as clouds and focal plane temperature variations) have a continuous spatial power spectrum, and a more sophisticated estimate is required.  
-
-One can place this argument on a firmer mathematical foundation through "objective analysis", a formulation developed by the 
+while below it they may become quite significant.\footnote{In reality, many zeropoint perturbations (such as clouds and focal plane temperature variations) have a continuous spatial power spectrum, and a more sophisticated estimate is required.  
+This estimate can be provided through "objective analysis", a formulation developed by the 
 oceanographic and meteorological communities, and based on the Gauss-Markov theorem (\citep{Bretherton1976}, 
 \citep{Bretherton1980},\citep{McIntosh1990}).
 The problem addressed by objective analysis is:  Given a continuous scalar field, measured in a two dimensional domain at a set of 
@@ -1506,13 +1506,19 @@ star in the field.  The formalism allows the error to be predicted based on the 
 of the field.  Figure \ref{fig:GaussMarkov} shows an example result using a realistic cloud structure function, with 
 characteristic length scale of 500 meters, which is at the short (and more stressing) end of what we expect.  This development
 has just begun, but it will offer an independent check of the simulation results.  Early results show consistency between
-the two methods.
+the two methods.}  This expectation is confirmed by our simulation results, as shown in Figure 
+\ref{fig:zp_errs}. These runs, for the r-filter, have no color dependent errors, and data is plotted 
+only for zeropoint errors less than 100 mmag (the fat tails extend further).  The zeropoint errors 
+after self calibration saturate at a level independent of the input 
+zeropoint perturbations, and the saturation level is approximately
+$\sigma_{sat} = \sqrt {\left( }\sigma_1}^2 / N + {\sigma_{sys}}^2 \right)}$
+where $\sigma_1 \approx 3$ mmag and $\sigma_{sys} \approx 0.7$ mmag.
 
-
-Zeropoint errors depend not only on the spatial scale of the zeropoint perturbations, as argued above,
-but also on the magnitude of those perturbations.   This is shown in Figures \ref{fig:zp2dhist}, \ref{fig:zpHist0_0.5} and 
+Zeropoint errors obey the approximate relation above only when they are relatively small.  If they become large enough
+to dim the calibration stars significantly, the reduction in their signal-to-noise ratio increases the errors that
+come out of Self Calibration.  This is shown in Figures \ref{fig:zp2dhist}, \ref{fig:zpHist0_0.5} and 
 \ref{fig:zpHist1.0_1.5}, which present
-the results of a self calibration simulation which includes {\it only} zeropoint perturbations, without
+the results of a self calibration simulation, again without
 color-dependent effects.  As the first of these figures illustrates, the zeropoint error has the shape of a fan
 in (zp, zp-error) space, with the width of the fan increasing as the input zeropoint increases.  The other two
 figures, which are cross sections of the fan at different zeropoint levels, show that the error distribution
@@ -1520,7 +1526,7 @@ is roughly a gaussian core with fat tails.  When the zeropoint is between 0 and 
 1 mmag.  Under extinction conditions near the limit at which we propose to continue survey operations, between
 1 and 1.5 mag, the gaussian core has a sigma of 30 mmag.
 
-In practice, zeropoint variations are dominated by clouds, with lesser effects described below.
+In practice, zeropoint variations are dominated by clouds, with smaller effects described below.
 The impact of these variations on calibration performance as a whole will depend strongly on
 the pdf of the cloud extinction, as the above results show.  The strength of this dependence derives partly from the fact that
 the standard deviation in cloud extinction is roughly proportional to the extinction itself.  Additionally, 
@@ -1531,27 +1537,31 @@ less than 0.5 mag for approximately 94\% of the observations.
 The higher extinction data therefore comfortably falls within the 10\% fraction of the data excludable
 from the repeatability requirement by the SRD.
 
+
+
+
 Other perturbations to the zeropoints arise from:
 \begin{itemize}
 \item{Varying gray averages of extinction from aerosols, water vapor, and ozone.  These are dominated by aerosols, 
-and Figure \ref{fig:CASLEO} suggests that variations of more than 0.1 mag will be restricted to far fewer than 
-10\% of the observations.}
+and have spatial scales large compared to a detector.
 \item{Camera gain variation.  This is constrained by Camera requirements to be less than 1 mmag rms over a 1 hour
-period, and less than 10 mmag over 12 hours.  Because the gain variations occur at the detector segment level, the
-argument earlier in this section implies that we can correct them to no better than 1 mmag, so this error goes
-directly into the error budget.}
-\item{Shutter travel time variation.  Camera requirements constrain this to 20 mmag, but the effects are over
-large spatial scales, well controlled by self calibration.}
+period, and less than 10 mmag over 12 hours.  These gain variations occur at the detector segment level.}
+\item{Shutter travel time variation.  Camera requirements constrain this to 20 mmag. The effects are over
+spatial scales comparable to the size of the focal plane}
 \item{Detector QE variation due to varying focal plane temperature. These occur over full detectors,
 affect only the y-band, and knowledge of them is constrained by Camera requirements to be better than 0.5 K.
-This results in a 1 mmag zeropoint effect. }
+This results in a 1 mmag zeropoint perturbatsion. }
 \end{itemize}
 
-In summary, we therefore expect repeatability errors due to zeropoint variations to be at the 1 mmag level for 90\% of the 
-survey observations due to clouds, atmospheric component variations, shutter travel time variations, and long term 
-camera gain variations.  Short term camera gain variations add another 1 mmag to the error budget.
 
-The error budget for repeatability errors, including all of the above effects, is summarized in Table \ref{tab:rpt_error_budget}.
+In summary, for the 90\% of the survey observations with cloud extinction less than 0.5 mag, we expect the 
+zeropoint errors to be dominated by perturbations that act at the detector segment scale.  It is prudent to expect that 
+the resultant errors will be at $\sigma_{sat}$ for that scale, the saturation level determined above.  For typical 
+detector segment size areas on the sky, these contain roughly 20 stars, and $\sigma_{sat} \approx 1$ mmag.  Some 
+segment areas will have substantially less, however, leading to increased $\sigma_{sat} \approx 2$ mmag.  To be
+conservative, we carry this latter value in our error budget.  The error budget for repeatability errors, 
+including all of the above effects, and for the above specified
+90 \% fraction of the survey, is summarized in Table \ref{tab:rpt_error_budget}.
 
 \subsection{Uniformity errors}
 Uniformity errors must meet the uniformity requirement in the SRD (Requirement 2 in Section \ref{sec:photoreq}).  Nonuniformity 
@@ -2907,6 +2917,24 @@ of the total range. }}
 }
 \end{figure}
 
+\begin{figure}
+\centering
+\centering
+\fbox{
+\begin{minipage}{6.5in}
+\subfloat[]{\includegraphics[width=5in]{SelfcalFigs/zp_err_dist}} \\
+\subfloat[]{\includegraphics[width=5in]{SelfcalFigs/zp_err_sigmas}}
+\caption{{\small  Zeropoint error distributions from an r-band simulation
+with no color-dependent errors.  The top plot shows the distribution of
+errors for calibration patches with varying number of stars.  The bottom
+plot shows the behavior of the $\sigma$ of the Gaussian core as a function
+of the number of stars.  The solid curve is the $\sigma_{sat}$ function
+discussed in the text. }}
+\label{fig:zp_errs}
+\end{minipage}
+}
+\end{figure}
+
 \begin{figure}[htbp]
 \centering
 \fbox{
@@ -2976,7 +3004,7 @@ errors. The histogram shows a vertical crossection of the error fan, with zeropo
 \begin{center}
 \begin{table}[htb]
 \caption{{\bf Repeatability error budget.  All values are in mmag} }
-\begin{tabular}{l | l | c c c c c c }
+\begin{tabular}{l | p{8.5cm} | c c c c c c }
 Affected term & Effect &  $u$  & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
 {\bf $m_b^{obs}$} & {\bf Total} & 3.0 & 3.0 & 3.0 & 3.0 & 3.0 & 3.0 \\ \hline
 {\bf $\Delta m_b^{obs}$} & & & & \\
@@ -2990,10 +3018,8 @@ Affected term & Effect &  $u$  & $g$ & $r$ & $i$ & $z$ & $y$ \\ \hline
 & Filter positioning errors & 2.2 & 0.5 & 0.2 & 0.2 & 0.3 & 0.3 \\ 
 & {\bf Total} & 7.0 & 2.5 & 1.0 & 0.8 & 1.2 & 2.2 \\ \hline
 $Z_b^{obs}$ & & & & \\
-& Clouds and cloud-like effects (90\% of obs) & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 \\
-& Camera gain variation (short term) & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 \\
-& {\bf Total} & 1.4 & 1.4 & 1.4 & 1.4 & 1.4 & 1.4 \\ \hline
-{\bf Total Estimate} & & 7.7 & 4.1 & 3.5 & 3.4 & 3.5 & 4.0 \\ 
+& Saturated self calibration errors from clouds (90\% of obs), atmosphere, and camera effects  & 2.0 & 2.0 & 2.0 & 2.0 & 2.0 & 2.0 \\ \hline
+{\bf Total Estimate} & & 7.9 & 4.4 & 3.7 & 3.7 & 3.8 & 4.2 \\ 
 {\bf Simulation Result (IQR Median)} & & 8.0 & 4.9 & 5.0 & 5.0 & 4.4 & 6.1 \\ \hline
 {\bf Design Requirement} & & 7.5 & 5.0 & 5.0 & 5.0 & 7.5 & 7.5 \\ 
 {\bf Min. Requirement} & & 12 & 8.0 & 8.0 & 8.0 & 12 & 12 \\
