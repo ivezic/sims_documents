@@ -1,4 +1,4 @@
-This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2012.8.24)  30 JUN 2013 20:33
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2012.8.24)  1 JUL 2013 11:20
 entering extended mode
 **scUpdate
 (./scUpdate.tex
@@ -184,16 +184,16 @@ loading : Context Support Macros / PDF (2004.03.26)
 \everyMPtoPDFconversion=\toks21
 )
 AAS preprint substyle, v5.2 <12 Dec 2003>.
-LaTeX Font Info:    Try loading font information for U+lasy on input line 50.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 51.
 (/usr/share/texmf/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 50.
+LaTeX Font Info:    Try loading font information for U+msa on input line 51.
 
 (/usr/share/texmf/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 50.
+LaTeX Font Info:    Try loading font information for U+msb on input line 51.
 
 (/usr/share/texmf/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
@@ -281,14 +281,16 @@ File: Plots/r_1e6_regsolver/Sdamg_hist.png Graphic file (type png)
 <Plots/r_1e6/Sdamg_hist.png, id=81, 578.16pt x 433.62pt>
 File: Plots/r_1e6/Sdamg_hist.png Graphic file (type png)
 
-<use Plots/r_1e6/Sdamg_hist.png>
+<use Plots/r_1e6/Sdamg_hist.png> [10] [11 <./Plots/u_band/input_illum_err.png> 
+<./Plots/r_band/input_illum_err.png> <./Plots/HPid_8.png> <./Plots/HPid_16.png>
+]
 Plottwo included the files Plots/r_1e6/Snobs.png Plots/r_1e6_nodither/Snobs.png
 
-<Plots/r_1e6/Snobs.png, id=82, 578.16pt x 433.62pt>
+<Plots/r_1e6/Snobs.png, id=88, 578.16pt x 433.62pt>
 File: Plots/r_1e6/Snobs.png Graphic file (type png)
 
 <use Plots/r_1e6/Snobs.png>
-<Plots/r_1e6_nodither/Snobs.png, id=83, 578.16pt x 433.62pt>
+<Plots/r_1e6_nodither/Snobs.png, id=89, 578.16pt x 433.62pt>
 File: Plots/r_1e6_nodither/Snobs.png Graphic file (type png)
 
 <use Plots/r_1e6_nodither/Snobs.png>
@@ -296,7 +298,7 @@ Plottwo included the files Plots/r_1e6/Sdmag.png Plots/r_1e6_nodither/Sdmag.png
 
 File: Plots/r_1e6/Sdmag.png Graphic file (type png)
 <use Plots/r_1e6/Sdmag.png>
-<Plots/r_1e6_nodither/Sdmag.png, id=84, 578.16pt x 433.62pt>
+<Plots/r_1e6_nodither/Sdmag.png, id=90, 578.16pt x 433.62pt>
 File: Plots/r_1e6_nodither/Sdmag.png Graphic file (type png)
 
 <use Plots/r_1e6_nodither/Sdmag.png>
@@ -304,19 +306,17 @@ Plottwo included the files Plots/r_1e6/Sdamg_hist.png Plots/r_1e6_nodither/Sdam
 g_hist.png
 File: Plots/r_1e6/Sdamg_hist.png Graphic file (type png)
 <use Plots/r_1e6/Sdamg_hist.png>
-<Plots/r_1e6_nodither/Sdamg_hist.png, id=85, 578.16pt x 433.62pt>
+<Plots/r_1e6_nodither/Sdamg_hist.png, id=91, 578.16pt x 433.62pt>
 File: Plots/r_1e6_nodither/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/r_1e6_nodither/Sdamg_hist.png>
 
 LaTeX Warning: Float too large for page by 10.81366pt on input line 365.
 
-[10] [11 <./Plots/u_band/input_illum_err.png> <./Plots/r_band/input_illum_err.p
-ng> <./Plots/HPid_8.png> <./Plots/HPid_16.png>] [12 <./Plots/r_1e6_regsolver/Sd
-mag.png> <./Plots/r_1e6/Sdmag.png> <./Plots/r_1e6_regsolver/Sdamg_hist.png> <./
-Plots/r_1e6/Sdamg_hist.png>] [13 <./Plots/r_1e6/Snobs.png> <./Plots/r_1e6_nodit
-her/Snobs.png> <./Plots/r_1e6_nodither/Sdmag.png> <./Plots/r_1e6_nodither/Sdamg
-_hist.png>] [14]
+[12] [13 <./Plots/r_1e6_regsolver/Sdmag.png> <./Plots/r_1e6/Sdmag.png> <./Plots
+/r_1e6_regsolver/Sdamg_hist.png> <./Plots/r_1e6/Sdamg_hist.png>] [14 <./Plots/r
+_1e6/Snobs.png> <./Plots/r_1e6_nodither/Snobs.png> <./Plots/r_1e6_nodither/Sdma
+g.png> <./Plots/r_1e6_nodither/Sdamg_hist.png>]
 Plottwo included the files Plots/r_1e6/Snobs.png Plots/r_1e6/Snobs_hist.png
 File: Plots/r_1e6/Snobs.png Graphic file (type png)
 <use Plots/r_1e6/Snobs.png>
@@ -543,119 +543,116 @@ File: Plots/r_1e6/Srepeat_IQR_bright_hist.png Graphic file (type png)
 <Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png, id=145, 578.16pt x 433.62pt>
 File: Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png Graphic file (type png)
 
-<use Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png>
+<use Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png> [15] [16 <./Plots/r_1e6/S
+nobs_hist.png> <./Plots/r_1e6/Srepeat_IQR.png> <./Plots/r_1e6/Srepeat_IQR_brigh
+t_hist.png>] [17 <./Plots/u_1e6_neg15/Snobs.png> <./Plots/u_1e6_neg15/Snobs_his
+t.png> <./Plots/u_1e6_neg15/Sdmag.png> <./Plots/u_1e6_neg15/Sdamg_hist.png> <./
+Plots/u_1e6_neg15/Srepeat_IQR.png> <./Plots/u_1e6_neg15/Srepeat_IQR_bright_hist
+.png>] [18 <./Plots/u_1e6_uselect/Snobs.png> <./Plots/u_1e6_uselect/Snobs_hist.
+png> <./Plots/u_1e6_uselect/Sdmag.png> <./Plots/u_1e6_uselect/Sdamg_hist.png> <
+./Plots/u_1e6_uselect/Srepeat_IQR.png> <./Plots/u_1e6_uselect/Srepeat_IQR_brigh
+t_hist.png>] [19 <./Plots/g_1e6/Snobs.png> <./Plots/g_1e6/Snobs_hist.png> <./Pl
+ots/g_1e6/Sdmag.png> <./Plots/g_1e6/Sdamg_hist.png> <./Plots/g_1e6/Srepeat_IQR.
+png> <./Plots/g_1e6/Srepeat_IQR_bright_hist.png>] [20 <./Plots/i_1e6/Snobs.png>
+ <./Plots/i_1e6/Snobs_hist.png> <./Plots/i_1e6/Sdmag.png> <./Plots/i_1e6/Sdamg_
+hist.png> <./Plots/i_1e6/Srepeat_IQR.png> <./Plots/i_1e6/Srepeat_IQR_bright_his
+t.png>] [21 <./Plots/z_1e6/Snobs.png> <./Plots/z_1e6/Snobs_hist.png> <./Plots/z
+_1e6/Sdmag.png> <./Plots/z_1e6/Sdamg_hist.png> <./Plots/z_1e6/Srepeat_IQR.png> 
+<./Plots/z_1e6/Srepeat_IQR_bright_hist.png>] [22 <./Plots/y_1e6/Snobs.png> <./P
+lots/y_1e6/Snobs_hist.png> <./Plots/y_1e6/Sdmag.png> <./Plots/y_1e6/Sdamg_hist.
+png> <./Plots/y_1e6/Srepeat_IQR.png> <./Plots/y_1e6/Srepeat_IQR_bright_hist.png
+>] [23 <./Plots/r_1e6/repeat_examples_hist.png> <./Plots/r_1e6/repeat_examples_
+cdf.png>] [24 <./Plots/r_1e6_newseed/Sdmag.png> <./Plots/r_1e6_newseed/Sdamg_hi
+st.png> <./Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png>]
 Plottwo included the files Plots/r_hd_test/Snobs.png Plots/r_hd_test/Snobs_hist
 .png
-<Plots/r_hd_test/Snobs.png, id=146, 578.16pt x 433.62pt>
+<Plots/r_hd_test/Snobs.png, id=177, 578.16pt x 433.62pt>
 File: Plots/r_hd_test/Snobs.png Graphic file (type png)
 
 <use Plots/r_hd_test/Snobs.png>
-<Plots/r_hd_test/Snobs_hist.png, id=147, 578.16pt x 433.62pt>
+<Plots/r_hd_test/Snobs_hist.png, id=178, 578.16pt x 433.62pt>
 File: Plots/r_hd_test/Snobs_hist.png Graphic file (type png)
 
 <use Plots/r_hd_test/Snobs_hist.png>
 Plottwo included the files Plots/r_hd_test/Sdmag.png Plots/r_hd_test/Sdamg_hist
 .png
-<Plots/r_hd_test/Sdmag.png, id=148, 578.16pt x 433.62pt>
+<Plots/r_hd_test/Sdmag.png, id=179, 578.16pt x 433.62pt>
 File: Plots/r_hd_test/Sdmag.png Graphic file (type png)
 
 <use Plots/r_hd_test/Sdmag.png>
-<Plots/r_hd_test/Sdamg_hist.png, id=149, 578.16pt x 433.62pt>
+<Plots/r_hd_test/Sdamg_hist.png, id=180, 578.16pt x 433.62pt>
 File: Plots/r_hd_test/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/r_hd_test/Sdamg_hist.png>
 Plottwo included the files Plots/r_hd_test/Srepeat_IQR.png Plots/r_hd_test/Srep
 eat_IQR_bright_hist.png
-<Plots/r_hd_test/Srepeat_IQR.png, id=150, 578.16pt x 433.62pt>
+<Plots/r_hd_test/Srepeat_IQR.png, id=181, 578.16pt x 433.62pt>
 File: Plots/r_hd_test/Srepeat_IQR.png Graphic file (type png)
 
 <use Plots/r_hd_test/Srepeat_IQR.png>
-<Plots/r_hd_test/Srepeat_IQR_bright_hist.png, id=151, 578.16pt x 433.62pt>
+<Plots/r_hd_test/Srepeat_IQR_bright_hist.png, id=182, 578.16pt x 433.62pt>
 File: Plots/r_hd_test/Srepeat_IQR_bright_hist.png Graphic file (type png)
 
-<use Plots/r_hd_test/Srepeat_IQR_bright_hist.png> [15] [16 <./Plots/r_1e6/Snobs
-_hist.png> <./Plots/r_1e6/Srepeat_IQR.png> <./Plots/r_1e6/Srepeat_IQR_bright_hi
-st.png>] [17 <./Plots/u_1e6_neg15/Snobs.png> <./Plots/u_1e6_neg15/Snobs_hist.pn
-g> <./Plots/u_1e6_neg15/Sdmag.png> <./Plots/u_1e6_neg15/Sdamg_hist.png> <./Plot
-s/u_1e6_neg15/Srepeat_IQR.png> <./Plots/u_1e6_neg15/Srepeat_IQR_bright_hist.png
->] [18 <./Plots/u_1e6_uselect/Snobs.png> <./Plots/u_1e6_uselect/Snobs_hist.png>
- <./Plots/u_1e6_uselect/Sdmag.png> <./Plots/u_1e6_uselect/Sdamg_hist.png> <./Pl
-ots/u_1e6_uselect/Srepeat_IQR.png> <./Plots/u_1e6_uselect/Srepeat_IQR_bright_hi
-st.png>] [19 <./Plots/g_1e6/Snobs.png> <./Plots/g_1e6/Snobs_hist.png> <./Plots/
-g_1e6/Sdmag.png> <./Plots/g_1e6/Sdamg_hist.png> <./Plots/g_1e6/Srepeat_IQR.png>
- <./Plots/g_1e6/Srepeat_IQR_bright_hist.png>] [20 <./Plots/i_1e6/Snobs.png> <./
-Plots/i_1e6/Snobs_hist.png> <./Plots/i_1e6/Sdmag.png> <./Plots/i_1e6/Sdamg_hist
-.png> <./Plots/i_1e6/Srepeat_IQR.png> <./Plots/i_1e6/Srepeat_IQR_bright_hist.pn
-g>] [21 <./Plots/z_1e6/Snobs.png> <./Plots/z_1e6/Snobs_hist.png> <./Plots/z_1e6
-/Sdmag.png> <./Plots/z_1e6/Sdamg_hist.png> <./Plots/z_1e6/Srepeat_IQR.png> <./P
-lots/z_1e6/Srepeat_IQR_bright_hist.png>] [22 <./Plots/y_1e6/Snobs.png> <./Plots
-/y_1e6/Snobs_hist.png> <./Plots/y_1e6/Sdmag.png> <./Plots/y_1e6/Sdamg_hist.png>
- <./Plots/y_1e6/Srepeat_IQR.png> <./Plots/y_1e6/Srepeat_IQR_bright_hist.png>]
-[23 <./Plots/r_1e6/repeat_examples_hist.png> <./Plots/r_1e6/repeat_examples_cdf
-.png>] [24 <./Plots/r_1e6_newseed/Sdmag.png> <./Plots/r_1e6_newseed/Sdamg_hist.
-png> <./Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.png>] [25 <./Plots/r_hd_tes
-t/Snobs.png> <./Plots/r_hd_test/Snobs_hist.png> <./Plots/r_hd_test/Sdmag.png> <
-./Plots/r_hd_test/Sdamg_hist.png> <./Plots/r_hd_test/Srepeat_IQR.png> <./Plots/
-r_hd_test/Srepeat_IQR_bright_hist.png>]
+<use Plots/r_hd_test/Srepeat_IQR_bright_hist.png>
 Plottwo included the files Plots/25mil/Sdensity.png Plots/25mil/Sdepth90.png
-<Plots/25mil/Sdensity.png, id=187, 578.16pt x 433.62pt>
+<Plots/25mil/Sdensity.png, id=183, 578.16pt x 433.62pt>
 File: Plots/25mil/Sdensity.png Graphic file (type png)
 
 <use Plots/25mil/Sdensity.png>
-<Plots/25mil/Sdepth90.png, id=188, 578.16pt x 433.62pt>
+<Plots/25mil/Sdepth90.png, id=184, 578.16pt x 433.62pt>
 File: Plots/25mil/Sdepth90.png Graphic file (type png)
 
 <use Plots/25mil/Sdepth90.png>
 Plottwo included the files Plots/25mil/Pnstars_hist.png Plots/25mil/Pzphist.png
 
-<Plots/25mil/Pnstars_hist.png, id=189, 578.16pt x 433.62pt>
+<Plots/25mil/Pnstars_hist.png, id=185, 578.16pt x 433.62pt>
 File: Plots/25mil/Pnstars_hist.png Graphic file (type png)
 
 <use Plots/25mil/Pnstars_hist.png>
-<Plots/25mil/Pzphist.png, id=190, 578.16pt x 433.62pt>
+<Plots/25mil/Pzphist.png, id=186, 578.16pt x 433.62pt>
 File: Plots/25mil/Pzphist.png Graphic file (type png)
 
 <use Plots/25mil/Pzphist.png>
 Plottwo included the files Plots/25mil/Snobs.png Plots/25mil/Snobs_hist.png
-<Plots/25mil/Snobs.png, id=191, 578.16pt x 433.62pt>
+<Plots/25mil/Snobs.png, id=187, 578.16pt x 433.62pt>
 File: Plots/25mil/Snobs.png Graphic file (type png)
 
 <use Plots/25mil/Snobs.png>
-<Plots/25mil/Snobs_hist.png, id=192, 578.16pt x 433.62pt>
+<Plots/25mil/Snobs_hist.png, id=188, 578.16pt x 433.62pt>
 File: Plots/25mil/Snobs_hist.png Graphic file (type png)
 
 <use Plots/25mil/Snobs_hist.png>
 Plottwo included the files Plots/25mil/Sdmag.png Plots/25mil/Sdamg_hist.png
-<Plots/25mil/Sdmag.png, id=193, 578.16pt x 433.62pt>
+<Plots/25mil/Sdmag.png, id=189, 578.16pt x 433.62pt>
 File: Plots/25mil/Sdmag.png Graphic file (type png)
 
 <use Plots/25mil/Sdmag.png>
-<Plots/25mil/Sdamg_hist.png, id=194, 578.16pt x 433.62pt>
+<Plots/25mil/Sdamg_hist.png, id=190, 578.16pt x 433.62pt>
 File: Plots/25mil/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/25mil/Sdamg_hist.png>
 Plottwo included the files Plots/25mil/Srepeat_IQR.png Plots/25mil/Srepeat_IQR_
 bright_hist.png
-<Plots/25mil/Srepeat_IQR.png, id=195, 578.16pt x 433.62pt>
+<Plots/25mil/Srepeat_IQR.png, id=191, 578.16pt x 433.62pt>
 File: Plots/25mil/Srepeat_IQR.png Graphic file (type png)
 
 <use Plots/25mil/Srepeat_IQR.png>
-<Plots/25mil/Srepeat_IQR_bright_hist.png, id=196, 578.16pt x 433.62pt>
+<Plots/25mil/Srepeat_IQR_bright_hist.png, id=192, 578.16pt x 433.62pt>
 File: Plots/25mil/Srepeat_IQR_bright_hist.png Graphic file (type png)
 
 <use Plots/25mil/Srepeat_IQR_bright_hist.png>
 Plotone included the file Plots/r_1e6_1yr/Snobs.png
-<Plots/r_1e6_1yr/Snobs.png, id=197, 578.16pt x 433.62pt>
+<Plots/r_1e6_1yr/Snobs.png, id=193, 578.16pt x 433.62pt>
 File: Plots/r_1e6_1yr/Snobs.png Graphic file (type png)
 
 <use Plots/r_1e6_1yr/Snobs.png>
 Plotone included the file Plots/r_1e6_1yr/Sdmag.png
-<Plots/r_1e6_1yr/Sdmag.png, id=198, 578.16pt x 433.62pt>
+<Plots/r_1e6_1yr/Sdmag.png, id=194, 578.16pt x 433.62pt>
 File: Plots/r_1e6_1yr/Sdmag.png Graphic file (type png)
 
 <use Plots/r_1e6_1yr/Sdmag.png>
 Plotone included the file Plots/r_1e6_1yr/Sdamg_hist.png
-<Plots/r_1e6_1yr/Sdamg_hist.png, id=199, 578.16pt x 433.62pt>
+<Plots/r_1e6_1yr/Sdamg_hist.png, id=195, 578.16pt x 433.62pt>
 File: Plots/r_1e6_1yr/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/r_1e6_1yr/Sdamg_hist.png>
@@ -669,43 +666,46 @@ Plotone included the file Plots/r_1e6/Sdamg_hist.png
 File: Plots/r_1e6/Sdamg_hist.png Graphic file (type png)
 <use Plots/r_1e6/Sdamg_hist.png>
 Plotone included the file Plots/r_1e6_5yr/Snobs.png
-<Plots/r_1e6_5yr/Snobs.png, id=200, 578.16pt x 433.62pt>
+<Plots/r_1e6_5yr/Snobs.png, id=196, 578.16pt x 433.62pt>
 File: Plots/r_1e6_5yr/Snobs.png Graphic file (type png)
 
 <use Plots/r_1e6_5yr/Snobs.png>
 Plotone included the file Plots/r_1e6_5yr/Sdmag.png
-<Plots/r_1e6_5yr/Sdmag.png, id=201, 578.16pt x 433.62pt>
+<Plots/r_1e6_5yr/Sdmag.png, id=197, 578.16pt x 433.62pt>
 File: Plots/r_1e6_5yr/Sdmag.png Graphic file (type png)
 
 <use Plots/r_1e6_5yr/Sdmag.png>
 Plotone included the file Plots/r_1e6_5yr/Sdamg_hist.png
-<Plots/r_1e6_5yr/Sdamg_hist.png, id=202, 578.16pt x 433.62pt>
+<Plots/r_1e6_5yr/Sdamg_hist.png, id=198, 578.16pt x 433.62pt>
 File: Plots/r_1e6_5yr/Sdamg_hist.png Graphic file (type png)
 
 <use Plots/r_1e6_5yr/Sdamg_hist.png>
 Plotone included the file Plots/r_1e6_10yr/Snobs.png
-<Plots/r_1e6_10yr/Snobs.png, id=203, 578.16pt x 433.62pt>
+<Plots/r_1e6_10yr/Snobs.png, id=199, 578.16pt x 433.62pt>
 File: Plots/r_1e6_10yr/Snobs.png Graphic file (type png)
 
 <use Plots/r_1e6_10yr/Snobs.png>
 Plotone included the file Plots/r_1e6_10yr/Sdmag.png
-<Plots/r_1e6_10yr/Sdmag.png, id=204, 578.16pt x 433.62pt>
+<Plots/r_1e6_10yr/Sdmag.png, id=200, 578.16pt x 433.62pt>
 File: Plots/r_1e6_10yr/Sdmag.png Graphic file (type png)
 
 <use Plots/r_1e6_10yr/Sdmag.png>
 Plotone included the file Plots/r_1e6_10yr/Sdamg_hist.png
-<Plots/r_1e6_10yr/Sdamg_hist.png, id=205, 578.16pt x 433.62pt>
+<Plots/r_1e6_10yr/Sdamg_hist.png, id=201, 578.16pt x 433.62pt>
 File: Plots/r_1e6_10yr/Sdamg_hist.png Graphic file (type png)
 
-<use Plots/r_1e6_10yr/Sdamg_hist.png> [26] [27 <./Plots/25mil/Sdensity.png> <./
-Plots/25mil/Sdepth90.png> <./Plots/25mil/Pnstars_hist.png> <./Plots/25mil/Pzphi
-st.png>] [28 <./Plots/25mil/Snobs.png> <./Plots/25mil/Snobs_hist.png> <./Plots/
-25mil/Sdmag.png> <./Plots/25mil/Sdamg_hist.png> <./Plots/25mil/Srepeat_IQR.png>
- <./Plots/25mil/Srepeat_IQR_bright_hist.png>] [29 <./Plots/r_1e6_1yr/Snobs.png>
- <./Plots/r_1e6_1yr/Sdmag.png> <./Plots/r_1e6_1yr/Sdamg_hist.png> <./Plots/r_1e
-6_5yr/Snobs.png> <./Plots/r_1e6_5yr/Sdmag.png> <./Plots/r_1e6_5yr/Sdamg_hist.pn
-g> <./Plots/r_1e6_10yr/Snobs.png> <./Plots/r_1e6_10yr/Sdmag.png> <./Plots/r_1e6
-_10yr/Sdamg_hist.png>]
+<use Plots/r_1e6_10yr/Sdamg_hist.png> [25] [26 <./Plots/r_hd_test/Snobs.png> <.
+/Plots/r_hd_test/Snobs_hist.png> <./Plots/r_hd_test/Sdmag.png> <./Plots/r_hd_te
+st/Sdamg_hist.png> <./Plots/r_hd_test/Srepeat_IQR.png> <./Plots/r_hd_test/Srepe
+at_IQR_bright_hist.png>] [27 <./Plots/25mil/Sdensity.png> <./Plots/25mil/Sdepth
+90.png> <./Plots/25mil/Pnstars_hist.png> <./Plots/25mil/Pzphist.png>] [28 <./Pl
+ots/25mil/Snobs.png> <./Plots/25mil/Snobs_hist.png> <./Plots/25mil/Sdmag.png> <
+./Plots/25mil/Sdamg_hist.png> <./Plots/25mil/Srepeat_IQR.png> <./Plots/25mil/Sr
+epeat_IQR_bright_hist.png>] [29 <./Plots/r_1e6_1yr/Snobs.png> <./Plots/r_1e6_1y
+r/Sdmag.png> <./Plots/r_1e6_1yr/Sdamg_hist.png> <./Plots/r_1e6_5yr/Snobs.png> <
+./Plots/r_1e6_5yr/Sdmag.png> <./Plots/r_1e6_5yr/Sdamg_hist.png> <./Plots/r_1e6_
+10yr/Snobs.png> <./Plots/r_1e6_10yr/Sdmag.png> <./Plots/r_1e6_10yr/Sdamg_hist.p
+ng>]
 Plottwo included the files Plots/flux_color/coloru_g.png Plots/flux_color/map_c
 oloru_g.png
 <Plots/flux_color/coloru_g.png, id=218, 578.16pt x 433.62pt>
@@ -746,7 +746,7 @@ File: Plots/flux_color/colori_z.png Graphic file (type png)
 File: Plots/flux_color/map_colori_z.png Graphic file (type png)
 
 <use Plots/flux_color/map_colori_z.png>
-Underfull \hbox (badness 10000) in paragraph at lines 617--623
+Underfull \hbox (badness 10000) in paragraph at lines 609--615
 
  []
 
@@ -783,32 +783,32 @@ x 433.62pt>
 File: Plots/mag_recover/80per_results/Srepeat_IQR_bright_hist.png Graphic file 
 (type png)
  <use Plots/mag_recover/80per_results/Srepeat_IQR_bright_hist.png>
+[30] [31 <./Plots/flux_color/coloru_g.png> <./Plots/flux_color/map_coloru_g.png
+> <./Plots/flux_color/colorg_r.png> <./Plots/flux_color/map_colorg_r.png> <./Pl
+ots/flux_color/colorr_i.png> <./Plots/flux_color/map_colorr_i.png> <./Plots/flu
+x_color/colori_z.png> <./Plots/flux_color/map_colori_z.png>] [32 <./Plots/mag_r
+ecover/20per_results/Sdmag.png> <./Plots/mag_recover/80per_results/Sdmag.png> <
+./Plots/mag_recover/20per_results/Sdamg_hist.png> <./Plots/mag_recover/80per_re
+sults/Sdamg_hist.png> <./Plots/mag_recover/20per_results/Srepeat_IQR_bright_his
+t.png> <./Plots/mag_recover/80per_results/Srepeat_IQR_bright_hist.png>]
 Plottwo included the files Plots/u_1e6_neg15/Saccuracyvcolor.png Plots/u_1e6_mo
 reghost_small/Saccuracyvcolor_mod.png
-<Plots/u_1e6_neg15/Saccuracyvcolor.png, id=232, 578.16pt x 433.62pt>
+<Plots/u_1e6_neg15/Saccuracyvcolor.png, id=242, 578.16pt x 433.62pt>
 File: Plots/u_1e6_neg15/Saccuracyvcolor.png Graphic file (type png)
 
 <use Plots/u_1e6_neg15/Saccuracyvcolor.png>
-<Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png, id=233, 578.16pt x 433.62
+<Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png, id=243, 578.16pt x 433.62
 pt>
 File: Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png Graphic file (type pn
 g)
- <use Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png> [30] [31 <./Plots/fl
-ux_color/coloru_g.png> <./Plots/flux_color/map_coloru_g.png> <./Plots/flux_colo
-r/colorg_r.png> <./Plots/flux_color/map_colorg_r.png> <./Plots/flux_color/color
-r_i.png> <./Plots/flux_color/map_colorr_i.png> <./Plots/flux_color/colori_z.png
-> <./Plots/flux_color/map_colori_z.png>] [32 <./Plots/mag_recover/20per_results
-/Sdmag.png> <./Plots/mag_recover/80per_results/Sdmag.png> <./Plots/mag_recover/
-20per_results/Sdamg_hist.png> <./Plots/mag_recover/80per_results/Sdamg_hist.png
-> <./Plots/mag_recover/20per_results/Srepeat_IQR_bright_hist.png> <./Plots/mag_
-recover/80per_results/Srepeat_IQR_bright_hist.png>] (./scUpdate.bbl [33])
-[34] [35 <./Plots/u_1e6_neg15/Saccuracyvcolor.png> <./Plots/u_1e6_moreghost_sma
-ll/Saccuracyvcolor_mod.png>] (./scUpdate.aux) ) 
+ <use Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png> [33]
+(./scUpdate.bbl) [34] [35 <./Plots/u_1e6_neg15/Saccuracyvcolor.png> <./Plots/u_
+1e6_moreghost_small/Saccuracyvcolor_mod.png>] (./scUpdate.aux) ) 
 Here is how much of TeX's memory you used:
- 2803 strings out of 94500
- 42454 string characters out of 1176766
- 91403 words of memory out of 1000000
- 5907 multiletter control sequences out of 10000+50000
+ 2802 strings out of 94500
+ 42444 string characters out of 1176766
+ 91817 words of memory out of 1000000
+ 5906 multiletter control sequences out of 10000+50000
  11888 words of font info for 50 fonts, out of 500000 for 2000
  580 hyphenation exceptions out of 1000
  32i,9n,26p,1128b,270s stack positions out of 1500i,500n,5000p,200000b,5000s
@@ -816,14 +816,14 @@ PDF statistics:
  252 PDF objects out of 300000
  0 named destinations out of 131072
  511 words of extra memory for PDF output out of 65536
-</usr/share/texmf/fonts/type1/bl
-uesky/cm/cmr6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy8.pfb></usr/shar
-e/texmf/fonts/type1/bluesky/cm/cmmi6.pfb></usr/share/texmf/fonts/type1/bluesky/
-cm/cmex10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi8.pfb></usr/share/te
-xmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/
-cmr10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf/f
-onts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr8.
-pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts
-/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx12.pfb
->
-Output written on scUpdate.pdf (35 pages, 12719770 bytes).
+</usr/share/tex
+mf/fonts/type1/bluesky/cm/cmr6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cms
+y8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi6.pfb></usr/share/texmf/fon
+ts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi8.p
+fb></usr/share/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/
+type1/bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pfb></
+usr/share/texmf/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf/fonts/type1
+/bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/
+share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/fonts/type1/blue
+sky/cm/cmbx12.pfb>
+Output written on scUpdate.pdf (35 pages, 12719759 bytes).
