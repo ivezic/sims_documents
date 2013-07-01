@@ -409,13 +409,14 @@ The $y$-filter (Figure~\ref{fig:y_fd}) is poorly fit because the simulation incl
 \colhead{filter} & \colhead{Design Spec} & \colhead{Minimum Spec}&\colhead{Simulation Results} \\
        & \colhead{(mmag)}        &  \colhead{(mmag)}       & \colhead{(mmag)} \\
 \hline
-$u$    &     7.5        & 12 & 11.5    \\
+$u$    &     7.5        & 12 & 6.5$^{/*}$   \\
 $g$    &     5          & 8 &  4.89 \\
 $r$    &     5          & 8 & 5.0 \\
 $i$    &     5          & 8 & 5.0 \\
 $z$    &     7.5        & 12 & 4.4 \\
 $y$    &     7.5        & 12 & 6.1\\
 \hline
+$^{/*}$Using a $u$-band selected catalog 
 \end{tabular}
 \end{table}
 
@@ -452,6 +453,17 @@ $y$      &  10    & 20 & 21.8 \\
 \plottwo{Plots/u_1e6_neg15/Srepeat_IQR.png}{Plots/u_1e6_neg15/Srepeat_IQR_bright_hist.png}
 \caption{ {\bf Full-Sky, Low-Density simulation for the $u$-filter}.  Note this is limited to declinations south of -15 degrees.  After 2-years, the Opsim pointings in $u$ do not cover the entire southern hemisphere.  \label{fig:u1e6}}
 \end{figure}
+
+
+\begin{figure}
+\plottwo{Plots/u_1e6_uselect/Snobs.png}{Plots/u_1e6_uselect/Snobs_hist.png} \\
+\plottwo{Plots/u_1e6_uselect/Sdmag.png}{Plots/u_1e6_uselect/Sdamg_hist.png} \\
+\plottwo{Plots/u_1e6_uselect/Srepeat_IQR.png}{Plots/u_1e6_uselect/Srepeat_IQR_bright_hist.png}
+\caption{ {\bf Full-Sky, Low-Density simulation for the $u$-filter}.  Unlike Figure~\ref{fig:u1e6}, this simulation used a stellar catalog selected to be near 17 mag in $u$ ranther than $r$, resulting in much higher signal-to-noise. \label{fig:u1e6_uselect}}
+\end{figure}
+
+
+
 
 
 \begin{figure}
