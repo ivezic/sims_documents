@@ -1519,7 +1519,7 @@ the two methods.}  This expectation is confirmed by our simulation results, as s
 only for zeropoint errors less than 100 mmag (the fat tails extend further).  The zeropoint errors 
 after self calibration saturate at a level independent of the input 
 zeropoint perturbations, and the saturation level is approximately
-$\sigma_{sat} = \sqrt {\left( }\sigma_1}^2 / N + {\sigma_{sys}}^2 \right)}$
+$\sigma_{sat} = \sqrt {\left( {\sigma_1}^2 / N + {\sigma_{sys}}^2 \right)}$
 where $\sigma_1 \approx 3$ mmag and $\sigma_{sys} \approx 0.7$ mmag.
 
 Zeropoint errors obey the approximate relation above only when they are relatively small.  If they become large enough
@@ -1551,14 +1551,14 @@ from the repeatability requirement by the SRD.
 Other perturbations to the zeropoints arise from:
 \begin{itemize}
 \item{Varying gray averages of extinction from aerosols, water vapor, and ozone.  These are dominated by aerosols, 
-and have spatial scales large compared to a detector.
+and have spatial scales large compared to a detector.}
 \item{Camera gain variation.  This is constrained by Camera requirements to be less than 1 mmag rms over a 1 hour
 period, and less than 10 mmag over 12 hours.  These gain variations occur at the detector segment level.}
 \item{Shutter travel time variation.  Camera requirements constrain this to 20 mmag. The effects are over
 spatial scales comparable to the size of the focal plane}
 \item{Detector QE variation due to varying focal plane temperature. These occur over full detectors,
 affect only the y-band, and knowledge of them is constrained by Camera requirements to be better than 0.5 K.
-This results in a 1 mmag zeropoint perturbatsion. }
+This results in a 1 mmag zeropoint perturbation. }
 \end{itemize}
 
 
@@ -1621,7 +1621,8 @@ is dependent on understanding and controlling a large number of small perturbati
 \subsection{Self Calibration Simulation}
 \label{sec:selfcalsim}
 
-One of the final steps in the LSST calibration process is running self-calibration, solving for a large number of stellar magnitudes and observation zeropoints.  The accuracy and precision of the self-calibration procedure has complicated dependencies on various sources of noise as well as the overall observing strategy which determines how well different regions of sky can be tied together.  We have undertaken a serries of simulations to test the validity of the LSST self-calibration process.
+One of the final steps in the LSST calibration process is running self-calibration, solving for a large number of stellar magnitudes and observation zeropoints.  The accuracy and precision of the self-calibration procedure has complicated dependencies on various sources of noise as well as the overall observing strategy which determines how well different regions of sky can be tied together.  We have undertaken a series of simulations to test the validity of the LSST self-calibration process.  A more comprehensive
+discussion is available in \cite{Yoachim2013}.
 
 To simulate self-calibration, we require a catalog of realistic LSST observations of bright stars.  We generate this catalog by combining Galfast and Opsim.  The Galfast code generates a realistic model of the Milky Way stellar populations, matching the observed distributions from SDSS.  The LSST Opsim can then be used to generate observations of the stars in the Galfast model.  For each Opsim pointing, we generate a list of observed stars along with an observed magnitude that includes atmospheric and hardware effects.  
 
@@ -2314,7 +2315,14 @@ at zenith.  The units are mm of liquid water equivalent. }
 \fbox{
 \begin{minipage}{6.5in}
 \includegraphics[width=6.5in]{CalibDataProdSchematic4}
-\caption{ {\small {\bf Science Object Calibration.}  Photometric calibration for science objects takes place in two stages.  In the first, the natural magnitudes are calculated, using the zeropoint model for each exposure.  These are stored in the Level 2 databases.  The second, optional, stage, relies on knowledge of the object SEDs, which is an external input to the system, supplied by the user.   The object SED, in conjunction with the system bandpass, $\phi$, allows standard magnitudes to be calculated. }
+\caption{ {\small {\bf Science Object Calibration.}  Photometric calibration for science objects takes place in two stages.  In the
+ first, the natural magnitudes are calculated, using the zeropoint model for each exposure.  This stage is implemented in both
+Level 1 (nightly) and Level 2 (data release) processing.  These are stored in the Level 1 and Level 2 databases.  The second, 
+optional, stage, relies on knowledge of the object SEDs, which is an external input to the system, supplied by the user.   
+The object SED, in conjunction with the system bandpass, $\phi$, allows standard magnitudes to be calculated. Standard magnitudes
+can be calculated for Level 1 as well as Level 2 photometry, which enables better calibration of transient sources.  
+$\phi$ will generally be available within 24 hours of an exposure being taken.  The diagram simplifies the data flow for Level 2
+considerably:  Measuring object properties with multifit is not shown.}
 \label{fig:overview_flowchart4} }
 \end{minipage}
 }
@@ -3239,7 +3247,7 @@ the calibrated and true magnitudes for bright stars, demonstrating the
 \plottwo{SelfcalFigs/r_1e6_regsolver/Sdamg_hist.png}{SelfcalFigs/r_1e6/Sdamg_hist.png}
 %\plottwo{SelfcalFigs/r_1e6_regsolver/Srepeat_IQR.png}{SelfcalFigs/r_1e6/Srepeat_IQR.png}
 %\plottwo{SelfcalFigs/r_1e6_regsolver/Srepeat_IQR_bright_hist.png}{SelfcalFigs/r_1e6/Srepeat_IQR_bright_hist.png}
-\caption{Comparison of a simulation solved simultaneously (left) with one solved on individual HEALpixels and combined.  Statistically, the differences between the two solutions are at the sub-millimag level, which is much less than the differences we see between runs with different starting seeds (Figure~\ref{fig:diffseed}). \label{fig:hpvglobal}}
+\caption{Comparison of a simulation solved simultaneously (left) with one solved on individual HEALpixels and combined.  Statistically, the differences between the two solutions are at the sub-millimag level, which is much less than the differences we see between runs with different starting seeds \citep{Yoachim2013}. \label{fig:hpvglobal}}
 \end{minipage}
 }
 \end{figure}
