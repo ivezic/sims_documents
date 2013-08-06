@@ -1,4 +1,4 @@
-This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2012.8.24)  1 JUL 2013 11:20
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2012.8.24)  6 AUG 2013 09:46
 entering extended mode
 **scUpdate
 (./scUpdate.tex
@@ -133,7 +133,8 @@ Package: subfigure 2002/07/30 v2.1.4 subfigure package
 (/usr/share/texmf/tex/latex/subfigure/subfigure.cfg)
 \subfig@top=\skip50
 \subfig@bottom=\skip51
-) (./scUpdate.aux)
+) (./scUpdate.aux
+(./appen.aux))
 \openout1 = `scUpdate.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
@@ -148,8 +149,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
 LaTeX Font Info:    ... okay on input line 19.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
 LaTeX Font Info:    ... okay on input line 19.
-
-(/usr/share/texmf/tex/context/base/supp-pdf.tex
+ (/usr/share/texmf/tex/context/base/supp-pdf.tex
 (/usr/share/texmf/tex/context/base/supp-mis.tex
 loading : Context Support Macros / Miscellaneous (2004.10.26)
 \protectiondepth=\count101
@@ -803,27 +803,176 @@ File: Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png Graphic file (type pn
 g)
  <use Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.png> [33]
 (./scUpdate.bbl) [34] [35 <./Plots/u_1e6_neg15/Saccuracyvcolor.png> <./Plots/u_
-1e6_moreghost_small/Saccuracyvcolor_mod.png>] (./scUpdate.aux) ) 
+1e6_moreghost_small/Saccuracyvcolor_mod.png>]
+\openout2 = `appen.aux'.
+
+ (./appen.tex
+Plotone included the file Plots/lots_of_y/y_fd_chip/dmagtemp.png
+<Plots/lots_of_y/y_fd_chip/dmagtemp.png, id=253, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip/dmagtemp.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip/dmagtemp.png>
+Plottwo included the files Plots/lots_of_y/y_fd_chip/Sdmag.png Plots/lots_of_y/
+y_fd_chip/Sdamg_hist.png
+<Plots/lots_of_y/y_fd_chip/Sdmag.png, id=254, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip/Sdmag.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip/Sdmag.png>
+<Plots/lots_of_y/y_fd_chip/Sdamg_hist.png, id=255, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip/Sdamg_hist.png>
+Plottwo included the files Plots/lots_of_y/y_fd_chip/Srepeat_IQR_bright.png Plo
+ts/lots_of_y/y_fd_chip/Srepeat_IQR_bright_hist.png
+
+<Plots/lots_of_y/y_fd_chip/Srepeat_IQR_bright.png, id=256, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip/Srepeat_IQR_bright.png Graphic file (type png)
+<use Plots/lots_of_y/y_fd_chip/Srepeat_IQR_bright.png>
+<Plots/lots_of_y/y_fd_chip/Srepeat_IQR_bright_hist.png, id=257, 578.16pt x 433.
+62pt>
+File: Plots/lots_of_y/y_fd_chip/Srepeat_IQR_bright_hist.png Graphic file (type 
+png)
+ <use Plots/lots_of_y/y_fd_chip/Srepeat_IQR_bright_hist.png>
+Plottwo included the files Plots/lots_of_y/r_1e6_minclouds/Sdmag.png Plots/lots
+_of_y/r_1e6_minclouds/Sdamg_hist.png
+<Plots/lots_of_y/r_1e6_minclouds/Sdmag.png, id=258, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/r_1e6_minclouds/Sdmag.png Graphic file (type png)
+
+<use Plots/lots_of_y/r_1e6_minclouds/Sdmag.png>
+<Plots/lots_of_y/r_1e6_minclouds/Sdamg_hist.png, id=259, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/r_1e6_minclouds/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/lots_of_y/r_1e6_minclouds/Sdamg_hist.png>
+Plottwo included the files Plots/lots_of_y/r_1e6_minclouds/Srepeat_IQR_bright.p
+ng Plots/lots_of_y/r_1e6_minclouds/Srepeat_IQR_bright_hist.png
+
+<Plots/lots_of_y/r_1e6_minclouds/Srepeat_IQR_bright.png, id=260, 578.16pt x 433
+.62pt>
+File: Plots/lots_of_y/r_1e6_minclouds/Srepeat_IQR_bright.png Graphic file (type
+ png)
+ <use Plots/lots_of_y/r_1e6_minclouds/Srepeat_IQR_bright.png>
+<Plots/lots_of_y/r_1e6_minclouds/Srepeat_IQR_bright_hist.png, id=261, 578.16pt 
+x 433.62pt>
+File: Plots/lots_of_y/r_1e6_minclouds/Srepeat_IQR_bright_hist.png Graphic file 
+(type png)
+ <use Plots/lots_of_y/r_1e6_minclouds/Srepeat_IQR_bright_hist.png>
+Plottwo included the files Plots/lots_of_y/y_fd_chip_randrot2/Sdmag.png Plots/l
+ots_of_y/y_fd_chip_randrot2/Sdamg_hist.png
+<Plots/lots_of_y/y_fd_chip_randrot2/Sdmag.png, id=262, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip_randrot2/Sdmag.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip_randrot2/Sdmag.png>
+<Plots/lots_of_y/y_fd_chip_randrot2/Sdamg_hist.png, id=263, 578.16pt x 433.62pt
+>
+File: Plots/lots_of_y/y_fd_chip_randrot2/Sdamg_hist.png Graphic file (type png)
+
+ <use Plots/lots_of_y/y_fd_chip_randrot2/Sdamg_hist.png>
+Plottwo included the files Plots/lots_of_y/y_fd_chip_randrot2/Srepeat_IQR_brigh
+t.png Plots/lots_of_y/y_fd_chip_randrot2/Srepeat_IQR_bright_hist.png
+
+<Plots/lots_of_y/y_fd_chip_randrot2/Srepeat_IQR_bright.png, id=264, 578.16pt x 
+433.62pt>
+File: Plots/lots_of_y/y_fd_chip_randrot2/Srepeat_IQR_bright.png Graphic file (t
+ype png)
+ <use Plots/lots_of_y/y_fd_chip_randrot2/Srepeat_IQR_bright.png>
+<Plots/lots_of_y/y_fd_chip_randrot2/Srepeat_IQR_bright_hist.png, id=265, 578.16
+pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip_randrot2/Srepeat_IQR_bright_hist.png Graphic fi
+le (type png)
+
+<use Plots/lots_of_y/y_fd_chip_randrot2/Srepeat_IQR_bright_hist.png>
+Plottwo included the files Plots/lots_of_y/y_fd_chip_5step/Sdmag.png Plots/lots
+_of_y/y_fd_chip_5step/Sdamg_hist.png
+<Plots/lots_of_y/y_fd_chip_5step/Sdmag.png, id=266, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip_5step/Sdmag.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip_5step/Sdmag.png>
+<Plots/lots_of_y/y_fd_chip_5step/Sdamg_hist.png, id=267, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip_5step/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip_5step/Sdamg_hist.png>
+Plottwo included the files Plots/lots_of_y/y_fd_chip_15step/Sdmag.png Plots/lot
+s_of_y/y_fd_chip_15step/Sdamg_hist.png
+<Plots/lots_of_y/y_fd_chip_15step/Sdmag.png, id=268, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip_15step/Sdmag.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip_15step/Sdmag.png>
+<Plots/lots_of_y/y_fd_chip_15step/Sdamg_hist.png, id=269, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip_15step/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip_15step/Sdamg_hist.png>
+Plottwo included the files Plots/lots_of_y/y_fd_chip_30step/Sdmag.png Plots/lot
+s_of_y/y_fd_chip_30step/Sdamg_hist.png
+<Plots/lots_of_y/y_fd_chip_30step/Sdmag.png, id=270, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip_30step/Sdmag.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip_30step/Sdmag.png>
+<Plots/lots_of_y/y_fd_chip_30step/Sdamg_hist.png, id=271, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip_30step/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip_30step/Sdamg_hist.png>
+Plottwo included the files Plots/lots_of_y/y_fd_chip_45step/Sdmag.png Plots/lot
+s_of_y/y_fd_chip_45step/Sdamg_hist.png
+<Plots/lots_of_y/y_fd_chip_45step/Sdmag.png, id=272, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip_45step/Sdmag.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip_45step/Sdmag.png>
+<Plots/lots_of_y/y_fd_chip_45step/Sdamg_hist.png, id=273, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip_45step/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip_45step/Sdamg_hist.png>
+Plottwo included the files Plots/lots_of_y/y_fd_chip_90step/Sdmag.png Plots/lot
+s_of_y/y_fd_chip_90step/Sdamg_hist.png
+<Plots/lots_of_y/y_fd_chip_90step/Sdmag.png, id=274, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip_90step/Sdmag.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip_90step/Sdmag.png>
+<Plots/lots_of_y/y_fd_chip_90step/Sdamg_hist.png, id=275, 578.16pt x 433.62pt>
+File: Plots/lots_of_y/y_fd_chip_90step/Sdamg_hist.png Graphic file (type png)
+
+<use Plots/lots_of_y/y_fd_chip_90step/Sdamg_hist.png>
+Underfull \hbox (badness 10000) in paragraph at lines 39--45
+
+ []
+
+) [36
+
+] [37 <./Plots/lots_of_y/y_fd_chip/dmagtemp.png>] [38 <./Plots/lots_of_y/y_fd_c
+hip/Sdmag.png> <./Plots/lots_of_y/y_fd_chip/Sdamg_hist.png> <./Plots/lots_of_y/
+y_fd_chip/Srepeat_IQR_bright.png> <./Plots/lots_of_y/y_fd_chip/Srepeat_IQR_brig
+ht_hist.png>] [39 <./Plots/lots_of_y/r_1e6_minclouds/Sdmag.png> <./Plots/lots_o
+f_y/r_1e6_minclouds/Sdamg_hist.png> <./Plots/lots_of_y/r_1e6_minclouds/Srepeat_
+IQR_bright.png> <./Plots/lots_of_y/r_1e6_minclouds/Srepeat_IQR_bright_hist.png>
+] [40 <./Plots/lots_of_y/y_fd_chip_randrot2/Sdmag.png> <./Plots/lots_of_y/y_fd_
+chip_randrot2/Sdamg_hist.png> <./Plots/lots_of_y/y_fd_chip_randrot2/Srepeat_IQR
+_bright.png> <./Plots/lots_of_y/y_fd_chip_randrot2/Srepeat_IQR_bright_hist.png>
+] [41 <./Plots/lots_of_y/y_fd_chip_5step/Sdmag.png> <./Plots/lots_of_y/y_fd_chi
+p_5step/Sdamg_hist.png> <./Plots/lots_of_y/y_fd_chip_15step/Sdmag.png> <./Plots
+/lots_of_y/y_fd_chip_15step/Sdamg_hist.png> <./Plots/lots_of_y/y_fd_chip_30step
+/Sdmag.png> <./Plots/lots_of_y/y_fd_chip_30step/Sdamg_hist.png> <./Plots/lots_o
+f_y/y_fd_chip_45step/Sdmag.png> <./Plots/lots_of_y/y_fd_chip_45step/Sdamg_hist.
+png> <./Plots/lots_of_y/y_fd_chip_90step/Sdmag.png> <./Plots/lots_of_y/y_fd_chi
+p_90step/Sdamg_hist.png>] (./scUpdate.aux (./appen.aux)) ) 
 Here is how much of TeX's memory you used:
- 2802 strings out of 94500
- 42444 string characters out of 1176766
- 91817 words of memory out of 1000000
- 5906 multiletter control sequences out of 10000+50000
+ 2915 strings out of 94500
+ 47643 string characters out of 1176766
+ 92202 words of memory out of 1000000
+ 6002 multiletter control sequences out of 10000+50000
  11888 words of font info for 50 fonts, out of 500000 for 2000
  580 hyphenation exceptions out of 1000
  32i,9n,26p,1128b,270s stack positions out of 1500i,500n,5000p,200000b,5000s
 PDF statistics:
- 252 PDF objects out of 300000
+ 294 PDF objects out of 300000
  0 named destinations out of 131072
- 511 words of extra memory for PDF output out of 65536
-</usr/share/tex
-mf/fonts/type1/bluesky/cm/cmr6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cms
-y8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi6.pfb></usr/share/texmf/fon
-ts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi8.p
-fb></usr/share/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/
-type1/bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pfb></
-usr/share/texmf/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf/fonts/type1
-/bluesky/cm/cmr8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/
-share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/fonts/type1/blue
-sky/cm/cmbx12.pfb>
-Output written on scUpdate.pdf (35 pages, 12719759 bytes).
+ 626 words of extra memory for PDF output out of 65536
+</usr/share/texmf/fon
+ts/type1/bluesky/cm/cmr6.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy8.pfb
+></usr/share/texmf/fonts/type1/bluesky/cm/cmmi6.pfb></usr/share/texmf/fonts/typ
+e1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi8.pfb></u
+sr/share/texmf/fonts/type1/bluesky/cm/cmti12.pfb></usr/share/texmf/fonts/type1/
+bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pfb></usr/sh
+are/texmf/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf/fonts/type1/blues
+ky/cm/cmr8.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/
+texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/fonts/type1/bluesky/cm
+/cmbx12.pfb>
+Output written on scUpdate.pdf (41 pages, 14369806 bytes).

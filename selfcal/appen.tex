@@ -1,0 +1,46 @@
+\section{$y$-band Convergence}
+The temperature variations have made it difficult for self calibration to converge.  This appears to be an isssue where persistent residual structure combines with the Opsim observing pattern to create coherent structures that cannot be well solved.  Figure~\ref{y_chip} shows an example full-stellar density $y$-band simulation that includes temperature variations.  
+
+We have run a set of simulations to test possible solutions.  Each sim uses a stellar catalog at full density (selected in either $r$ or $y$), and ccd-sized calibration patches.  
+
+This is not a situation where structured noise makes in hard for self cal to converge.  We have run an $r$-band simulation where all the observations were taken through at least 0.1 magnitudes of cloud extinction and it converges fine (Figure~\ref{min_clouds}).  
+
+The problem does go away if we set the camera rotator angle to a random value for each visit.  
+
+Trying to expand the self calibration solver to include a gradient on each patch is very computationally expensive, and might not converge to a legitimate solution.  So far, these attempts have all hit the (very high) iteration limit.  Other possibile modifications include fitting a gradient for the chip over a set time-span, or using sub-chip size illumination corrections that are assigned every few hours.  
+
+
+\begin{figure}
+\plotone{Plots/lots_of_y/y_fd_chip/dmagtemp.png}
+\caption{Residuals caused by temperature variations in a single visit.  Each chip has a temperature gradient which causes a $sim4$ mmag gradient.  These graidents then slowly change with time.  \label{dmag_temperature}}
+\end{figure}
+
+\begin{figure}
+\plottwo{Plots/lots_of_y/y_fd_chip/Sdmag.png}{Plots/lots_of_y/y_fd_chip/Sdamg_hist.png}\\
+\plottwo{Plots/lots_of_y/y_fd_chip/Srepeat_IQR_bright.png}{Plots/lots_of_y/y_fd_chip/Srepeat_IQR_bright_hist.png}
+\caption{Including a temperature gradient, self calibration leaves large-scale residuals.  The stellar repeatability is low, implying the solver has found a $\chi^2$ minimum. \label{y_chip}}
+\end{figure}
+
+\begin{figure}
+\plottwo{Plots/lots_of_y/r_1e6_minclouds/Sdmag.png}{Plots/lots_of_y/r_1e6_minclouds/Sdamg_hist.png}\\
+\plottwo{Plots/lots_of_y/r_1e6_minclouds/Srepeat_IQR_bright.png}{Plots/lots_of_y/r_1e6_minclouds/Srepeat_IQR_bright_hist.png}
+\caption{Checking that the solver can handle more structure in the patch residuals.  This is an $r$-band simulation with every exposure set to have a minimum of 0.1 mags of cloud extinction.  While the repeatability increases, the best-fit magnitudes are still recovered with high precision. \label{min_clouds}}
+\end{figure}
+
+\begin{figure}
+\plottwo{Plots/lots_of_y/y_fd_chip_randrot2/Sdmag.png}{Plots/lots_of_y/y_fd_chip_randrot2/Sdamg_hist.png}\\
+\plottwo{Plots/lots_of_y/y_fd_chip_randrot2/Srepeat_IQR_bright.png}{Plots/lots_of_y/y_fd_chip_randrot2/Srepeat_IQR_bright_hist.png}
+\caption{Setting the camera rotator angle randomly for each exposure makes it possible for self calibration to converge well.}
+\end{figure}
+
+
+\begin{figure}
+\epsscale{0.6}
+\plottwo{Plots/lots_of_y/y_fd_chip_5step/Sdmag.png}{Plots/lots_of_y/y_fd_chip_5step/Sdamg_hist.png}\\
+\plottwo{Plots/lots_of_y/y_fd_chip_15step/Sdmag.png}{Plots/lots_of_y/y_fd_chip_15step/Sdamg_hist.png}\\
+\plottwo{Plots/lots_of_y/y_fd_chip_30step/Sdmag.png}{Plots/lots_of_y/y_fd_chip_30step/Sdamg_hist.png}\\
+\plottwo{Plots/lots_of_y/y_fd_chip_45step/Sdmag.png}{Plots/lots_of_y/y_fd_chip_45step/Sdamg_hist.png}\\
+\plottwo{Plots/lots_of_y/y_fd_chip_90step/Sdmag.png}{Plots/lots_of_y/y_fd_chip_90step/Sdamg_hist.png}\\
+\epsscale{1}
+\caption{Adding an additional rotation to the Opsim camera rotator angle makes it possible for self calibration to properly converge.  From top to bottom, additional rotations of  5, 15, 30, 45, and 90 degrees are added to each visit.  }
+\end{figure}

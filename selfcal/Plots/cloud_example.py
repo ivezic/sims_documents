@@ -49,4 +49,4 @@ pylab.xlim([0,fov])
 pylab.ylim([0,fov])
 
 cb.set_label('extinction (mags)')
-pylab.savefig('cloud.png')
+pylab.savefig('cloud.eps')
