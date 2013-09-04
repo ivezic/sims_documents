@@ -13,7 +13,15 @@ The large-scale errors go away if we set the camera rotator angle to a random va
 
 Another solution is to rotate the camera between exposures.  Figure~\ref{steprot} shows how including a rotation between exposures effects the self calibration solution.  A 5 degree rotation is enough to help immensely, and there  is little advantage to rotating more than 30 degrees.
 
-Another possibility would be to change the Opsim observing pattern to observe every-other field, then fill in the missing fields with the camera at a different rotation angle.  Figure~\ref{90evother} shows the results of rotating every-other visit by 90 degrees.  
+Another possibility would be to change the Opsim observing pattern to observe every-other field, then fill in the missing fields with the camera at a different rotation angle.  Figure~\ref{90evother} shows the results of rotating every-other visit by 90 degrees.  Flipping every-other observation by 180 degrees actually works quite well (Figure~\ref{180evother}).
+
+One important point is that whenever Opsim re-visits a field during a night, it use the same rotation angle as the first observation of the night.  This is probably the primary cause of the problem, as the errors from the temperature variations will systematically add in this scenario.
+
+
+Changing the temperature variation time-scale seems to have little effect on the solution.  I'm not sure why that is the case.
+
+1st attepmt at putting in a reasonable rotation angle dithering.  We do not worry about fields that are observed more than 8 times in a night, or when there are multiple sequencial visits to a field.  If the previous rotation angle of the camera is within 10 degrees of the previous observation (on the same night), the camera is rotated 90 degrees.  If the camera is symetric and aligned, rotating on 90 degree intervals will keep objects observed early in the night from falling into chip gaps.   
+
 
 \begin{figure}
 \plotone{Plots/lots_of_y/y_fd_chip/dmagtemp.png}
@@ -57,10 +65,18 @@ Another possibility would be to change the Opsim observing pattern to observe ev
 \caption{Rotating the camera 90 degrees every-other exposure.  Interestingly, the residual map look like Figure~\ref{y_chip} rotated 45 degrees.  \label{90evother}}
 \end{figure}
 
+\begin{figure}
+\plottwo{Plots/lots_of_y/y_fd_chip_eo180/Sdmag.png}{Plots/lots_of_y/y_fd_chip_eo180/Sdamg_hist.png}\\
+\plottwo{Plots/lots_of_y/y_fd_chip_eo180/Srepeat_IQR_bright.png}{Plots/lots_of_y/y_fd_chip_eo180/Srepeat_IQR_bright_hist.png}
+\caption{Rotating the camera 180 degrees every-other exposure.  \label{180evother}}
+\end{figure}
+
 
 \section{Future Investigations}
 \begin{itemize}
 \item{Is this a possible failure mode in other filters as well?  It could be a generic problem with slowly varying structured residuals at the chip level.}
+\item{Why isn't this a problem for flat field errors?--IT IS.  Adding a 5 mmag variation pattern that is smaller than the patch size makes the solution unstable to large scale errors.}
+\item{What happens if we fiddle with the temperature variation time-scale?--not much}
 \item{What happens if we use every-other Opsim pointing?  That might solve the problem.--nope.  Not sure why that didn't help...}
 \item{What if each raft is given a unique temperature?  Is this an artificial aliasing problem caused by rafts behaving identically?--nope, setting the rafts to unique offsets changes nothing.}
 \end{itemize}

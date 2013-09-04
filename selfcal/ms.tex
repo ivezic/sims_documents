@@ -1,0 +1,790 @@
+\documentclass[12pt,preprint]{aastex}
+%\documentclass{emulateapj}
+\usepackage{url}
+%\usepackage{natbib}
+%\usepackage{xspace}
+\def\arcsec{$^{\prime\prime}$}
+\bibliographystyle{apj}
+\newcommand\degree{{^\circ}}
+\newcommand\surfb{$\mathrm{mag}/\square$\arcsec}
+\newcommand\Gyr{\rm{~Gyr}}
+\newcommand\msun{\rm{M}_\odot}
+\newcommand\kms{km s$^{-1}$}
+\newcommand\al{$\alpha$}
+\newcommand\ha{$\rm{H}\alpha$}
+\newcommand\hb{$\rm{H}\beta$}
+\usepackage{graphicx}
+\usepackage{subfigure}
+
+\begin{document}
+
+\title{Self Calibration Simulation Results}
+\author{Peter Yoachim (UW), Lynne Jones (UW),
+\v{Z}eljko Ivezi\'{c} (UW), Tim Axelrod (LSST)}
+
+\begin{abstract}
+We describe the planned self calibration procedure for LSST and compare results of simulated observations to SRD requirements.  By combining Opsim pointing histories with a realistic model of the Galactic stellar distribution we generate mock-catalogs of calibrated LSST observations.  We simulate the major sources of error expected in LSST observations and measure how sensitive the self calibration procedure is to them.  We demonstrate a new technique for solving the self calibration problem in parallel using HEALpixels, making it possible to solve an LSST-sized data set on current computer hardware.
+\end{abstract}
+
+
+\section{Introduction}
+
+
+LSST is required to deliver photometric calibration with zeropoint
+variation of at most 1\% (root-mean-square scatter of 0.01 mag) across
+the observed sky.  By reducing the photometric error by a factor of
+two over the current state-of-the-art wide-field optical photometry
+delivered by SDSS, the error volume in the five-dimensional LSST
+color-color space will be reduced by more than a factor of 30 when
+compared to SDSS-like photometry. This improves source classification
+and the precision of quantities dependent upon color, such as
+photometric redshifts for galaxies and metallicity determination for
+stars.
+
+The overall calibration strategy is described in detail in ``Level 2
+Photometric Calibration for the LSST Survey" by Jones et al.,
+(git://dev.lsstcorp.org/LSST/sims/doc.git, hereafter abbreviated
+``L2PC"). The major advances in the LSST calibration plan include
+correcting the wavelength dependence of the hardware and atmospheric
+transmission curves using direct measurements from auxiliary
+instrumentation and, most importantly, the wealth of repeat
+observations of $\sim10^8$ bright main sequence stars in the LSST
+survey. These series of repeat observations will enable correction of
+a wide variety of photometric errors and most importantly, allow LSST
+to operate in a wide variety of atmospheric conditions.  The factor of
+two reduction in photometric error results from two major differences
+between LSST and SDSS. First, each source will receive a hundred to
+two hundred observations (per band) over the ten years of the LSST
+survey. These series of repeat observations will be used to
+self-calibrate the photometric system across the sky and for each
+observation (akin, but not identical to, the \"{u}ber-calibration
+procedure used by SDSS \citep{pad08}), allowing LSST to operate in a
+wide variety of conditions. Secondly, the wavelength dependence of the
+hardware and atmospheric transmission response functions will be
+measured with auxiliary instrumentation on sufficiently fine angular
+and temporal scales to enable their explicit inclusion in the
+calibration procedure, rather than resorting to traditional
+approximations such as linear color terms.
+
+
+
+\citet{Holmes12} examine how various dither strategies can effect self-calibration results.  However, this study was only 8x8 degrees.  Thus it behooves us to expand to a full-sky survey and include more error terms that can be present in LSST.
+
+
+
+%Using large catalogs of stellar photometry to perform a global calibration fit has become common practice in large surveys \citep{pad08,Ofek11,Schaf12}.  LSST 
+
+%Comparison to other surveys:  \citet{Schaf12} fit each filter independently and solve for the system throughput and atmospheric transparency nightly, an illumination correction, and a correction based on the image quality.  Since we fit a zero-point for every observation, we are combining the atmospheric and system throughput into a single term, and dropping the dependence on observation airmass.  The 3$\pi$\ survey takes 40s exposures.  
+
+
+\section{Simulated LSST Catalog}
+
+
+We combine the following elements to generate a simulated LSST catalog of observed stellar magnitudes.
+
+\noindent{\bf{Milky Way Model}}\\
+The stars used as the basis for self calibration are generated using Mario Juri\'{c}'s GALFAST code\footnote{ http://mwscience.net/trac/wiki/galfast}.  This provides a mock Milky Way stellar catalog to act as ``ground truth'' for our simulations.  
+
+Our model Milky Way includes $\sim1$ billion stars, with a magnitude range of $17 < r < 21$.  The model includes several stellar components (thin disk, thick disk, bulge, halo) with magnitude and color distributions based on SDSS. The catalog is dominated by main-sequence and red giant branch stars, but also includes white dwarf stars and blue horizontal branch stars.  We do not include O, B, or A stars, however, as these stars are concentrated near the galactic plane and are expected to be saturated in LSST exposures.  Our catalog is drawn from the object catalog currently used by Imsim.  For most of our simulations, we have pre-selected a subset of one million stars that are uniformly distributed across the sky.  This pre-selection is done to limit the amount of computational memory the self calibration requires, and prevents systematic effects from having a steep density gradient of stars across the field of view.  The densities of the various stellar populations in out 1 million star subset are shown in Figure~\ref{fig:gfpop}.
+
+
+\begin{figure}
+%\plottwo{Plots/r_1e6/GFdensity.eps}{Plots/r_1e6/GFwddensity.eps}\\
+%\plottwo{Plots/r_1e6/GFbhbdensity.eps}{Plots/r_1e6/GFcolor.eps}
+\caption{Basic properties of the GALFAST stellar catalog used to generate LSST observations.  For our sub-sample of $\sim$1 million stars, we plot the densities of the different stellar populations along with the average $g-i$ stellar color.\label{fig:gfpop}}
+\end{figure}
+
+
+\noindent{\bf{Telescope and Survey Properties}}\\
+A simulated pointing history of the telescope is generated by the LSST Operations Simulation. We are using the Opsim 3.61 run as our baseline survey.  Opsim simulations include scheduled and unscheduled downtime, main survey visits, deep drilling fields, and a few other observing programs. The Opsim database includes the five-sigma depth ($m_5$) for each observation, calculated from the expected sky background emission in that filter at that altitude/azimuth, lunar distance and phase, as well the seeing and exposure time of each observation.  We use this $m_5$\ value when calculating the signal-to-noise ratio for each observation.  We modify the $m_5$\ depth across the field of view to model the telescope vignetting.  Opsim also includes the extinction from cloud cover.  Because Opsim reports cloud extinction in a limited number of bins, we interpolate the Opsim values to fully cover the possible phase space.  Opsim typically lists 60-70\% of LSST observations as being taken in cloudless conditions, with the remainder of observations being taken through clouds with 0.1-0.8 magnitudes of extinction.  
+
+
+\noindent{\bf{Atmospheric Extinction}}\\
+For each observation, we simulate the atmospheric extinction and cloud cover.  One of the largest calibration issues for LSST will be dealing with cloud extinction.  Unlike most previous surveys, LSST plans to observe in non-photometric conditions, thus we need to be able to perform accurate calibration even when stars are extincted through cloud cover.  
+
+
+
+\noindent{\bf{Instrumentation Effects}}\\
+We assume there is a systematic limited noise floor for all the photometric observations.  We include a radially dependent color term to simulate the effect of a radially varying filter bandpass.  We also have a generic color-term to simulate errors/uncertainties in the atmospheric throughput corrections.  These are the terms that remain {\emph{after}} the standard calibrations have been applied to the data. 
+
+
+\subsection{Resulting Calibration Star Catalog}
+
+%Once all the observations have been recorded, we pass the observed magnitudes, observed uncertainties, and patch assignments to the self calibration algorithm.  The self calibration returns a best-fit zeropoint for each patch and a best-fit magnitude for each star.  
+
+In building our calibration star catalog, we assume the recorded calibrated magnitudes can be expressed as the true magnitude offset by a number of offset terms that are a function of position on the focal plane, time, magnitude, color, etc.
+\begin{equation}
+m^{std}=m^{true}+\sum_i\Delta m_i(x,y,t,m,m_5, g-i)
+\end{equation}
+We emphasize that these $\Delta m_i$ terms are what remain {\emph{after}} the observations have been reduced (i.e., corrected for flat field variations, shifted to a standard bandpass, etc.), but have not had a zeropoint correction applied.  We thus pull $m^{true}$ values from the GALFAST catalog and generate values for $\Delta m_i(x,y,t,m,m_5, g-i)$.  Descriptions of all our $\Delta m_i$ terms are listed in Table~\ref{dmags} and described in \S\ref{offsets}.  
+
+
+
+\begin{deluxetable}{lll}
+\tablecaption{Offsets Generated in Selfcal Sims}
+\tablewidth{0pt}
+\tablehead{ \colhead{$\Delta m$} & \colhead{Arguments}  & \colhead{Description} \label{dmags}}
+\startdata
+snr  & $m,m_5$ & Gaussian noise from signal-to-noise ratio + error floor \\
+color & $(g-i)$ & color term for a patch (imperfect atmospheric correction)\\
+colordist & $(g-i),x,y$ & color term calculated from the variable filter bandpass and placement\\
+cloud\_im & $x,y,t$ &Offset calculated from a simulated cloud image \\
+temperature & $x,y,t$ &  temperature variation which effect QE ($y$-band only)\\
+expt & $t$ & exposure time variation \\
+gain & $x,y,t$& Variation in the gain \\
+illum & $(g-i),x,y$ & color-dependent errors from illumination and ghosting
+\enddata
+\end{deluxetable} 
+
+
+
+\subsection{Simulated Offsets}\label{offsets}
+
+The self calibration simulations currently use up to 8 terms to simulate the errors that can be present in LSST standard magnitudes.  We emphasize that these are offsets that remain after the observed magnitudes have been corrected for atmospheric and instrumental effects and transformed to standard bandpass magnitudes.  For example, there are currently no offset terms that depend explicitly on the airmass the observation was taken at, as we assume the LSST calibration procedure corrects for any color dependencies leaving only a gray extinction that is adequately modeled with a zeropoint shift.  All our applied error terms are listed in Table~\ref{dmags}.  
+
+The $\Delta m_{snr}$ term is used to add Gaussian noise based on the signal-to-noise of a given measurement.  We use the star's magnitude along with the Opsim reported 5-sigma visit depth to calculate the value. 
+\begin{eqnarray}
+x = 10^{0.4(m^{std} - m_5)} \\
+\sigma^2_{rand} = (0.04-\gamma)x+\gamma x^2 \rm{ (mag}^2) \\
+\sigma^2_{snr} = \sigma^2_{sys}+\sigma^2_{rand}
+\end{eqnarray}
+Where $m_5$ is the 5-sigma depth for a given visit from Opsim and $\gamma$ is filter dependent and varies between 0.037 for $u$ to 0.040 for $z$ and $y$.  The value for $\sigma_{sys}$ is set to 3 millimags to simulate a systematic error floor for realistic photometry procedures.  The simulation generates $\Delta m_{snr}$ as a random number drawn from a Gaussian distribution with $\sigma=\sigma_{snr}$ for each observation.  
+
+%A $\Delta m_{var}$ term is an additional Gaussian noise term added to all stars that can be used to simulate low-level stellar variability and instrumental jitter.  A $\Delta m_{rr}$ term is used to add additional noise to a subset of stars that are simulated as variable. 
+
+There are two color terms, $\Delta m_{color}$ and $\Delta m_{colordist}$.  $\Delta m_{color}$ is a color term that simulates errors introduced from imperfect atmospheric corrections (e.g., if the auxiliary telescope incorrectly fits the atmospheric transmission model).  $\Delta m_{colordist}$ simulates the errors introduced by having the filter bandpass shape vary radially on the focal plane.  
+\begin{eqnarray}
+\Delta m_{colordist} = \Delta m_{filter} (1+\frac{\Delta S}{S})(1+\frac{\Delta R}{R})(1+\frac{\Delta (g-i)}{(g-i)})-\Delta m_{filter}
+\end{eqnarray}
+where $\Delta m_{filter}$ is the offset caused by the variable filter throughput, $S$ is the slope of the offset in mags per $(g-i)$ per fraction of field of view (see Figure~3 in L2PC), $R$ is the radial position on the field of view where the star falls.  The terms $\Delta S$, $\Delta R$, and $\Delta (g-i)$ represent the difference between the measured and true values of the various quantities.  See figures~9 and~10 in L2PC for examples of $\Delta m_{filter}$ in LSST filters.
+
+
+
+We have developed a robust procedure for generating realistic clouds based on previously observed cloud structure functions \citep{Ivezic2007,Burke2010}. Clouds are particularly difficult for LSST because the short exposure times means clouds have little time to drift across the field of view, resulting in extinction which is more structured than in surveys with longer exposure times like SDSS.  
+
+We first calculate an ARMA-based structure function, drawing from realistic distributions of physical scales for clouds and average extinctions from Opsim.  The structure function is then used to generate a cloud image with LSST's field-of-view and sampled at a resolution similar to the average spacing between stars.  An example of a simulated cloud in shown in Figure~\ref{fig:cloud}.  
+
+
+\begin{figure}
+\epsscale{.6}
+\plotone{Plots/cloud.eps}
+\epsscale{1}
+\caption{Example of a simulated cloud image with an average extinction of 0.5 magnitudes.  The large square shows the size of an LSST raft while the small square shows the scale of a single LSST CCD.  \label{fig:cloud}}
+\end{figure}
+
+We have used FRED runs to calculate the expected illumination correction errors for each filter.  Examples of the magnitude of the illumination corrections can be seen in Figure~\ref{fig:illum}.  For our simulations, we typically assume the illumination errors will be removed by a map derived from dense star field observations and measurements from the camera calibration optical bench (CCOB).  We assume the pipeline reductions will only be able to remove these effects at the 90\%-level.  
+
+%from /local/tmp/selfcal_runs/July_rev/test2/r_band_fppatches/input_illum_err.eps
+%\begin{figure}
+%\plottwo{Plots/u_band/input_illum_err.eps}{Plots/r_band/input_illum_err.eps}
+%\caption{The illumination and ghosting error maps.  left panel shows
+%the $u$-band while the right panel is for $r$. For most of the simulations, we assume $\sim90$\% of the illumination errors are calibrated out before passing magnitudes to self calibration.  \label{fig:illum}}
+%\end{figure}
+
+
+\section{Self Calibration Algorithm}\label{alg}
+
+
+The L2PC document describes a number of steps in the complete
+photometric calibration procedure for LSST. The overall procedure can
+be summarized as separating the hardware and atmospheric throughput
+curves, and furthermore, separating the wavelength dependent and
+independent portions of the transmission curve throughput and
+shape. The wavelength-independent hardware throughput curve is
+normalized using a dome screen flat field in a fairly traditional
+manner. Wavelength-dependent (i.e. color-dependent) corrections to the
+hardware throughput curve are generated using narrow-band dome screen
+measurements. Wavelength-dependent corrections to the atmospheric
+response curve are generated using measurements from the auxiliary
+telescope. After applying all of these corrections to the extracted
+counts of objects in each image, we must still correct for
+wavelength-independent atmospheric transmission response variations
+due to cloud extinction and set appropriate zeropoints for each
+observation. This wavelength-independent correction of the
+atmospheric transmission curve is the primary function of the
+self calibration procedure.
+
+
+In the terms introduced in L2PC, we are starting self calibration
+using magnitudes extracted from images which have been corrected to be
+in a standardized bandpass, $\phi_b^{std}(\lambda)$, where
+\begin{equation}
+\label{eqn:PhiDef}
+	   \phi_b^{obs}(\lambda,t) =  {
+	     {S^{atm}(\lambda,alt,az,t)\, S_b^{sys}(\lambda,x,y,t) \,
+	       \lambda^{-1}} \over
+	     \int_0^\infty { {S^{atm}(\lambda,alt,az,t) \,
+	         S_b^{sys}(\lambda,x,y,t) \, \lambda^{-1}} \,d\lambda}}.  
+\end{equation}
+From the many repeat observations (under a variety of conditions) of the many different stars, we will then determine the best-fit zeropoints for each observation.
+
+%\begin{equation}
+%\chi^2 = \sum_{ij} \frac{(m^{std}_{ij}-m_{i}^{best}-Z_j)^2}{(\sigma_{ij}^{std})^2}
+%\end{equation}
+%where $m_{ij}^{std}$ is the observed magnitude in the standardized bandpass and $m_{ij}^{best}$  is a model magnitude.
+
+The self calibration routine assumes that
+\begin{equation} \label{eqn:selfcal}
+m_{ij}^{std} = m_i^{best}+Z_j
+\end{equation}
+where $m_{ij}^{std}$ is the observed magnitude of star $i$ corrected
+to a standard LSST bandpass in patch $j$, $m_i^{best}$ is the best-fit
+magnitude for the star, and $Z_j$ is the zeropoint for patch $j$. The
+patch sizes for $Z_j$ will be approximately the size of a CCD,
+containing about 100 calibration stars on average. In most of our
+simulations, due to limitations on computer memory and processing
+time, we have simplified the calibration patches to be the size of an
+LSST raft (3x3 CCDs). The self calibration procedure uses the multiple
+observations of stars to find the best-fit values for $m_i^{best}$ and
+$Z_j$ by minimizing
+\begin{equation} \label{eqn:chi2}
+\chi^2 = \sum_{ij} \frac{(m^{std}_{ij}-m_{i}^{best}-Z_j)^2}{(\sigma_{ij}^{std})^2}
+\end{equation}  
+where $\sigma_{ij}^{std}$ are the uncertainties in the observed
+magnitude.  Minimizing Equation~\ref{eqn:chi2} requires solving for
+approximately $10^8$ $m_{i}^{best}$ and $10^8$ $Z_j$ terms in the
+basic calibration model. Adding additional terms to
+Equation~\ref{eqn:selfcal} to refine the calibration of the hardware
+normalization or bandpass shape increases the number of parameters
+that must be fit only slightly, as these terms are assumed constant
+over large stretches (years) of observations. Of course, not all stars
+will be observed on all calibration patches, so there will be only
+about 10$^{10}$ non-zero values of $(m^{std})_{ij}$ (per band).
+
+Because we include radially dependent terms, we modify Eqn~\ref{eqn:selfcal} to include an illumination patch correction
+\begin{equation}
+m_{ij}^{std} = m_i^{best}+Z_j+I_r
+\end{equation}
+where $I_r$ is an illumination correction.  Unlike the patch zeropoint, the illumination correction stays the same from exposure to exposure.  By default, we use an illumination correction that divides the focal plane into five radial bins.  
+
+We are currently using the LSQR algorithm, which is in the conjugate gradient
+family of solvers for solving the system $Ax=b$.  Previous surveys
+have typically introduced a covariance matrix to perform the
+self calibration \citep{pad08,Schaf12}.  We have not introduced a
+covariance matrix and use LSQR because it has the advantage of having
+well-defined convergence criteria.  Using alternative solvers, we were
+often forced to specify a number of iterations and found ourselves
+under-converged.  LSQR often runs longer than strictly necessary, but
+stops iterating when it reaches the limits of machine precision.
+
+For smaller simulations where we observe one-million stars at LSST
+cadence for 2 years, the resulting matrix $A$ has 130 million non-zero
+elements and can be solved with modest computational resources.
+
+%Investigations using a
+%conjugate gradient method to compute $m_{b}^{best}$ and $Z_j$ for
+%approximately $10^6$ stars and $10^6$ patches were very successful;
+%the same method could be relatively easily parallelized for the full
+%data set.  We have also had preliminary success with simulations using
+%a least squares method to invert the matrix from
+%Equation~\ref{eqn:chi2} and solve for $m_{i}^{best}$ and $Z_j$.
+
+If flux standard stars are not included in the fit, the
+self calibration procedure will include a floating zeropoint.  This
+means there is only one number per filter that converts the fitted
+magnitudes to a flux-calibrated system.
+
+%A full description of the sparse matrix
+%construction for the self calibration problem is presented in
+%Appendix~\ref{matrix}.  
+
+%We currently have limited knowledge of the
+%gray extinction structure function, and it may be the case that
+%CCD-scale patches will not be small enough for all observing
+%conditions.
+
+A key assumption of the self calibration algorithm is that the
+majority of stars are non-variable, or variable with amplitudes much
+smaller than the required calibration precision (0.01 mag). Based on
+SDSS results, at most 10\% of stars will be variable at a level that
+would make them poor calibration sources.  We assume that such
+variable stars will be easily recognized using their light curves
+(possibly using an iterative rejection scheme).  Another crucial
+assumption is that for each LSST observation the field of view can be
+divided into a set of patches that each have a single photometric
+zeropoint. Presently, the zeropoints for these patches are set
+independently but it is likely that on photometric nights this
+assumption is too strong and will be relaxed (resulting in a smaller
+number of observations to close the system).
+
+
+
+\section{Solving in Parallel With HEALpixels}\label{sec:hp}
+
+The self calibration problem for LSST is incredibly large.  For comparison, the uber-cal of SDSS involved 36 million observations of 12 million unique stars.  For LSST in the first two years we will have around 3.2 billion observations of 100 million unique stars.  The memory and computation power required to solve such a system demands that we parallelize the problem in some way.
+
+We have developed a technique using the Hierarchical Equal Area isoLatitude Pixelization (HEALpix) tessellation of a sphere.  The HEALpix tessellation was originally designed for analyzing all-sky CMB observations.  HEALpixels have equal area, and are distributed to make fast calculations of multipole moments and power spectra.  
+
+To run self calibration in parallel, we assign each observation (consisting of a patch ID, star ID, observed magnitude, magnitude uncertainty, and possibly illumination patch ID) to the nearest four HEALpixels on the sky.  This divides the observations in such a way that we have regions on the sky that are entire HEALpixels plus a surrounding border of approximately one-half HEALpixel.  We have had good results with using 768 (53 square degrees) or 3072 (13 square degree) HEALpixels.  
+
+Once the observations have been divided, we run the self calibration solver on each HEALpix region independently.  By solving each HEALpixel in isolation, each result converges to a unique floating zeropoint.  To tie the system back to a single floating zeropoint, we construct a matrix based on
+\begin{equation}\label{eqn:hp}
+P_{ij} = P_{i} + HP_{j}
+\end{equation}
+where the $P_{ij}$ are the patch zeropoints fitted on each HEALpixel.  The equation is solved for the true patch zeropoint $P_{i}$ and the HEALpixel floating zeropoint $HP_{j}$, completely analogously to equation~\ref{eqn:selfcal}.  If an illumination correction is included, we replace the patch ID with a unique ID for each patch ID and illumination ID combination present.  At full density, we expect $\sim100$ stars per calibration patch and $\sim$15 observations per year.  Thus, by using the patches to tie large scale solutions together, we have reduced the computational requirements by three orders of magnitude.  For example, the two-year $r$-band simulation presented in \S\ref{sec:fsld} has $1.3\times 10^{11}$  non-zero matrix elements in the full self calibration formulation, but the patch solution needs only $3.2 \times 10^7$ non-zero elements.  
+
+This procedure is inefficient in the sense that each patch zeropoint and stellar magnitude is solved for 4 times.  However, there is substantial speedup provided by not having to run the solver to convergence over very large spatial scales.  Once the final patch zeropoints are solved for, we loop back through the data and apply the zeropoints (and possibly illumination solution) to the stellar observations and calculate a weighted mean for the final best-fit stellar magnitudes.  We are currently weighting the patches in Eqn~\ref{eqn:hp} by the number of stars they contain.  This should probably be refined, as patches taken in cloudy conditions will be poorly fit even if they contain many stars.  
+
+The solutions returned by fitting in parallel are well-matched to solutions which solve the system simultaneously.  Figure~\ref{fig:hpvglobal} compares a fit with the traditional global solver with a solution made with HEALpixels and shows the differences are typically less than 1 millimag.  
+
+%for the r_1e6:  The matrix A has 43,730,761 rows and 2,908,952 columns
+% number of patches = 1,777,021
+% number of star_obs.dat:  43,730,772
+%so for full-scale 2-years, patches = 44e6, observations = 4.3e9 , and that's a matrix with 129e9 non-zero elements
+%for the HP Lsqr.out:
+%The matrix A has 15,999,101 rows and 1,580,519 columns, that's 32e6 
+
+
+
+
+Why does breaking the problem into HEALpixels work?  Since LSST has multiple visits over the entire survey area, the problem is very well linked.  Figure~\ref{fig:nodither} shows how the fitting with HEALpixels fails if we do not use the Opsim Hexdither option.  By default, Opsim uses a fixed set of observation locations.  Opsim also includes the option to use a Hexdither.  In this case, the field positions are shifted each night to one of 217 offsets, of magnitude up to half the field-of-view.  Using Hexdither results in more uniform depth for the survey.  With Hexdither off, the self calibration problem is poorly linked, and we are no longer able to solve regions independently and stitch the solutions back together to find the global solution.  
+
+We have not yet explored optimizing the amount of overlap needed when solving individual HEALpixels.   The choice to assign each observation to the four closest HEALpixels was done out of convenience rather than any deep mathematical insight.  
+
+
+\begin{figure}
+\plottwo{Plots/r_1e6_nodither_8hp/HPid.eps}{Plots/r_1e6/HPid.eps}
+\caption{HEALpixel maps for 8 and 16 sides, resulting in 400 and 1568 individual pixels in the Southern hemisphere respectively.}
+\end{figure}
+
+
+\begin{figure}
+\plottwo{Plots/r_1e6_regsolver/Sdmag.eps}{Plots/r_1e6/Sdmag.eps} \\
+\plottwo{Plots/r_1e6_regsolver/Sdamg_hist.eps}{Plots/r_1e6/Sdamg_hist.eps}  
+%\plottwo{Plots/r_1e6_regsolver/Srepeat_IQR.eps}{Plots/r_1e6/Srepeat_IQR.eps} 
+%\plottwo{Plots/r_1e6_regsolver/Srepeat_IQR_bright_hist.eps}{Plots/r_1e6/Srepeat_IQR_bright_hist.eps}
+\caption{Comparison of a simulation solved simultaneously (left) with one solved on individual HEALpixels and combined.  Statistically, the differences between the two solutions are at the sub-millimag level, much less than the differences we see between runs with different starting seeds (Figure~\ref{fig:diffseed}). \label{fig:hpvglobal}}
+\end{figure}
+
+
+\begin{figure}
+\plottwo{Plots/r_1e6/Snobs.eps}{Plots/r_1e6_nodither/Snobs.eps}\\
+\plottwo{Plots/r_1e6/Sdmag.eps}{Plots/r_1e6_nodither/Sdmag.eps}\\
+\plottwo{Plots/r_1e6/Sdamg_hist.eps}{Plots/r_1e6_nodither/Sdamg_hist.eps}
+\caption{Example of when solving the self calibration problem in parallel fails.  On the left are the results from a 1-million star simulation in $r$-band.  On the right, the same input parameters were used, but the Opsim hex-dither option was turned off, resulting in a survey that has much less spatial coverage uniformity.  The top panel shows a map of the number of visits.  The bottom two panels show how well stellar magnitudes are recovered by self calibration.  By turning off dithering, the self calibration problem is poorly-linked and we are not able to solve the system in parallel.  We are able to solve the system without Hexdither if we do not use HEALpixels and solve the entire system simultaneously.  \label{fig:nodither}}
+\end{figure}
+
+
+
+
+\section{Simulation Metrics}
+
+Our self calibration simulations can be used to measure the spatial uniformity of the best-fitting solutions as well as the accuracy of repeat observations of a single object.  Example plots showing the spatial uniformity and repeatability can be seen in Figure~\ref{fig:r1e6}.  
+
+The spatial uniformity is usually dominated by the visit density of a region of sky, with the expected result that sparsely observed areas of the sky are poorly fit while regions with many observations are smooth.  The repeatability is dominated by cloud structure which is not well fit as a single zeropoint.  Because cloud structure can generate large offsets, we use a robust RMS measure by scaling the inter-quartile range (IQR).  How residuals in individual observations departs from Gaussianity are shown in Figure~\ref{fig:resid_dist}.
+
+Since most of our simulations were done with stars uniformly distributed over the sky, the distribution of true minus best-fit stellar magnitude is a good measure of the calibration uniformity.  When we make simulations with variable densities, we average the residuals in HEALpixels (see \S\ref{sec:hp}).
+
+Measuring how well we can derive stellar colors and tie the system to an external flux scale are discussed in \S\ref{sec:fluxcal}.
+
+
+
+
+
+
+
+%#######################################
+
+\section{Results}
+
+
+
+\subsection{Full-Sky, Low-Density}\label{sec:fsld}
+
+Since a full-scale self calibration simulation is still computationally expensive, we have run a series of simulations using only 1.3 million stars, distributed fairly uniformly across the sky.  Since we are using fewer stars, we increase the calibration patch size from one LSST CCD to one LSST raft (3x3 CCDs).  With fewer stars, we expect the patch zero-points will not be as well constrained as the full-scale self calibration.  We will also be more sensitive to the extinction structure in clouds with larger calibration patches.  Despite these limitations, these simulations still provide useful insight to how well the Opsim pointings tie the sky together.  Also, the results from these simulations can be considered worst-case scenarios, as the fits should only improve with more stars and higher resolution patches.
+
+
+Most of these simulations use the same sub-catalog of stars shown in Figure~\ref{fig:gfpop}.  This is one-million bright main-sequence and red giant stars, selected to be distributed fairly uniformly across the sky.  There are additional faint white dwarf and blue horizontal branch stars added, so we can better detect any color-dependent effects.
+
+In general, areas that have fewer visits have the largest residuals.  The repeatability is these simulations is dominated by the cloud cover.  The repeatability is particularly bad in regions that have few visits and those visits were in clouds conditions.  The visit distribution, uniformity, and repeatability for each filter are shown im Figures~\ref{fig:r1e6}-\ref{fig:y1e6}.  The repeatability and uniformity along with the relevant SRD values are listed in Tables~\ref{tab:repeat} and~\ref{tab:uniform}.
+
+An important aspect of the self calibration simulations is to see if the residual magnitudes and shapes are understood and repeatable.  To test this, we re-ran the $r$-band simulation with a different starting random number seed.  The results are shown in Figure~\ref{fig:diffseed}.  The areas on the sky with the largest residuals are very similar to the original simulation, with both having the largest residuals where the Opsim visit density is the lowest.  One important point is that the residual structures can flip sign, implying self calibration simulations can identify areas that are subject to large uncertainties, but cannot necessarily be used to make corrections to those areas.
+
+The $y$-filter (Figure~\ref{fig:y1e6}) is poorly fit because the simulation includes temperature variation, which in turn change the effective quantum efficiency, at the CCD level.  Since these simulation have raft-sized patches, the offsets from the temperature variations are not fit well.  The $u$-filter simulation has problems because Opsim has not covered the entire sky after two years.  Also, because the stars were selected in $r$-band, they can be quite faint in $u$.  Figure~\ref{fig:u1e6_uselect} shows a $u$-band simulation with stars selected to be 17 mag in $u$.  
+
+
+\begin{table}[htb]
+\caption{Comparison of SRD relative photometry (repeatability) RMS requirements to simulations.\label{tab:repeat} }
+\begin{tabular}{lccc}
+\colhead{filter} & \colhead{Design Spec} & \colhead{Minimum Spec}&\colhead{Simulation Results} \\
+       & \colhead{(mmag)}        &  \colhead{(mmag)}       & \colhead{(mmag)} \\
+\hline
+$u$    &     7.5        & 12 & 6.5$^{*}$   \\
+$g$    &     5          & 8 &  4.89 \\
+$r$    &     5          & 8 & 5.0 \\
+$i$    &     5          & 8 & 5.0 \\
+$z$    &     7.5        & 12 & 4.4 \\
+$y$    &     7.5        & 12 & 6.1\\
+\hline
+\end{tabular}\\
+$^{*}$Using a $u$-band selected catalog 
+\end{table}
+
+There is the additional relative photometry design (minimum) goal that not more than 10\% (20\%) of measurements deviatate by 15 (15) millimag.  Figure~\ref{fig:resid_dist} shows that in the $r$-band we meet the minimum requirement, but not the design goal.  The relative photometry values should improve slightly as we move from raft-sized patches to CCD-sized patches.
+
+\begin{table}[htb]
+\caption{Comparison of SRD uniformity RMS requirements to simulations. \label{tab:uniform}}
+\begin{tabular}{lccc}
+filter & Design Spec & Minimum Spec&Simulation Results \\
+       & \colhead{(mmag)}        &  \colhead{(mmag)}       & \colhead{(mmag)} \\
+\hline
+$u$      &  20    & 30 & 5.2 \\
+$g$      &  10    & 20 &  2.0 \\
+$r$      &  10    & 20 & 1.6 \\
+$i$      &  10    & 20 & 1.8 \\
+$z$      &  10    & 20 & 2.3  \\
+$y$      &  10    & 20 & 21.8 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\begin{figure}
+\plottwo{Plots/r_1e6/Snobs.eps}{Plots/r_1e6/Snobs_hist.eps} \\
+\plottwo{Plots/r_1e6/Sdmag.eps}{Plots/r_1e6/Sdamg_hist.eps} \\
+\plottwo{Plots/r_1e6/Srepeat_IQR.eps}{Plots/r_1e6/Srepeat_IQR_bright_hist.eps}
+\caption{ {\bf Full-Sky, Low-Density simulation for the $r$-filter.}  \label{fig:r1e6}}
+\end{figure}
+
+
+\begin{figure}
+\plottwo{Plots/u_1e6_neg15/Snobs.eps}{Plots/u_1e6_neg15/Snobs_hist.eps} \\
+\plottwo{Plots/u_1e6_neg15/Sdmag.eps}{Plots/u_1e6_neg15/Sdamg_hist.eps} \\
+\plottwo{Plots/u_1e6_neg15/Srepeat_IQR.eps}{Plots/u_1e6_neg15/Srepeat_IQR_bright_hist.eps}
+\caption{ {\bf Full-Sky, Low-Density simulation for the $u$-filter}.  Note this is limited to declinations south of -15 degrees.  After 2-years, the Opsim pointings in $u$ do not cover the entire southern hemisphere.  \label{fig:u1e6}}
+\end{figure}
+
+
+\begin{figure}
+\plottwo{Plots/u_1e6_uselect/Snobs.eps}{Plots/u_1e6_uselect/Snobs_hist.eps} \\
+\plottwo{Plots/u_1e6_uselect/Sdmag.eps}{Plots/u_1e6_uselect/Sdamg_hist.eps} \\
+\plottwo{Plots/u_1e6_uselect/Srepeat_IQR.eps}{Plots/u_1e6_uselect/Srepeat_IQR_bright_hist.eps}
+\caption{ {\bf Full-Sky, Low-Density simulation for the $u$-filter}.  Unlike Figure~\ref{fig:u1e6}, this simulation used a stellar catalog selected to be near 17 mag in $u$ rather than $r$, resulting in much higher signal-to-noise and improved repeatability. \label{fig:u1e6_uselect}}
+\end{figure}
+
+
+
+
+
+\begin{figure}
+\plottwo{Plots/g_1e6/Snobs.eps}{Plots/g_1e6/Snobs_hist.eps} \\
+\plottwo{Plots/g_1e6/Sdmag.eps}{Plots/g_1e6/Sdamg_hist.eps} \\
+\plottwo{Plots/g_1e6/Srepeat_IQR.eps}{Plots/g_1e6/Srepeat_IQR_bright_hist.eps}
+\caption{ {\bf Full-Sky, Low-Density simulation for the $g$-filter.}  \label{fig:g1e6}}
+\end{figure}
+ 
+
+\begin{figure}
+\plottwo{Plots/i_1e6/Snobs.eps}{Plots/i_1e6/Snobs_hist.eps} \\
+\plottwo{Plots/i_1e6/Sdmag.eps}{Plots/i_1e6/Sdamg_hist.eps} \\
+\plottwo{Plots/i_1e6/Srepeat_IQR.eps}{Plots/i_1e6/Srepeat_IQR_bright_hist.eps}
+\caption{ {\bf Full-Sky, Low-Density simulation for the $i$-filter.}  \label{fig:i1e6}}
+\end{figure}
+
+\begin{figure}
+\plottwo{Plots/z_1e6/Snobs.eps}{Plots/z_1e6/Snobs_hist.eps} \\
+\plottwo{Plots/z_1e6/Sdmag.eps}{Plots/z_1e6/Sdamg_hist.eps} \\
+\plottwo{Plots/z_1e6/Srepeat_IQR.eps}{Plots/z_1e6/Srepeat_IQR_bright_hist.eps}
+\caption{ {\bf Full-Sky, Low-Density simulation for the $z$-filter.}  \label{fig:z1e6}}
+\end{figure}
+
+\begin{figure}
+\plottwo{Plots/y_1e6/Snobs.eps}{Plots/y_1e6/Snobs_hist.eps} \\
+\plottwo{Plots/y_1e6/Sdmag.eps}{Plots/y_1e6/Sdamg_hist.eps} \\
+\plottwo{Plots/y_1e6/Srepeat_IQR.eps}{Plots/y_1e6/Srepeat_IQR_bright_hist.eps}
+\caption{ {\bf Full-Sky, Low-Density simulation for the $y$-filter.}  Since the $y$-filter simulations include temperature variation, our raft-size calibration patches do a poor job fitting the data.   \label{fig:y1e6}}
+\end{figure}
+
+
+
+\begin{figure}
+\plottwo{Plots/r_1e6/repeat_examples_hist.eps}{Plots/r_1e6/repeat_examples_cdf.eps}
+\caption{The residual distribution for individual observations is very non-Gaussian.  This is an example of all the observations in a single $r$-band HEALpixel (1 million star simulation).  The left panel shows the histogram of residuals of individual observations while the right shows the cumulative distribution.  Both panels show a Gaussian for comparison.  This shows for any individual star, about 60\% of the observations follow a Gaussian distribution with $\sim5$ mmag RMS, while the other 40\% of the observations are in a much broader tail.  This well matches the Opsim input which has about 60\% of observations taken in photometric conditions.  The distribution should improve slightly when we reduce the calibration patch size down to a single CCD.  \label{fig:resid_dist}}
+\end{figure}
+
+
+\begin{figure}
+\plottwo{Plots/r_1e6/Sdmag.eps}{Plots/r_1e6_newseed/Sdmag.eps} \\
+\plottwo{Plots/r_1e6/Sdamg_hist.eps}{Plots/r_1e6_newseed/Sdamg_hist.eps} \\
+\plottwo{Plots/r_1e6/Srepeat_IQR_bright_hist.eps}{Plots/r_1e6_newseed/Srepeat_IQR_bright_hist.eps}
+\caption{Comparing two $r$-band simulations started with different random number generator seeds.  The residual histograms look very similar, but the sky maps show the residual structures can undergo sign flips. \label{fig:diffseed} }
+\end{figure}
+
+
+\subsection{Small-Sky, Full-Density}
+We have simulated observations on a small section of sky at full stellar density with CCD-sized calibration patches.  This was two-years of Opsim pointing in $r$-band, and included all stars in the range $17 < r < 21 $, resulting in 60 stars per patch.  Results are shown in Figure~\ref{fig:r1e6hd}.  There does not appear to be substantial improvement over the fits which used fewer stars and larger patches.
+
+%\begin{figure}
+%\plottwo{Plots/r_hd_test/Snobs.eps}{Plots/r_hd_test/Snobs_hist.eps} \\
+%\plottwo{Plots/r_hd_test/Sdmag.eps}{Plots/r_hd_test/Sdamg_hist.eps} \\
+%\plottwo{Plots/r_hd_test/Srepeat_IQR.eps}{Plots/r_hd_test/Srepeat_IQR_bright_hist.eps}
+%\caption{ {\bf Small-Sky, Full-Density simulation for the $r$-filter.}  \label{fig:r1e6hd}}
+%\end{figure}
+
+\subsection{Full-Sky, High-Density}
+
+With the ability to solve self calibration in parallel with HEALpixels, we can now solve systems that have a similar number of stars as we expect LSST will have.  We have generated an $r$-band observation similar to what was run in \S\ref{sec:fsld}, only now with 25 million stars and CCD-sized calibration patches.  Stellar properties are shown in Figure~\ref{fig:25mil_about} and results of the self calibration are shown in Figure~\ref{fig:25mil}.  The uniformity and repeatability both show a modest improvement.  Solving the full-sky high-density simulation requires 2000-3000 CPU core hours.  
+
+
+\begin{figure}
+\plottwo{Plots/25mil/Sdensity.eps}{Plots/25mil/Sdepth90.eps}
+\plottwo{Plots/25mil/Pnstars_hist.eps}{Plots/25mil/Pzphist.eps}
+\caption{Properties of our 25 million star simulation.  We vary the stellar catalog depth across the sky to maintain uniform density.  The bottom plots show the number of stars per calibration patch and the cloud extinction distribution from Opsim. \label{fig:25mil_about}}
+\end{figure}
+
+\begin{figure}
+\plottwo{Plots/25mil/Snobs.eps}{Plots/25mil/Snobs_hist.eps} \\
+\plottwo{Plots/25mil/Sdmag.eps}{Plots/25mil/Sdamg_hist.eps} \\
+\plottwo{Plots/25mil/Srepeat_IQR.eps}{Plots/25mil/Srepeat_IQR_bright_hist.eps}
+\caption{ {\bf Full-Sky, High-Density simulation for the $r$-filter.}  There is only a modest improvement over the 1 million star simulation in Figure~\ref{fig:r1e6}  \label{fig:25mil}}
+\end{figure}
+
+
+\subsection{Time Evolution}
+
+Figure~\ref{fig:timeevo} shows the time evolution of the self calibration solution, using 1 million star simulations in the $r$-band.  After one-year, the $r$-band still has regions that are not well connected to the rest of the survey.  However, the solution does meet the SRD requirements for relative photometry repeatability even when regions are not well connected.  After 2-years, the self calibration solution gradually improves with increasing numbers of observations.  
+
+
+
+\begin{figure}
+\epsscale{0.3}
+\plotone{Plots/r_1e6_1yr/Snobs.eps}\plotone{Plots/r_1e6_1yr/Sdmag.eps}\plotone{Plots/r_1e6_1yr/Sdamg_hist.eps} \\
+\plotone{Plots/r_1e6/Snobs.eps}\plotone{Plots/r_1e6/Sdmag.eps}\plotone{Plots/r_1e6/Sdamg_hist.eps} \\
+\plotone{Plots/r_1e6_5yr/Snobs.eps}\plotone{Plots/r_1e6_5yr/Sdmag.eps}\plotone{Plots/r_1e6_5yr/Sdamg_hist.eps} \\
+\plotone{Plots/r_1e6_10yr/Snobs.eps}\plotone{Plots/r_1e6_10yr/Sdmag.eps}\plotone{Plots/r_1e6_10yr/Sdamg_hist.eps} 
+\epsscale{1}
+\caption{The evolution of the $r$-band self calibration solution.  From top to bottom, 1, 2, 5, and 10 years of $r$-band observations.   \label{fig:timeevo}}
+\end{figure}
+
+
+
+\subsection{Flux Calibration and Colors}\label{sec:fluxcal}
+
+By default, the self calibration procedure does not tie the solution to a physical flux scale.  We keep track of which stars are WDs and select a subset as possible flux standards.  
+
+
+We assume that by the time LSST begins observations, there will be white dwarf standard stars available with $\sim1\%$ absolute flux precision.  Here, we attempt to flux calibrate the low-density full-sky simulations from \S\ref{sec:fsld}.  Using only 10 WD flux standards, the absolute flux level in each filter can be set with an RMS of 3-5 mmag.  If we have 30 standards, that drops to 2-3 mmag.  These values are well below the SRD design spec of 10 millimags.  Figure~\ref{fig:colorcolor} shows the residuals of the colors after calibrating with 30 randomly chosen WD stars.  Table~\ref{tab:color} compares the color accuracies with SRD requirements.  
+
+\begin{table}[htb]
+\caption{Comparison of SRD band-to-band requirements to simulations.\label{tab:color} }
+\begin{tabular}{lccc}
+\colhead{filter} & \colhead{Design Spec} & \colhead{Minimum Spec}&\colhead{Simulation Results} \\
+       & \colhead{(mmag)}        &  \colhead{(mmag)}       & \colhead{(mmag)} \\
+\hline
+$u-g$    &   10           &    15         & 7.4 \\
+$g-r$    & 5	      &	10	          & 4.2 \\
+$r-i$    & 	5      &	10	   & 1.8 \\
+$i-z$    & 	 5     &		10   & 2.2 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+
+
+
+%30 standards
+%filter mean       std
+%u: True zp - fit zp = 2.330944 (mmag)
+%g: True zp - fit zp = -3.379508 (mmag)
+%r: True zp - fit zp = -1.781482 (mmag)
+%i: True zp - fit zp = -0.214748 (mmag)
+%z: True zp - fit zp = -2.381536 (mmag)
+%y: True zp - fit zp = 5.172899 (mmag)
+
+
+%10 standards
+%u: True zp - fit zp = -3.738901 (mmag)
+%g: True zp - fit zp = -2.963236 (mmag)
+%r: True zp - fit zp = 3.790768 (mmag)
+%i: True zp - fit zp = -7.200404 (mmag)
+%z: True zp - fit zp = 2.097253 (mmag)
+%y: True zp - fit zp = 6.204528 (mmag)
+
+
+
+%\begin{figure}
+%\epsscale{.75}
+%\plottwo{Plots/flux_color/coloru_g.eps} {Plots/flux_color/map_coloru_g.eps} \\
+%\plottwo{Plots/flux_color/colorg_r.eps}{Plots/flux_color/map_colorg_r.eps} \\
+%\plottwo{Plots/flux_color/colorr_i.eps}{Plots/flux_color/map_colorr_i.eps} \\
+%\plottwo{Plots/flux_color/colori_z.eps}{Plots/flux_color/map_colori_z.eps} \\
+%%\plottwo{Plots/flux_color/colorz_y.eps}{Plots/flux_color/map_colorz_y.eps} 
+%\epsscale{1}
+%\caption{Color residuals after using 30 WD flux standards to move each band to a flux-calibrated system.   \label{fig:colorcolor}}
+%\end{figure}
+
+\subsection{Magnitude Recovery}
+
+As a test of how accurately we recover patch zeropoints, we randomly selected 20\% of the stars from the $r$-band full-sky low-density simulation and re-computed the self calibration solution without including those stars.  We then used the best-fit patch zeropoints to calculate the stellar magnitudes of the withheld stars.  Figure~\ref{fig:zpcheck} shows the residuals are nearly identical for stars included in the fit as those that were not, confirming that our zeropoint fits can be used for objects not included in the fit without introducing additional noise.
+
+
+\begin{figure}
+%\plottwo{Plots/mag_recover/20per_results/Sdmag.eps}{Plots/mag_recover/80per_results/Sdmag.eps} \\
+%\plottwo{Plots/mag_recover/20per_results/Sdamg_hist.eps}{Plots/mag_recover/80per_results/Sdamg_hist.eps} \\
+%\plottwo{Plots/mag_recover/20per_results/Srepeat_IQR_bright_hist.eps}{Plots/mag_recover/80per_results/Srepeat_IQR_bright_hist.eps}
+\caption{Recovering stellar magnitudes that were not included in the self calibration fit.  The panels on the left show the residuals of stars that were not included in the fit, while the panel on the right shows the residuals for stars that were.  \label{fig:zpcheck}}
+\end{figure}
+
+
+
+\subsection{Self Calibration Limitations}
+
+It is very easy to introduce degeneracies when adding additional terms to the self calibration solver.  For example, we were tempted to solve the illumination correction as a function of color.  Unfortunately, this makes the solution degenerate and each color bin is free to diverge on its own floating zeropoint.  
+
+Figure~\ref{fig:badcolor} illustrates how passing data with large color terms can result in poor fits.  This was a $u$-band simulation where we did not remove the illumination and ghosting errors before running the solver.  Normally, these errors are assumed to be removed at the 90\%-level.  Note that since the stellar sample is dominated by main-sequence stars, extreme blue and red stars are poorly fit when there are color terms.  This is especially concerning since it is blue white dwarf stars that are considered the best flux calibration standards.
+
+\begin{figure}
+%\plottwo{Plots/u_1e6_neg15/Saccuracyvcolor.eps}{Plots/u_1e6_moreghost_small/Saccuracyvcolor_mod.eps}
+\caption{The left panel shows the standard $u$-band simulation, where the color-dependent illumination errors have been mostly removed before solving.  On the right,  the illumination errors are uncorrected before solving.  \label{fig:badcolor}}
+\end{figure}
+
+
+\section{Conclusions}
+A summary of lessons we have learned through running many self calibration simulations.
+\begin{itemize}
+\item{Dithering is important.  If LSST observations are not dithered, the system is not linked well enough to solve the problem in parallel.}
+\item{Even with a small number of stars and large calibration patches, self calibration converges to meet SRD requirements for uniformity and repeatability.}
+\item{$u$ observations are very tough to calibrate.  This is due in large part to Opsim focusing observations on the poles and leaving regions near the celestial equator disconnected from the rest of the survey}
+\item{The ability to meet the SRD uniformity requirement is very sensitive to color terms present in the data passed to the solver.}
+\item{The ability to meet the repeatability requirement depends strongly on the cloud cover and structure.  }
+\item{We have demonstrated the ability to run self calibration in parallel on LSST-sized data sets.}
+\item{With a sufficient number of flux standards, the self calibration solutions can be moved to a flux-calibrated system, meeting the SRD color requirements.}
+\end{itemize}
+
+
+\section{Future Refinements}
+\begin{itemize}
+\item{We need to inspect the returned uncertainties on the fit parameters to see if they match the actual residuals}
+\item{Variable patch sizes.  We can easily identify observations that were taken in cloudy conditions.  For these observations, if there are an adequate number of stars, we could consider decreasing the patch size to remove additional cloud extinction structure.}
+\item{Stars in the galactic plane have no additional errors added due to crowding.  In the future, it would be good to include the effects of crowded field photometry.  }
+\item{Refine the $y$-band simulations.  The $y$-band uniformity is currently the only parameter that does not meet the SRD design spec.}
+\item{A more complete simulation of the residuals left after fitting for the atmosphere.}
+\end{itemize}
+
+
+\bibliography{cal}
+
+
+
+\end{document}
+
+
+
+
+
+
+-----------------------------------------------------------------
+###########################################################
+-----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ starsFOV['rmagobs'] = (starsFOV['rmagtrue'] + starsFOV['dmag_var'] + starsFOV['dmag_snr'] + \
+                              starsFOV['dmag_color'] + starsFOV['dmag_color_dist'] + \
+                              starsFOV['dmag_zp'] + starsFOV['dmag_zp_dist'] + \
+                              starsFOV['dmag_sin'] + starsFOV['dmag_flat_sin'] + starsFOV['dmag_cloud'] + \
+                              starsFOV['dmag_cloud_image']+starsFOV['dmag_rr']+starsFOV['dmag_kep']+starsFOV['dmag_gainvar']+
+                              starsFOV['dmag_exptvar']+starsFOV['dmag_illumcorr'])
+
+
+
+
+
+
+
+
+
+
+\section{Gain Variations}
+Since the calibration patch size is 1 CCD, variation in gain from individual amplifiers will be below the patch resolution.  The SRD calls for gain stability of 1\% RMS over a 12 hour period.  The gain must also very at a level of less than 0.1\% on 1-hour time scales.  
+
+We thus add 1 mmag of variation per exposure for the gain variation.  We assume any long-term variation can be removed by the calibration pipeline when fitting and removing the sky background.  Yusra has already demonstrated a powerful method of matching relative backgrounds via constructing a matrix of the relative background (i.e., $g_1/g_2$, $g_1/g_3$, $g_2/g_3$).  As long as the gain values are all matched at a relative level, the self calibration procedure will fit the gray shift for the chip.  
+
+Presumably, using a background matching technique will not be possible for every frame--large galaxies and crowded fields will make it difficult to determine the sky background in every amp in every frame.  Since the relative gains are expected to vary slowly over the night, we can fit the relative gain when possible and interpolate the values for frames where the background is poorly fit.  
+
+We can calculate how well the relative gain variations can be matched using the sky background.
+with 4kx4k CCDs and 16 amplifiers per CCD, each amplifier reads out one-million pixels.  In the simple case where there are no objects in a frame, the sky can be taken as the mean pixel value, and will have an uncertainty of 
+
+gain = elec/ADU
+
+sky counts $= e_{sky}/g \pm \sqrt{e_{sky}/g+(RN/g)^2}/\sqrt{N_{pix}}$
+
+A shift in the gain is a pure gray-scale effect, thus we only need to match the relative gains of the amplifiers on each exposure.
+
+in $u$ during dark-time, expect 58.5 $e^{-1}$ from sky in each pixel in 15s exposure.  Read noise around 5 $e^-$
+
+\begin{eqnarray}
+\frac{sky_1}{sky_2} = \frac{g_2}{g_1} \\
+g_2 = g_1\frac{sky_1}{sky_2} \pm (sky_1+(RN/g_1)^2)/sky_1^2\sqrt{N_{pix}} + (sky_2+(RN/g_2)^2)/sky_2^2\sqrt{N_{pix}}
+\end{eqnarray}
+
+
+
+
+%what's the distribution of Opsim xparency?
+
+%select distinct(xparency) from  output_opsim3_61 where night <= 730;
+% xparency
+%---------- all        r
+%0          540688    77995
+%0.125      82763     15003
+%0.375      39272     4132
+%0.25       51347     5878
+%0.5        33318     4059
+%0.625      18927     3768
+
+%so photometric for 540688 visits non-photo for 225627
+%in 100 nights, expect 54 photo, 32 non.  
+%so this looks slightly more optimistic than what's in the calibration doc.  but if I fudge 10\% of the photos up to non-photo, it looks fine.  
+
+%in r, 77995 photometric and 32840 other
+
+%what is the conversion between transparency and mag of extinction?  units are range 0:1---not clear how to convert to mags.
+
+%more notes in 4.23.13.txt
+
+
+%calibDB.05.05.2010=# select count(interpCloud) from output_opsim3_61 where interpCloud = 0;
+%  count
+%---------
+% 2276999
+%(1 row)
+
+%select count(interpCloud) from output_opsim3_61 where interpCloud between 0 and 0.4;
+%  count
+%---------
+% 3455270
+
+%select count(interpCloud) from output_opsim3_61 where interpCloud > 0;
+%  count
+%---------
+% 1522394
+
+%select count(interpCloud) from output_opsim3_61 where interpCloud < .01;
+%2276999
+
+%so for interpCloud, I have 60% photometric, 40% non-zero.  Looks pretty good!
+
+% LocalWords:  eljko Ivezi Axelrod SRD Opsim HEALpixels zeropoint et Docushare
+% LocalWords:  ber Ofek Schaf Juri GALFAST pre fiducial lll Selfcal snr zp im
+% LocalWords:  colordist zpdist flatsin rr airmass sys millimags cloudim atm az
+% LocalWords:  zeropoints ij CCDs parallelized Imsim pointings RMS millimag kep
+% LocalWords:  FoV expvar illumcorr dmag LSQR parallelize HEALpix HEALpixel Eqn
+% LocalWords:  WDs starsFOV rmagobs rmagtrue gainvar exptvar mmag Yusra kx elec
+% LocalWords:  ADU interpCloud opsim hexdither CCOB uber isoLatitude multipole
+% LocalWords:  Pixelization QE expt Illum Ivezic IQR WD ARMA LSST's phot illum
+% LocalWords:  lccc Gaussianity

@@ -11,3 +11,4 @@ rsync -av /data/tmp/July_rev/y_fd_chip_90step/*.png  y_fd_chip_90step/.
 rsync -av /data/tmp/July_rev/y_fd_chip_randrot2/*.png  y_fd_chip_randrot2/.
 
 rsync -av /data/tmp/July_rev/y_fd_chip_eo90/*.png  y_fd_chip_eo90/.
+rsync -av /data/tmp/July_rev/y_fd_chip_eo180/*.png  y_fd_chip_eo180/.
