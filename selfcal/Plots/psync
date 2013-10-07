@@ -31,3 +31,4 @@ rsync /data/tmp/July_rev/r_1e6_10yr/*.png r_1e6_10yr
 rsync /data/tmp/July_rev/y_fd/*.png y_fd
 
 rsync /data/tmp/July_rev/u_1e6_uselect/*.png u_1e6_uselect 
+rsync /data/tmp/July_rev2/y_25/HP_star_obs/All_files/*.png y_25
