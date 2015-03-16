@@ -1,6 +1,0 @@
-PWV measured on a single day at Gemini S \citep{Radomski2010}.  Two
-techniques were used, GPS and Phoenix, an IR spectrograph, and the
-data is in good agreement.  Note the decline of approximately 4 mm
-over a period of two hours.  This is a case where use of a single
-average atmosphere for a whole night would give poor results,
-especially in the y-band.

@@ -1,0 +1,15 @@
+These files include the direct and direct+ghosting information for each vendor, including 
+all of the camera hardware  -- i.e., detector, lenses and filter -- but not mirrors or atmosphere. 
+
+The format is : 
+
+each filter is in a different hdu ([1] = 'u', [2] = 'g', etc.).
+
+In each hdu, the data is arranged as : 
+
+radius, wavelength, direct, flatghost 
+
+where radius is in mm in the focal plane. 
+
+
+

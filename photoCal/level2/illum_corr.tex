@@ -1,0 +1,101 @@
+\documentclass[12pt,preprint]{aastex}
+\usepackage{amsmath}
+
+\begin{document}
+
+\title{Determining Illumination Corrections for (almost) Arbitrary SEDs}
+
+\author{Tim Axelrod}
+
+Suppose we have a set of objects on the sky with SEDs that are
+drawn from some parameterized family of SEDs.  Examples of such families
+are main sequence stars; DA white dwarfs; and emission line galaxies.
+In what follows, we will describe the vector of parameters that
+defines a member of the family by $\vec{p}$.  Note that there is no
+conceptual difficulty in combining several families into a larger
+family, if $\vec{p}$ is suitably defined, and in fact we will want to
+do this.  I have argued previously that if we have enough exemplars
+from this family in
+the set of calibration objects, and a large enough
+set of observations of them, the self-calibration process can
+determine the illumination correction as a function of $\vec{p}$.  The
+illumination corrections determined for SNLS are of this form, with
+$\vec{p}$ being just a single color of the object, and the input data
+being a relatively small set of rastered star field measurements.
+
+Let's make a precise definition of the illumination correction for an
+object with a particular SED, $f(\lambda)$, which is not necessarily a
+member of our SED family.  I assume that we have a
+broadband photometric flat (``white light'') for band $b$,
+$F^{b}_{wl}(\vec{r})$. Note that this is a {\bf photometric} flat,
+meaning that each point in the flat is an aperture sum over the {\bf
+  image processing} flat, with the aperture centered at that
+point. It's largely a matter of taste whether this flat has some
+approximate illumination correction applied to it.  If that is done,
+and the approximation is a good one, the illumination correction that
+we determine from self calibration will be of smaller amplitude.
+
+The illumination correction for a particular object is then defined as
+
+\begin{equation}
+IC^{b}_{obj}(\vec{r})~=~\frac{F^{b}_{obj}(\vec{r})}{F^{b}_{wl}(\vec{r})}~=~
+\frac{\int {d\lambda \, f_{obj}(\lambda) \, \phi^{b}_{sys}(\vec{r}, \lambda)}}{F^{b}_{wl}(\vec{r})}
+\end{equation}
+
+% normalization issue here
+
+Note that if one sets $f_{obj}(\lambda)=1$, one obtains the
+illumination correction for the white light flat, which is {\bf not}
+unity.  Directly measuring $IC^{b}_{obj}$ is not in general practical, since
+it would require a much larger number of observations of the object
+than we will have in our survey (perhaps $10^4$ required, $10^2$
+available in the survey).  However, if the SED of our object can be
+adequately expressed as a linear combination of the SEDs in our
+parameterized family, we are in business.  Suppose
+
+\begin{equation}
+f_{obj}(\lambda)~=~\int {d\vec{p} \, q(\vec{p}) \, f(\lambda, \vec{p})}
+\end{equation}
+
+Then
+
+\begin{align}
+IC^{b}_{obj}(\vec{r})~&=~\frac {\int {d\vec{p} \, q(\vec{p}) \, \int
+    {d\vec{p} \, q(\vec{p}) \, f(\lambda,
+      \vec{p})}}}{F^{b}_{wl}(\vec{r})}\\
+    &=~\int {d\vec{p} \, q(\vec{p}) \, IC^{b}(\vec{p}, \vec{r})}
+\end{align}
+
+where $IC^{b}(\vec{p}, \vec{r})$ is the illumination correction for
+each member of the SED family as determined by self-calibration.
+
+As I see it, the major question revolves around eqn(2). Can we really
+mock up a supernova SED, for example, as a linear combination of SEDs of objects
+that are
+\begin{itemize}
+\item abundantly present on the sky
+\item not significantly time variable
+\end{itemize}
+
+This is an interesting question, which we can investigate right now,
+given our library of SEDs.  I do think it's going to be crucial to
+include emission line galaxies in our family, as Chris has suggested,
+because this will expand the range of representable SEDs quite a lot.
+
+A secondary question is how many representatives of the SED family
+near some particular value of the parameters $\vec{p}_0$ are required
+for self-calibration to give a good estimate for $IC^{b}(\vec{p}_0,
+\vec{r})$.  I suspect we can find a decent way to estimate this, and
+determine whether it is practical.
+
+In this scheme, the monochromatic flats are used for two purposes;
+
+\begin{itemize}
+\item to transform from calibrated magnitudes to standard magnitudes,
+  using only the on-axis values
+\item to generate a first guess for the illumination correction
+  $IC^{b}(\vec{p}, \vec{r})$, which will speed up (or perhaps even
+  make possible) the convergence of self-calibration
+\end{itemize}   
+ 
+\end{document}

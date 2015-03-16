@@ -1,2 +1,0 @@
-Three years of PWV measured at CTIO (\citep{Hansen1975}), based on the depth of the 1.87 $\mu m$ line to the
-Solar continuum at 1.65 $\mu m$

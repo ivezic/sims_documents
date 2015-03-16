@@ -1,5 +1,0 @@
-Lidar measurements of aerosol extinction at 355nm over a single night
-near Greenbelt, MD \citep{Veselovskii2013}.  Cerro Pachon is, of
-course, a different environment, and is at an altitude 2700m, removing
-much of the variability.  Even above that altitude, however,
-significant variation on rapid time scales remains.
